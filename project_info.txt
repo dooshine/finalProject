@@ -1,0 +1,32 @@
+프로젝트 정보
+
+[개발환경]
+* JDK 17
+* Spring Boot 2.7.11
+
+[dependency]
+Spring Boot DevTools
+Lombok
+Spring Configuration Processor
+Spring Web
+Spring Data JDBC
+Oracle Driver
+MyBatis Framework
+Java Mail Sender
+Spring Boot Actuator
+tomcat embed jasper
+jstl
+swagger ui
+jsoup
+spring-security-core
+
+
+[해야 할 것들]
+* 파일 업로드 시스템 만들기
+* 이메일 시스템
+* jsp파일 import ( css, js, cdn import )
+  - jquery
+  - vue
+  - moment
+  - lodash
+  - 
