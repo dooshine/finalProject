@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+<mapper namespace="chatRoom">
+
+	<!-- 채팅방 생성 -->
+	<insert id="create">
+		insert into chat_room(chat_room_no, chat_room_name, chat_room_start)
+		values(chat_room_seq.nextval, #{chatRoomName}, #{chatRoomStart})
+	</insert>
+	
+	<!-- 채팅방 상세조회 -->
+	<select id="findRoom" resultType="ChatRoomDto">
+		select * from chat_room where chat_room_no = #{chatRoomNo}	
+	</select>
+	
+	<!-- 채팅방 목록 -->
+	<select id="listRoom">
+		select * from chat_room
+	</select>
+
+</mapper>
+    
