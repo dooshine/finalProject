@@ -26,12 +26,18 @@
 
     <!-- custom 테스트 css -->
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/static/css/test.css">
+    
+    <!-- 폰트css -->
+    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/static/css/load.css" />
 
     <script>
     	const contextPath = "${pageContext.request.contextPath}";
     </script>
 </head>
-<body>
+
+
+
+<body style="background-color: #f5f5f5;">
     <main>
         <header>
             <div class="row">

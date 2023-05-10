@@ -3,12 +3,12 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>   
 
 
+
 <jsp:include page="/WEB-INF/views/template/header.jsp"></jsp:include> 
 
     <title>내 지갑</title>
 
-	<script src="https://cdn.jsdelivr.net/npm/vue"></script>
-	<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css">
+	
     <script>
     	const contextPath = "${pageContext.request.contextPath}";
     </script>
@@ -42,37 +42,55 @@
 </script>
     
    <style>
+   
+		   	section {
+			  font-family: "Noto Sans KR", sans-serif;
+			}
+			   	
+		   
+		    ul.point_header_tab {
+		      padding: 0;
+		      margin: 0;
+		    }
+		   
 	    /* 탭 메뉴 스타일 */
 	    .point_header_tab {
 	        overflow: hidden;
 			width:100%;
-
+	
 	    }
 	
 	    .tab_list {
 	        background-color: inherit;
 	        float: left;
-	        border: none;
+	      	border-bottom: 0.5px solid #f5f5f5;
 	        outline: none;
 	        cursor: pointer;
-	        padding: 14px 16px;
+	        padding: 15px 15px;
 	        transition: 0.3s;
 	        font-size: 17px;
 	        list-style: none; /* 불렛포인트 없애기 */
 	        position: relative; /* 하위 요소에 적용할 수 있는 유사 클래스(자식 셀렉터)를 사용하기 위해 position을 추가 */
+	        
 	    }
 	
-	    .tab_list.active {
-	        background-color: #f8f8f8;
-	    }
-	
+	   
 	    .tab_list a {
 	        text-decoration: none;
 	        color: #333;
+	        
+	    }
+	    
+	     .tab_list.active {
+	      color: #77E9CC;
+	       font-weight:bold;
+	        
 	    }
 	
+	
 	    .tab_list:hover {
-	        background-color: #f8f8f8;
+	    
+	    
 	    }
 	
 	    /* 하위 요소에 적용할 스타일 */
@@ -84,6 +102,7 @@
 	        width: 100%;
 	        height: 4px;
 	        background-color: #77E9CC;
+	        
 	    }
 	    
 	    .point_select {
@@ -96,6 +115,11 @@
 		}
 	   
 	    
+    	.title {
+   		font-weight:bold;
+	   	}
+	    
+	    
 	</style>
 
 
@@ -103,21 +127,25 @@
 	
 	  <div id="app">
       	<div class= "container-fluid d-flex justify-content-center">
-        	<div class="col-6">    
+        	<div class="col-6"> 
+        	
+        		 <div class="container rounded p-3" style="background-color:white">
+        		 
 		        <ul class="point_header_tab">
 		            <li class="tab_list active"><a href="#">포인트 충전</a></li>
 		            <li class="tab_list"><a href="history">충전 내역</a></li>
 		            <li class="tab_list"><a href="order">사용 내역</a></li>
 		        </ul>
+		      
 		        
 		        
-		        <h3>포인트 충전</h3>
+		        <h3 class="title mt-5 mb-3" style="padding-left: 0.5em">포인트 충전</h3>
 
-        <div>
-            <p>내 포인트: <span class="amount">{{ formattedAmount }}</span>원</p>
+        <div style="padding-left: 0.5em; padding-right: 0.5em;">
+            <p class="container rounded p-3 border">내 포인트: <span class="amount" style="color:#77E9CC; font-weight:bold" >{{ formattedAmount }}</span>원</p>
         </div>
 
-        <form id="chargeForm" method="post" action="${contextPath}/charge">
+        <form id="chargeForm" method="post" action="${contextPath}/charge" style="padding-left: 0.7em; padding-right: 0.7em;">
             
             
                 <label class="point_select">
@@ -146,7 +174,7 @@
                 </label>        
 				
 				
-				<div>
+				<div class="mt-3">
 				    <p>충전 후 내 포인트: 
 				    <span class="amount">{{ (amount+parseInt(selectedAmount || 0)).toLocaleString() }}
 				    </span>원
@@ -155,7 +183,7 @@
 				
 
 				<div>
-					<span>결제 수단</span>
+					<span style="font-weight:bold">결제 수단</span>
 					<div class = "rounded bg-light p-3">
 						  <label>
 						    <input type="radio" name="payment-method" value="kakaopay">
@@ -169,12 +197,12 @@
 
 
 
-	            <div>
-	                <button type="button" @click="charge">충전하기</button>
+	            <div class="justify-content-center d-flex mt-3">
+	                <button type="button" class="btn btn-lg btn-primary mb-5" @click="charge">충전하기</button>
 	            </div>
 	       	 </form>
 	       	 
-	       	 
+	       	 </div>
             </div>
 		</div>
     </div>

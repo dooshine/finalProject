@@ -7,110 +7,141 @@
 
     <title>ㅇㅇㅇ</title>
 
-	<script src="https://cdn.jsdelivr.net/npm/vue"></script>
-	<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css">
+	
     <script>
     	const contextPath = "${pageContext.request.contextPath}";
     </script>
-    
 
-    
-    
-	    <style>
-	.funding-list {
-	  display: flex;
-	  flex-wrap: wrap;
-	}
-	
-	.funding-preview {
-	  width: 20%;
-	  padding: 20px;
-	  box-sizing: border-box;
-	  text-align: center;
-	}
-	
-	.funding-thumbnail {
-	  width: 100%;
-	  height: 200px;
-	  object-fit: cover;
-	  margin-bottom: 10px;
-	}
-	
-	.funding-title {
-	  font-size: 1.2rem;
-	  margin-bottom: 10px;
-	}
-	
-	.funding-description {
-	  margin-bottom: 10px;
-	}
-	
-	.funding-info {
-	  display: flex;
-	  justify-content: space-between;
-	}
-	</style>
+		<template>
+		  <div class="funding-list">
+		    <div class="funding-item" v-for="funding in fundings" :key="funding.id">
+		      <img :src="funding.imageUrl" alt="Funding Image">
+		      <h3 class="title">{{ funding.title }}</h3>
+		      <p class="description">{{ funding.description }}</p>
+		      <div class="progress-bar">
+		        <div class="progress" :style="{ width: funding.progress + '%' }"></div>
+		      </div>
+		      <div class="info">
+		        <div class="col">
+		          <span class="value">{{ funding.amount }}원</span>
+		          <span class="label">목표금액</span>
+		        </div>
+		        <div class="col">
+		          <span class="value">{{ funding.daysLeft }}일</span>
+		          <span class="label">남은 일수</span>
+		        </div>
+		        <div class="col">
+		          <span class="value">{{ funding.supporters }}명</span>
+		          <span class="label">서포터</span>
+		        </div>
+		      </div>
+		    </div>
+		  </div>
+		</template>
+
+		<script>
+			new Vue({
+				  el: '#app',
+				  data: {
+			      fundings: [
+			        {
+			          id: 1,
+			          title: 'Vue.js 프로젝트 템플릿',
+			          description: 'Vue.js를 사용하여 프로젝트를 시작하는 데 필요한 템플릿을 제작합니다.',
+			          imageUrl: 'https://dummyimage.com/400x300/000/fff.png&text=Funding+1',
+			          amount: 1000000,
+			          progress: 75,
+			          daysLeft: 10,
+			          supporters: 20,
+			        },
+			        {
+			          id: 2,
+			          title: 'Vue.js 강의 만들기',
+			          description: 'Vue.js를 사용하는 웹 개발자들을 위한 강의를 만듭니다.',
+			          imageUrl: 'https://dummyimage.com/400x300/000/fff.png&text=Funding+2',
+			          amount: 2000000,
+			          progress: 50,
+			          daysLeft: 20,
+			          supporters: 30,
+			        },
+			        {
+			          id: 3,
+			          title: 'Vue.js 웹앱 제작',
+			          description: 'Vue.js를 사용하여 웹앱을 제작합니다.',
+			          imageUrl: 'https://dummyimage.com/400x300/000/fff.png&text=Funding+3',
+			          amount: 5000000,
+			          progress: 30,
+			          daysLeft: 30,
+			          supporters: 40,
+			        },
+			      ],
+			    };
+			  },
+			};
+		</script>
+				
+		<style scoped>
+			.funding-list {
+			  display: flex;
+			  flex-wrap: wrap;
+			  gap: 20px;
+			}
 			
+			.funding-item {
+			  width: calc(33.33% - 20px);
+			  box-sizing: border-box;
+			  padding: 20px;
+			  border: 1px solid #ccc;
+			  border-radius: 5px;
+			}
 			
-	<script>
-	new Vue({
-	  el: '#fund',
-	  data() {
-	    return {
-	      fundings: [
-	        { 
-	          title: "펀딩 제목",
-	          description: "펀딩 설명",
-	          imageUrl: "이미지 URL",
-	          amount: 100000,
-	          progress: 50
-	        },
-	        { 
-	          title: "펀딩 제목",
-	          description: "펀딩 설명",
-	          imageUrl: "이미지 URL",
-	          amount: 200000,
-	          progress: 80
-	        },
-	        // 추가적인 펀딩 데이터
-	      ]
-	    };
-	  },
-	  
-	  created() {
-		    // 더미 데이터 추가
-		    for (let i = 0; i < 25; i++) {
-		      this.fundings.push({
-		        title: `더미 펀딩 ${i+1}`,
-		        description: "더미 설명",
-		        imageUrl: "https://picsum.photos/400",
-		        amount: Math.floor(Math.random() * 1000000) + 100000,
-		        progress: Math.floor(Math.random() * 100)
-		      });
-		    }
-		  }
-		};
-
-	</script>
-		
-
-			<section id="fund">
-			  <div class="container-fluid">
-			    <h3>펀딩 리스트</h3>
-			    <div class="funding-list">
-			      <div v-for="(funding, index) in fundings" :key="index" class="funding-preview" v-if="index % 5 === 0">
-			        <img :src="funding.imageUrl" alt="funding thumbnail" class="funding-thumbnail">
-			        <h3 class="funding-title">{{ funding.title }}</h3>
-			        <p class="funding-description">{{ funding.description }}</p>
-			        <div class="funding-info">
-			          <p class="funding-amount">{{ funding.amount }} 원</p>
-			          <p class="funding-progress">{{ funding.progress }}% 달성</p>
-			        </div>
-			      </div>
-			    </div>
-			  </div>
-			</section>
-
-      
-      	
-  
+			.funding-item img {
+			  width: 100%;
+			  border-radius: 5px;
+			  
+			  }
+			
+			.funding-item .title {
+			margin: 10px 0;
+			font-size: 1.2em;
+			font-weight: bold;
+			}
+			
+			.funding-item .description {
+			margin: 10px 0;
+			font-size: 0.9em;
+			color: #666;
+			}
+			
+			.progress-bar {
+			height: 10px;
+			background-color: #eee;
+			border-radius: 5px;
+			overflow: hidden;
+			margin: 10px 0;
+			}
+			
+			.progress {
+			height: 100%;
+			background-color: #2ecc71;
+			}
+			
+			.info {
+			display: flex;
+			justify-content: space-between;
+			}
+			
+			.info .col {
+			text-align: center;
+			color: #888;
+			}
+			
+			.info .col .value {
+			font-size: 1.2em;
+			font-weight: bold;
+			}
+			
+			.info .col .label {
+			font-size: 0.9em;
+			}
+		</style>
