@@ -181,7 +181,7 @@ public class ChatServiceImpl implements ChatService {
 		}
 		// 채팅방 입장 메세지인 경우
 		else if(receiveVO.getType() == WebSocketConstant.JOIN) {
-			int chatRoomNo = receiveVO.getRoomNo();
+			int chatRoomNo = receiveVO.getChatRoomNo();
 			this.join(member, chatRoomNo);
 		}
 	}
