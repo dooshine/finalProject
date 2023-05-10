@@ -10,6 +10,6 @@ public class ChatMessageReceiveVO {
 
 	private int type;
 	private String content;
-	private int roomNo;
+	private int chatRoomNo;
 	
 }
