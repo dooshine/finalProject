@@ -159,16 +159,6 @@
 				$(html).find(".memberId").text(data.memberID);
 				$(html).find(".content").text(data.content);
 				$(html).find(".time").text(time);
-				
-				switch(data.memberLevel) {
-					case "우수회원":
-						$(html).find(".memberId").css("color", "blue");
-						break;
-					case "관리자":
-						$(html).find(".memberId").css("color", "red");
-						break;
-				}
-				
 				// 템플릿 화면에 찍기
 				$(".message-wrapper").append(html);
 			};
