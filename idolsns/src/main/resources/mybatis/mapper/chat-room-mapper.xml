@@ -6,9 +6,9 @@
 <mapper namespace="chatRoom">
 
 	<!-- 채팅방 생성 -->
-	<insert id="create">
+	<insert id="createChatRoom">
 		insert into chat_room(chat_room_no, chat_room_name, chat_room_start)
-		values(chat_room_seq.nextval, #{chatRoomName}, #{chatRoomStart})
+		values(chat_room_seq.nextval, #{chatRoomName}, sysdate)
 	</insert>
 	
 	<!-- 채팅방 상세조회 -->
@@ -17,7 +17,7 @@
 	</select>
 	
 	<!-- 채팅방 목록 -->
-	<select id="listRoom">
+	<select id="listRoom" resultType="ChatRoomDto">
 		select * from chat_room
 	</select>
 
