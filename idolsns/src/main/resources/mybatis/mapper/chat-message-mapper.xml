@@ -5,15 +5,15 @@
     
 <mapper namespace="chatMessage">
 
-	<!-- 메세지 저장 -->
-	<insert id="add">
+	<!-- 보낸 메세지 저장 -->
+	<insert id="sendMessage">
 		insert into chat_message(
 				chat_room_no, chat_message_no, member_id, 
-				chat_message_time, message_content
+				chat_message_time, chat_message_content
 			)
 		values(
 				chat_message_seq.nextval, #{chatMessageNo}, #{memberId}, 
-				sysdate, #{messageContent}
+				sysdate, #{chatMessageContent}
 			)
 	</insert>
 	
@@ -22,6 +22,13 @@
 		select * from chat_message where chat_room_no = #{chatRoomNo}
 		order by chat_message_no asc
 	</select>
+	
+	<!-- 보낸 메세지 삭제 -->
+	<delete id="deleteMessage">
+		delete chat_message 
+		where chat_message_no = #{chatMessageNo} 
+		and member_id = #{memberId}
+	</delete>
 
 </mapper>
     
