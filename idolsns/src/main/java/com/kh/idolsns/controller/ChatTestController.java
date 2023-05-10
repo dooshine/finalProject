@@ -21,7 +21,7 @@ public class ChatTestController {
 	
 	@GetMapping("/chatRoomNo")
 	public String chatRooms() {
-		return "chat/chatRoom";
+		return "chat/chatRoomNo";
 	}
 	
 }
