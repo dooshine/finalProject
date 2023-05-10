@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- dtd -->
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+<!-- mapper -->
+<mapper namespace="fundPost">
+	
+	<!-- C 펀딩 게시물 등록 -->
+	<insert id="add">
+		insert into fund_post(
+					post_no, member_id, fund_title, post_start, post_end,
+					fund_goal, fund_sponsor_count, fund_state
+					)
+		values(
+		#{postNo}, #{memberId), #{fundTitle}, #{postStart}, #{postEnd},
+		#{fundGoal}, #{fundSponsorCount}, #{fundState}
+		)
+	</insert>
+	
+	<!-- R 펀딩 게시물 조회 -->
+	<select id="selectList">
+		select * from fund_post order by post_no desc
+	</select>
+	
+	<select id="selectOne">
+		select * from fund_post
+		where post_no=#{postNo}
+	</select>
+	
+	<!-- U 펀딩 게시물 수정 -->
+	<update id="edit">
+		update fund_post
+		set fund_state=#{fundState}
+		where post_no=#{postNo}
+	</update>
+	
+</mapper>
