@@ -19,7 +19,7 @@
 	<!-- 이미 참여중인 채팅방인지 확인 -->
 	<select id="doseAlreadyIn" resultType="ChatJoinDto">
 		select * from chat_join
-		where member_id = #{memberId} and chat_room_no = #{chatRoomno}
+		where member_id = #{memberId} and chat_room_no = #{chatRoomNo}
 	</select>
 	
 	<!-- 채팅방에 참여중인 회원 조회 -->
