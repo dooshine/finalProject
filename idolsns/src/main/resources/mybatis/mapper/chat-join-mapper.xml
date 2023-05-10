@@ -21,6 +21,11 @@
 		select * from chat_join
 		where member_id = #{memberId} and chat_room_no = #{chatRoomno}
 	</select>
+	
+	<!-- 채팅방에 참여중인 회원 조회 -->
+	<select id="findMembersByRoomNo" resultType="ChatJoinDto">
+		select * from chat_join where chat_room_no = #{chatRoomNo}
+	</select>
 
 </mapper>
     
