@@ -13,7 +13,8 @@
 	</p>
 </c:forEach>
 
-<form action="chatRoom">
+<form action="chatRoomNo">
+	<input type="number" name="chatRoomNo">
 	<button type="submit">입장</button>
 </form>
     
