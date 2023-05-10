@@ -5,13 +5,12 @@ import lombok.Data;
 @Data
 public class ChatMessageDto {
 
-	private int chatRoomNo;
 	private long chatMessageNo;
+	private int chatRoomNo;
 	
 	private String memberId;
 	private Date chatMessageTime;
 	
-	// 메세지 내용
-	private String messageContent;
+	private String chatMessageContent;
 	
 }
