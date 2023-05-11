@@ -1,14 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- ↑ XML 헤더(반드시 첫 번째 줄에 위치) -->
 
-<!-- dtd -->
+<!-- dtd선언 -->
 <!DOCTYPE mapper
     PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
-    
+
+<!-- mapper -->
 <mapper namespace="post">
-
-	<select id="sequence" resultType="int">
-		select post_seq.nextval from dual
-	</select>
-
+    <!-- 통합게시물 시퀀스 생성 -->
+    <select id="sequence" resultType="Long">
+        select post_seq.nextval from dual
+    </select>
+    <!-- 통합게시물 생성 -->
+    <insert id="insert">
+        insert into post 
+        (post_no, member_id, post_type, post_time, post_content) 
+        values
+        (#{postNo}, #{memberId}, #{postType}, sysdate, #{postContent})
+    </insert>
+    <!-- 통합게시물 1개 조회 -->
+    <select id="selectOne" resultType="PostDto">
+        select * from post where post_no = #{postNo}
+    </select>
+    <!-- 통합게시물 모두 조회 -->
+    <select id="selectList" resultType="PostDto">
+        select * from post
+    </select>
+    <!-- 통합게시물 수정 -->
+    <update id="update">
+        update post set post_content = #{postContent} 
+        where post_no = #{postNo}
+    </update>
+    <!-- 통합게시물 삭제 -->
+    <delete id="delete">
+        delete from post 
+        where post_no = #{postNo}
+    </delete>
 </mapper>

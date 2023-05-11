@@ -63,7 +63,7 @@ public class FundController {
 							@ModelAttribute FundPostDto fundPostDto,
 							@ModelAttribute PostDto postDto,
 							@RequestParam MultipartFile attach) throws IllegalStateException, IOException {
-		fundPostDto.setPostNo(postRepo.sequence());
+//		fundPostDto.setPostNo(postRepo.sequence());
 		fundPostRepo.insert(fundPostDto);
 		if(!attach.isEmpty()) {
 	         int attachmentNo = attachmentRepo.sequence();   
@@ -80,7 +80,7 @@ public class FundController {
 
 	         postImageRepo.insert(PostImageDto.builder()
 	        		 				.attachmentNo(attachmentNo)
-	        		 				.postNo(postDto.getPostNo())
+//	        		 				.postNo(postDto.getPostNo())
 	         						.build()
 	        		 );
 	      }

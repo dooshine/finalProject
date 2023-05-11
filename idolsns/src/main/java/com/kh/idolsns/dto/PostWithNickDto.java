@@ -7,11 +7,12 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+// 통합게시물 DTO
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class PostDto {
+public class PostWithNickDto {
     // 통합게시물 번호
     private Long postNo;
     // 통합게시물 작성자
@@ -22,4 +23,6 @@ public class PostDto {
     private Date postTime;
     // 통합게시물 내용
     private String postContent;
+    // 통합게시물 +닉네임
+    private String memberNick;
 }
