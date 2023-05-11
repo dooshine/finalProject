@@ -1,0 +1,47 @@
+-- 테이블 삭제
+-- (5/9 시퀀스 삭제 추가, follow, point,채팅방, 채팅참여, 채팅 메세지 삭제 추가)
+-- (5/10 채팅 전송, 좋아요 테이블 삭제 추가)
+-- 행사일정, 같이가요, 자유 게시물 테이블 추가
+
+drop table post_fixed_tag;
+drop table fixed_tag;
+drop table post_free_tag;
+drop table free_tag;
+drop table post_image;
+drop table member_profile_image;
+drop table attachment;
+drop table intergrated_table;
+drop table idol_like;
+drop table idol; 
+drop table delete_member;
+drop table reply_like;
+drop table reply; 
+drop table fund;
+drop table fund_post;
+drop table schedule_post;
+drop table together_post;
+drop table free_post;
+drop table post_like;
+drop table post;
+drop table follow;
+drop table point;
+drop table chat_like;
+drop table chat_read;
+drop table chat_message;
+drop table chat_join;
+drop table chat_room;
+drop table member;
+
+
+-- 시퀀스 삭제
+drop sequence member_seq;
+drop sequence attachment_seq;
+drop sequence fixed_tag_seq;
+drop sequence free_tag_seq;
+drop sequence post_seq;
+drop sequence fund_seq;
+drop sequence reply_seq;
+drop sequence chat_message_seq;
+drop sequence chat_room_seq;
+
+COMMIT;
