@@ -5,6 +5,11 @@
     
 <mapper namespace="chatMessage">
 
+	<!-- 메세지 번호 시퀀스 뽑기 -->
+	<select id="sequence" resultType="int">
+		select chat_message_seq.nextval from dual
+	</select>
+
 	<!-- 보낸 메세지 저장 -->
 	<insert id="sendMessage">
 		insert into chat_message(
@@ -12,7 +17,7 @@
 				chat_message_time, chat_message_content
 			)
 		values(
-				#{chatRoomNo}, chat_message_seq.nextval, #{memberId}, 
+				#{chatRoomNo}, #{chatMessageNo}, #{memberId}, 
 				sysdate, #{chatMessageContent}
 			)
 	</insert>

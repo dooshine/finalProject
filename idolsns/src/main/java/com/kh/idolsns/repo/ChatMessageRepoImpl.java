@@ -14,6 +14,10 @@ public class ChatMessageRepoImpl implements ChatMessageRepo {
 	private SqlSession sql;
 
 	@Override
+	public int sequence() {
+		return sql.selectOne("chatMessage.sequence");
+	}
+	@Override
 	public void sendMessage(ChatMessageDto dto) {
 		sql.insert("chatMessage.sendMessage", dto);
 	}
