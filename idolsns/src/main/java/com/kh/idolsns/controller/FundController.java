@@ -1,6 +1,7 @@
 package com.kh.idolsns.controller;
 
 import java.io.File;
+import java.io.IOException;
 
 import javax.annotation.PostConstruct;
 
@@ -17,18 +18,28 @@ import org.springframework.web.multipart.MultipartFile;
 import com.kh.idolsns.configuration.CustomFileuploadProperties;
 import com.kh.idolsns.dto.AttachmentDto;
 import com.kh.idolsns.dto.FundPostDto;
+import com.kh.idolsns.dto.PostDto;
+import com.kh.idolsns.dto.PostImageDto;
 import com.kh.idolsns.repo.AttachmentRepo;
 import com.kh.idolsns.repo.FundPostRepo;
+import com.kh.idolsns.repo.PostImageRepo;
+import com.kh.idolsns.repo.PostRepo;
 
 @Controller
 @RequestMapping("fund")
 public class FundController {
 	
 	@Autowired
-	FundPostRepo repo;
+	FundPostRepo fundPostRepo;
 	
 	@Autowired
 	PostRepo postRepo;
+	
+	@Autowired
+	PostDto postDto;
+	
+	@Autowired
+	PostImageRepo postImageRepo;
 	
 	@Autowired
 	CustomFileuploadProperties customFileuploadProperties;
@@ -48,10 +59,12 @@ public class FundController {
 	}
 	
 	@PostMapping("/writeProcess")
-	public String write(@ModelAttribute FundPostDto dto,
-							@RequestParam MultipartFile attach) {
-		dto.setPostNo(postRepo.sequence());
-		repo.insert(dto);
+	public String write(
+							@ModelAttribute FundPostDto fundPostDto,
+							@ModelAttribute PostDto postDto,
+							@RequestParam MultipartFile attach) throws IllegalStateException, IOException {
+		fundPostDto.setPostNo(postRepo.sequence());
+		fundPostRepo.insert(fundPostDto);
 		if(!attach.isEmpty()) {
 	         int attachmentNo = attachmentRepo.sequence();   
 	         File target = new File(dir, String.valueOf(attachmentNo));
@@ -65,11 +78,11 @@ public class FundController {
 	                                 .build()
 	               );
 
-//	         productImageDao.insert(ProductImageDto.builder()
-//                     .productNo(productDto.getProductNo())
-//                     .attachmentNo(attachmentNo)
-//                     .build()
-//	        		 );
+	         postImageRepo.insert(PostImageDto.builder()
+	        		 				.attachmentNo(attachmentNo)
+	        		 				.postNo(postDto.getPostNo())
+	         						.build()
+	        		 );
 	      }
 		
 		return "redirect:writeFinish";
@@ -82,7 +95,7 @@ public class FundController {
 	
 	@GetMapping("/list")
 	public String list(Model model) {
-		model.addAttribute("fundList", repo.selectList());
+		model.addAttribute("fundList", fundPostRepo.selectList());
 		return "list";
 	}
 	

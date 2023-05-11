@@ -28,6 +28,7 @@
 			  ]
 			});
 	});
+	
 </script>
 </head>
 <body>
@@ -37,7 +38,6 @@
 			게시물 번호: <input type="text" name="postNo"><br><br>
 			아이디 : <input type="text" name="memberId"><br><br>
 			제목 : <input type="text" name="fundTitle"><br><br>
-			내용 : <textarea name="fundContent"></textarea>
 			시작일 : <input type="date" name="postStart"><br><br>
 			종료일 : <input type="date" name="postEnd"><br><br>
 			목표 금액 : <input type="text" name="fundGoal"><br><br>
