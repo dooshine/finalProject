@@ -4,6 +4,9 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.servlet.http.WebConnection;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.socket.TextMessage;
@@ -39,7 +42,6 @@ public class ChatServiceImpl implements ChatService {
 	
 	// 저장소
 	private Map<Integer, ChatRoomVO> chatRooms = Collections.synchronizedMap(new HashMap<>());
-	
 	// 메세지 해석기
 	private ObjectMapper mapper = new ObjectMapper();
 	
@@ -56,7 +58,6 @@ public class ChatServiceImpl implements ChatService {
 		boolean isWatingRoom = chatRoomNo == WebSocketConstant.WAITING_ROOM;
 		if(!isWatingRoom && chatRoomRepo.findRoom(chatRoomNo) == null) {
 			ChatRoomDto dto = new ChatRoomDto();
-			dto.setChatRoomNo(chatRoomNo);
 			dto.setChatRoomName("나중에 바꾸기");
 			chatRoomRepo.createRoom(dto);
 		}
@@ -65,6 +66,12 @@ public class ChatServiceImpl implements ChatService {
 	// 방 제거
 	public void deleteRoom(int chatRoomNo) {
 		chatRooms.remove(chatRoomNo);
+	}
+	
+	// 로그인하면 대기실에 입장
+	public void login(WebSocketSession session) {
+		ChatMemberVO member = new ChatMemberVO(session);
+		join(member, WebSocketConstant.WAITING_ROOM);
 	}
 	
 	// 방 입장
