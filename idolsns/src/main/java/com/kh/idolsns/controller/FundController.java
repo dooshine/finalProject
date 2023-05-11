@@ -30,22 +30,19 @@ import com.kh.idolsns.repo.PostRepo;
 public class FundController {
 	
 	@Autowired
-	FundPostRepo fundPostRepo;
+	private FundPostRepo fundPostRepo;
 	
 	@Autowired
-	PostRepo postRepo;
+	private PostRepo postRepo;
 	
 	@Autowired
-	PostDto postDto;
+	private PostImageRepo postImageRepo;
 	
 	@Autowired
-	PostImageRepo postImageRepo;
+	private CustomFileuploadProperties customFileuploadProperties;
 	
 	@Autowired
-	CustomFileuploadProperties customFileuploadProperties;
-	
-	@Autowired
-	AttachmentRepo attachmentRepo;
+	private AttachmentRepo attachmentRepo;
 	
 	private File dir;
 	   @PostConstruct
