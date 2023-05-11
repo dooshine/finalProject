@@ -9,5 +9,10 @@ import lombok.NoArgsConstructor;
 public class PostImageDto {
 
 	private int attachmentNo;
-	private int postNo;
+	private Long postNo;
+	
+	//이미지의 URL을 반환하는 메소드
+		public String getImageURL() {
+			return "/download?attachmentNo="+attachmentNo;
+		}
 }

@@ -7,9 +7,14 @@
 
 <mapper namespace="postImage">
 	
-	<insert id="add">
+	<insert id="add" parameterType="PostImageDto">
 		insert into post_image(attachment_no, post_no)
 		values(#{attachmentNo}, #{postNo})
 	</insert>
+	
+	<select id="list" resultType="PostImageDto" parameterType="Long">
+		select * from post_image
+		where post_no=#{postNo}
+	</select>
 	
 </mapper>

@@ -8,7 +8,7 @@ public interface FundPostRepo {
 	
 	void insert(FundPostDto dto);
 	List<FundPostDto> selectList();
-	FundPostDto selectOne(int postNo);
+	FundPostDto selectOne(Long postNo);
 	boolean update(FundPostDto dto);
 
 }

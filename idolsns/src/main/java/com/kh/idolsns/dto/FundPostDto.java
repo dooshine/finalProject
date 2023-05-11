@@ -7,7 +7,7 @@ import lombok.Data;
 @Data
 public class FundPostDto {
 	
-	private int postNo;
+	private Long postNo;
 	private String memberId;
 	private String fundTitle;
 	private Date postStart;

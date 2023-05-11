@@ -25,7 +25,7 @@ public class FundPostRepoImpl implements FundPostRepo{
 	}
 
 	@Override
-	public FundPostDto selectOne(int postNo) {
+	public FundPostDto selectOne(Long postNo) {
 		return sqlSession.selectOne("fundPost.selectOne", postNo);
 	}
 

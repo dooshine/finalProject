@@ -7,8 +7,8 @@ import lombok.Data;
 @Data
 public class FundDto {
 	
-	private int fundNo;
-	private int postNo;
+	private Long fundNo;
+	private Long postNo;
 	private int fundPrice;
 	private String fundId;
 	private Date fundTime;

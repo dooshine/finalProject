@@ -25,7 +25,7 @@
 		select * from fund_post order by post_no desc
 	</select>
 	
-	<select id="selectOne" resultType="FundPostDto" parameterType="int">
+	<select id="selectOne" resultType="FundPostDto" parameterType="Long">
 		select * from fund_post
 		where post_no=#{postNo}
 	</select>
