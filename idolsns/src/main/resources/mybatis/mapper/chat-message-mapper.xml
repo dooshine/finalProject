@@ -12,7 +12,7 @@
 				chat_message_time, chat_message_content
 			)
 		values(
-				chat_message_seq.nextval, #{chatMessageNo}, #{memberId}, 
+				#{chatRoomNo}, chat_message_seq.nextval, #{memberId}, 
 				sysdate, #{chatMessageContent}
 			)
 	</insert>

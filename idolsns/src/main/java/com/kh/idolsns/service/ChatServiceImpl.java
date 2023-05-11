@@ -74,10 +74,14 @@ public class ChatServiceImpl implements ChatService {
 		// 방 선택
 		ChatRoomVO chatRoom = chatRooms.get(chatRoomNo);
 		// 해당 방에 입장
+		// 대기실에 있다면 
+		boolean isWaitingRoom = chatRoomNo == WebSocketConstant.WAITING_ROOM;
+		if(isWaitingRoom) {
+			exit(member, chatRoomNo);
+			return;
+		}
 		chatRoom.enter(member);
 		// 참여자 등록(db 처리)
-		boolean isWatingRoom = chatRoomNo == WebSocketConstant.WAITING_ROOM;
-		if(isWatingRoom) return;
 		ChatJoinDto joinDto = new ChatJoinDto();
 		joinDto.setChatRoomNo(chatRoomNo);
 		joinDto.setMemberId(member.getMemberId());
@@ -96,7 +100,7 @@ public class ChatServiceImpl implements ChatService {
 		ChatRoomVO chatRoom = chatRooms.get(chatRoomNo);
 		chatRoom.leave(member);
 		// 참여자 삭제(db 처리) - 테스트 해보고 처리
-		log.debug("{} 님이 {}번 방에 입장했습니다.", member.getMemberId(), chatRoomNo);
+		log.debug("{} 님이 {}번 방에 퇴장했습니다.", member.getMemberId(), chatRoomNo);
 	}
 	
 	// 사용자가 존재하는 방의 번호를 찾는 기능
@@ -112,10 +116,11 @@ public class ChatServiceImpl implements ChatService {
 	}
 	
 	// 메세지 전송
-	public void broadcast(ChatMemberVO member, int chatRoomNo, TextMessage jsonMessage) throws IOException {
+	public void broadcastRoom(ChatMemberVO member, int chatRoomNo, TextMessage jsonMessage) throws IOException {
 		if(!roomExist(chatRoomNo)) return;
-		ChatRoomVO chatroom = chatRooms.get(chatRoomNo);
-		chatroom.broadcast(jsonMessage);
+		ChatRoomVO chatRoom = chatRooms.get(chatRoomNo);
+		System.out.println(chatRoomNo);
+		chatRoom.broadcast(jsonMessage);
 		// 보낸 메세지 db 처리
 		// [1] 메세지 테이블에 저장
 		ChatMessageDto messageDto = new ChatMessageDto();
@@ -126,7 +131,9 @@ public class ChatServiceImpl implements ChatService {
 		// [2] 전송 테이블에 저장
 		// 채팅방 사용자 저장
 		List<ChatJoinDto> recieverList = chatJoinRepo.findMembersByRoomNo(chatRoomNo);
+		System.out.println(recieverList);
 		String memberId = member.getMemberId();
+		System.out.println(memberId);
 		for(int i=0; i<recieverList.size(); i++) {
 			if(memberId.equals(recieverList.get(i).getMemberId())) return;
 			ChatReadDto readDto = new ChatReadDto();
@@ -166,18 +173,19 @@ public class ChatServiceImpl implements ChatService {
 			// 채팅방 찾기
 			int chatRoomNo = this.findRoomHasMember(member);
 			// 채팅방이 없거나, 대기실인 경우 매세지 전송 불가
-			if(chatRoomNo == -1) return;
-			if(chatRoomNo == WebSocketConstant.WAITING_ROOM) return;
+//			if(chatRoomNo == -1) return;
+//			if(chatRoomNo == WebSocketConstant.WAITING_ROOM) return;
+//			if(chatRoomNo == 1) return;
 			// 메세지 해석 및 신규 메세지 생성, 전송
 			ChatMemberMessageVO msg = new ChatMemberMessageVO();
-			msg.setChatMessageContent(receiveVO.getContent());
+			msg.setChatMessageContent(receiveVO.getChatMessageContent());
 			msg.setTime(System.currentTimeMillis());
 			msg.setMemberId(member.getMemberId());
 			msg.setMemberLevel(member.getMemberLevel());
 			// JSON으로 변환
 			String json = mapper.writeValueAsString(msg);
 			TextMessage jsonMessage = new TextMessage(json);
-			this.broadcast(member, chatRoomNo, jsonMessage);
+			this.broadcastRoom(member, chatRoomNo, jsonMessage);
 		}
 		// 채팅방 입장 메세지인 경우
 		else if(receiveVO.getType() == WebSocketConstant.JOIN) {

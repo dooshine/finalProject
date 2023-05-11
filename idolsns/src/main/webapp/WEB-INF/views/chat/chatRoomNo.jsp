@@ -60,14 +60,15 @@
 		// 메세지 불러오는 함수
 		function loadMessage() {
 			const chatRoomNo = new URLSearchParams(location.search).get("chatRoomNo");
+			console.log("chatRoomNo: " + chatRoomNo);
 			$.ajax({
 				url:"${pageContext.request.contextPath}/chat/message/" + chatRoomNo,
 				method:"get",
 				success:function(resp) {
 					// resp에 있는 목록의 모든 메세지를 화면에 추가
-//					console.log(resp);
+					console.log("loadMessage resp: " + resp);
 					// 메세지 리스트 불러오는 함수 호출
-					displyMessageList(resp);
+					displayMessageList(resp);
 					// 웹소켓 연결하는 함수 호출
 					connectWebSocket();
 				},
@@ -75,11 +76,12 @@
 		}
 		
 		// 메세지 리스트 불러오는 함수
-		function displyMessageList(resp) {
+		function displayMessageList(resp) {
+//			console.log("resp: " + resp);
 			for(let i=0; i<resp.length; i++) {
-//				console.log(e.data);
+				//console.log(e.data);
 				// 수신한 데이터(e.data)가 JSON 문자열 형태이므로 해석 후 처리
-				const data = JSON.parse(resp[i].messageBody);
+				const data = JSON.parse(resp[i].chatMessageContent);
 				// fromNow: n초 전(갱신은 따로 처리해줘야 함)
 //				const time = moment(data.time).fromNow();
 				const time = moment(data.time).format("HH:mm");
@@ -91,17 +93,8 @@
 				const html = $.parseHTML(template);
 				// html에 정보 담기
 				$(html).find(".memberId").text(data.memberId);
-				$(html).find(".content").text(data.content);
+				$(html).find(".content").text(data.chatMessageContent);
 				$(html).find(".time").text(time);
-				
-				switch(data.memberLevel) {
-					case "우수회원":
-						$(html).find(".memberId").css("color", "blue");
-						break;
-					case "관리자":
-						$(html).find(".memberId").css("color", "red");
-						break;
-				}
 				
 				// 템플릿 화면에 찍기
 				$(".message-wrapper").append(html);
@@ -143,11 +136,10 @@
 			};
 			// 메세지 수신 시 수신된 메세지로 태그를 만들어서 추가
 			window.socket.onmessage = function(e) {
-//				console.log(e.data);
+				console.log("data: " + e.data);
 				// 수신한 데이터(e.data)가 JSON 문자열 형태이므로 해석 후 처리
 				const data = JSON.parse(e.data);
 				// fromNow: n초 전(갱신은 따로 처리해줘야 함)
-//				const time = moment(data.time).fromNow();
 				const time = moment(data.time).format("HH:mm");
 //				$("<p>").text(data.content + " / " + time).appendTo(".message-wrapper");
 				
@@ -156,8 +148,8 @@
 				// 템플릿을 html로 해석
 				const html = $.parseHTML(template);
 				// html에 정보 담기
-				$(html).find(".memberId").text(data.memberID);
-				$(html).find(".content").text(data.content);
+				$(html).find(".memberId").text(data.memberId);
+				$(html).find(".content").text(data.chatMessageContent);
 				$(html).find(".time").text(time);
 				// 템플릿 화면에 찍기
 				$(".message-wrapper").append(html);
@@ -167,17 +159,18 @@
 			
 			// 전송 버튼을 누르면 서버에 메세지를 전송하도록 구현
 			$(".btn-send").click(function() {
+				//console.log("전송1");
 				const text = $(".user-input").val();
+				console.log("text: " + text);
 				if(text.lengh == 0) return;
-				
+				//console.log("전송2");
 //				window.socket.send(text); -> 일반 텍스트
-				const data = { type : 1, content : text };
-				
+				const data = { type : 1, chatMessageContent : text };
+				console.log("data: " + data);
 				// 자바스크립트에서 JSON을 처리하는 병령
 				// JSON.stringify(객체) -> 객체를 JSON 문자열로 반환
 				// JSON.parse(JSON 문자열) -> JSON 문자열을 객체로 변환
 				window.socket.send(JSON.stringify(data));
-				
 				// 입력창 초기화
 				$(".user-input").val("");
 			});
