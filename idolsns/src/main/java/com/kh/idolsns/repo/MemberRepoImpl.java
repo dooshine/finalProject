@@ -51,4 +51,5 @@ public class MemberRepoImpl implements MemberRepo{
 		return sqlSession.selectOne("member.findId", memberEmail);
 	}
 
+
 }

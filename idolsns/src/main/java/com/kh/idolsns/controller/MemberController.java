@@ -177,5 +177,20 @@ public class MemberController {
 		return "member/findId";
 	}
 	
+	@PostMapping("/findId")
+	public String findId(@RequestParam String memberEmail,
+							RedirectAttributes attr) {
+		MemberDto memberDto = memberRepo.findId(memberEmail);
+		System.out.println(memberDto.getMemberId());
+		attr.addAttribute("memberId", memberDto.getMemberId());
+		return "redirect:findIdFinish";
+	}
+	
+	@GetMapping("/findIdFinish")
+	public String findIdFinish(@RequestParam String memberId,
+								Model model) {
+		model.addAttribute("memberId", memberId);
+		return "member/findIdFinish";
+	}
 	
 }

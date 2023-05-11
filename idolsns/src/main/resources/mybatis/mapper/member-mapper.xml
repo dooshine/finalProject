@@ -30,8 +30,8 @@
 		update member set member_nick=#{memberNick} where member_id=#{memberId}
 	</update>
 	
-	<select id="findId" resultType="String">
-		select member_id=#{memberId} from member where member_email=#{memberEmail}
+	<select id="findId" resultType="MemberDto">
+		select member_id from member where member_email=#{memberEmail}
 	</select>
 		
 </mapper>
