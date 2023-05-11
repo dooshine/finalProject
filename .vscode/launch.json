@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-IdolsnsApplication<idolsns>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.kh.idolsns.IdolsnsApplication",
+            "projectName": "idolsns",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}
