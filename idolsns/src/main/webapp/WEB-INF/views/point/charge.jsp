@@ -121,7 +121,7 @@
         data(){
     	   return{
 	       
-	     
+    		   	item_name: '포인트충전',
 	            amount: 0,
 	            selectedAmount: null
 	        },
@@ -138,7 +138,7 @@
 	                }
 	                var chargeForm = document.getElementById("chargeForm");
 	                chargeForm.submit();
-	            },
+	            }
 	        },
 	    }
 	    
@@ -176,22 +176,22 @@
             
             
                 <label class="point_select">
-                    <input type="radio" name="chargeAmount" v-model="selectedAmount" value="1000"> 
+                    <input type="radio" name="total_amount" v-model="selectedAmount" value="1000"> 
                     <span class="amount">1,000</span>원
                 </label>        
 
                 <label class="point_select">
-                    <input type="radio" name="chargeAmount" v-model="selectedAmount" value="5000"> 
+                    <input type="radio" name="total_amount" v-model="selectedAmount" value="5000"> 
                    <span class="amount">5,000</span>원
                 </label>        
 
                 <label class="point_select">
-                    <input type="radio" name="chargeAmount" v-model="selectedAmount" value="10000"> 
+                    <input type="radio" name="total_amount" v-model="selectedAmount" value="10000"> 
                     <span class="amount">10,000</span>원
                 </label>        
 
                 <label class="point_select">
-                    <input type="radio" name="chargeAmount" v-model="selectedAmount" value="20000"> 
+                    <input type="radio" name="total_amount" v-model="selectedAmount" value="20000"> 
                     <span class="amount">20,000</span>원
                 </label>        
 
@@ -219,9 +219,6 @@
 					
 					</div>
 				</div>
-
-
-
 
 
 	            <div class="justify-content-center d-flex mt-3">

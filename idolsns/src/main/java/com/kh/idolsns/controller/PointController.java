@@ -75,6 +75,7 @@ public class PointController {
 		vo.setPartner_order_id(UUID.randomUUID().toString());
 		//vo.setPartner_user_id((String)session.getAttribute("memberId"));
 		vo.setPartner_user_id("testuser1");
+		vo.setItem_name("포인트충전");
 		
 		//준비요청
 		KakaoPayReadyResponseVO response = kakaoPayService.ready(vo);
