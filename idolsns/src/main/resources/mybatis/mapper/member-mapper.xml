@@ -8,9 +8,30 @@
     
     
 <mapper namespace="member">
+	
+	<insert id="memberjoin">
+		insert into member(member_id, member_pw, member_nick, member_point, member_email, member_agree, member_join, member_level, member_login)
+		values(#{memberId}, #{memberPw}, #{memberNick}, 0, #{memberEmail}, 'Y', sysdate, '일반회원', null)
+	</insert>
 
 	<select id="selectOne" resultType="MemberDto">
 		select * from member where member_id = #{memberId}
 	</select>
 	
+	<delete id="delete">
+		delete member where member_id = #{memberId}
+	</delete>
+	
+	<update id="password">
+		update member set member_pw=#{memberPw} where member_id=#{memberId}
+	</update>
+	
+	<update id="nickname">
+		update member set member_nick=#{memberNick} where member_id=#{memberId}
+	</update>
+	
+	<select id="findId" resultType="String">
+		select member_id=#{memberId} from member where member_email=#{memberEmail}
+	</select>
+		
 </mapper>

@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>    
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>   
+<jsp:include page="/WEB-INF/views/template/header.jsp"></jsp:include> 
 
 <!DOCTYPE html>
 <html lang="ko">
@@ -8,7 +9,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>홈페이지 레이아웃</title>
+    <title>회원가입</title>
     <!-- 폰트어썸 cdn -->
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css">
     <!-- jquery cdn -->
@@ -32,27 +33,13 @@
     </script>
 </head>
 <body>
-    <main>
-        <header>
-            <div class="row">
-                <div class="col">
-                    <img src="https://via.placeholder.com/400x100?text=final" alt="로고">
-                </div>
-                <div class="col">
-                    <h1>파이널 프로젝트</h1>
-                </div>
-            </div>
-            <div class="row">
-            	<c:if test="${memberId == null}">
-            		<a href="${pageContext.request.contextPath}/member/login">로그인</a>
-            		<a href="${pageContext.request.contextPath}/member/join">회원가입</a>
-            	</c:if>
-            	<c:if test="${memberId != null}">
-            		<a href="${pageContext.request.contextPath}/member/logout">로그아웃</a>
-            		<a href="${pageContext.request.contextPath}/member/mypage">마이페이지</a>
-            	</c:if>
-            </div>
-        </header>
-        <section>
-            <article>
-                <hr>
+
+		<div class="container">
+			<div class="row">
+				<a href="${pageContext.request.contextPath}/member/exit">회원탈퇴</a>
+				<a href="${pageContext.request.contextPath}/member/password">비밀번호 변경</a>
+				<a href="${pageContext.request.contextPath}/member/nickname">닉네임 변경</a>
+			</div>
+		</div>
+	
+</body>    
