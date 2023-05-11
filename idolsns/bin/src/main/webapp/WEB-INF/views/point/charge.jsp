@@ -13,7 +13,12 @@
     	const contextPath = "${pageContext.request.contextPath}";
     </script>
     
-  
+    
+    
+
+	    
+	    
+	    
 	    
     
    <style>
@@ -22,10 +27,13 @@
 		    width: 100%;
 		    
 		  }
-
+        
+        
     }
 		
-
+   
+   
+   
 		   	section {
 			  font-family: "Noto Sans KR", sans-serif;
 			}
@@ -104,6 +112,41 @@
 	    
 	    
 	</style>
+
+
+    
+    <script>
+    Vue.createApp({
+        //데이터 설정 영역
+        data(){
+    	   return{
+	       
+    		   	item_name: '포인트충전',
+	            amount: 0,
+	            selectedAmount: null
+	        },
+	        computed: {
+	            formattedAmount: function() {
+	                return this.amount.toLocaleString();
+	            }
+	        },
+	        methods: {
+	            charge: function() {
+	                if (!this.selectedAmount) {
+	                    alert("충전할 금액을 선택해주세요.");
+	                    return;
+	                }
+	                var chargeForm = document.getElementById("chargeForm");
+	                chargeForm.submit();
+	            }
+	        },
+	    }
+	    
+	}).mount("#app");
+	    
+	    
+
+    </script>
 
 
 
@@ -189,44 +232,14 @@
     </div>
     
     
+    
+	
+	
+	
+	
 	
 	</section>
 	
 	
-	
-    
-    <script>
-    Vue.createApp({
-        //데이터 설정 영역
-        data(){
-    	   return{
-	       
-    		   	item_name: '포인트충전',
-	            amount: 0,
-	            selectedAmount: null
-	        },
-	        computed: {
-	            formattedAmount: function() {
-	                return this.amount.toLocaleString();
-	            }
-	        },
-	        methods: {
-	            charge: function() {
-	                if (!this.selectedAmount) {
-	                    alert("충전할 금액을 선택해주세요.");
-	                    return;
-	                }
-	                var chargeForm = document.getElementById("chargeForm");
-	                chargeForm.submit();
-	            }
-	        },
-	    }
-	    
-	}).mount("#app");
-	    
-	    
-
-    </script>
-
 	
 	
