@@ -15,35 +15,45 @@
 
 <style scoped>
 		
-	    <style>
+	
         /*메인 스타일 - 데스크톱*/
         * {
             box-sizing : border-box;
-        }
+            
+              }
+            
+  
+            
+            
+            
+      
         .funding-list {
             display:flex;
             flex-wrap: wrap;
    
         }
+        
+    
+        
         .funding-list > .funding-item {
             width : 32%;
-            padding: 10px;
             transition: width 0.1s ease-out;
         }
       
         /*조건부 스타일 - 태블릿*/
-        @media screen and (max-width:992px) {
+        @media screen and (max-width:1200px) {
     
-            .funding-list > .funding-item  {
-            width : 33%;
-        }
-    }
-
-        /*조건부 스타일 - 모바일*/
-        @media screen and (max-width:768px) {
-		   .col-6 {
+    	 .col-6 {
 		    width: 100%;
 		  }
+            .funding-list > .funding-item  {
+            width : 49%;
+        	}
+    	}
+
+        /*조건부 스타일 - 모바일*/
+        @media screen and (max-width:800px) {
+		  
             .funding-list > .funding-item  {
             width : 100%;
         }
@@ -53,7 +63,7 @@
 			.funding-list {
 			  display: flex;
 			  flex-wrap: wrap;
-			  gap: 7px;
+			  gap: 10px;
 			}
 			
 			.funding-item {
@@ -65,7 +75,9 @@
 			  
 			  
 			}
-
+			
+			
+			
 			
 			.funding-item img {
 			  width: 100%;
@@ -126,8 +138,10 @@
 	    
         		 <div class="container rounded p-3" style="background-color:white;">
         		 
+        		 
 		
-					  <div class="funding-list justify-content-center">
+					  <div class="funding-list justify-content-center mt-5">
+					  
 					    <div class="funding-item" v-for="funding in fundings" :key="funding.id">
 					      <img :src="funding.imageUrl" alt="Funding Image">
 					      <h3 class="title">{{ funding.title }}</h3>

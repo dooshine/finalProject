@@ -15,31 +15,11 @@
     
     
     
-    
-    <script>
-	    var app = new Vue({
-	        el: '#app',
-	        data: {
-	            amount: 0,
-	            selectedAmount: null
-	        },
-	        computed: {
-	            formattedAmount: function() {
-	                return this.amount.toLocaleString();
-	            }
-	        },
-	        methods: {
-	            charge: function() {
-	                if (!this.selectedAmount) {
-	                    alert("충전할 금액을 선택해주세요.");
-	                    return;
-	                }
-	                var chargeForm = document.getElementById("chargeForm");
-	                chargeForm.submit();
-	            }
-	        }
-	    });
-</script>
+
+	    
+	    
+	    
+	    
     
    <style>
    	     @media screen and (max-width:992px) {
@@ -134,6 +114,42 @@
 	</style>
 
 
+    
+    <script>
+    Vue.createApp({
+        //데이터 설정 영역
+        data(){
+    	   return{
+	       
+	     
+	            amount: 0,
+	            selectedAmount: null
+	        },
+	        computed: {
+	            formattedAmount: function() {
+	                return this.amount.toLocaleString();
+	            }
+	        },
+	        methods: {
+	            charge: function() {
+	                if (!this.selectedAmount) {
+	                    alert("충전할 금액을 선택해주세요.");
+	                    return;
+	                }
+	                var chargeForm = document.getElementById("chargeForm");
+	                chargeForm.submit();
+	            },
+	        },
+	    }
+	    
+	}).mount("#app");
+	    
+	    
+
+    </script>
+
+
+
 <section id = "my_point">
 	
 	  <div id="app">
@@ -156,7 +172,7 @@
             <p class="container rounded p-3 border">내 포인트: <span class="amount" style="color:#77E9CC; font-weight:bold" >{{ formattedAmount }}</span>원</p>
         </div>
 
-        <form id="chargeForm" method="post" action="${contextPath}/charge" style="padding-left: 0.7em; padding-right: 0.7em;">
+        <form id="chargeForm" method="post" style="padding-left: 0.7em; padding-right: 0.7em;">
             
             
                 <label class="point_select">
@@ -180,7 +196,7 @@
                 </label>        
 
                 <label class="point_select">
-                    <input type="radio" name="chargeAmount" v-model="selectedAmount" value="50000"> 
+                    <input type="radio" name="total_amount" v-model="selectedAmount" value="50000"> 
                     <span class="amount">50,000</span>원
                 </label>        
 				
@@ -197,7 +213,7 @@
 					<span style="font-weight:bold">결제 수단</span>
 					<div class = "rounded bg-light p-3">
 						  <label>
-						    <input type="radio" name="payment-method" value="kakaopay">
+						    <input type="radio" name="payment-method" value="kakaopay" checked>
 						    카카오페이
 						  </label>
 					
@@ -209,7 +225,7 @@
 
 
 	            <div class="justify-content-center d-flex mt-3">
-	                <button type="button" class="btn btn-lg btn-primary mb-5" @click="charge">충전하기</button>
+	                <button type="submit" class="btn btn-lg btn-primary mb-5" @click="charge">충전하기</button>
 	            </div>
 	       	 </form>
 	       	 

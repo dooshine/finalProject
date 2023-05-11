@@ -43,13 +43,7 @@ public class PointController {
 	
 	
 	
-	//포인트 페이지
-	@GetMapping("/charge")
-	public String charge() {
-		return "point/charge";
-	}
-	
-	
+
 	
 	@GetMapping("/history") //충전 내역
 	public String history() {
@@ -68,23 +62,19 @@ public class PointController {
 	
 	
 	
-
-	
-	
-	
-	@GetMapping("test1")
-	public String test1() {
-		//return "/WEB-INF/views/point/test1.jsp";
-		return "point/test1";
+	//포인트 충전 페이지
+	@GetMapping("/charge")
+	public String charge() {
+		return "point/charge";
 	}
 	
-	@PostMapping("test1")
-	public String test1(@ModelAttribute KakaoPayReadyRequestVO vo,
+	@PostMapping("/charge")
+	public String charge(@ModelAttribute KakaoPayReadyRequestVO vo,
 			HttpSession session) throws URISyntaxException {
 		//정보추가(주문자번호, 주문번호)
 		vo.setPartner_order_id(UUID.randomUUID().toString());
 		//vo.setPartner_user_id((String)session.getAttribute("memberId"));
-		vo.setPartner_user_id("testuser119");
+		vo.setPartner_user_id("testuser1");
 		
 		//준비요청
 		KakaoPayReadyResponseVO response = kakaoPayService.ready(vo);
@@ -98,9 +88,15 @@ public class PointController {
 		return "redirect:" + response.getNext_redirect_pc_url();
 	}
 	
+	
+	
+
+	
+
+	
 	//test1 결제 성공 매핑 - 카카오페이가 불러주는 주소
-	@GetMapping("point/success")
-	public String test1Success(
+	@GetMapping("/charge/success")
+	public String chargeSuccess(
 			//@RequestParam String pg_token
 			@ModelAttribute KakaoPayApproveRequestVO vo,
 			HttpSession session
@@ -121,30 +117,45 @@ public class PointController {
 		
 		KakaoPayApproveResponseVO response = kakaoPayService.approve(vo);
 		
-		//return "redirect:/pay/test1/clear";
+	
 		return "redirect:clear";
 	}
 	
-	@GetMapping("/test1/clear")
-	public String test1Clear() {
-		//return "/WEB-INF/views/pay/clear.jsp";
+	@GetMapping("/charge/clear")
+	public String chargeClear() {
+	
 		return "point/clear";
 	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	@Autowired
 	private PaymentRepo paymentRepo;
 	
-	@GetMapping("/test1/list")
+	@GetMapping("/point/history")
 	public String list(Model model) {
 		//String memberId = (String)session.getAttribute("memberId");
 		String memberId = "testuser1";
 		List<PaymentDto> list = paymentRepo.selectByMember(memberId);
 		model.addAttribute("list", list);
 		//return "/WEB-INF/views/pay/list.jsp";
-		return "point/list";
+		return "point/history";
 	}
 	
-	@GetMapping("/test1/detail")
+	@GetMapping("/point/detail")
 	public String detail(@RequestParam int paymentNo, Model model) throws URISyntaxException {
 		//우리 DB에서 정보를 찾아라
 		PaymentDto paymentDto = paymentRepo.find(paymentNo);
@@ -162,7 +173,7 @@ public class PointController {
 		return "point/detail"; //"/WEB-INF/views/pay/detail.jsp"
 	}
 	
-	@GetMapping("/test1/cancel")
+	@GetMapping("/point/cancel")
 	public String cancel(
 			@RequestParam int paymentNo, 
 			HttpServletResponse resp,
