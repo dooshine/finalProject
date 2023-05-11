@@ -36,24 +36,30 @@
 
 	<form action="join" method="post" autocomplete="off">
 	
-		<div class="container">
-			<div class="row center">
+		<div class="container ">
+			<div class="row">
+			<div class="col-3">				
+				</div>
+				<div class="col-6 text-center">				
 				<h1>회원가입</h1>
+				</div>
+				<div class="col-3">				
+				</div>
 			</div>
-			<div class="row">
-				<input type="text" name="memberId" placeholder="아이디">
+			<div class="row mb-3">
+				<input type="text" name="memberId" placeholder="아이디" class="form-control">
 			</div>
-			<div class="row">
-				<input type="password" name="memberPw" placeholder="비밀번호">
+			<div class="row mb-3">
+				<input type="password" name="memberPw" placeholder="비밀번호" class="form-control">
 			</div>
-			<div class="row">
-				<input type="text" name="memberNick" placeholder="닉네임">
+			<div class="row mb-3">
+				<input type="text" name="memberNick" placeholder="닉네임" class="form-control">
 			</div>
-			<div class="row">
-				<input type="email" name="memberEmail" placeholder="이메일">
+			<div class="row mb-3">
+				<input type="email" name="memberEmail" placeholder="이메일" class="form-control">
 			</div>
-			<div class="row">
-				<button type="submit">회원가입</button>
+			<div class="row mb-3">
+				<button type="submit" class="btn btn-info">회원가입</button>
 			</div>
 		</div>
 	
