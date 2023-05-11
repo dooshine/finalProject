@@ -42,6 +42,17 @@
 </script>
     
    <style>
+   	     @media screen and (max-width:992px) {
+		  	.col-6 {
+		    width: 100%;
+		    
+		  }
+        
+        
+    }
+		
+   
+   
    
 		   	section {
 			  font-family: "Noto Sans KR", sans-serif;
