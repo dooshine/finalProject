@@ -1,6 +1,7 @@
 package com.kh.idolsns.repo;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
@@ -49,6 +50,21 @@ public class MemberRepoImpl implements MemberRepo{
 	@Override
 	public MemberDto findId(String memberEmail) {
 		return sqlSession.selectOne("member.findId", memberEmail);
+	}
+
+	@Override
+	public List<MemberDto> selectAll() {
+		return sqlSession.selectList("member.selectAll");
+	}
+
+	@Override
+	public MemberDto joinNick(String memberNick) {
+		return sqlSession.selectOne("member.joinNick", memberNick);
+	}
+
+	@Override
+	public MemberDto joinEmail(String memberEmail) {
+		return sqlSession.selectOne("member.joinEmail", memberEmail);
 	}
 
 

@@ -33,5 +33,17 @@
 	<select id="findId" resultType="MemberDto">
 		select member_id from member where member_email=#{memberEmail}
 	</select>
+	
+	<select id="selectAll" resultType="MemberDto">
+		select * from member
+	</select>
+	
+	<select id="joinNick" resultType="MemberDto">
+		select * from member where member_nick=#{memberNick}
+	</select>
+	
+	<select id="joinEmail" resultType="MemberDto">
+		select * from member where member_email=#{memberEmail}
+	</select>
 		
 </mapper>
