@@ -13,32 +13,17 @@
     </script>
     
     <script>
-    Vue.createApp({
-		  // 데이터 설정 영역
-		  data() {
-		    return {
-		    	likeCount: 0
-		    }
-		  }
-		  }).mount("#app");
-    
+	  new Vue({
+	    el: '#app',
+	    data: {
+	      likeCount: 0
+	    }
+	  });
 	</script>
 	    
     
     
-
-    
     <style>
-    
-          /*조건부 스타일 - 태블릿*/
-        @media screen and (max-width:1200px) {
-    
-    	 .col-6 {
-		    width: 100%;
-		  }
-          
-    	}
-    
     
     	section {
 		  font-family: "Noto Sans KR", sans-serif;

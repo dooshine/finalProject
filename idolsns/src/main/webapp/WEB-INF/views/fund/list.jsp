@@ -53,7 +53,7 @@
 
         /*조건부 스타일 - 모바일*/
         @media screen and (max-width:800px) {
-		  
+		 
             .funding-list > .funding-item  {
             width : 100%;
         }

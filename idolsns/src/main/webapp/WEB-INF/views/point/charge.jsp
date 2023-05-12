@@ -16,10 +16,6 @@
     
     
 
-	    
-	    
-	    
-	    
     
    <style>
    	     @media screen and (max-width:992px) {
@@ -29,11 +25,8 @@
 		  }
         
         
-    }
+    	}
 		
-   
-   
-   
 		   	section {
 			  font-family: "Noto Sans KR", sans-serif;
 			}
@@ -114,47 +107,15 @@
 	</style>
 
 
-    
-    <script>
-    Vue.createApp({
-        //데이터 설정 영역
-        data(){
-    	   return{
-	       
-    		   	item_name: '포인트충전',
-	            amount: 0,
-	            selectedAmount: null
-	        },
-	        computed: {
-	            formattedAmount: function() {
-	                return this.amount.toLocaleString();
-	            }
-	        },
-	        methods: {
-	            charge: function() {
-	                if (!this.selectedAmount) {
-	                    alert("충전할 금액을 선택해주세요.");
-	                    return;
-	                }
-	                var chargeForm = document.getElementById("chargeForm");
-	                chargeForm.submit();
-	            }
-	        },
-	    }
-	    
-	}).mount("#app");
-	    
-	    
-
-    </script>
 
 
+   
 
 <section id = "my_point">
 	
 	  <div id="app">
-      	<div class= "container-fluid d-flex justify-content-center">
-        	<div class="col-6"> 
+      	<div class= "container-fluid d-flex justify-content-center col-6">
+        
         	
         		 <div class="container rounded p-3" style="background-color:white">
         		 
@@ -169,7 +130,8 @@
 		        <h3 class="title mt-5 mb-3" style="padding-left: 0.5em">포인트 충전</h3>
 
         <div style="padding-left: 0.5em; padding-right: 0.5em;">
-            <p class="container rounded p-3 border">내 포인트: <span class="amount" style="color:#77E9CC; font-weight:bold" >{{ formattedAmount }}</span>원</p>
+            <p class="container rounded p-3 border">내 포인트: 
+            <span class="amount" style="color:#77E9CC; font-weight:bold" >{{ formattedAmount }}</span>원</p>
         </div>
 
         <form id="chargeForm" method="post" style="padding-left: 0.7em; padding-right: 0.7em;">
@@ -227,19 +189,52 @@
 	       	 </form>
 	       	 
 	       	 </div>
-            </div>
+           
 		</div>
     </div>
     
-    
-    
-	
-	
-	
-	
-	
+
 	</section>
 	
+
+	
+	
+	
+	
+    
+    <script>
+	    Vue.createApp({
+	        //데이터 설정 영역
+	        data() {
+	            return {
+	                item_name: '포인트충전',
+	                amount: 0,
+	                selectedAmount: null,
+	            }
+	        },
+	        computed: {
+	            formattedAmount() {
+	                return this.amount.toLocaleString();
+	            },
+	        },
+	        methods: {
+	            charge() {
+	                if (!this.selectedAmount) {
+	                    alert("충전할 금액을 선택해주세요.");
+	                    return;
+	                }
+	                var chargeForm = document.getElementById("chargeForm");
+	               
+	                chargeForm.submit();
+	                
+	            }
+	        }
+	    }).mount("#app");
+	
+		    
+	    
+
+    </script>
 	
 	
 	

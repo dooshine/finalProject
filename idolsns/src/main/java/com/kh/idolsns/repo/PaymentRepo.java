@@ -11,5 +11,5 @@ public interface PaymentRepo {
 	List<PaymentDto> selectByMember(String memberId);
 	PaymentDto find(int paymentNo);
 
-	
+	void decreasePoint(String memberId, int memberPoint);
 }

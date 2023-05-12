@@ -73,9 +73,10 @@ public class PointController {
 			HttpSession session) throws URISyntaxException {
 		//정보추가(주문자번호, 주문번호)
 		vo.setPartner_order_id(UUID.randomUUID().toString());
-		//vo.setPartner_user_id((String)session.getAttribute("memberId"));
-		vo.setPartner_user_id("testuser1");
+		vo.setPartner_user_id((String) session.getAttribute("memberId"));
 		vo.setItem_name("포인트충전");
+		
+		
 		
 		//준비요청
 		KakaoPayReadyResponseVO response = kakaoPayService.ready(vo);
@@ -90,10 +91,6 @@ public class PointController {
 	}
 	
 	
-	
-
-	
-
 	
 	//test1 결제 성공 매핑 - 카카오페이가 불러주는 주소
 	@GetMapping("/charge/success")
@@ -123,33 +120,23 @@ public class PointController {
 	}
 	
 	@GetMapping("/charge/clear")
-	public String chargeClear() {
-	
-		return "point/clear";
+	public String chargeClear(HttpSession session) {
+		// memberId 정보를 세션에서 가져옴
+	    String memberId = (String) session.getAttribute("memberId");
+	    session.setAttribute("memberId", memberId);
+	    
+	    return "point/clear";
 	}
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+	/////
 	
 	
 	@Autowired
 	private PaymentRepo paymentRepo;
 	
 	@GetMapping("/point/history")
-	public String list(Model model) {
-		//String memberId = (String)session.getAttribute("memberId");
-		String memberId = "testuser1";
+	public String list(Model model, HttpSession session) {
+		String memberId = (String)session.getAttribute("memberId");
 		List<PaymentDto> list = paymentRepo.selectByMember(memberId);
 		model.addAttribute("list", list);
 		//return "/WEB-INF/views/pay/list.jsp";
@@ -175,10 +162,16 @@ public class PointController {
 	}
 	
 	@GetMapping("/point/cancel")
-	public String cancel(
+	public String chargeCancel(
 			@RequestParam int paymentNo, 
 			HttpServletResponse resp,
 			RedirectAttributes attr) throws URISyntaxException, IOException, NoHandlerFoundException {
+		
+		 String memberId = (String) session.getAttribute("memberId");
+		
+		 
+		 
+		 
 		//[1] paymentNo로 PaymentDto 정보를 조회
 		PaymentDto paymentDto = paymentRepo.find(paymentNo);
 		if(paymentDto == null || paymentDto.getPaymentRemain() == 0) {
@@ -200,6 +193,26 @@ public class PointController {
 		//[4] 상세 페이지로 돌려보낸다
 		//return "redirect:detail?paymentNo="+paymentNo;
 		attr.addAttribute("paymentNo", paymentNo);
+		
+		
+		
+		
+		
+		
+		// 해당 유저의 포인트를 조회합니다.
+		  int point = pointService.getPoint(memberId);
+		 
+		  // 포인트를 차감합니다.
+		  int amount = (int) session.getAttribute("amount");
+		  pointService.decreasePoint(memberId, amount);
+		  
+		  // 변경된 포인트를 세션에 저장합니다.
+		  session.setAttribute("point", point - amount);
+		
+		
+		
+		
+		
 		return "redirect:detail";
 	}
 	

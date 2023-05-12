@@ -1,6 +1,8 @@
 package com.kh.idolsns.repo;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +47,14 @@ public class PaymentRepoImpl implements PaymentRepo {
 	
 	
 
+	
+	// 충전 취소 시 포인트 차감
+	  public void decreasePoint(String memberId, int memberPoint) {
+	    Map<String, Object> params = new HashMap<>();
+	    params.put("memberId", memberId);
+	    params.put("memberPoint", memberPoint);
+	    sqlSession.update("decreasePoint", params);
+	  }
 	
 	
 }
