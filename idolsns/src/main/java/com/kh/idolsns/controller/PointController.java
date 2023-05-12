@@ -40,9 +40,6 @@ public class PointController {
 	@Autowired
 	private KakaoPayService kakaoPayService;
 
-	
-	
-	
 
 	
 	@GetMapping("/history") //충전 내역
@@ -57,10 +54,6 @@ public class PointController {
 	}
 	
 
-	
-	
-	
-	
 	
 	//포인트 충전 페이지
 	@GetMapping("/charge")
@@ -92,7 +85,7 @@ public class PointController {
 	
 	
 	
-	//test1 결제 성공 매핑 - 카카오페이가 불러주는 주소
+	//충전 성공 매핑 - 카카오페이가 불러주는 주소
 	@GetMapping("/charge/success")
 	public String chargeSuccess(
 			//@RequestParam String pg_token
@@ -109,11 +102,15 @@ public class PointController {
 		vo.setPartner_user_id((String)session.getAttribute("partner_user_id"));
 		vo.setTid((String)session.getAttribute("tid"));
 		
+		
 		session.removeAttribute("partner_order_id");
 		session.removeAttribute("partner_user_id");
 		session.removeAttribute("tid");
 		
 		KakaoPayApproveResponseVO response = kakaoPayService.approve(vo);
+		
+		
+		
 		
 	
 		return "redirect:clear";
@@ -123,7 +120,9 @@ public class PointController {
 	public String chargeClear(HttpSession session) {
 		// memberId 정보를 세션에서 가져옴
 	    String memberId = (String) session.getAttribute("memberId");
-	    session.setAttribute("memberId", memberId);
+	    
+	    
+	    
 	    
 	    return "point/clear";
 	}

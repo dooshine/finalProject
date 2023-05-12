@@ -41,20 +41,43 @@ public class PaymentRepoImpl implements PaymentRepo {
 	}
 	
 	@Override
-	public PaymentDto find(int PaymentNo) {
-		return sqlSession.selectOne("payment.find", PaymentNo);
+	public PaymentDto find(int paymentNo) {
+		return sqlSession.selectOne("payment.find", paymentNo);
+	}
+	
+
+	//전체취소
+	@Override
+	public void cancelRemain(int paymentNo) {
+		sqlSession.update("payment.cancelRemain", paymentNo);
+		
+	}
+
+	
+	
+	
+	
+	@Override
+	public void chargePoint(String memberId, int memberPoint) {
+		Map<String, Object> params = new HashMap<>();
+		params.put("memberId", memberId);
+	    params.put("memberPoint", memberPoint);
+	    
+	    sqlSession.update("payment.chargePoint", params);
 	}
 	
 	
-
-	
 	// 충전 취소 시 포인트 차감
-	  public void decreasePoint(String memberId, int memberPoint) {
-	    Map<String, Object> params = new HashMap<>();
+	@Override
+	public void decreasePoint(String memberId, int memberPoint) {
+		Map<String, Object> params = new HashMap<>();
 	    params.put("memberId", memberId);
 	    params.put("memberPoint", memberPoint);
-	    sqlSession.update("decreasePoint", params);
-	  }
+	    sqlSession.update("payment.decreasePoint", params);
+	}
+
 	
+	
+
 	
 }

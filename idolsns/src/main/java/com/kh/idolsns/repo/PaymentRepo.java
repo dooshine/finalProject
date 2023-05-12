@@ -10,6 +10,10 @@ public interface PaymentRepo {
 	List<PaymentDto> selectAll();
 	List<PaymentDto> selectByMember(String memberId);
 	PaymentDto find(int paymentNo);
-
+	
+	
+	void cancelRemain(int paymentNo); //전체 취소
+	
+	void chargePoint(String memberId, int memberPoint);
 	void decreasePoint(String memberId, int memberPoint);
 }

@@ -184,12 +184,7 @@
 		</div>
     </div>
     
-<<<<<<< HEAD
 
-=======
-    
-	
->>>>>>> branch 'naaaaann' of https://github.com/dooshine/finalProject.git
 	</section>
 	
 

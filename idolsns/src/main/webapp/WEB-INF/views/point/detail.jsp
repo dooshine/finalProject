@@ -30,13 +30,6 @@
 <h2>취소 금액 : ${response.canceled_amount.total}원</h2>
 <h2>취소 가능 : ${response.cancel_available_amount.total}원</h2>
 
-<h2>상품명 : ${response.item_name}</h2>
-<h2>상품코드 : ${response.item_code}</h2>
-<h2>구매수량 : ${response.quantity}</h2>
-
-<h2>준비 시각 : <fmt:formatDate value="${response.created_at}" pattern="y년 M월 d일 E a h시 m분 s초"/></h2>
-<h2>승인 시각 : <fmt:formatDate value="${response.approved_at}" pattern="y년 M월 d일 E a h시 m분 s초"/></h2>
-<h2>취소 시각 : <fmt:formatDate value="${response.canceled_at}" pattern="y년 M월 d일 E a h시 m분 s초"/></h2>
 
 <%-- 카드 정보는 카드 결제일 때만 나옴--%>
 <c:if test = "${response.payment_method_type == 'CARD'}"></c:if>
