@@ -10,7 +10,6 @@ ${fundPostDto }<br>
 <c:forEach var="postImageDto" items="${list}">
 	<img src="${postImageDto.imageURL}">
 </c:forEach>
-<%-- <img src="${postImageDto.imageURL}"> --%>
 
 
 <jsp:include page="/WEB-INF/views/template/footer.jsp"></jsp:include>

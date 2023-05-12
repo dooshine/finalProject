@@ -27,6 +27,7 @@ import com.kh.idolsns.repo.AttachmentRepo;
 import com.kh.idolsns.repo.FundPostRepo;
 import com.kh.idolsns.repo.PostImageRepo;
 import com.kh.idolsns.repo.PostRepo;
+import com.kh.idolsns.vo.SearchVO;
 
 @Controller
 @RequestMapping("fund")
@@ -59,7 +60,12 @@ public class FundController {
 	}
 	
 	@GetMapping("/write")
-	public String write() {
+	public String write(@ModelAttribute PostImageDto postImageDto,
+								Model model) {
+		// 이미지 파일 경로
+		String imageUrl = postImageDto.getImageURL();
+		
+		model.addAttribute("url", imageUrl);
 		return "fund/write";
 	}
 	
@@ -158,12 +164,12 @@ public class FundController {
         // 3. 펀딩게시물 등록
 		fundPostRepo.insert(fundPostDto);
 		
-		// # 파일 등록
+		// # DB 저장
 		if(!attaches.isEmpty()) {
 			for(MultipartFile attach : attaches) {
 				int attachmentNo = attachmentRepo.sequence();   
 				File target = new File(dir, String.valueOf(attachmentNo));
-				attach.transferTo(target);
+				attach.transferTo(target);	
 				
 				attachmentRepo.insert(AttachmentDto.builder()
 						.attachmentNo(attachmentNo)
@@ -183,14 +189,19 @@ public class FundController {
 		
 		// 리디렉트어트리뷰트 추가
         attr.addAttribute("postNo", postNo);
+        attr.addAttribute("fundPostDto", fundPostDto);
 		
 		return "redirect:detail/";
 	}
 	
+	
 	// 펀딩게시물 목록조회
 	@GetMapping("/list")
-	public String list(Model model) {
-		model.addAttribute("fundList", fundPostRepo.selectList());
+	public String list(
+						Model model,
+						@ModelAttribute SearchVO searchVO
+						) {
+//		model.addAttribute("fundList", fundPostViewRepo.selectList());
 		return "fund/list";
 	}
 	
@@ -200,16 +211,7 @@ public class FundController {
 		FundPostDto fundPostDto = fundPostRepo.selectOne(postNo);
 		
 		List<PostImageDto> list = postImageRepo.selectList(postNo);
-//		List<PostImageDto> postImageList = postImageRepo.selectList(postNo);
-//		for(PostImageDto dto : postImageList) {
-//			
-//		}
-//		int attachmentNo = postImageDto.getAttachmentNo();
-//		postImageDto.setAttachmentNo(attachmentNo);
 		
-//		if(postImageDto.getAttachmentNo() != null) {
-//			
-//		}
 		model.addAttribute("fundPostDto", fundPostDto);
 		model.addAttribute("list", list);
 		return "fund/detail";

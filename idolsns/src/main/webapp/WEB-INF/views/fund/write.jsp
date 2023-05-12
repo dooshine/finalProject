@@ -6,36 +6,92 @@
 <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.js"></script>
 
-<script>
-	$(function(){
-	    $('[name=postContent]').summernote({
-	         placeholder: '내용을 작성하세요.',
-	         tabsize: 2, // 탭키를 누르면 띄어쓰기 몇 번 할지
-	         height: 120, // 최초 표시될 높이(px)
-	         toolbar: [ // 메뉴 설정
-	            ['style', ['style']],
-	              ['font', ['bold', 'underline', 'clear']],
-	              ['color', ['color']],
-	              ['para', ['ul', 'ol', 'paragraph']],
-	              ['table', ['table']],
-	              ['insert', ['link', 'picture']],
-	         ]
-	       });
-	 });
+<script type="text/javascript">
+    $(function(){
+        $('[name=postContent]').summernote({
+            placeholder: '내용을 입력해주세요',
+            tabsize: 4,
+            height: 600,
+            toolbar: [
+                ['style', ['style']],
+                ['font', ['bold', 'underline', 'clear']],
+                ['color', ['color']],
+                ['para', ['ul', 'ol', 'paragraph']],
+                ['table', ['table']],
+                ['insert', ['link', 'picture']]
+            ],
+            callbacks: {
+            onImageUpload: function(files) {
+               if(files.length != 1) return;
+               
+               var fd = new FormData();
+               fd.append("attach", files[0]);
+               
+               $.ajax({
+                  url:"/write2",
+                  method:"post",
+                  data:fd,
+                  processData:false,
+                  contentType:false,
+                  success:function(response){
+                     var input = $("<input>").attr("type", "hidden")
+                                                .attr("name", "attachmentNo")
+                                                .val(response.attachmentNo);
+                     $("form").prepend(input);
+
+                     var imgNode = $("<img>").attr("src", "/rest/attachment/download/"+response.attachmentNo);
+                     $("[name=postContent]").summernote('insertNode', imgNode.get(0));
+                  },
+                  error:function(){}
+               });
+               
+            }
+         }
+        });
+        
+//         onImageUpload : function(files, editor, welEditable) {
+//             // 파일 업로드(다중업로드를 위해 반복문 사용)
+//             for (var i = files.length - 1; i >= 0; i--) {
+//             uploadSummernoteImageFile(files[i],
+//             this);
+//             		}
+//             	}
+//             }
+//          };
+//         $('#summernote').summernote(setting);
+//         });
+        
+//         function uploadSummernoteImageFile(file, el) {
+// 			data = new FormData();
+// 			data.append("file", file);
+// 			$.ajax({
+// 				data : data,
+// 				type : "POST",
+// 				url : "uploadSummernoteImageFile",
+// 				contentType : false,
+// 				enctype : 'multipart/form-data',
+// 				processData : false,
+// 				success : function(data) {
+// 					$(el).summernote('editor.insertImage', data.url);
+// 				}
+// 			});
+// 		}
+        
+    });
 </script>
 
 <div style="width:600px";>
 	<h2>게시글 작성</h2>
-	<form action="write2" method="post" enctype="multipart/form-data">
+	<form action="write2" method="post" > <!--enctype="multipart/form-data"  -->
 		제목 : <input type="text" name="fundTitle"><br><br>
 		시작일 : <input type="date" name="postStart"><br><br>
 		종료일 : <input type="date" name="postEnd"><br><br>
 		목표 금액 : <input type="text" name="fundGoal"><br><br>
-		후원자 수 : <input type="text" name="fundSponsorCount"><br><br>
+<!-- 		후원자 수 : <input type="text" name="fundSponsorCount"><br><br> -->
 		펀딩 상태 : <input type="text" name="fundState"><br><br>
 		내용 : <textarea name="postContent"></textarea><br><br>
 <!-- 		이미지 : <input type="file" name="attach"> -->
-		이미지 : <input type="file" name="attaches" multiple>
+<!-- 		이미지 : <input type="file" name="attaches" multiple> -->
 		<button type="submit">글쓰기</button>
 	</form>
 </div>
