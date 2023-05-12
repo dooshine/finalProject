@@ -26,6 +26,7 @@
 
     <!-- custom 테스트 css -->
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/static/css/test.css">
+    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/static/css/custom.css">
     
     <!-- 폰트css -->
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/static/css/load.css" />
@@ -33,21 +34,50 @@
     <script>
     	const contextPath = "${pageContext.request.contextPath}";
     </script>
+    
+    <style>
+    	@media screen and (max-width:767px) {
+		  	.hide-part {
+		    	display:none; 
+		  	}
+    	}
+    
+    	.profileDummy,
+    	.notification,
+    	.weez {
+    		border-radius: 100%;
+    		width: 40px;
+    		border: 0.3px solid #c7cbca;
+    	}
+    </style>
 </head>
 
 
 
 <body style="background-color: #f5f5f5;">
     <main>
+    	<!----------------------------------------------- 헤더 시작 ----------------------------------------------->
         <header>
-            <div class="row">
-                <div class="col">
-                    <img src="https://via.placeholder.com/400x100?text=final" alt="로고">
-                </div>
-                <div class="col">
-                    <h1>파이널 프로젝트</h1>
-                </div>
-            </div>
+			<nav class="navbar navbar-expand-md navbar-light bg-light">
+			  	<div class="container-fluid">
+			  		<div class="col-3">
+				    	<a class="navbar-brand" href="/">STARLINK</a>
+				    </div>
+			    	<div class="col-6 d-flex collapse navbar-collapse" id="navbarSupportedContent">
+			      		<form class="d-flex w-100">
+			      			<div class="search-box w-100">
+				        		<input class="search-input me-2 w-100" placeholder="STARLINK 검색" type="text">
+				        	</div>
+			      		</form>
+			    	</div>
+			    	<div class="col-3 d-flex justify-content-end collapse navbar-collapse">
+						<img class="notification me-2 nav-item hide-part" alt="알림" src="/static/image/notificationIcon.png">
+						<img class="weez nav-item hide-part" alt="위즈" src="/static/image/dmIcon.png">
+			    	</div>
+			  	</div>
+			</nav>
+        	<!----------------------------------------------- 헤더 끝 ----------------------------------------------->
+
             <div class="row">
             	<c:if test="${memberId == null}">
             		<a href="${pageContext.request.contextPath}/member/login">로그인</a>
@@ -57,15 +87,7 @@
             	</c:if>
             </div>
         </header>
-          <hr>
-        
-        
-         <aside class="col-3 d-flex">
-	         <jsp:include page="/WEB-INF/views/template/sidebar.jsp"></jsp:include>
-	     </aside>
-
-        
-        
+        <hr>
         <section>
             <article>
               
