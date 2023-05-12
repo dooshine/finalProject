@@ -3,9 +3,10 @@
 -- (5/8 시퀀스 추가 시퀀스 이름 "테이블명_seq"으로 통일,  fund 테이블에 fund_no 수정 )
 -- (5/9 팔로우 테이블, 구매내역 테이블, 채팅방, 채팅참여, 채팅 메세지 생성) 
 -- (5/10 채팅방 관련 테이블 수정 및 전송, 좋아요 테이블 추가)
--- (5/10 fund_post테이블 fund_content 컬럼 추가)
 -- (5/10 post 테이블 post_type 컬럼추가, 
 -- 행사일정, 같이가요, 자유 게시물 테이블 추가
+-- (5/11 채팅방 테이블에 컬럼 추가, 1대1채팅방 테이블 삭제)
+-- (5/12 고정, 자유 태그 테이블 및 정규화 테이블 전부 삭제)
 
 -- 멤버테이블
 CREATE TABLE member (
@@ -42,20 +43,6 @@ CREATE TABLE member_profile_image (
 	attachment_no references attachment(attachment_no) on delete cascade
 );
 
--- 고정 태그 
-CREATE TABLE fixed_tag (
-	fixed_tag_no number primary key,
-	fixed_tag_name varchar2(20) NULL
-);
-create sequence fixed_tag_seq;
-
--- 자유 태그
-CREATE TABLE free_tag (
-	free_tag_no	number primary key,
-	free_tag_name varchar2(20) NULL
-);
-create sequence free_tag_seq;
-
 -- 통합 게시물 
 CREATE TABLE post (
 	post_no	number primary key, 
@@ -67,18 +54,14 @@ CREATE TABLE post (
 );
 create sequence post_seq;
 
--- 고정 태그 정규화
-CREATE TABLE post_fixed_tag (
-	post_no	references post(post_no) on delete cascade,
-	fixed_tag_no	references fixed_tag(fixed_tag_no) on delete cascade
+-- 태그
+CREATE TABLE tag (
+    tag_no number primary key,
+    post_no references post(post_no) on delete cascade,
+    tag_type varchar2(6),
+    tag_name varchar2(90)
 );
-
--- 자유 태그 정규화 
-CREATE TABLE post_free_tag (
-	post_no	references post(post_no) on delete cascade,
-	free_tag_no references free_tag(free_tag_no) on delete cascade
-);
-
+create sequence tag_seq;
 
 -- 통합 테이블 
 CREATE TABLE intergrated_table (
@@ -188,11 +171,12 @@ CREATE TABLE follow (
     receiver_id varchar2(20)
 );
 
--- 채팅 방 
+-- 단체 채팅 방 
 CREATE TABLE chat_room(
 	chat_room_no NUMBER PRIMARY KEY,
 	chat_room_name varchar2(60),
-	chat_room_start DATE DEFAULT sysdate NOT NULL
+	chat_room_start DATE DEFAULT sysdate NOT NULL,
+	chat_room_type char(1) NOT NULL
 );
 CREATE SEQUENCE chat_room_seq;
 
