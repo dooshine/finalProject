@@ -167,10 +167,7 @@ public class PointController {
 			HttpServletResponse resp,
 			RedirectAttributes attr) throws URISyntaxException, IOException, NoHandlerFoundException {
 		
-		 String memberId = (String) session.getAttribute("memberId");
-		
-		 
-		 
+
 		 
 		//[1] paymentNo로 PaymentDto 정보를 조회
 		PaymentDto paymentDto = paymentRepo.find(paymentNo);
@@ -194,20 +191,6 @@ public class PointController {
 		//return "redirect:detail?paymentNo="+paymentNo;
 		attr.addAttribute("paymentNo", paymentNo);
 		
-		
-		
-		
-		
-		
-		// 해당 유저의 포인트를 조회합니다.
-		  int point = pointService.getPoint(memberId);
-		 
-		  // 포인트를 차감합니다.
-		  int amount = (int) session.getAttribute("amount");
-		  pointService.decreasePoint(memberId, amount);
-		  
-		  // 변경된 포인트를 세션에 저장합니다.
-		  session.setAttribute("point", point - amount);
 		
 		
 		
