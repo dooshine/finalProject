@@ -6,6 +6,7 @@ import org.springframework.web.socket.WebSocketSession;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+//한 명의 웹소켓 사용자 정보를 가지는 클래스
 @Data
 @EqualsAndHashCode(of = {"session"})
 public class ChatMemberVO {
