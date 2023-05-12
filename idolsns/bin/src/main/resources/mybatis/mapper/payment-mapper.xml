@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+<mapper namespace="payment">
+	<select id="sequence" resultType="int">
+		select payment_seq.nextval from dual
+	</select>
+	<insert id="save">
+		insert into payment(
+			payment_no, payment_tid, payment_name, payment_total,
+			payment_remain, payment_time, member_id
+		)
+		values(
+			#{paymentNo}, #{paymentTid}, #{paymentName}, #{paymentTotal},
+			#{paymentRemain}, #{paymentTime}, #{memberId}
+		)
+	</insert>
+	
+	<!-- 결제내역 조회 기능(전체/회원별/...) -->
+	<select id="selectAll" resultType="PaymentDto">
+		select * from payment order by payment_no desc
+	</select>
+	<select id="selectByMember" resultType="PaymentDto">
+		select * from payment 
+		where member_id = #{memberId}
+		order by payment_no desc
+	</select>
+	
+	<select id="find" resultType="PaymentDto">
+		select * from payment where payment_no = #{paymentNo}
+	</select>
+	
+	<update id="cancelRemain">
+		update payment
+		set payment_remain = 0
+		where payment_no = #{paymentNo}
+	</update>
+	
+</mapper>
+
+
+
+
+
+
+
+
