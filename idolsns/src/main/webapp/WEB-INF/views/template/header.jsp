@@ -26,12 +26,18 @@
 
     <!-- custom 테스트 css -->
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/static/css/test.css">
+    
+    <!-- 폰트css -->
+    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/static/css/load.css" />
 
     <script>
     	const contextPath = "${pageContext.request.contextPath}";
     </script>
 </head>
-<body>
+
+
+
+<body style="background-color: #f5f5f5;">
     <main>
         <header>
             <div class="row">
@@ -42,7 +48,27 @@
                     <h1>파이널 프로젝트</h1>
                 </div>
             </div>
+            <div class="row">
+            	<c:if test="${memberId == null}">
+            		<a href="${pageContext.request.contextPath}/member/login">로그인</a>
+            	</c:if>
+            	<c:if test="${memberId != null}">
+            		<a href="${pageContext.request.contextPath}/member/logout">로그아웃</a>
+            	</c:if>
+            </div>
         </header>
+          <hr>
+        
+        
+         <aside class="col-3 d-flex">
+	         <jsp:include page="/WEB-INF/views/template/sidebar.jsp"></jsp:include>
+	     </aside>
+
+        
+        
         <section>
             <article>
-                <hr>
+              
+                
+                
+                

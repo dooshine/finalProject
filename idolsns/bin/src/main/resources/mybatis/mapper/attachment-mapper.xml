@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ↑ XML 헤더(반드시 첫 번째 줄에 위치) -->
+
+<!-- dtd선언 -->
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- mapper -->
+<mapper namespace="attachment">
+
+    <!-- R 첨부파일 시퀀스 -->
+    <select id="sequence" resultType="int">
+        select attachment_seq.nextval from dual
+    </select>
+
+    <!-- C 첨부파일 등록 -->
+    <insert id="insert">
+        insert into attachment 
+        (attachment_no, attachment_name, attachment_type, attachment_size) 
+        values 
+        (#{attachmentNo}, #{attachmentName}, #{attachmentType}, #{attachmentSize})
+    </insert>
+
+    <!-- R 첨부파일 읽기 -->
+    <select id="selectOne" resultType="AttachmentDto">
+        select * from attachment 
+        where attachment_no = #{attachmentNo}
+    </select>
+
+    <!-- D 첨부파일 삭제 -->
+    <delete id="remove">
+        delete from attachment where attachment_no = #{attachmentNo}
+    </delete>
+</mapper>

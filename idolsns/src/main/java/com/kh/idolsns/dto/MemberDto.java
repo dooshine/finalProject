@@ -3,7 +3,6 @@ package com.kh.idolsns.dto;
 import java.sql.Date;
 
 import com.fasterxml.jackson.databind.deser.std.DateDeserializers.DateDeserializer;
-
 import lombok.Data;
 
 @Data
