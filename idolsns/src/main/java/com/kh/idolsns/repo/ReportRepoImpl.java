@@ -23,8 +23,8 @@ public class ReportRepoImpl implements ReportRepo{
 
     // 신고 체크(중복확인)
     @Override
-    public ReportDto checkReport(ReportDto reportDto) {
-        return sqlSession.selectOne("report.checkReport", reportDto);
+    public boolean reportExist(ReportDto reportDto) {
+        return sqlSession.selectOne("report.reportExist", reportDto) != null;
     }
 
     // 신고 단일조회
@@ -39,12 +39,15 @@ public class ReportRepoImpl implements ReportRepo{
         return sqlSession.selectList("report.selectList", searchVO);
     }
 
+    // 신고 사유 수정
+    @Override
+    public boolean update(ReportDto reportDto) {
+        return sqlSession.update("report.update", reportDto) > 0;
+    }
+    
     // 신고 삭제
     @Override
     public boolean delete(Long reportNo) {
         return sqlSession.delete("report.delete", reportNo) > 0;
     }
-
-    
-    
 }

@@ -14,7 +14,7 @@
         values (report_seq.nextval, #{memberId}, #{reportTargetType}, #{reportTargetPrimaryKey}, #{reportFor}, sysdate)
     </insert>
     <!-- 신고 단일조회 -->
-    <select id="checkReport" resultType="reportDto">
+    <select id="reportExist" resultType="reportDto">
         select * from report 
         where 
             member_id = #{memberId} 
@@ -25,6 +25,16 @@
     </select>
     <!-- 신고 목록조회 -->
 
+    <!-- 신고 수정(신고사유 변경) -->
+    <update id="update">
+        update report set report_for = #{reportFor} 
+        where 
+            member_id = #{memberId} 
+            and 
+            report_target_type = #{reportTargetType}
+            and
+            report_target_primary_key = #{reportTargetPrimaryKey}
+    </update>
     <!-- 신고 삭제(신고 취소) -->
     <delete id="delete">
         delete from report where report_no = #{reportNo}
