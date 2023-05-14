@@ -57,18 +57,6 @@
             	</c:if>
             </div>
         </header>
-          <hr>
-        
-        
-         <aside class="col-3 d-flex">
-	         <jsp:include page="/WEB-INF/views/template/sidebar.jsp"></jsp:include>
-	     </aside>
-
-        
-        
         <section>
             <article>
-              
-                
-                
-                
+                <hr>
