@@ -18,7 +18,7 @@ $(function(){
 
         if(isValid) {
             $.ajax({
-                url:contextPath+"/rest/member/memberId" + memberId,
+                url:contextPath+"/rest/member/memberId/" + memberId,
                 method:"get",
                 success:function(response) {
                     if(response == 'Y') {

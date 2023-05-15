@@ -18,18 +18,17 @@ public class MemberRestController {
 	private MemberRepo memberRepo;
 	
 	@GetMapping("/memberId/{memberId}")
-	public char memberId(@PathVariable String memberId) {
-		return memberRepo.selectOne(memberId) == null ? 'Y':'N';
+	public String memberId(@PathVariable String memberId) {
+		return memberRepo.selectOne(memberId) == null ? "Y":"N";
 	}
 	
 	@GetMapping("memberNick/{memberNick}")
-	public char memberNick(@PathVariable String memberNick) {
-		return memberRepo.joinNick(memberNick) == null? 'Y':'N';
+	public String memberNick(@PathVariable String memberNick) {
+		return memberRepo.joinNick(memberNick) == null? "Y":"N";
 	}
 	
 	@GetMapping("memberEmail/{memberEmail}")
-	public char memberEmail(@PathVariable String memberEmail) {
-		return memberRepo.joinEmail(memberEmail) == null? 'Y':'N';
+	public String memberEmail(@PathVariable String memberEmail) {
+		return memberRepo.joinEmail(memberEmail) == null? "Y":"N";
 	}
-	
 }
