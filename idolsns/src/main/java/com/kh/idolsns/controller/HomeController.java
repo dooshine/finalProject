@@ -21,5 +21,5 @@ public class HomeController {
     @GetMapping("/write")
     public String write(){
         return "temp_write";
-    }
+    }  
 }
