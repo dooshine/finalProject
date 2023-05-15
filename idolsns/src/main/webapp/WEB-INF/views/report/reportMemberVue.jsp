@@ -36,7 +36,6 @@
             {{member}}
         </div>
         <div class="col">
-            
             <i class="fa-solid fa-user-xmark" data-bs-toggle="modal" data-bs-target="#repotModal1"></i>
         </div>
         <hr>

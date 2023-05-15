@@ -29,6 +29,8 @@
     
     <!-- 폰트css -->
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/static/css/load.css" />
+    <!-- doo-css -->
+    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/static/css/doo.css" />
 
     <script>
     	const contextPath = "${pageContext.request.contextPath}";
@@ -63,12 +65,12 @@
         </header>
           <hr>
         
-        <section class="container max-width-100" style="background-color: gray;">
+        <section class="container-fluid">
             <div class="row">
                 <div class="col-3 d-flex left-aside">
                     <jsp:include page="/WEB-INF/views/template/sidebar.jsp"></jsp:include>
                 </div>
-                <div class="col-6 article container">
+                <div class="col-6 article container-fluid">
               
                 
                 

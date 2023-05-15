@@ -8,10 +8,7 @@
         <h1>본문</h1>
     </div>
 </div>
-<script>
-    console.log(memberId)
-</script>
-    
+
 <jsp:include page="/WEB-INF/views/template/footer.jsp"></jsp:include>
 	
 	
