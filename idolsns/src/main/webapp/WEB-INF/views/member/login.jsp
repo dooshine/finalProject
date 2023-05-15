@@ -41,8 +41,12 @@
 				아이디:<input type="text" name="memberId">
 				비밀번호:<input type="password" name="memberPw">
 				<button type="submit">로그인</button>
-			</form>		
+			</form>
+			<div class="row">
+				<a href="${pageContext.request.contextPath}/member/findId">아이디 찾기</a>
+			</div>		
 		</div>
 	</div>
 
 </body>    
+>>>>>>> branch 'main' of https://github.com/dooshine/finalProject.git

@@ -281,9 +281,5 @@ public class FundController {
 		model.addAttribute("list", list);
 		return "fund/detail";
 	}
-	
-	
-	
-	
 
 }

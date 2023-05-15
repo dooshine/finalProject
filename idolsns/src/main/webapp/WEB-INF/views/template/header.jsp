@@ -26,12 +26,20 @@
 
     <!-- custom 테스트 css -->
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/static/css/test.css">
+    
+    <!-- 폰트css -->
+    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/static/css/load.css" />
 
     <script>
     	const contextPath = "${pageContext.request.contextPath}";
+        const memberId = "${memberId}";
+        const memberLevel = "${memberLevel}";
     </script>
 </head>
-<body>
+
+
+
+<body style="background-color: #f5f5f5;">
     <main>
         <header>
             <div class="row">
@@ -45,12 +53,26 @@
             <div class="row">
             	<c:if test="${memberId == null}">
             		<a href="${pageContext.request.contextPath}/member/login">로그인</a>
+            		<a href="${pageContext.request.contextPath}/member/join">회원가입</a>
             	</c:if>
             	<c:if test="${memberId != null}">
             		<a href="${pageContext.request.contextPath}/member/logout">로그아웃</a>
+            		<a href="${pageContext.request.contextPath}/member/mypage">마이페이지</a>
             	</c:if>
             </div>
         </header>
+          <hr>
+        
+        
+         <aside class="col-3 d-flex">
+	         <jsp:include page="/WEB-INF/views/template/sidebar.jsp"></jsp:include>
+	     </aside>
+
+        
+        
         <section>
             <article>
-                <hr>
+              
+                
+                
+                
