@@ -4,6 +4,7 @@
 * JDK 17
 * Spring Boot 2.7.11
 
+
 [dependency]
 Spring Boot DevTools
 Lombok
@@ -22,11 +23,3 @@ spring-security-core
 
 
 [해야 할 것들]
-* 파일 업로드 시스템 만들기
-* 이메일 시스템
-* jsp파일 import ( css, js, cdn import )
-  - jquery
-  - vue
-  - moment
-  - lodash
-  - 

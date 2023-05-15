@@ -1,15 +1,19 @@
 package com.kh.idolsns.restcontroller;
 
+import java.util.List;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
+import com.kh.idolsns.dto.MemberDto;
 import com.kh.idolsns.repo.MemberRepo;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
+import com.kh.idolsns.vo.AdminMemberSearchVO;
 
-@CrossOrigin(origins = {"http://127.0.0.1:5500"})
+@CrossOrigin
 @RestController
 @RequestMapping("/rest/member")
 public class MemberRestController {
@@ -31,4 +35,9 @@ public class MemberRestController {
 	public String memberEmail(@PathVariable String memberEmail) {
 		return memberRepo.joinEmail(memberEmail) == null? "Y":"N";
 	}
+
+    @PostMapping("/")
+    public List<MemberDto> adminSelectList(@RequestBody AdminMemberSearchVO adminMemberSearchVO){
+        return memberRepo.adminSelectList(adminMemberSearchVO);
+    }
 }
