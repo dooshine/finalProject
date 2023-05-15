@@ -32,6 +32,8 @@
 
     <script>
     	const contextPath = "${pageContext.request.contextPath}";
+        const memberId = "${memberId}";
+        const memberLevel = "${memberLevel}";
     </script>
 </head>
 
