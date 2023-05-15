@@ -28,16 +28,17 @@
                fd.append("attach", files[0]);
                
                $.ajax({
-                  url:"/write2",
+                  url:"/rest/attachment/upload",
                   method:"post",
                   data:fd,
                   processData:false,
                   contentType:false,
                   success:function(response){
-                     var input = $("<input>").attr("type", "hidden")
+                     const inputAttachNo = $("<input>").attr("type", "hidden")
                                                 .attr("name", "attachmentNo")
                                                 .val(response.attachmentNo);
-                     $("form").prepend(input);
+                     
+                     $("form").prepend(inputAttachNo);
 
                      var imgNode = $("<img>").attr("src", "/rest/attachment/download/"+response.attachmentNo);
                      $("[name=postContent]").summernote('insertNode', imgNode.get(0));

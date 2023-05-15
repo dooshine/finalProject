@@ -165,27 +165,92 @@ public class FundController {
 		fundPostRepo.insert(fundPostDto);
 		
 		// # DB 저장
-		if(!attaches.isEmpty()) {
-			for(MultipartFile attach : attaches) {
-				int attachmentNo = attachmentRepo.sequence();   
-				File target = new File(dir, String.valueOf(attachmentNo));
-				attach.transferTo(target);	
-				
-				attachmentRepo.insert(AttachmentDto.builder()
-						.attachmentNo(attachmentNo)
-						.attachmentName(attach.getOriginalFilename())
-						.attachmentType(attach.getContentType())
-						.attachmentSize(attach.getSize())
-						.build()
-						);
-				
-				postImageRepo.insert(PostImageDto.builder()
-						.attachmentNo(attachmentNo)
-						.postNo(postDto.getPostNo())
-						.build()
-						);
-			}
-	      }
+//		if(!attaches.isEmpty()) {
+//			for(MultipartFile attach : attaches) {
+//				int attachmentNo = attachmentRepo.sequence();   
+//				File target = new File(dir, String.valueOf(attachmentNo));
+//				attach.transferTo(target);	
+//				
+//				attachmentRepo.insert(AttachmentDto.builder()
+//						.attachmentNo(attachmentNo)
+//						.attachmentName(attach.getOriginalFilename())
+//						.attachmentType(attach.getContentType())
+//						.attachmentSize(attach.getSize())
+//						.build()
+//						);
+//				
+//				postImageRepo.insert(PostImageDto.builder()
+//						.attachmentNo(attachmentNo)
+//						.postNo(postDto.getPostNo())
+//						.build()
+//						);
+//			}
+//	      }
+		
+		// 리디렉트어트리뷰트 추가
+        attr.addAttribute("postNo", postNo);
+        attr.addAttribute("fundPostDto", fundPostDto);
+		
+		return "redirect:detail/";
+	}
+	
+	
+	@PostMapping("/write3")
+	public String write3(
+							HttpSession session,
+							@ModelAttribute FundPostDto fundPostDto,
+							@ModelAttribute PostDto postDto,
+							@RequestParam List<MultipartFile> attaches,
+							RedirectAttributes attr
+							) throws IllegalStateException, IOException {
+		
+		// # 통합게시물 등록
+		// 1. 통합게시물 시퀀스 발행
+        Long postNo = postRepo.sequence();
+        postDto.setPostNo(postNo);
+
+        // 2. 통합게시물 작성자
+        String memberId = (String)session.getAttribute("memberId");
+        postDto.setMemberId(memberId);
+
+        // 3. 통합게시물 게시물종류 설정(Fix!!)
+        postDto.setPostType("펀딩");
+
+        // 4. 통합게시물 등록
+        postRepo.insert(postDto);
+
+		// # 펀딩게시물 등록
+        // 1. 펀딩게시물 시퀀스 설정
+        fundPostDto.setPostNo(postNo);
+        
+        // 2. 펀딩게시물 작성자
+        fundPostDto.setMemberId(memberId);
+        
+        // 3. 펀딩게시물 등록
+		fundPostRepo.insert(fundPostDto);
+		
+		// # DB 저장
+//		if(!attaches.isEmpty()) {
+//			for(MultipartFile attach : attaches) {
+//				int attachmentNo = attachmentRepo.sequence();   
+//				File target = new File(dir, String.valueOf(attachmentNo));
+//				attach.transferTo(target);	
+//				
+//				attachmentRepo.insert(AttachmentDto.builder()
+//						.attachmentNo(attachmentNo)
+//						.attachmentName(attach.getOriginalFilename())
+//						.attachmentType(attach.getContentType())
+//						.attachmentSize(attach.getSize())
+//						.build()
+//						);
+//				
+//				postImageRepo.insert(PostImageDto.builder()
+//						.attachmentNo(attachmentNo)
+//						.postNo(postDto.getPostNo())
+//						.build()
+//						);
+//			}
+//	      }
 		
 		// 리디렉트어트리뷰트 추가
         attr.addAttribute("postNo", postNo);
