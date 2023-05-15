@@ -30,7 +30,7 @@ import com.kh.idolsns.repo.PostRepo;
 import com.kh.idolsns.vo.SearchVO;
 
 @Controller
-@RequestMapping("fund")
+@RequestMapping("/fund")
 public class FundController {
 	
 	@Autowired
