@@ -170,9 +170,11 @@
 			
 				</div>
 				</div>	
-			<c:forEach var="fundPostDto" items="${fundList}">
-			${fundPostDto}<br>
+				
+			<c:forEach var="fundPostViewDto" items="${fundList}">
+			${fundPostViewDto}<br>
 			</c:forEach>
+			
 </section>
 
 

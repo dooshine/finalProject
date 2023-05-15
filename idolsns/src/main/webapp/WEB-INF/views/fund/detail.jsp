@@ -207,12 +207,12 @@
 			</div>
 			
 			<h2>펀딩 상세페이지임</h2>
-			${postImageDto}<br>
-			${fundPostDto }<br>
-			
-			<c:forEach var="postImageDto" items="${list}">
-				<img src="${postImageDto.imageURL}">
-			</c:forEach>
+				postImageDto : ${postImageList}<br>
+				fundPostDto: ${fundPostDto }<br>
+				
+				<c:forEach var="postImageDto" items="${postImageList}">
+					<img src="${postImageDto.imageURL}">
+				</c:forEach>
 			
 			
 			
