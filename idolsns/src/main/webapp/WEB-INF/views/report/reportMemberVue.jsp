@@ -41,21 +41,49 @@
         <hr>
     </div>
 
+    <style>
+        .modal-border {
+            border: 1px solid #dee2e6;
+        }
+        .no-border {
+            border: 1px solid transparent !important;
+        }
+    </style>
     <!-- 신고 모달1 -->
     <div class="modal" tabindex="-1" role="dialog" id="repotModal1">
         <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
+            <div class="modal-content position-relative">
                 <div class="modal-header">
-                    <h5 class="modal-title">신고</h5>
+                    <h4 class="modal-title mx-auto">신고</h4>
+                </div>
+                <div style="position: absolute !important; top: 1.5em !important; right: 1.5em !important;">
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body p-0">
                     <!-- 모달에서 표시할 실질적인 내용 구성 -->
-                    <p>모달1</p>
+                    <div class="w-100 modal-border" style="border-bottom: 1px solid #dee2e6;">
+                        <button class="modal-content align-items-center" style="border: 1px solid transparent;">신고 사유를 선택해주세요</button>
+                    </div>
+                    <div class="w-100 modal-border" style="border-bottom: 1px solid #dee2e6;">
+                        <button class="modal-content align-items-center" style="border: 1px solid transparent;">부적절한 컨텐츠 게시</button>
+                    </div>
+                    <div class="w-100 modal-border" style="border-bottom: 1px solid #dee2e6;">
+                        <button class="modal-content align-items-center" style="border: 1px solid transparent;">선정/폭력성</button>
+                    </div>
+                    <div class="w-100 modal-border" style="border-bottom: 1px solid #dee2e6;">
+                        <button class="modal-content align-items-center" style="border: 1px solid transparent;">스팸/광고</button>
+                    </div>
+                    <div class="w-100 modal-border" style="border-bottom: 1px solid #dee2e6;">
+                        <button class="modal-content align-items-center" style="border: 1px solid transparent;">거짓 또는 사기</button>
+                    </div>
+
+                    <div class="w-100 modal-content" style="border: 1px solid transparent;">
+                        <button class="modal-content align-items-center" style="border: 1px solid transparent;">기타</button>
+                    </div>
                 </div>
-                <div class="modal-footer">
+                <!-- <div class="modal-footer">
                     <button type="button" class="btn btn-primary" data-bs-target="#repotModal2" data-bs-toggle="modal">닫기</button>
-                </div>
+                </div> -->
             </div>      
         </div>
     </div>
