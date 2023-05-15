@@ -53,9 +53,11 @@
             <div class="row">
             	<c:if test="${memberId == null}">
             		<a href="${pageContext.request.contextPath}/member/login">로그인</a>
+            		<a href="${pageContext.request.contextPath}/member/join">회원가입</a>
             	</c:if>
             	<c:if test="${memberId != null}">
             		<a href="${pageContext.request.contextPath}/member/logout">로그아웃</a>
+            		<a href="${pageContext.request.contextPath}/member/mypage">마이페이지</a>
             	</c:if>
             </div>
         </header>

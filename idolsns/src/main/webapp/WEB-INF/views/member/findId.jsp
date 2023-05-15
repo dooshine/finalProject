@@ -9,7 +9,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>로그인</title>
+    <title>아이디 찾기</title>
     <!-- 폰트어썸 cdn -->
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css">
     <!-- jquery cdn -->
@@ -34,19 +34,20 @@
 </head>
 <body>
 
-	<div class="container">
-		<div class="row">
-			<form action="login" method="post">
-				<h1>testuser1/Testuser1!</h1>
-				아이디:<input type="text" name="memberId">
-				비밀번호:<input type="password" name="memberPw">
-				<button type="submit">로그인</button>
-			</form>
+	<form action="findId" method="post" autocomplete="off">
+	
+		<div class="container">
+			<div class="row center">
+				<h1>아이디 찾기</h1>
+			</div>
 			<div class="row">
-				<a href="${pageContext.request.contextPath}/member/findId">아이디 찾기</a>
-			</div>		
+				<input type="email" name="memberEmail" placeholder="이메일">
+			</div>
+			<div class="row">
+				<button type="submit">아이디 조회</button>
+			</div>
 		</div>
-	</div>
+	
+	</form>
 
 </body>    
->>>>>>> branch 'main' of https://github.com/dooshine/finalProject.git
