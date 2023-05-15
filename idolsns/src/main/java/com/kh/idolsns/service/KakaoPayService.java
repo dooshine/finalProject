@@ -7,6 +7,8 @@ import com.kh.idolsns.vo.KakaoPayApproveRequestVO;
 import com.kh.idolsns.vo.KakaoPayApproveResponseVO;
 import com.kh.idolsns.vo.KakaoPayCancelRequestVO;
 import com.kh.idolsns.vo.KakaoPayCancelResponseVO;
+import com.kh.idolsns.vo.KakaoPayChargeRequestVO;
+import com.kh.idolsns.vo.KakaoPayChargeResponseVO;
 import com.kh.idolsns.vo.KakaoPayOrderRequestVO;
 import com.kh.idolsns.vo.KakaoPayOrderResponseVO;
 import com.kh.idolsns.vo.KakaoPayReadyRequestVO;
@@ -22,7 +24,7 @@ public interface KakaoPayService {
 	KakaoPayApproveResponseVO approve(KakaoPayApproveRequestVO vo) throws URISyntaxException;
 
 	//충전 charge
-	void charge(PaymentDto paymentDto);
+	KakaoPayChargeResponseVO charge(KakaoPayChargeRequestVO vo) throws URISyntaxException;
 
 	
 	//조회 order
@@ -30,6 +32,8 @@ public interface KakaoPayService {
 	
 	//취소 cancel
 	KakaoPayCancelResponseVO cancel(KakaoPayCancelRequestVO vo) throws URISyntaxException;
+
+
 
 	
 

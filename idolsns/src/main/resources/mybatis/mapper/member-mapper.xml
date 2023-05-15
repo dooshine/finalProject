@@ -26,7 +26,7 @@
 	<!-- 포인트 차감 -->
 	<update id="decreasePoint">
 	  UPDATE member 
-	  SET member_point = member_point - #{paymentTotal} 
+	  SET member_point =  member_point - #{paymentTotal} 
 	  WHERE member_id = #{memberId}
 	</update>
 	

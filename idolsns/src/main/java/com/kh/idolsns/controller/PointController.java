@@ -71,7 +71,6 @@ public class PointController {
 		vo.setItem_name("포인트충전");
 		
 		
-		
 		//준비요청
 		KakaoPayReadyResponseVO response = kakaoPayService.ready(vo);
 		
@@ -103,35 +102,35 @@ public class PointController {
 		vo.setPartner_user_id((String)session.getAttribute("partner_user_id"));
 		vo.setTid((String)session.getAttribute("tid"));
 		
+	
 		
 		session.removeAttribute("partner_order_id");
 		session.removeAttribute("partner_user_id");
 		session.removeAttribute("tid");
 		
-		KakaoPayApproveResponseVO response = kakaoPayService.approve(vo);
-		
+		 // 결제 승인 요청
+	    KakaoPayApproveResponseVO response = kakaoPayService.approve(vo);
 
-		PaymentDto paymentDto = new PaymentDto();
-		
-		paymentDto.setMemberId((String)session.getAttribute("memberId"));
-		paymentDto.setPaymentTotal(response.getAmount().getTotal());
-		
-	    // memberPoint를 업데이트
-	    kakaoPayService.charge(paymentDto);
-	    
-		
-		return "redirect:clear";
+	    // 충전된 금액을 포인트로 업데이트
+	    KakaoPayChargeRequestVO chargeRequestVO = new KakaoPayChargeRequestVO();
+	    chargeRequestVO.setMemberId((String) session.getAttribute("memberId"));
+	    chargeRequestVO.setPaymentTotal(response.getAmount().getTotal());
+	    System.out.println("chargeRequestVO: " + chargeRequestVO);
+	    kakaoPayService.charge(chargeRequestVO);
+
+	    // "redirect:clear"로 리다이렉트하여 clear 페이지로 이동
+	    return "redirect:clear";
 	}
 	
 	@GetMapping("/charge/clear")
-	public String chargeClear(HttpSession session, KakaoPayChargeRequestVO vo) throws URISyntaxException {
-		// memberId 정보를 세션에서 가져옴
-		String memberId = (String) session.getAttribute("memberId");
+	public String chargeClear(HttpSession session) {
+	    // memberId 정보를 세션에서 가져옴
+	    String memberId = (String) session.getAttribute("memberId");
 
-	    
+	    // 포인트 충전 완료 후 처리할 로직 작성
+
 	    return "point/clear";
 	}
-	
 	/////
 	
 	
