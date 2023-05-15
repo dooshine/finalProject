@@ -32,8 +32,8 @@
 
     <script>
     	const contextPath = "${pageContext.request.contextPath}";
-        const memberId = "${memberId}";
-        const memberLevel = "${memberLevel}";
+        const memberId = "${sessionScope.memberId}";
+        const memberLevel = "${sessionScope.memberLevel}";
     </script>
 </head>
 
@@ -63,15 +63,12 @@
         </header>
           <hr>
         
-        
-         <aside class="col-3 d-flex">
-	         <jsp:include page="/WEB-INF/views/template/sidebar.jsp"></jsp:include>
-	     </aside>
-
-        
-        
-        <section>
-            <article>
+        <section class="container max-width-100" style="background-color: gray;">
+            <div class="row">
+                <div class="col-3 d-flex left-aside">
+                    <jsp:include page="/WEB-INF/views/template/sidebar.jsp"></jsp:include>
+                </div>
+                <div class="col-6 article container">
               
                 
                 
