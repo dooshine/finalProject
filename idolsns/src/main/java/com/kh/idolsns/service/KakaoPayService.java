@@ -2,6 +2,7 @@ package com.kh.idolsns.service;
 
 import java.net.URISyntaxException;
 
+import com.kh.idolsns.dto.PaymentDto;
 import com.kh.idolsns.vo.KakaoPayApproveRequestVO;
 import com.kh.idolsns.vo.KakaoPayApproveResponseVO;
 import com.kh.idolsns.vo.KakaoPayCancelRequestVO;
@@ -19,12 +20,19 @@ public interface KakaoPayService {
 	
 	//승인 approve
 	KakaoPayApproveResponseVO approve(KakaoPayApproveRequestVO vo) throws URISyntaxException;
-	
+
+	//충전 charge
+	void charge(PaymentDto paymentDto);
+
 	
 	//조회 order
 	KakaoPayOrderResponseVO order(KakaoPayOrderRequestVO vo) throws URISyntaxException;
 	
 	//취소 cancel
 	KakaoPayCancelResponseVO cancel(KakaoPayCancelRequestVO vo) throws URISyntaxException;
+
+	
+
+	
 	
 }

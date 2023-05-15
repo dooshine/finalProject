@@ -57,25 +57,6 @@ public class PaymentRepoImpl implements PaymentRepo {
 	
 	
 	
-	@Override
-	public void chargePoint(String memberId, int memberPoint) {
-		Map<String, Object> params = new HashMap<>();
-		params.put("memberId", memberId);
-	    params.put("memberPoint", memberPoint);
-	    
-	    sqlSession.update("payment.chargePoint", params);
-	}
-	
-	
-	// 충전 취소 시 포인트 차감
-	@Override
-	public void decreasePoint(String memberId, int memberPoint) {
-		Map<String, Object> params = new HashMap<>();
-	    params.put("memberId", memberId);
-	    params.put("memberPoint", memberPoint);
-	    sqlSession.update("payment.decreasePoint", params);
-	}
-
 	
 	
 

@@ -14,6 +14,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.kh.idolsns.configuration.KakaoPayProperties;
 import com.kh.idolsns.dto.PaymentDto;
+import com.kh.idolsns.repo.MemberRepo;
 import com.kh.idolsns.repo.PaymentRepo;
 import com.kh.idolsns.vo.KakaoPayApproveRequestVO;
 import com.kh.idolsns.vo.KakaoPayApproveResponseVO;
@@ -42,6 +43,8 @@ public class KakaoPayServiceImpl implements KakaoPayService {
 	@Autowired
 	private PaymentRepo paymentRepo;
 	
+	@Autowired
+	private MemberRepo memberRepo;
 	
 	
 	@Override
@@ -123,7 +126,20 @@ public class KakaoPayServiceImpl implements KakaoPayService {
 		return response;
 	}
 
-
+	
+	//포인트 충전
+	@Override
+	public void charge(PaymentDto paymentDto) {
+				
+		String memberId = paymentDto.getMemberId();
+		int paymentTotal = paymentDto.getPaymentTotal();
+		
+		memberRepo.chargePoint(memberId, paymentTotal);
+			    
+		return;
+		
+	
+}
 	
 	@Override
 	public KakaoPayOrderResponseVO order(KakaoPayOrderRequestVO vo) throws URISyntaxException {
@@ -160,5 +176,6 @@ public class KakaoPayServiceImpl implements KakaoPayService {
 		//반환
 		return response;
 	}
-	
+
+
 }

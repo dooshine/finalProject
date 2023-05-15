@@ -26,6 +26,7 @@ import com.kh.idolsns.vo.KakaoPayApproveRequestVO;
 import com.kh.idolsns.vo.KakaoPayApproveResponseVO;
 import com.kh.idolsns.vo.KakaoPayCancelRequestVO;
 import com.kh.idolsns.vo.KakaoPayCancelResponseVO;
+import com.kh.idolsns.vo.KakaoPayChargeRequestVO;
 import com.kh.idolsns.vo.KakaoPayOrderRequestVO;
 import com.kh.idolsns.vo.KakaoPayOrderResponseVO;
 import com.kh.idolsns.vo.KakaoPayReadyRequestVO;
@@ -109,20 +110,24 @@ public class PointController {
 		
 		KakaoPayApproveResponseVO response = kakaoPayService.approve(vo);
 		
+
+		PaymentDto paymentDto = new PaymentDto();
 		
+		paymentDto.setMemberId((String)session.getAttribute("memberId"));
+		paymentDto.setPaymentTotal(response.getAmount().getTotal());
 		
+	    // memberPoint를 업데이트
+	    kakaoPayService.charge(paymentDto);
+	    
 		
-	
 		return "redirect:clear";
 	}
 	
 	@GetMapping("/charge/clear")
-	public String chargeClear(HttpSession session) {
+	public String chargeClear(HttpSession session, KakaoPayChargeRequestVO vo) throws URISyntaxException {
 		// memberId 정보를 세션에서 가져옴
-	    String memberId = (String) session.getAttribute("memberId");
-	    
-	    
-	    
+		String memberId = (String) session.getAttribute("memberId");
+
 	    
 	    return "point/clear";
 	}
