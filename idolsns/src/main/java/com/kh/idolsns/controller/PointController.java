@@ -168,8 +168,11 @@ public class PointController {
 	public String chargeCancel(
 			@RequestParam int paymentNo, 
 			HttpServletResponse resp,
-			RedirectAttributes attr) throws URISyntaxException, IOException, NoHandlerFoundException {
+			RedirectAttributes attr,
+			HttpSession session) throws URISyntaxException, IOException, NoHandlerFoundException {
 		
+
+		String memberId = (String)session.getAttribute("memberId");
 
 		 
 		//[1] paymentNo로 PaymentDto 정보를 조회
@@ -194,11 +197,7 @@ public class PointController {
 		//return "redirect:detail?paymentNo="+paymentNo;
 		attr.addAttribute("paymentNo", paymentNo);
 		
-		
-		
-		
-		
-		
+
 		return "redirect:detail";
 	}
 	

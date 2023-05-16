@@ -1,0 +1,10 @@
+@charset "UTF-8";
+
+/* 컨테이너 최대너비 100% */
+.max-width-100 {
+    max-width: 100%;
+}
+
+.article {
+    border: 1px solid black;
+}

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+<mapper namespace="chatRoom">
+
+	<!-- 시퀀스 생성 -->
+	<select id="sequence" resultType="int">
+		select chat_room_seq.nextval from dual
+	</select>
+	
+	<!-- 채팅방에 초대된 회원 목록을 확인해서 이미 존재하는 채팅방인지 확인 -->
+	<select id="isRoomExist" resultType="ChatRoomDto">
+		select * from chat_room where
+		<foreach collection="memberList" item="member" separator=",">
+			${member}
+		</foreach>
+	</select>
+
+	<!-- 채팅방 생성 -->
+	<insert id="createChatRoom">
+		insert into chat_room(chat_room_no, chat_room_name, chat_room_start, chat_room_type)
+		values(#{chatRoomNo}, #{chatRoomName}, sysdate, #{chat_room_type})
+	</insert>
+	
+	<!-- 채팅방 상세조회 -->
+	<select id="findRoom" resultType="ChatRoomDto">
+		select * from chat_room where chat_room_no = #{chatRoomNo}	
+	</select>
+	
+	<!-- 채팅방 목록 -->
+	<select id="listRoom" resultType="ChatRoomDto">
+		select * from chat_room
+	</select>
+
+</mapper>
+    
