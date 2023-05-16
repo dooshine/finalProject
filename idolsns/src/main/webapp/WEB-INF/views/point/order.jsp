@@ -1,7 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>   
-
 
 <jsp:include page="/WEB-INF/views/template/header.jsp"></jsp:include> 
 
@@ -90,14 +88,7 @@
 	    
 	</style>
 
-
-
-<section id = "my_point">
-	
-
-      	<div class= "container-fluid d-flex justify-content-center">
-        	<div class="col-6"> 
-        	
+     
         		 <div class="container rounded p-3" style="background-color:white">
         		 
 		        <ul class="point_header_tab">
@@ -143,7 +134,5 @@
 				  </table>
 				  </div>
 				</div>
-			</div>
-		</div>
-	</section>
 	
+	<jsp:include page="/WEB-INF/views/template/footer.jsp"></jsp:include> 

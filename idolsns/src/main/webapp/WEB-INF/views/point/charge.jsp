@@ -1,10 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>   
-
-
 
 <jsp:include page="/WEB-INF/views/template/header.jsp"></jsp:include> 
+
 
     <title>내 지갑</title>
     
@@ -96,13 +94,12 @@
 
 
 
-<section id = "my_point">
+
 	
 	  <div id="app">
-      	<div class= "container-fluid d-flex justify-content-center col-6">
-        
+  
         	
-        		 <div class="container rounded p-3" style="background-color:white">
+        	<div class="container rounded p-3" style="background-color:white">
         		 
 		        <ul class="point_header_tab">
 		            <li class="tab_list active"><a href="#">포인트 충전</a></li>
@@ -180,14 +177,9 @@
 	       	 </div>
            
 		</div>
-    </div>
+
     
 
-	</section>
-	
-
-	
-	
 	
 	
     
@@ -204,9 +196,12 @@
 	            }
 	        },
 	        computed: {
+	       
 	            formattedAmount() {
 	                return this.amount.toLocaleString();
-	            }
+	            },
+	            
+                
 	        },
 	        methods: {
 	            charge(event) {
@@ -215,6 +210,9 @@
 	                    alert("충전할 금액을 선택해주세요.");
 	                    return;
 	                }
+	          
+
+	              
 	                var chargeForm = document.getElementById("chargeForm");
 	               
 	                chargeForm.submit();
@@ -236,6 +234,7 @@
 	            
 	        },
 	        created(){
+	        	
 	        	this.loadMemberPoint();
 	        }
 	    }).mount("#app");
@@ -244,3 +243,4 @@
 
 	
 	
+<jsp:include page="/WEB-INF/views/template/footer.jsp"></jsp:include> 
