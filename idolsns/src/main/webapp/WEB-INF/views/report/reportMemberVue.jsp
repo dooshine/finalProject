@@ -66,6 +66,7 @@
                     <div class="w-100 modal-border" style="border-bottom: 1px solid #dee2e6; padding: 0.5em;">
                         <button class="modal-content align-items-center" style="border: 1px solid transparent; font-weight: bold;">신고 사유를 선택해주세요</button>
                     </div>
+                    
                     <div v-for="(reportFor, i) in reportForList" :key="i" class="w-100 modal-border" style="border-bottom: 1px solid #dee2e6; padding: 0.5em;">
                         <button v-text="reportFor" class="modal-content align-items-center" style="border: 1px solid transparent;" data-bs-target="#repotModal2" data-bs-toggle="modal" @click="setReportFor(reportFor)"></button>
                     </div>
@@ -109,7 +110,6 @@
         </div>
     </div>
 </div>
-
 
 
 

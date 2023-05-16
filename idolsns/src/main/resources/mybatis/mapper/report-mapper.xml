@@ -25,6 +25,14 @@
     </select>
     <!-- 신고 목록조회 -->
 
+    <!-- 신고 횟수 조회 (전체기간 - 전체 100회 이상 제재) -->
+    <select id="selectAllReportCnt" resultType="Integer">
+        select count(*) from report 
+        where 
+            REPORT_TARGET_TYPE = #{reportTargetType}
+            and
+            REPORT_TARGET_PRIMARY_KEY = #{reportTargetPrimaryKey}
+    </select>
     <!-- 신고 수정(신고사유 변경) -->
     <update id="update">
         update report set report_for = #{reportFor} 
