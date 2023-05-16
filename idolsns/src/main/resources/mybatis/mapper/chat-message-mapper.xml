@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+<mapper namespace="chatMessage">
+
+	<!-- 메세지 번호 시퀀스 뽑기 -->
+	<select id="sequence" resultType="int">
+		select chat_message_seq.nextval from dual
+	</select>
+
+	<!-- 보낸 메세지 저장 -->
+	<insert id="sendMessage">
+		insert into chat_message(
+				chat_room_no, chat_message_no, member_id, 
+				chat_message_time, chat_message_content
+			)
+		values(
+				#{chatRoomNo}, #{chatMessageNo}, #{memberId}, 
+				sysdate, #{chatMessageContent}
+			)
+	</insert>
+	
+	<!-- 메세지 불러오기 -->
+	<select id="listMessage" resultType="ChatMessageDto">
+		select * from chat_message where chat_room_no = #{chatRoomNo}
+		order by chat_message_no asc
+	</select>
+	
+	<!-- 보낸 메세지 삭제 -->
+	<delete id="deleteMessage">
+		delete chat_message 
+		where chat_message_no = #{chatMessageNo} 
+		and member_id = #{memberId}
+	</delete>
+
+</mapper>
+    

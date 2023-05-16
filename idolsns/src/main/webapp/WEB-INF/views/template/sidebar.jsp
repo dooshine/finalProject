@@ -7,19 +7,16 @@
 		padding: 10px;
 		margin-bottom: 10px;
 		transition: background-color 0.3s ease;
-		}
+	}
 		
 	.nav a:hover {
 	  	background-color: #eee;
 		border-radius: 10px / 10px;
-		}
+	}
 </style>
     
-  
-
   <!-- aside -->
-  <aside class ="col-6">
-  
+  <aside class ="col-12">
 	<div class= "nav flex-column">
         <a href="${pageContext.request.contextPath}/">
         	<i class="fa-solid fa-house"> 홈</i></a>
@@ -31,9 +28,6 @@
         	<i class="fa-solid fa-sack-dollar"> 펀딩</i></a>
         <a href="${pageContext.request.contextPath}/point/charge">
         	<i class="fa-sharp fa-solid fa-coins"> 충전</i></a>
-       	<button>글쓰기</button> 
-       
+       	<button>글쓰기</button>
   	</div>
-  
-  
   </aside>

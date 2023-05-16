@@ -26,6 +26,7 @@ import com.kh.idolsns.vo.KakaoPayApproveRequestVO;
 import com.kh.idolsns.vo.KakaoPayApproveResponseVO;
 import com.kh.idolsns.vo.KakaoPayCancelRequestVO;
 import com.kh.idolsns.vo.KakaoPayCancelResponseVO;
+import com.kh.idolsns.vo.KakaoPayChargeRequestVO;
 import com.kh.idolsns.vo.KakaoPayOrderRequestVO;
 import com.kh.idolsns.vo.KakaoPayOrderResponseVO;
 import com.kh.idolsns.vo.KakaoPayReadyRequestVO;
@@ -40,9 +41,6 @@ public class PointController {
 	@Autowired
 	private KakaoPayService kakaoPayService;
 
-	
-	
-	
 
 	
 	@GetMapping("/history") //충전 내역
@@ -57,10 +55,6 @@ public class PointController {
 	}
 	
 
-	
-	
-	
-	
 	
 	//포인트 충전 페이지
 	@GetMapping("/charge")
@@ -77,7 +71,6 @@ public class PointController {
 		vo.setItem_name("포인트충전");
 		
 		
-		
 		//준비요청
 		KakaoPayReadyResponseVO response = kakaoPayService.ready(vo);
 		
@@ -92,7 +85,7 @@ public class PointController {
 	
 	
 	
-	//test1 결제 성공 매핑 - 카카오페이가 불러주는 주소
+	//충전 성공 매핑 - 카카오페이가 불러주는 주소
 	@GetMapping("/charge/success")
 	public String chargeSuccess(
 			//@RequestParam String pg_token
@@ -109,25 +102,35 @@ public class PointController {
 		vo.setPartner_user_id((String)session.getAttribute("partner_user_id"));
 		vo.setTid((String)session.getAttribute("tid"));
 		
+	
+		
 		session.removeAttribute("partner_order_id");
 		session.removeAttribute("partner_user_id");
 		session.removeAttribute("tid");
 		
-		KakaoPayApproveResponseVO response = kakaoPayService.approve(vo);
-		
-	
-		return "redirect:clear";
+		 // 결제 승인 요청
+	    KakaoPayApproveResponseVO response = kakaoPayService.approve(vo);
+
+	    // 충전된 금액을 포인트로 업데이트
+	    KakaoPayChargeRequestVO chargeRequestVO = new KakaoPayChargeRequestVO();
+	    chargeRequestVO.setMemberId((String) session.getAttribute("memberId"));
+	    chargeRequestVO.setPaymentTotal(response.getAmount().getTotal());
+	    System.out.println("chargeRequestVO: " + chargeRequestVO);
+	    kakaoPayService.charge(chargeRequestVO);
+
+	    // "redirect:clear"로 리다이렉트하여 clear 페이지로 이동
+	    return "redirect:clear";
 	}
 	
 	@GetMapping("/charge/clear")
 	public String chargeClear(HttpSession session) {
-		// memberId 정보를 세션에서 가져옴
+	    // memberId 정보를 세션에서 가져옴
 	    String memberId = (String) session.getAttribute("memberId");
-	    session.setAttribute("memberId", memberId);
-	    
+
+	    // 포인트 충전 완료 후 처리할 로직 작성
+
 	    return "point/clear";
 	}
-	
 	/////
 	
 	
@@ -165,12 +168,12 @@ public class PointController {
 	public String chargeCancel(
 			@RequestParam int paymentNo, 
 			HttpServletResponse resp,
-			RedirectAttributes attr) throws URISyntaxException, IOException, NoHandlerFoundException {
+			RedirectAttributes attr,
+			HttpSession session) throws URISyntaxException, IOException, NoHandlerFoundException {
 		
-		 String memberId = (String) session.getAttribute("memberId");
-		
-		 
-		 
+
+		String memberId = (String)session.getAttribute("memberId");
+
 		 
 		//[1] paymentNo로 PaymentDto 정보를 조회
 		PaymentDto paymentDto = paymentRepo.find(paymentNo);
@@ -194,25 +197,7 @@ public class PointController {
 		//return "redirect:detail?paymentNo="+paymentNo;
 		attr.addAttribute("paymentNo", paymentNo);
 		
-		
-		
-		
-		
-		
-		// 해당 유저의 포인트를 조회합니다.
-		  int point = pointService.getPoint(memberId);
-		 
-		  // 포인트를 차감합니다.
-		  int amount = (int) session.getAttribute("amount");
-		  pointService.decreasePoint(memberId, amount);
-		  
-		  // 변경된 포인트를 세션에 저장합니다.
-		  session.setAttribute("point", point - amount);
-		
-		
-		
-		
-		
+
 		return "redirect:detail";
 	}
 	
