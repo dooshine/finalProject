@@ -73,29 +73,32 @@ public class ChatServiceImpl implements ChatService {
 	
 	// 방 입장
 	public void join(ChatMemberVO member, int chatRoomNo) {
+		log.debug("join No: " + chatRoomNo);
 		// 방 생성
 		createRoom(chatRoomNo);
 		// 방 선택
 		ChatRoomVO chatRoom = chatRooms.get(chatRoomNo);
 		// 해당 방에 입장
+		chatRoom.enter(member);
 		// 대기실에 있다면 대기실에서 퇴장
 		boolean isWaitingRoom = chatRoomNo == WebSocketConstant.WAITING_ROOM;
-		if(isWaitingRoom) {
-			exit(member, chatRoomNo);
-			return;
-		}
-		// 대기실 퇴장 후 실제 채팅방 입장
-		chatRoom.enter(member);
+		log.debug("isWaitingRoom: " + isWaitingRoom);
+		log.debug("new No: " + chatRoomNo);
+		log.debug("chatRoom: " + chatRoom);
 		// 참여자 등록(db 처리)
 		ChatJoinDto joinDto = new ChatJoinDto();
 		joinDto.setChatRoomNo(chatRoomNo);
 		joinDto.setMemberId(member.getMemberId());
 		boolean isJoin = chatJoinRepo.doseAlreadyIn(joinDto);
 		if(isJoin) return;
-		ChatJoinDto dto = new ChatJoinDto();
-		dto.setChatRoomNo(chatRoomNo);
-		dto.setMemberId(member.getMemberId());
-		chatJoinRepo.joinChatRoom(dto);
+		// 대기실 퇴장 후 실제 채팅방 입장
+		if(!isWaitingRoom) {
+			exit(member, WebSocketConstant.WAITING_ROOM);
+			ChatJoinDto dto = new ChatJoinDto();
+			dto.setChatRoomNo(chatRoomNo);
+			dto.setMemberId(member.getMemberId());
+			chatJoinRepo.joinChatRoom(dto);
+		}
 	}
 	
 	// 방 퇴장
@@ -112,6 +115,9 @@ public class ChatServiceImpl implements ChatService {
 		for(int chatRoomNo : chatRooms.keySet()) {
 			// 해당 방 객체 추출
 			ChatRoomVO chatRoom = chatRooms.get(chatRoomNo);
+			log.debug("rooms: " + chatRooms.get(chatRoomNo));
+			log.debug("chatRoom: " + chatRoom);
+			log.debug("chatRoomNo: " + chatRoomNo);
 			// 해당 방에 사용자가 있다면 방 번호 반환
 			if(chatRoom.memberExist(member)) return chatRoomNo;
 		}
@@ -173,8 +179,10 @@ public class ChatServiceImpl implements ChatService {
 		ChatMessageReceiveVO receiveVO = mapper.readValue(message.getPayload(), ChatMessageReceiveVO.class);
 		// 채팅 메세지인 경우
 		if(receiveVO.getType() == WebSocketConstant.CHAT) {
+			log.debug("type: " + receiveVO.getType());
 			// 채팅방 찾기
 			int chatRoomNo = this.findRoomHasMember(member);
+			log.debug("chatRoomNo: " + chatRoomNo);
 			// 채팅방이 없거나, 대기실인 경우 매세지 전송 불가
 			if(chatRoomNo == -1) return;
 			if(chatRoomNo == WebSocketConstant.WAITING_ROOM) return;

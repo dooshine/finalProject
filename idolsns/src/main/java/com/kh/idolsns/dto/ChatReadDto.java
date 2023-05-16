@@ -1,4 +1,5 @@
 package com.kh.idolsns.dto;
+import java.sql.Date;
 import lombok.Data;
 
 @Data
@@ -10,6 +11,6 @@ public class ChatReadDto {
 	private String chatSender;
 	private String chatReciever;
 	
-	private long chatReadTime;
+	private Date chatReadTime;
 	
 }

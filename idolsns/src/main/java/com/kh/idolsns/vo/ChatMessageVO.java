@@ -1,5 +1,4 @@
-package com.kh.idolsns.dto;
-import java.sql.Date;
+package com.kh.idolsns.vo;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -7,10 +6,14 @@ import lombok.NoArgsConstructor;
 
 @Data @NoArgsConstructor
 @AllArgsConstructor @Builder
-public class ChatJoinDto {
+public class ChatMessageVO {
 
+	private long chatMessageNo;
 	private int chatRoomNo;
+	
 	private String memberId;
-	private Date chatJoinTime;
+	private long chatMessageTime;
+	
+	private String chatMessageContent;
 	
 }

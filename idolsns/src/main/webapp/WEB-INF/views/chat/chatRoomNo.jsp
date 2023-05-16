@@ -1,13 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 
-<style>
-	.message {
-		border-bottom: 1px solid gray;
-		padding: 10px;
-	}
-</style>
-
 <div id="app">
 	<h1>채팅 테스트</h1>
 	<p>${sessionScope.memberId}</p>
@@ -25,10 +18,10 @@
 		<div class="message" v-for="(message, index) in messageList" :key="index">
 			<div>
 				<h4>{{ message.memberId }}</h4>
-				<span v-if="message.memberId == memberId">(내가쓴글)</span>
+				<p v-if="message.memberId == memberId">(내가쓴글)</p>
 			</div>
-			<div>{{ message.content }}</div>
-			<div>{{ timeFormat(message.chatMessageTime) }}</div>
+			<div>{{ JSON.parse(message.chatMessageContent).chatMessageContent }}</div>
+			<div>{{ message.chatMessageTime }}</div>
 		</div>
 	</div>
 </div>
@@ -79,46 +72,85 @@
 					app.messageHandler(e);
 				};
 			},
-			openHandler() {},
+			openHandler() {
+				// 방 접속 코드 필요
+				const chatRoomNo = new URLSearchParams(location.search).get("chatRoomNo");
+				const data = { type: 2, chatRoomNo: chatRoomNo };
+				this.socket.send(JSON.stringify(data));
+			},
 			closeHandler() {},
-			closeHandler() {},
+			errorHandler() {},
 			messageHandler(e) {
 				this.messageList.push(JSON.parse(e.data));
 			},
-			changeToConnect() {
-				
-			},
-			changeToDisconnect() {
-				
+			// 메세지 목록 지우기
+			clearMessageList() {
+				this.messageList.splice(0);
 			},
 			// 메세지 불러오기
 			async loadMessage() {
 				const chatRoomNo = new URLSearchParams(location.search).get("chatRoomNo");
-				// console.log("chatRoomNo: " + chatRoomNo);
+				console.log("chatRoomNo: " + chatRoomNo);
 				const url = "${pageContext.request.contextPath}/chat/message/" + chatRoomNo;
-				const resp = await axios.get(url);
-				this.messageList.push(...resp.data)
+				let resp = await axios.get(url);
+				let temp = resp.data.map(item => {
+					item.chatMessageTime = this.timeFormat(new Date(item.chatMessageTime));
+					return item;
+//					console.log("chatMessageTime: " + item.chatMessageTime);
+// 					console.log(new Date(resp.data.chatMessageTime));
+				})
+//				console.log(temp);
+				this.clearMessageList();
+				this.messageList.push(...temp);
 			},
+			// 메세지 보내기
+			/*sendMessage() {
+		        const messageContent = this.text;
+		        if (messageContent.length === 0) return;
+		        const data = { type: 1, chatMessageContent: messageContent };
+		        this.socket.send(this.jsonText);
+		     	// 입력창 초기화
+				this.clear();
+				// 목록 불러오기
+				this.loadMessage();
+		    },*/
 			sendMessage() {
 				if(this.text.length == 0) return;
-				this.socket.send(this.jsonText);
+				const data = { type: 1, chatMessageContent: this.jsonText };
+				this.socket.send(JSON.stringify(data));
+				/*const url = "${pageContext.request.contextPath}/chat/message/";
+				const data = {
+						chatRoomNo: new URLSearchParams(location.search).get("chatRoomNo"),
+						memberId: this.memberId,
+						chatMessageContent: this.jsonText,
+				};
+				console.log(data.chatRoomNo);
+				console.log(data.memberId);
+				console.log(data.chatMessageContent);
+				const resp = await axios.post(url, JSON.stringify(data));*/
 				// 입력창 초기화
 				this.clear();
+				// 목록 불러오기
+				this.loadMessage();
 			},
+			// 시간 포맷 설정
 			timeFormat(chatMessageTime) {
-				console.log(chatMessageTime)
+//				console.log(chatMessageTime);
 				return moment(chatMessageTime).format("A h:mm");
 			}
 		},
 		computed: {
 			jsonText() {
-				return JSON.stringify({content : this.text})
+				return JSON.stringify({chatMessageContent : this.text})
 			}
 		},
 		created() {
 			// 웹소켓 연결
 			this.connect();
 			this.loadMessage();
+		},
+		mounted() {
+
 		}
 	}).mount("#app");
 </script>
