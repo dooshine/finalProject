@@ -31,6 +31,8 @@
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/static/css/load.css" />
 
     <script>
+    	const memberId = "${sessionScope.memberId}";
+    	const memberLevel = "${sessionScope.memberLevel}";
     	const contextPath = "${pageContext.request.contextPath}";
     </script>
 </head>

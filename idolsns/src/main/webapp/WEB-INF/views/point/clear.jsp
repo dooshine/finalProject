@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>   
+ 
 
 
 <jsp:include page="/WEB-INF/views/template/header.jsp"></jsp:include> 
@@ -24,6 +24,7 @@
 	          <h2>주문자 : ${response.partner_user_id}</h2>
 	          <h2>결제 수단 : ${response.payment_method_type}</h2>
 	          <h2>결제 금액 : {{ amount }}원</h2>
+	          ${paymentDto.paymentTime}
 	        </div>
 	      </div>
 	    </div>
@@ -36,7 +37,7 @@
 		  data() {
 		    return {
 		      memberId: '',
-		      amount: 0,
+		      amount: '',
 		      response: null // response 변수 추가
 		    }
 		  },

@@ -152,6 +152,7 @@
 				    <p>충전 후 내 포인트: 
 				    <span class="amount">{{ (amount+parseInt(selectedAmount || 0)).toLocaleString() }}
 				    </span>원
+				    
 				    </p>
 				</div>
 				
@@ -191,6 +192,7 @@
 	
     
     <script>
+   
 	    Vue.createApp({
 	        //데이터 설정 영역
 	        data() {
@@ -224,17 +226,16 @@
 	                     const data = {
 	                         memberId: this.memberId // 로그인된 멤버 아이디 사용
 	                     };
-	                     const resp = await axios.get(url, data);
+	                     const resp = await axios.get(url);
 
 	                     this.amount = resp.data.memberPoint;
-	               
 	            	// MemberRestController(rest/member)에 getMapping method 추가 후
 	        		// Axios로 method 호출(await 사용, 전달 data-> 멤버아이디), 로 멤버DTO 정보 불러와서
 	        		// 멤버 DTO의 point를 this.amount 대입
 	        	}
 	            
 	        },
-	        create(){
+	        created(){
 	        	this.loadMemberPoint();
 	        }
 	    }).mount("#app");
