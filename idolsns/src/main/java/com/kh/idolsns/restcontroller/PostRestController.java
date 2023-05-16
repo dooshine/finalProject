@@ -78,32 +78,7 @@ public class PostRestController {
 		 
 		 // 5. 통합게시물 등록 
 		 postRepo.insert(postDto);
-		 
-         // # 해당 게시물에 해당하는 테이블에 데이터 추가
-		 String postType = postDto.getPostType();
-		 
-		 String memberId = postDto.getMemberId(); 
-		 if(postType.equals("자유")){
-			 FreePostDto freePostDto = new FreePostDto();
-			 freePostDto.setPostNo(postNo); 
-			 freePostDto.setMemberId(memberId);
-			 System.out.println("자유 게시글");
-			 freePostRepo.insert(freePostDto); 
-		 }
-		 else if(postType.equals("같이가요")) {
-			 TogetherPostDto togetherPostDto = new TogetherPostDto();
-			 togetherPostDto.setPostNo(postNo);
-			 togetherPostDto.setMemberId(memberId);
-			 System.out.println("같이가요 게시글");
-			 togetherPostRepo.insert(togetherPostDto);
-		 }
-		 else if(postType.equals("행사일정")) {
-			 SchedulePostDto schedulePostDto = new SchedulePostDto();
-			 schedulePostDto.setPostNo(postNo);
-			 schedulePostDto.setMemberId(memberId);
-			 System.out.println("행사일정 게시글");
-			 schedulePostRepo.insert(schedulePostDto);
-		 }
+			 
         
 		 // 등록된 게시글 번호를 바탕으로 다른 비동기 통신(ajax, axios)에서 태그, 
 		 // 사진 정보를 해당 테이블의 정규화 테이블 추가할 떄 사용한다.
@@ -116,22 +91,86 @@ public class PostRestController {
   
     	Long tempNo; // controller측 임시 시퀀스 번호 
     	TagDto tempDto = new TagDto();
-    	System.out.println("ajax로 수신받은 값들은 다음과 같아요 postNo : "+postNo+" tagList : "+tagList);
+
     	for(String tag : tagList) {
-    		// 태그 존재 하지 않을 때,(태그 명으로 조회했을 때 시퀀스가 있는 경우)
-//    		if(tagRepo.selectOne(tag)==null) 
-//    		{
-    			tempNo = tagRepo.sequence();
-    			tempDto.setTagNo(tempNo);
-    			tempDto.setPostNo(postNo);
-    			tempDto.setTagType("자유"); // 자유, 고정 둘 중 하나
-    			tempDto.setTagName(tag);
-    			tagRepo.insert(tempDto);
-//    		}
-    		
+			tempNo = tagRepo.sequence();
+			tempDto.setTagNo(tempNo);
+			tempDto.setPostNo(postNo);
+			tempDto.setTagType("자유"); // 자유, 고정 둘 중 하나
+			tempDto.setTagName(tag);
+			tagRepo.insert(tempDto);    		
     	}
     }	
 
+    
+    @PostMapping("/postType")
+    public void postType(@RequestParam Long postNo,@RequestBody PostDto postDto){
+    	String postType = postDto.getPostType();
+    	System.out.println("ajax로 수신받은 값들은 다음과 같아요 postNo : "+postNo+" postType: "+postType);
+    	if(postType.equals("자유"))
+    	{
+    		TogetherPostDto togetherPostDto = new TogetherPostDto();
+        	togetherPostDto.setPostNo(postDto.getPostNo()); 
+        	togetherPostDto.setMemberId(postDto.getMemberId());
+        	togetherPostDto.setTogetherStart(null);
+        	togetherPostDto.setTogetherEnd(null);
+        	togetherPostRepo.insert(togetherPostDto);
+    	}
+    	else if (postType.equals("행사일정"))
+    	{
+        	SchedulePostDto schedulePostDto = new SchedulePostDto();
+        	schedulePostDto.setPostNo(postDto.getPostNo()); 
+        	schedulePostDto.setMemberId(postDto.getMemberId()); 
+        	schedulePostDto.setScheduleStart(null);
+        	schedulePostDto.setScheduleEnd(null); 
+        	schedulePostRepo.insert(schedulePostDto); 
+    	}
+    	else if (postType.equals("같이가요"))
+    	{
+        	FreePostDto freePostDto = new FreePostDto();
+        	freePostDto.setPostNo(postDto.getPostNo());
+        	freePostDto.setMemberId(postDto.getMemberId());
+        	freePostRepo.insert(freePostDto);
+    	}
+    }
+    
+//    @PostMapping("/together")
+//    public void together(PostDto postDto)
+//    {
+//    	System.out.println("게시물 타입은 :  " + postDto.getPostType());
+//    	System.out.println("게시물 번호는 :  " + postDto.getPostNo());
+//    	TogetherPostDto togetherPostDto = new TogetherPostDto();
+//    	togetherPostDto.setPostNo(postDto.getPostNo()); 
+//    	togetherPostDto.setMemberId(postDto.getMemberId());
+//    	togetherPostDto.setTogetherStart(null);
+//    	togetherPostDto.setTogetherEnd(null);
+//    	togetherPostRepo.insert(togetherPostDto);
+//    }
+//    
+//    @PostMapping("/schedule")
+//    public void schedule(PostDto postDto)
+//    {
+//    	System.out.println("게시물 타입은 :  " + postDto.getPostType());
+//    	System.out.println("게시물 번호는 :  " + postDto.getPostNo());
+//    	SchedulePostDto schedulePostDto = new SchedulePostDto();
+//    	schedulePostDto.setPostNo(postDto.getPostNo()); 
+//    	schedulePostDto.setMemberId(postDto.getMemberId()); 
+//    	schedulePostDto.setScheduleStart(null);
+//    	schedulePostDto.setScheduleEnd(null); 
+//    	schedulePostRepo.insert(schedulePostDto); 
+//    }
+//    @PostMapping("/free")
+//    public void free(PostDto postDto)
+//    {
+//    	System.out.println("게시물 타입은 :  " + postDto.getPostType());
+//    	System.out.println("게시물 번호는 :  " + postDto.getPostNo());
+//    	FreePostDto freePostDto = new FreePostDto();
+//    	freePostDto.setPostNo(postDto.getPostNo());
+//    	freePostDto.setMemberId(postDto.getMemberId());
+//    	freePostRepo.insert(freePostDto);
+//    }
+    
+    
 
 //    // 통합게시물 목록조회, 해당 DTO로 전달
 //    @GetMapping("/")

@@ -13,31 +13,11 @@
     </style>
   </head>
   <body>
-
-    <!--
-        container - 화면이 배치될 기본 위치
-
-        1. container : 기본 컨테이너이며 폭에 반응하여 자동 조정(뚝뚝끊김)
-        2. container-fluid : 폭의 변화에 부드럽게 반응하는 컨테이너(100%)
-
-        row - 한 줄 영역 , col - 한 칸 영역
-
-        사이즈 - sm, md, lg, xl
-    -->
     <div class="container-fluid mt-4" id="app">
 
         <div class="row">
             <div class="offset-md-2 col-md-8">
-
-<!--                 문서 제목 (Jumbotron) -->
-<!--                 <div class="row text-center"> -->
-<!--                     <div class="col bg-dark text-light p-4 rounded"> -->
-<!--                         <h1>모달(Modal)</h1> -->
-<!--                         <p>브라우저에게 차단당하지 않는 새창</p> -->
-<!--                     </div> -->
-<!--                 </div> -->
-
-                <!-- 작성하고자 하는 컨텐츠 내용 -->
+            
                 <div class="row mt-4">
                     <div class="col">
                         <button type="button" class="btn btn-primary"
@@ -50,27 +30,6 @@
             </div>
         </div>
 
-        <!-- 
-            모달은 디자인에 영향이 없으므로 아무데나 만들면 된다 
-            일반적으로 화면 마지막에 만든다(처음부터 표시되지 않으니까)
-
-            tabindex="-1"이면 탭키를 눌러서 선택이 불가능
-
-            부트스트랩에서는 버튼등에 옵션을 지정하여 모달을 제어할 수 있다
-            (프로그래밍 코드 없이도 표시/숨김 등을 설정할 수 있다)
-
-            모달창에 아이디나 클래스같은 식별자를 표시하고 버튼에 설정으로 연결
-            data-bs-target은 참조할 대상 모달창을 지정할 수 있다
-            data-bs-toggle로 토글 효과를 지정할 수 있다
-            data-bs-dismiss로 제거할 효과를 지정할 수 있다
-
-            data-bs-backdrop="static"으로 배경 클릭 시 모달이 사라지지 않도록 설정
-        -->
-
-
-		<!-- modal, modal-dialog, modal-content, modal-header, modal-title, modal-body는 모두 -->
-		<!-- bootstrap5에 사전에 정의된 모달에 관한 클래스이다. -->
-		
 		<script>
 			// 페이지 로드
 			$(function(){
@@ -88,10 +47,28 @@
 				// 1-1. 행사일정의 날짜 및 시간 scheduleStart, scheduleEnd에 저장
 				let scheduleStart = "";
 				let scheduleEnd = "";
+				$("#schedule-start").on("change",function(){
+					let scheduleStart = $(this).val();
+					console.log("일정 시작날짜 "+scheduleStart);
+				});
+				$("#schedule-end").on("change",function(){
+					let scheduleEnd = $(this).val();
+				});
+				
+				
 				
 				// 1-2. 같이가요의 날짜 및 시간 togetherStart, togetherEnd에 저장
 				let togetherStart = "";
 				let togetherEnd = ""; 
+				$("#together-start").on("change",function(){
+					let togetherStart = $(this).val();
+				});
+				$("#together-end").on("change",function(){
+					let togetherEnd = $(this).val();
+				});
+				
+				
+				
 				
 				// 2. 태그를 저장할 배열 선언 및 태그 전역 변수 tag에 저장
 				let tag = [];			
@@ -170,6 +147,66 @@
 									    console.log(error);
 									}
 							});
+							$.ajax({
+									url: "http://localhost:8080/rest/post/postType?postNo="+postNo,
+									method: "post",
+									contentType: "application/json",
+								    data: JSON.stringify(postDto),
+									success: function(result){
+										console.log(result)
+									},
+									error: function(xhr,status,error){
+										console.log(error);
+									}
+							})
+							
+// 							// 게시물 등록 성공 시에, 같이가요 정보를 비동기로 서버에 전송 
+// 							if(categori==="같이가요"){
+// 								$.ajax({
+// 									url: "http://localhost:8080/rest/post/together",
+// 									method: "post",
+// 									data: postDto,
+// 									success: function(result){
+// 										console.log(result)
+// 									},
+// 									error: function(xhr,status,error){
+// 										console.log(error);
+// 									}
+// 								})
+// 							}
+// 							// 게시물 등록 성공 시에, 행사일정 정보를 비동기로 서버에 전송 
+// 							if(categori==="행사일정"){
+// 								$.ajax({
+// 									url: "http://localhost:8080/rest/post/schedule",
+// 									method: "post",
+// 									data: postDto,
+// 									success: function(result){
+// 										console.log(result)
+// 									},
+// 									error: function(xhr,status,error){
+// 										console.log(error);
+// 									}
+									
+// 								})
+// 							}
+// 							// 게시물 등록 성공 시에, 자유 정보를 비동기로 서버에 전송 
+// 							if(categori==="자유"){
+// 								$.ajax({
+// 									url: "http://localhost:8080/rest/post/free",
+// 									method: "post",
+// 									data: postDto,
+// 									success: function(result){
+// 										console.log(result);
+// 									},
+// 									error: function(xhr,status,error){
+// 										console.log(error);
+// 									}
+								
+					
+// 								});
+// 							}
+								
+							
 							
 							
 							// 게시물 등록 성공 시에, 파일 입력을 비동기로 서버에 전송 
