@@ -167,7 +167,7 @@ public class PointController {
 			HttpServletResponse resp,
 			RedirectAttributes attr) throws URISyntaxException, IOException, NoHandlerFoundException {
 		
-//		 String memberId = (String) session.getAttribute("memberId");
+		 String memberId = (String) session.getAttribute("memberId");
 		 
 		//[1] paymentNo로 PaymentDto 정보를 조회
 		PaymentDto paymentDto = paymentRepo.find(paymentNo);
