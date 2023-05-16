@@ -49,4 +49,3 @@
 	</div>
 
 </body>    
->>>>>>> branch 'main' of https://github.com/dooshine/finalProject.git

@@ -1,7 +1,5 @@
 package com.kh.idolsns.repo;
 
-import javax.servlet.http.HttpSession;
-
 import com.kh.idolsns.dto.PostDto;
 
 public interface PostRepo {
