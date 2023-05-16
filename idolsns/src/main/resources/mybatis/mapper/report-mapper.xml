@@ -21,7 +21,7 @@
             and 
             report_target_type = #{reportTargetType}
             and
-            report_primary_key = #{reportPrimaryKey}
+            report_target_primary_key = #{reportTargetPrimaryKey}
     </select>
     <!-- 신고 목록조회 -->
 

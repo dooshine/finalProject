@@ -36,7 +36,7 @@
             {{member}}
         </div>
         <div class="col">
-            <i class="fa-solid fa-user-xmark" data-bs-toggle="modal" data-bs-target="#repotModal1"></i>
+            <i class="fa-solid fa-user-xmark" data-bs-toggle="modal" data-bs-target="#repotModal1" @click="setReportDto(member.memberId)"></i>
         </div>
         <hr>
     </div>
@@ -56,8 +56,10 @@
                 <div class="modal-header">
                     <h4 class="modal-title mx-auto" style="color: #ff4757;">신고</h4>
                 </div>
-                <div style="position: absolute !important; top: 1.5em !important; right: 1.5em !important;">
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <div class="carousel carousel-dark slide" style="position: absolute !important; top: 1.5em !important; right: 1.5em !important;">
+                    <button type="button" class="btn-close carousel-control-prev" data-bs-dismiss="modal" aria-label="Close">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    </button>
                 </div>
                 <div class="modal-body p-0">
                     <!-- 모달에서 표시할 실질적인 내용 구성 -->
@@ -72,9 +74,6 @@
                         <button class="modal-content align-items-center" style="border: 1px solid transparent;" data-bs-target="#repotModal2" data-bs-toggle="modal" @click="setReportFor('기타')">기타</button>
                     </div>
                 </div>
-                <!-- <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" data-bs-target="#repotModal2" data-bs-toggle="modal">닫기</button>
-                </div> -->
             </div>      
         </div>
     </div>
@@ -83,20 +82,28 @@
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content position-relative">
                 <div class="modal-header">
-                    <h4 class="modal-title mx-auto" style="color: #ff4757;">신고</h4>
+                    <h4 class="modal-title mx-auto">선택한 항목</h4>
                 </div>
-                <div class="slide" style="position: absolute !important; top: 1.5em !important; left: 1.5em !important;">
-                    <button type="button" class="carousel-control-prev-icon" aria-hidden="true" data-bs-dismiss="modal" aria-label="Close"></button>
+
+                <!-- 이전버튼 -->
+                <div class="carousel carousel-dark" style="position: absolute !important; top: 1.5em !important; left: 1.5em !important; width: 1.5em; height: 1.5em;">
+                    <button class="carousel-control-prev w-100 h-100" type="button" data-bs-target="#repotModal1" data-bs-toggle="modal">
+                        <span class="carousel-control-prev-icon" aria-hidden="true" style="padding: 4px;"></span>
+                    </button>
                 </div>
+
+                <!-- 닫기 버튼 -->
                 <div style="position: absolute !important; top: 1.5em !important; right: 1.5em !important;">
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body">
-                    <!-- 모달에서 표시할 실질적인 내용 구성 -->
-                    <p>모달2</p>
+
+
+                <!-- 모달에서 표시할 실질적인 내용 구성 -->
+                <div class="modal-body align-items-center">
+                    <p style="text-align: center;">{{reportDto.reportFor}}</p>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">닫기</button>
+                    <button type="button" class="btn btn-danger w-100" data-bs-dismiss="modal" @click="reportMember">신고하기</button>
                 </div>
             </div>      
         </div>
@@ -161,7 +168,6 @@
         // 신고 대상 설정
         setReportDto(target){
             this.reportDto.reportTargetPrimaryKey = target;
-            console.log(this.reportDto);
         },
         // 신고 이유 설정
         setReportFor(reportFor){
@@ -170,11 +176,9 @@
         },
         // 회원신고 생성
         async reportMember(target){
-            // 신고 대상 설정
-            this.setReportDto(target);
             console.log(this.reportDto);
-            // const url = "http://localhost:8080/rest/report/"
-            // await axios.post(url, this.reportDto);
+            const url = "http://localhost:8080/rest/report/"
+            const resp = await axios.post(url, this.reportDto);
         },
       },
       watch: {
