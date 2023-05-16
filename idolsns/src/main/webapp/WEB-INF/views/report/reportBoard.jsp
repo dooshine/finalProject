@@ -3,9 +3,11 @@
 
 <jsp:include page="/WEB-INF/views/template/header.jsp"></jsp:include>
 
-<div class="row">
-    <div class="col">
-        <h1>본문</h1>
+<div class="container">
+    <div class="row">
+        <article class="col">
+            <h1>아티클</h1>
+        </article>
     </div>
 </div>
 

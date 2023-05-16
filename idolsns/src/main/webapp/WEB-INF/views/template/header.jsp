@@ -30,9 +30,13 @@
     
     <!-- 폰트css -->
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/static/css/load.css" />
+    <!-- doo-css -->
+    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/static/css/doo.css" />
 
     <script>
     	const contextPath = "${pageContext.request.contextPath}";
+        const memberId = "${sessionScope.memberId}";
+        const memberLevel = "${sessionScope.memberLevel}";
     </script>
     
     <style>
@@ -81,16 +85,19 @@
             <div class="row">
             	<c:if test="${memberId == null}">
             		<a href="${pageContext.request.contextPath}/member/login">로그인</a>
+            		<a href="${pageContext.request.contextPath}/member/join">회원가입</a>
             	</c:if>
             	<c:if test="${memberId != null}">
             		<a href="${pageContext.request.contextPath}/member/logout">로그아웃</a>
+            		<a href="${pageContext.request.contextPath}/member/mypage">마이페이지</a>
             	</c:if>
             </div>
         </header>
-        <hr>
-        <section>
-            <article>
-              
-                
-                
+          <hr>
+        <section class="container-fluid">
+            <div class="row">
+                <div class="col-3 d-flex left-aside">
+                    <jsp:include page="/WEB-INF/views/template/sidebar.jsp"></jsp:include>
+                </div>
+                <div class="col-6 article container-fluid">
                 

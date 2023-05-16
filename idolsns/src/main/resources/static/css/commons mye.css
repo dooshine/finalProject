@@ -1,0 +1,55 @@
+@charset "UTF-8";
+
+
+/* (11) */
+.menu > li.right-menu > ul > li ul {
+    left: auto;
+    right:100%;
+}
+
+.valid-message {
+    color: forestgreen;
+    display: none;
+}
+.invalid-message,
+.invalid-message2,
+.invalid-message3 {
+    color: red;
+    display: none;
+}
+/* 
+    입력창이 성공상태(.valid)일 경우 
+    뒤에 있는 성공메세지(.valid-message)를 표시 
+*/
+.valid ~ .valid-message {
+    display: block;
+}
+/* 
+    입력창이 실패상태(.invalid)일 경우 
+    뒤에 있는 실패메세지(.invalid-message)를 표시 
+*/
+.invalid ~ .invalid-message {
+    display: block;
+}
+.invalid2 ~ .invalid-message2 {
+    display: block;
+}
+.invalid3 ~ .invalid-message3 {
+    display: block;
+}
+
+/* 입력창 디자인 */
+.valid, .invalid, .invalid2, .invalid3 {
+    background-position: top 50% right 3%;
+    background-size: auto 60%;
+    background-repeat: no-repeat;
+}
+.valid {
+    border-color: forestgreen;
+    background-image: url("../image/valid.png");
+}
+
+.invalid, .invalid2, .invalid3 {
+    border-color: red;
+    background-image: url("../image/invalid.png");
+}
