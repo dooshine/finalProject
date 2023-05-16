@@ -96,7 +96,6 @@
 
 
 
-<section id = "my_point">
 	
 	  <div id="app">
       	<div class= "container-fluid d-flex justify-content-center col-6">
@@ -181,16 +180,6 @@
            
 		</div>
     </div>
-    
-
-	</section>
-	
-
-	
-	
-	
-	
-    
     <script>
    
 	    Vue.createApp({

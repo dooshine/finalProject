@@ -54,31 +54,22 @@
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content position-relative">
                 <div class="modal-header">
-                    <h4 class="modal-title mx-auto">신고</h4>
+                    <h4 class="modal-title mx-auto" style="color: #ff4757;">신고</h4>
                 </div>
                 <div style="position: absolute !important; top: 1.5em !important; right: 1.5em !important;">
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body p-0">
                     <!-- 모달에서 표시할 실질적인 내용 구성 -->
-                    <div class="w-100 modal-border" style="border-bottom: 1px solid #dee2e6;">
-                        <button class="modal-content align-items-center" style="border: 1px solid transparent;">신고 사유를 선택해주세요</button>
+                    <div class="w-100 modal-border" style="border-bottom: 1px solid #dee2e6; padding: 0.5em;">
+                        <button class="modal-content align-items-center" style="border: 1px solid transparent; font-weight: bold;">신고 사유를 선택해주세요</button>
                     </div>
-                    <div class="w-100 modal-border" style="border-bottom: 1px solid #dee2e6;">
-                        <button class="modal-content align-items-center" style="border: 1px solid transparent;">부적절한 컨텐츠 게시</button>
+                    <div v-for="(reportFor, i) in reportForList" :key="i" class="w-100 modal-border" style="border-bottom: 1px solid #dee2e6; padding: 0.5em;">
+                        <button v-text="reportFor" class="modal-content align-items-center" style="border: 1px solid transparent;" data-bs-target="#repotModal2" data-bs-toggle="modal" @click="setReportFor(reportFor)"></button>
                     </div>
-                    <div class="w-100 modal-border" style="border-bottom: 1px solid #dee2e6;">
-                        <button class="modal-content align-items-center" style="border: 1px solid transparent;">선정/폭력성</button>
-                    </div>
-                    <div class="w-100 modal-border" style="border-bottom: 1px solid #dee2e6;">
-                        <button class="modal-content align-items-center" style="border: 1px solid transparent;">스팸/광고</button>
-                    </div>
-                    <div class="w-100 modal-border" style="border-bottom: 1px solid #dee2e6;">
-                        <button class="modal-content align-items-center" style="border: 1px solid transparent;">거짓 또는 사기</button>
-                    </div>
-
-                    <div class="w-100 modal-content" style="border: 1px solid transparent;">
-                        <button class="modal-content align-items-center" style="border: 1px solid transparent;">기타</button>
+                    
+                    <div class="w-100 modal-content" style="border: 1px solid transparent; padding: 0.5em;">
+                        <button class="modal-content align-items-center" style="border: 1px solid transparent;" data-bs-target="#repotModal2" data-bs-toggle="modal" @click="setReportFor('기타')">기타</button>
                     </div>
                 </div>
                 <!-- <div class="modal-footer">
@@ -90,9 +81,14 @@
     <!-- 신고 모달2 -->
     <div class="modal" tabindex="-1" role="dialog" id="repotModal2">
         <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
+            <div class="modal-content position-relative">
                 <div class="modal-header">
-                    <h5 class="modal-title">신고</h5>
+                    <h4 class="modal-title mx-auto" style="color: #ff4757;">신고</h4>
+                </div>
+                <div class="slide" style="position: absolute !important; top: 1.5em !important; left: 1.5em !important;">
+                    <button type="button" class="carousel-control-prev-icon" aria-hidden="true" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div style="position: absolute !important; top: 1.5em !important; right: 1.5em !important;">
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -130,6 +126,8 @@
             searchLoginDays: "",
             orderList: [],
           },
+          // 신고 리스트
+          reportForList: [ "부적절한 컨텐츠 게시", "선정/폭력성", "스팸/광고", "거짓 또는 사기", "테스트리폿사유" ],
           // 회원신고 생성 시 신고 내용을 담은 object   
           reportDto: {
             memberId: memberId,
@@ -164,6 +162,11 @@
         setReportDto(target){
             this.reportDto.reportTargetPrimaryKey = target;
             console.log(this.reportDto);
+        },
+        // 신고 이유 설정
+        setReportFor(reportFor){
+            this.reportDto.reportFor = reportFor;
+            console.log(this.reportDto.reportFor);
         },
         // 회원신고 생성
         async reportMember(target){
