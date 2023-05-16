@@ -141,6 +141,26 @@
 		</if>
 		</select>
 	
+
+	
+	
+	<!-- 유저의 포인트 증가 -->
+	<update id="chargePoint">
+	  UPDATE member 
+	  SET member_point = member_point + #{paymentTotal} 
+	  WHERE member_id = #{memberId}
+	</update>
+			
+
+	<!-- 포인트 차감 -->
+	<update id="decreasePoint">
+	  UPDATE member 
+	  SET member_point =  member_point - #{paymentTotal} 
+	  WHERE member_id = #{memberId}
+	</update>
+	
+	
+	
 	<delete id="delete">
 		delete member where member_id = #{memberId}
 	</delete>

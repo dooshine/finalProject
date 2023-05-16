@@ -34,6 +34,8 @@
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/static/css/doo.css" />
 
     <script>
+    	const memberId = "${sessionScope.memberId}";
+    	const memberLevel = "${sessionScope.memberLevel}";
     	const contextPath = "${pageContext.request.contextPath}";
         const memberId = "${sessionScope.memberId}";
         const memberLevel = "${sessionScope.memberLevel}";
@@ -94,10 +96,12 @@
             </div>
         </header>
           <hr>
+
         <section class="container-fluid">
             <div class="row">
                 <div class="col-3 d-flex left-aside">
                     <jsp:include page="/WEB-INF/views/template/sidebar.jsp"></jsp:include>
                 </div>
                 <div class="col-6 article container-fluid">
+
                 
