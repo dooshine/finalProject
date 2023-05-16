@@ -58,7 +58,7 @@ $(function(){
     });
 
     //비밀번호 확인 검사
-    $("#passwordRe").blur(function(){
+    $("[name=memberPwRe]").blur(function(){
         var memberPw = $("[name=memberPw]").val();
         var memberPwRe = $(this).val();
 
@@ -99,7 +99,7 @@ $(function(){
             method:"get",
             success:function(response) {
                 if(response == "Y") {
-                    valid.memberIdVaild = true;
+                    valid.memberNickVaild = true;
                     $(this).removeClass("valid invalid invalid2")
                             .addClass("valid");
                 }
