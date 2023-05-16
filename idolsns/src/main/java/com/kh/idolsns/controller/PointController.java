@@ -165,7 +165,8 @@ public class PointController {
 	public String chargeCancel(
 			@RequestParam int paymentNo, 
 			HttpServletResponse resp,
-			RedirectAttributes attr) throws URISyntaxException, IOException, NoHandlerFoundException {
+			RedirectAttributes attr,
+			HttpSession session) throws URISyntaxException, IOException, NoHandlerFoundException {
 		
 		 String memberId = (String) session.getAttribute("memberId");
 		 

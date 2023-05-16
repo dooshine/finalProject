@@ -1,5 +1,4 @@
 package com.kh.idolsns.dto;
-import java.sql.Date;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,7 +10,7 @@ public class ChatRoomDto {
 
 	private int chatRoomNo;
 	private String chatRoomName;
-	private Date chatRoomStart;
+	private long chatRoomStart;
 	private char chatRoomType;
 	
 }
