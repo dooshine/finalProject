@@ -102,4 +102,20 @@ public class MemberRepoImpl implements MemberRepo{
 		return sqlSession.selectList("member.selectList", adminMemberSearchVO);
 	}
 
+	//중복 검사
+	@Override
+	public int idDuplicatedCheck(String memberId) {
+		return sqlSession.selectOne("member.idDuplicatedCheck", memberId);
+	}
+
+	@Override
+	public int nickDuplicatedCheck(String memberNick) {
+		return sqlSession.selectOne("member.nickDuplicatedCheck", memberNick);
+	}
+
+	@Override
+	public int emailDuplicatedCheck(String memberEmail) {
+		return sqlSession.selectOne("member.emailDuplicatedCheck", memberEmail);
+	}
+
 }
