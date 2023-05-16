@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-
+<%-- <jsp:include page="/WEB-INF/views/template/header.jsp"></jsp:include> --%>
   <head>
     <!-- <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"> -->
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/5.2.3/cosmo/bootstrap.min.css">
@@ -83,6 +83,15 @@
 					console.log(categori);
 					
 				});
+				
+				
+				// 1-1. 행사일정의 날짜 및 시간 scheduleStart, scheduleEnd에 저장
+				let scheduleStart = "";
+				let scheduleEnd = "";
+				
+				// 1-2. 같이가요의 날짜 및 시간 togetherStart, togetherEnd에 저장
+				let togetherStart = "";
+				let togetherEnd = ""; 
 				
 				// 2. 태그를 저장할 배열 선언 및 태그 전역 변수 tag에 저장
 				let tag = [];			
@@ -270,25 +279,21 @@
                     <div class="modal-body">
                         <!-- 태그 버튼 선택 -->
                         <p class="text-center">무엇에 대한 글인가요?(카테고리 설정)</p>
-                        <div class="row justify-content-end"> 
-                        	<div class="col-auto">
-                        		<button type="button" class=" btn btn-primary modal2"
+                        <div class="row justify-content-center"> 
+                        	<button type="button" class="col-3 btn btn-primary modal2"
 	                        	data-bs-target="#modal2" data-bs-toggle="modal">
 	                        	자유
 	                        </button>
-                        	</div>                   
-	                        
 	                        &nbsp;&nbsp;
 	                        <button type="button" class="col-3 btn btn-primary modal2"
-	                        	data-bs-target="#modal2" data-bs-toggle="modal">
+	                        	data-bs-target="#modal1-1" data-bs-toggle="modal">
 	                        	행사일정
 	                        </button>
                      	    &nbsp;&nbsp;
 	                        <button type="button" class="col-3 btn btn-primary modal2"
-	                        	data-bs-target="#modal2" data-bs-toggle="modal">
+	                        	data-bs-target="#modal1-2" data-bs-toggle="modal">
 	                        	같이가요
 	                        </button>
-	                        
                         </div>
                     </div>
                    
@@ -300,9 +305,88 @@
                     
                 </div>      
             </div>
-         </div>
+        </div>
        
+        <!-- 1-1. 행사일정 기간 -->
+        <div class="modal" tabindex="-1" role="dialog" id="modal1-1"
+                            data-bs-backdrop="static"> <!-- static이면 모달창 외부 클릭해도 안꺼짐 -->
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                
+                	<!-- header -->
+                    <div class="modal-header">
+                        <h5 class="modal-title">행사일정 기간</h5>
+                    </div>
+                    
+                    <!-- body -->
+                    <div class="modal-body">
+                        <!-- 태그 버튼 선택 -->
+                        <p class="text-center">행사일정의 시작, 종료 날짜 및 시간을 선택하세요</p>
+                        <div class="row justify-content-center"> 
+                        	<h6 class="col-5 text-center">시작 날짜 및 시간</h6>
+                        	<input type="datetime-local" id="schedule-start" class="col-7">
+                        </div>
+                        <br>
+                        <div class="row justify-content-center"> 
+                        	<h6 class="col-5 text-center">종료 날짜 및 시간</h6>
+                        	<input type="datetime-local" id="schedule-end" class="col-7">
+                        </div>
+                    </div>
+                   
+                    <!-- footer -->
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary"
+	                        	data-bs-target="#modal2" data-bs-toggle="modal">
+	                        	다음
+	                    </button>
+                        <button type="button" class="btn btn-secondary"
+                                data-bs-dismiss="modal">닫기</button>
+                    </div>
+                    
+                </div>      
+            </div>
+        </div>
    
+        <!-- 1-2. 같이가요 기간 -->
+        <div class="modal" tabindex="-1" role="dialog" id="modal1-2"
+                            data-bs-backdrop="static"> <!-- static이면 모달창 외부 클릭해도 안꺼짐 -->
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                
+                	<!-- header -->
+                    <div class="modal-header">
+                        <h5 class="modal-title">같이가요 기간</h5>
+                    </div>
+                    
+                    <!-- body -->
+                    <div class="modal-body">
+                        <!-- 태그 버튼 선택 -->
+                        <p class="text-center">같이가요의 시작, 종료 날짜 및 시간을 선택하세요</p>
+                        <div class="row justify-content-center"> 
+                        	<h6 class="col-5 text-center">시작 날짜</h6>
+                        	<input type="datetime-local" id="together-start" class="col-7">
+                        </div>
+                        <br>
+                        <div class="row justify-content-center"> 
+                        	<h6 class="col-5 text-center">종료 날짜</h6>
+                        	<input type="datetime-local" id="together-end" class="col-7">
+                        </div>
+                    </div>
+                   
+                    <!-- footer -->
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary"
+	                        	data-bs-target="#modal2" data-bs-toggle="modal">
+	                        	다음
+	                    </button>
+                        <button type="button" class="btn btn-secondary"
+                                data-bs-dismiss="modal">닫기</button>
+                    </div>
+                    
+                </div>      
+            </div>
+        </div>
+         
          
 		<!-- 2.  태그 창 (첫번 째 창에서 다음 버튼이 클릭 되었을 때, 비동기로 현존하는 이벤트 태그들을 가져옴)-->
         <div class="modal" tabindex="-1" role="dialog" id="modal2"
@@ -333,7 +417,7 @@
                     <div class="modal-footer">
                        	<button type="button" class="btn btn-primary"
                             data-bs-target="#modal3" data-bs-toggle="modal">
-                        	세번째모달로
+                        	글작성하기
                         </button>
                         <button type="button" class="btn btn-secondary"
                                 data-bs-dismiss="modal">닫기</button>
@@ -379,6 +463,6 @@
             
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
-    
   </body>
 </html>
+<%--  <jsp:include page="/WEB-INF/views/template/footer.jsp"></jsp:include> --%>
