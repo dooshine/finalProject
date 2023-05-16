@@ -124,7 +124,7 @@
 					
 					// postDto에 삽입하기 위해 post로 송신할 JSON 객체생성
 					let postDto = {
-						memberId: "testid",
+						memberId: "testuser1",
 						postType: categori,
 						postContent: postText		
 					}
@@ -170,7 +170,7 @@
 							}
 							console.log("총 "+files.length+"개의 파일이 전송되었습니다");
 							$.ajax({
-							      url: "http://localhost:8080/rest/attachment/upload?postNo="+postNo,
+							      url: "http://localhost:8080/rest/attachment/upload2?postNo="+postNo,
 							      type: 'POST',
 							      data: formData,
 							      contentType: false, // do not set content type
@@ -270,28 +270,25 @@
                     <div class="modal-body">
                         <!-- 태그 버튼 선택 -->
                         <p class="text-center">무엇에 대한 글인가요?(카테고리 설정)</p>
-                        <div class="row ms-5 me-5">                     
-	                        <button type="button" class="col btn btn-primary modal2"
+                        <div class="row justify-content-end"> 
+                        	<div class="col-auto">
+                        		<button type="button" class=" btn btn-primary modal2"
 	                        	data-bs-target="#modal2" data-bs-toggle="modal">
 	                        	자유
 	                        </button>
-	                        &nbsp; &nbsp;
-	                        <button type="button" class="col btn btn-primary modal2"
+                        	</div>                   
+	                        
+	                        &nbsp;&nbsp;
+	                        <button type="button" class="col-3 btn btn-primary modal2"
 	                        	data-bs-target="#modal2" data-bs-toggle="modal">
 	                        	행사일정
 	                        </button>
-                        </div>
-                        <br>
-                        <div class="row ms-5 me-5">
-	                        <button type="button" class="col btn btn-primary modal2"
+                     	    &nbsp;&nbsp;
+	                        <button type="button" class="col-3 btn btn-primary modal2"
 	                        	data-bs-target="#modal2" data-bs-toggle="modal">
 	                        	같이가요
 	                        </button>
-	                        &nbsp; &nbsp;
-	                        <button type="button" class="col btn btn-primary modal2"
-	                        	data-bs-target="#modal2" data-bs-toggle="modal">
-	                        	펀딩
-	                        </button>
+	                        
                         </div>
                     </div>
                    
