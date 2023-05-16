@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.kh.idolsns.dto.MemberDto;
@@ -38,6 +39,7 @@ public class MemberController {
 	public String joinFinish() {
 		return "member/joinFinish";
 	}
+	
 	
 	//로그인
 	@GetMapping("/login")
@@ -193,4 +195,42 @@ public class MemberController {
 		return "member/findIdFinish";
 	}
 	
+	//중복 검사
+	@GetMapping("/idDuplicatedCheck")
+	@ResponseBody
+	public String idDuplicatedCheck(@RequestParam String memberId) {
+		int result = memberRepo.idDuplicatedCheck(memberId);
+		
+		if(result == 0) {
+			return "Y";
+		}
+		else {
+			return "N";
+		}
+	}
+	
+	@GetMapping("nickDuplicatedCheck")
+	@ResponseBody
+	public String nickDuplicatedCheck(@RequestParam String memberNick) {
+		int result = memberRepo.nickDuplicatedCheck(memberNick);
+		if(result == 0) {
+			return "Y";
+		}
+		else {
+			return "N";
+		}
+	}
+	
+	@GetMapping("/emailDuplicatedCheck")
+	@ResponseBody
+	public String emailDuplicatedCheck(@RequestParam String memberEmail) {
+		int result = memberRepo.emailDuplicatedCheck(memberEmail);
+		
+		if(result == 0) {
+			return "Y";
+		}
+		else {
+			return "N";
+		}
+	}
 }
