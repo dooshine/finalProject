@@ -1,9 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-    
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
+<jsp:include page="/WEB-INF/views/template/header.jsp"></jsp:include> 
 
 <h1>결제 상세 정보</h1>
 		
@@ -54,3 +52,5 @@
 		</c:forEach>
 		
 		--%>
+		
+		<jsp:include page="/WEB-INF/views/template/footer.jsp"></jsp:include> 

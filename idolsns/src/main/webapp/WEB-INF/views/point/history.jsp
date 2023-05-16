@@ -115,8 +115,8 @@
 				            <th>충전일</th>
 				            <th>충전 금액</th>
 				            <th>결제 수단</th>
-				            <th>더보기</th>
 				            <th>상태</th>
+				            <th>더보기</th>
 				          </tr>
 				        </thead>
 				        <tbody>
@@ -125,15 +125,17 @@
 				              <td>${paymentDto.paymentTime}</td>
 				              <td>${paymentDto.paymentTotal}</td>
 				              <td>카카오페이</td>
+				            
 				              <td>
+				              	승인/취소
+      			
+				             </td>
+				             
+				               <td>
 				                <a href="detail?paymentNo=${paymentDto.paymentNo}">
 				                  더보기
 				                </a>
 				              </td>
-				              <td>
-				              	${response.status}
-      			
-				             </td>
 				            </tr>
 				          </c:forEach>
 				        </tbody>

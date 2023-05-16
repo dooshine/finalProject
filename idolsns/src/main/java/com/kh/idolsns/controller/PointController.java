@@ -20,6 +20,7 @@ import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.kh.idolsns.dto.PaymentDto;
+import com.kh.idolsns.repo.MemberRepo;
 import com.kh.idolsns.repo.PaymentRepo;
 import com.kh.idolsns.service.KakaoPayService;
 import com.kh.idolsns.vo.KakaoPayApproveRequestVO;
@@ -41,7 +42,10 @@ public class PointController {
 	@Autowired
 	private KakaoPayService kakaoPayService;
 
-
+	@Autowired
+	private MemberRepo memberRepo;
+	
+	
 
 	
 	@Autowired
@@ -163,16 +167,16 @@ public class PointController {
 		return "point/detail"; //"/WEB-INF/views/pay/detail.jsp"
 	}
 	
+	
+	
+	
+	
 	@GetMapping("/cancel")
 	public String chargeCancel(
 			@RequestParam int paymentNo, 
 			HttpServletResponse resp,
-			RedirectAttributes attr,
-			HttpSession session) throws URISyntaxException, IOException, NoHandlerFoundException {
+			RedirectAttributes attr) throws URISyntaxException, IOException, NoHandlerFoundException {
 		
-
-		String memberId = (String)session.getAttribute("memberId");
-
 		 
 		//[1] paymentNo로 PaymentDto 정보를 조회
 		PaymentDto paymentDto = paymentRepo.find(paymentNo);
@@ -190,17 +194,19 @@ public class PointController {
 		KakaoPayCancelResponseVO response = kakaoPayService.cancel(vo);
 		
 		//[3] 내 DB의 잔여 금액을 0으로 변경(paymentRepo)
-		//paymentRepo.cancelRemain(paymentNo);
+		paymentRepo.cancelRemain(paymentNo);
 		
-		//[4] 상세 페이지로 돌려보낸다
-		//return "redirect:detail?paymentNo="+paymentNo;
-		attr.addAttribute("paymentNo", paymentNo);
-		
+		 //[4] 포인트 차감
+	    String memberId = paymentDto.getMemberId();
+	    int paymentTotal = paymentDto.getPaymentTotal();
+	    memberRepo.decreasePoint(memberId, paymentTotal);
 
-		return "redirect:detail";
+	    //[5] 상세 페이지로 돌려보낸다
+	    attr.addAttribute("paymentNo", paymentNo);
+	    
+	    return "redirect:detail";
+	
 	}
-	
-	
 
 	
 	///////////////////////////
@@ -213,20 +219,5 @@ public class PointController {
 	}
 	
 
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+		
 }
