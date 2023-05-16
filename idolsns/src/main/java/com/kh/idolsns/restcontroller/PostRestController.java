@@ -17,11 +17,20 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.kh.idolsns.dto.TagDto;
+import com.kh.idolsns.dto.TogetherPostDto;
+import com.kh.idolsns.dto.FreePostDto;
 import com.kh.idolsns.dto.PostDto;
-import com.kh.idolsns.dto.PostWithNickDto;
+import com.kh.idolsns.dto.PostImageDto;
+import com.kh.idolsns.dto.SchedulePostDto;
+import com.kh.idolsns.repo.TagRepo;
+import com.kh.idolsns.repo.TogetherPostRepo;
+import com.kh.idolsns.repo.FreePostRepo;
+import com.kh.idolsns.repo.PostImageRepo;
 import com.kh.idolsns.repo.PostRepo;
 import com.kh.idolsns.repo.PostWithNickRepo;
-import com.kh.idolsns.vo.SearchVO;
+import com.kh.idolsns.repo.SchedulePostRepo;
+import com.kh.idolsns.repo.SchedulePostRepoImpl;
 
 @CrossOrigin
 @RestController
@@ -34,36 +43,106 @@ public class PostRestController {
     @Autowired
     private PostWithNickRepo postWithNickRepo;
 
+    @Autowired
+    private TagRepo tagRepo;
+    
+    // 자유 게시물
+    @Autowired
+    private FreePostRepo freePostRepo;
+    
+    // 행사일정 게시물
+    @Autowired
+    private SchedulePostRepo schedulePostRepo;
+    
+    @Autowired
+    private TogetherPostRepo togetherPostRepo;    
+    
     // 통합게시물 등록
     @PostMapping("/")
-    public void insert(@RequestBody @ModelAttribute PostDto postDto, HttpSession session){
-        // 통합 게시물 시퀀스 발행
-        Long postNo = postRepo.sequence();
-
-        // # 통합 게시물 생성
-        // 1. 통합게시물 번호 설정
-        postDto.setPostNo(postNo);
-        // 2. 통합게시물 작성자 설정
-        postDto.setMemberId((String)session.getAttribute("memberId"));
-        // 3. 통합게시물 글 종류 설정(fix!!)
-        postDto.setPostType("자유");
-        // 4. 통합게시물 등록
-        postRepo.insert(postDto);
-
-        // # 해당 게시물 생성
+    public Long insert(PostDto postDto, HttpSession session){
+        // 통합 게시물 시퀀스 발행	
+		 Long postNo = postRepo.sequence();
+		 
+		 System.out.println("postNo는 : "+postNo);
+		 // # 통합 게시물 생성 
+		 // 1. 통합게시물 번호 설정
+		 postDto.setPostNo(postNo); // 세션에 있는거 확인할 때는 이거
+		 // postDto.setMemberId((String)session.getAttribute("memberId"));
+		 // 2. 통합게시물 작성자 설정 
+		 postDto.setMemberId(postDto.getMemberId());
+		 // 3. 통합게시물 글 종류 설정(fix!!)
+		 postDto.setPostType(postDto.getPostType()); // postDto.setPostTime(new
+		 //Date(System.currentTimeMillis())); // 현재 시간으로 설정 
+		 // 4. 통합게시물 글 내용 설정
+		 postDto.setPostContent(postDto.getPostContent());
+		 
+		 // 5. 통합게시물 등록 
+		 postRepo.insert(postDto);
+		 
+         // # 해당 게시물에 해당하는 테이블에 데이터 추가
+		 String postType = postDto.getPostType();
+		 
+		 String memberId = postDto.getMemberId(); 
+		 if(postType.equals("자유")){
+			 FreePostDto freePostDto = new FreePostDto();
+			 freePostDto.setPostNo(postNo); 
+			 freePostDto.setMemberId(memberId);
+			 System.out.println("자유 게시글");
+			 freePostRepo.insert(freePostDto); 
+		 }
+		 else if(postType.equals("같이가요")) {
+			 TogetherPostDto togetherPostDto = new TogetherPostDto();
+			 togetherPostDto.setPostNo(postNo);
+			 togetherPostDto.setMemberId(memberId);
+			 System.out.println("같이가요 게시글");
+			 togetherPostRepo.insert(togetherPostDto);
+		 }
+		 else if(postType.equals("행사일정")) {
+			 SchedulePostDto schedulePostDto = new SchedulePostDto();
+			 schedulePostDto.setPostNo(postNo);
+			 schedulePostDto.setMemberId(memberId);
+			 System.out.println("행사일정 게시글");
+			 schedulePostRepo.insert(schedulePostDto);
+		 }
         
+		 // 등록된 게시글 번호를 바탕으로 다른 비동기 통신(ajax, axios)에서 태그, 
+		 // 사진 정보를 해당 테이블의 정규화 테이블 추가할 떄 사용한다.
+		 return postDto.getPostNo();
     }
+    
+    // -------------------- 태그정보 등록 
+    @PostMapping("/tag")
+    public void taging(@RequestParam Long postNo, @RequestBody List<String> tagList) {
+  
+    	Long tempNo; // controller측 임시 시퀀스 번호 
+    	TagDto tempDto = new TagDto();
+    	System.out.println("ajax로 수신받은 값들은 다음과 같아요 postNo : "+postNo+" tagList : "+tagList);
+    	for(String tag : tagList) {
+    		// 태그 존재 하지 않을 때,(태그 명으로 조회했을 때 시퀀스가 있는 경우)
+//    		if(tagRepo.selectOne(tag)==null) 
+//    		{
+    			tempNo = tagRepo.sequence();
+    			tempDto.setTagNo(tempNo);
+    			tempDto.setPostNo(postNo);
+    			tempDto.setTagType("자유"); // 자유, 고정 둘 중 하나
+    			tempDto.setTagName(tag);
+    			tagRepo.insert(tempDto);
+//    		}
+    		
+    	}
+    }	
 
-    // 통합게시물 목록조회, 해당 DTO로 전달
-    @GetMapping("/")
-    public List<PostWithNickDto> selectList(@ModelAttribute SearchVO searchVO){
-        return postWithNickRepo.selectList(searchVO);
-    }
-    // 통합게시물 상세조회
-    @GetMapping("/{postNo}")
-    public PostWithNickDto selectOne(@PathVariable Long postNo){
-        return postWithNickRepo.selectOne(postNo);
-    }
+
+//    // 통합게시물 목록조회, 해당 DTO로 전달
+//    @GetMapping("/")
+//    public List<PostWithNickDto> selectList(@ModelAttribute SearchVO searchVO){
+//        return postWithNickRepo.selectList(searchVO);
+//    }
+//    // 통합게시물 상세조회
+//    @GetMapping("/{postNo}")
+//    public PostWithNickDto selectOne(@PathVariable Long postNo){
+//        return postWithNickRepo.selectOne(postNo);
+//    }
 
     // 통합게시물 수정
     @PutMapping("/")

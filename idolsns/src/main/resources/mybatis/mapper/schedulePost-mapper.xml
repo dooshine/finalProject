@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ↑ XML 헤더(반드시 첫 번째 줄에 위치) -->
+
+<!-- dtd선언 -->
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+<mapper namespace="schedulePost">
+	<!-- 행사일정게시물 생성 -->
+	<insert id="insert">
+		insert into schedule_post
+		(post_no, member_id, schedule_start, schedule_end)
+		values
+		(#{postNo},#{memberId}, #{scheduleStart}, #{scheduleEnd})
+	</insert>
+	
+	<!-- 행사일정 게시물 조회 -->
+	<select id="selectOne" resultType="schedulePostDto">
+		select * from schedule_post where post_no = #{postNo}
+	</select>
+	
+	<delete id="delete">
+		delete from schedule_post
+		where post_no = #{postNo}
+	</delete>
+	
+	
+</mapper><!--  -->
