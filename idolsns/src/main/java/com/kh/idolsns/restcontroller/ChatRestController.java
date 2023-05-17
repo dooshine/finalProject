@@ -4,9 +4,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.kh.idolsns.dto.ChatMessageDto;
@@ -35,20 +33,19 @@ public class ChatRestController {
 						.build()
 			);
 		}
-//		System.out.println(list);
 		return list;
 	}
 	
 	// 메세지 보내기(보낸 메세지 저장)
-	@PostMapping("/")
+	/*@PostMapping("/")
 	public void sendMessage(@ModelAttribute ChatMessageDto chatMessageDto) {
 		chatMessageRepo.sendMessage(chatMessageDto);
-	}
+	}*/
 	
 	// 자기가 보낸 메세지 삭제 (모든 멤버에게 삭제됨)
 	@DeleteMapping("/{chatMessageNo}")
-	public void deleteMessage(@PathVariable int chatMessageNo, String memberId) {
-		chatMessageRepo.deleteMessage(chatMessageNo, memberId);
+	public void deleteMessage(@PathVariable int chatMessageNo) {
+		chatMessageRepo.deleteMessage(chatMessageNo);
 	}
 	
 }

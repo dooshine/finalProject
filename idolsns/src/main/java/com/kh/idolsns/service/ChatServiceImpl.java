@@ -166,6 +166,11 @@ public class ChatServiceImpl implements ChatService {
 		}
 	}
 	
+	// 메세지 삭제
+	public void deleteMessage(long chatMessageNo) {
+		chatMessageRepo.deleteMessage(chatMessageNo);
+	}
+	
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
@@ -207,24 +212,31 @@ public class ChatServiceImpl implements ChatService {
 			msg.setMemberId(member.getMemberId());
 			msg.setChatMessageTime(System.currentTimeMillis());
 			msg.setChatMessageContent(receiveVO.getChatMessageContent());
-//			msg.settime(System.currentTimeMillis());
-//			msg.setMemberLevel(member.getMemberLevel());
 			// JSON으로 변환
-			
 			// 메세지 번호 생성
 			int chatMessageNo = chatMessageRepo.sequence();
 			msg.setChatMessageNo(chatMessageNo);
-			
 			String json = mapper.writeValueAsString(msg);
 			TextMessage jsonMessage = new TextMessage(json);
-			
-			
 			this.broadcastRoom(member, chatRoomNo, jsonMessage, chatMessageNo);
 		}
 		// 채팅방 입장 메세지인 경우
 		else if(receiveVO.getType() == WebSocketConstant.JOIN) {
 			int chatRoomNo = receiveVO.getChatRoomNo();
 			this.join(member, chatRoomNo);
+		}
+		// 삭제인 경우
+		else if(receiveVO.getType() == WebSocketConstant.DELETE) {
+			int chatRoomNo = receiveVO.getChatRoomNo();
+			long chatMessageNo = receiveVO.getChatMessageNo();
+			this.deleteMessage(chatMessageNo);
+			String json = mapper.writeValueAsString(receiveVO);
+			TextMessage jsonMessage = new TextMessage(json);
+			//log.debug("member: " + member);
+			//log.debug("ChatRoomNo: " + receiveVO.getChatRoomNo());
+			//log.debug("jsonMessage: " + jsonMessage);
+			//log.debug("ChatMessageNo: " + receiveVO.getChatMessageNo());
+			this.broadcastRoom(member, chatRoomNo, jsonMessage, chatMessageNo);
 		}
 	}
 

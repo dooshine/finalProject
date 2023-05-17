@@ -88,8 +88,6 @@
 			messageHandler(e) {
 				console.log(JSON.parse(e.data));
 				this.messageList.push(JSON.parse(e.data));
-// 				console.log(JSON.parse(e.data).chatMessageContent);
-// 				this.messageList.push(JSON.parse(e.data));
 			},
 			// 메세지 목록 지우기
 			clearMessageList() {
@@ -98,47 +96,33 @@
 			// 메세지 불러오기
 			async loadMessage() {
 				const chatRoomNo = new URLSearchParams(location.search).get("chatRoomNo");
-				// console.log("chatRoomNo: " + chatRoomNo);
 				const url = "${pageContext.request.contextPath}/chat/message/" + chatRoomNo;
 				let resp = await axios.get(url);
 				this.messageList.push(...resp.data);
-				/*let temp = resp.data.map(item => {
-					item.chatMessageTime = this.timeFormat(new Date(item.chatMessageTime));
-					// console.log(item.chatMessageContent);
-					this.messageList.push(JSON.parse(item.chatMessageContent));
-					return item;
-				})
-				this.clearMessageList();
-				for(let i=0; i<temp.length; i++){
-					this.messageList.push(JSON.parse(temp[i].chatMessageContent));
-				}*/
-// 				this.messageList.push(...temp);
 			},
 			// 메세지 보내기
 			sendMessage() {
-				//console.log(this.text)
 				if(this.text.length == 0) return;
 				const data = { type: 1, chatMessageContent: this.text };
 				this.socket.send(JSON.stringify(data));
 				// 입력창 초기화
 				this.clear();
-				// 목록 불러오기 - 하면 안됨
-// 				this.loadMessage();
 			},
 			// 시간 포맷 설정
 			timeFormat(chatMessageTime) {
 				return moment(chatMessageTime).format("A h:mm");
 			},
 			// 보낸 메세지 삭제
-			async deleteMessage(index) {
-				const chatMessageNo = this.messageList[index].chatMessageNo;
-				console.log("chatMessageNo: " + chatMessageNo);
-				const url = "${pageContext.request.contextPath}/chat/message/" + chatMessageNo;
-				const resp = await axios.delete(url);
+			deleteMessage(index) {
+				const chatRoomNo = new URLSearchParams(location.search).get("chatRoomNo");
+				console.log("채팅번호: " + this.messageList[index].chatMessageNo);
+				const data = { type: 3, chatMessageNo: this.messageList[index].chatMessageNo, chatRoomNo: chatRoomNo };
+				this.socket.send(JSON.stringify(data));
+				this.messageList.splice(index, 1);
 			}
 		},
 		computed: {
-			
+
 		},
 		created() {
 			// 웹소켓 연결
