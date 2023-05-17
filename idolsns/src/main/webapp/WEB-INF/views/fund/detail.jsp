@@ -6,23 +6,6 @@
 
     <title>타이틀</title>
 
-
-    <script>
-    	const contextPath = "${pageContext.request.contextPath}";
-    </script>
-    
-    <script>
-    Vue.createApp({
-		  // 데이터 설정 영역
-		  data() {
-		    return {
-		    	likeCount: 0
-		    }
-		  }
-		  }).mount("#app");
-    
-	</script>
-	    
     
     
 
@@ -97,8 +80,7 @@
 	
 
 	<div class= "container-fluid d-flex justify-content-center">
-      	<div class="col-6">    
-   
+
 		
 			<div class="container rounded p-3" style="background-color:white">
 			
@@ -146,6 +128,7 @@
 				
 			
 				<div class="d-flex row mt-3" style="padding-left: 1em">
+				
 				<div id="app">
 	
 					    <button class="btn btn-primary like-btn col-2" @click="likeCount++">
@@ -160,7 +143,37 @@
 					    </button>
 				
 					
-						<button type="button" class="btn btn-primary col-7">이 프로젝트 후원하기</button>
+						<button type="button" data-bs-target="#modal01" 
+						data-bs-toggle="modal" class="btn btn-primary col-7">
+						이 프로젝트 후원하기</button>
+						
+						<!-- 후원 모달창 -->
+						<div class="modal" tabindex="-1" role="dialog" id="modal01"
+                            data-bs-backdrop="static">
+            				<div class="modal-dialog" role="document">
+                				<div class="modal-content">
+                    				<div class="modal-header">
+                        				<h5 class="modal-title">후원하기</h5>
+                    				</div>
+                    		<div class="modal-body">
+							<!-- 모달에서 표시할 실질적인 내용 구성 -->
+                        
+                <label>후원금</label>
+                <input type="text" v-model="fund.fundPrice">
+                
+                
+                <button type="button" v-on:click="sendItem">
+				    후원하기
+				</button>
+                        
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary"
+                                data-bs-dismiss="modal">닫기</button>
+                    </div>
+        	        </div>      
+    	        </div>
+	        </div>
 				</div>
 				</div>
 				
@@ -204,9 +217,7 @@
 			</div>
 			
 			
-			</div>
 			
-			<h2>펀딩 상세페이지임</h2>
 				postImageDto : ${postImageList}<br>
 				fundPostDto: ${fundPostDto }<br>
 				
@@ -215,6 +226,35 @@
 				</c:forEach>
 			
 			
+    <script src="https://unpkg.com/vue@3.2.36"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script>
+        Vue.createApp({
+            //데이터 설정 영역
+            data(){
+                return {
+                    //화면에서 사용할 데이터 선언
+                    fund:{
+                        fundPrice:"",
+                    },
+                };
+            },
+            computed:{
+            },
+            methods:{
+                // 데이터 중 fund를 서버로 전송
+                async sendItem() {
+
+                    // const resp = await axios.post("주소", {데이터});
+                    const url = "http://localhost:8080/rest/fund/";
+                    const resp = await axios.post(url, this.fund);
+                    console.log(resp);
+
+
+                },
+            },
+        }).mount("#app");
+    </script>
 			
 	
 		

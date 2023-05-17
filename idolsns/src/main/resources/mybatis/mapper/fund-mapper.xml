@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- dtd -->
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="fund">
+
+	<insert id="add" parameterType="FundDto">
+		insert into fund(
+				fund_no, post_no, fund_price, fund_id, fund_time
+				)
+		values(
+				#{fundNo}, #{postNo}, #{fundPrice}, #{fundId}, #{fundTime}
+				)
+	</insert>
+	
+	<select id="sequence" resultType="Long">
+		select * from fund_seq.nextval from dual
+	</select>
+
+</mapper>

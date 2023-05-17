@@ -50,34 +50,6 @@
 //          }
         });
         
-//         onImageUpload : function(files, editor, welEditable) {
-//             // 파일 업로드(다중업로드를 위해 반복문 사용)
-//             for (var i = files.length - 1; i >= 0; i--) {
-//             uploadSummernoteImageFile(files[i],
-//             this);
-//             		}
-//             	}
-//             }
-//          };
-//         $('#summernote').summernote(setting);
-//         });
-        
-//         function uploadSummernoteImageFile(file, el) {
-// 			data = new FormData();
-// 			data.append("file", file);
-// 			$.ajax({
-// 				data : data,
-// 				type : "POST",
-// 				url : "uploadSummernoteImageFile",
-// 				contentType : false,
-// 				enctype : 'multipart/form-data',
-// 				processData : false,
-// 				success : function(data) {
-// 					$(el).summernote('editor.insertImage', data.url);
-// 				}
-// 			});
-// 		}
-        
     });
 </script>
 
@@ -89,9 +61,12 @@
 		종료일 : <input type="date" name="postEnd"><br><br>
 		목표 금액 : <input type="text" name="fundGoal"><br><br>
 <!-- 		후원자 수 : <input type="text" name="fundSponsorCount"><br><br> -->
-		펀딩 상태 : <input type="text" name="fundState"><br><br>
+		펀딩 상태 : <select name="fundState">
+						<option selected>진행중</option>
+						<option>취소</option>
+						<option>완료</option>
+					</select><br><br>
 		내용 : <textarea name="postContent"></textarea><br><br>
-<!-- 		이미지 : <input type="file" name="attach"> -->
 		이미지 : <input type="file" name="attaches" multiple>
 		<button type="submit">글쓰기</button>
 	</form>

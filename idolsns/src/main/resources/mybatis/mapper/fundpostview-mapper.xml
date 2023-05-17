@@ -8,7 +8,7 @@
 <mapper namespace="fundPostView">
 
 	<select id="selectList" resultType="FundPostViewDto">
-		select * from fundpost_view order by post_time desc
+		select * from fundpost_view where post_type='펀딩' order by post_time desc
 	</select>
 
 </mapper>
