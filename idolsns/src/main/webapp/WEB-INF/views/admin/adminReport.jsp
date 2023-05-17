@@ -32,9 +32,35 @@
             </tr>
         </tbody>
     </table>
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">신고 번호</th>
+                <th scope="col">신고 </th>
+                <th scope="col">회원포인트</th>
+                <th scope="col">회원이메일</th>
+                <th scope="col">회원가입날짜</th>
+                <th scope="col">최근로그인날짜</th>
+                <th scope="col">관리도구</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr v-for="(report, i) in reportList" :key="i">
+                <td>
+                    {{member.memberId}}
+                </td>
+                <td>{{member.memberNick}}</td>
+                <td>{{member.memberPoint}}</td>
+                <td>{{member.memberEmail}}</td>
+                <td>{{member.memberJoin}}</td>
+                <td>{{member.memberLogin === null ? "미접속": member.memberLogin }}</td>
+                <td><i class="fa-solid fa-user-xmark" data-bs-toggle="modal" data-bs-target="#repotModal1" @click="setReportDto(member.memberId)"></i></td>
+            </tr>
+        </tbody>
+    </table>
+
     <div class="row">
         <div class="col">
-            <h1>신고 리스트 생성</h1>
         </div>
     </div>
     <div class="row" v-for="(report, i) in reportList" :key="i">
