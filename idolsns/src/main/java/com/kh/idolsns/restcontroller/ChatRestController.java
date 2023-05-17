@@ -14,14 +14,14 @@ import com.kh.idolsns.repo.ChatMessageRepo;
 import com.kh.idolsns.vo.ChatMessageVO;
 
 @RestController
-@RequestMapping("/chat")
+@RequestMapping("/chat/message")
 public class ChatRestController {
 
 	@Autowired
 	private ChatMessageRepo chatMessageRepo;
 	
 	// 메세지 불러오기
-	@GetMapping("/message/{chatRoomNo}")
+	@GetMapping("/{chatRoomNo}")
 	public List<ChatMessageVO> roomMessage(@PathVariable int chatRoomNo) {
 		List<ChatMessageDto> tempList = chatMessageRepo.messageList(chatRoomNo);
 		List<ChatMessageVO> list = new ArrayList<>();
@@ -39,14 +39,14 @@ public class ChatRestController {
 		return list;
 	}
 	
-	// 메세지 보내기
-	@PostMapping("/message/")
+	// 메세지 보내기(보낸 메세지 저장)
+	@PostMapping("/")
 	public void sendMessage(@ModelAttribute ChatMessageDto chatMessageDto) {
 		chatMessageRepo.sendMessage(chatMessageDto);
 	}
 	
 	// 자기가 보낸 메세지 삭제 (모든 멤버에게 삭제됨)
-	@DeleteMapping("/message/{chatMessageNo}")
+	@DeleteMapping("/{chatMessageNo}")
 	public void deleteMessage(@PathVariable int chatMessageNo, String memberId) {
 		chatMessageRepo.deleteMessage(chatMessageNo, memberId);
 	}

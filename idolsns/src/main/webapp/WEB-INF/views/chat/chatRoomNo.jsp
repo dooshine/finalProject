@@ -18,10 +18,10 @@
 		<div class="message" v-for="(message, index) in messageList" :key="index">
 			<div>
 				<h4>{{ message.memberId }}</h4>
-				<p v-if="message.memberId == memberId">(내가쓴글)</p>
+				<button v-if="message.memberId == memberId" @click="deleteMessage(index)">x</button>
 			</div>
-			<div>{{ JSON.parse(message.chatMessageContent).chatMessageContent }}</div>
-			<div>{{ message.chatMessageTime }}</div>
+			<div>{{ message.chatMessageContent }}</div>
+			<div>{{ timeFormat(message.time) }}</div>
 		</div>
 	</div>
 </div>
@@ -68,7 +68,7 @@
 				this.socket.onerror = function() {
 					app.closeHandler();
 				};
-				this.socket.onmessage = function() {
+				this.socket.onmessage = function(e) {
 					app.messageHandler(e);
 				};
 			},
@@ -77,11 +77,19 @@
 				const chatRoomNo = new URLSearchParams(location.search).get("chatRoomNo");
 				const data = { type: 2, chatRoomNo: chatRoomNo };
 				this.socket.send(JSON.stringify(data));
+				this.chatRoomNo = chatRoomNo;
 			},
-			closeHandler() {},
-			errorHandler() {},
+			closeHandler() {
+				this.connected = false;
+			},
+			errorHandler() {
+				this.connected = false;
+			},
 			messageHandler(e) {
+				console.log(JSON.parse(e.data));
 				this.messageList.push(JSON.parse(e.data));
+// 				console.log(JSON.parse(e.data).chatMessageContent);
+// 				this.messageList.push(JSON.parse(e.data));
 			},
 			// 메세지 목록 지우기
 			clearMessageList() {
@@ -90,59 +98,47 @@
 			// 메세지 불러오기
 			async loadMessage() {
 				const chatRoomNo = new URLSearchParams(location.search).get("chatRoomNo");
-				console.log("chatRoomNo: " + chatRoomNo);
+				// console.log("chatRoomNo: " + chatRoomNo);
 				const url = "${pageContext.request.contextPath}/chat/message/" + chatRoomNo;
 				let resp = await axios.get(url);
-				let temp = resp.data.map(item => {
+				this.messageList.push(...resp.data);
+				/*let temp = resp.data.map(item => {
 					item.chatMessageTime = this.timeFormat(new Date(item.chatMessageTime));
+					// console.log(item.chatMessageContent);
+					this.messageList.push(JSON.parse(item.chatMessageContent));
 					return item;
-//					console.log("chatMessageTime: " + item.chatMessageTime);
-// 					console.log(new Date(resp.data.chatMessageTime));
 				})
-//				console.log(temp);
 				this.clearMessageList();
-				this.messageList.push(...temp);
+				for(let i=0; i<temp.length; i++){
+					this.messageList.push(JSON.parse(temp[i].chatMessageContent));
+				}*/
+// 				this.messageList.push(...temp);
 			},
 			// 메세지 보내기
-			/*sendMessage() {
-		        const messageContent = this.text;
-		        if (messageContent.length === 0) return;
-		        const data = { type: 1, chatMessageContent: messageContent };
-		        this.socket.send(this.jsonText);
-		     	// 입력창 초기화
-				this.clear();
-				// 목록 불러오기
-				this.loadMessage();
-		    },*/
 			sendMessage() {
+				//console.log(this.text)
 				if(this.text.length == 0) return;
-				const data = { type: 1, chatMessageContent: this.jsonText };
+				const data = { type: 1, chatMessageContent: this.text };
 				this.socket.send(JSON.stringify(data));
-				/*const url = "${pageContext.request.contextPath}/chat/message/";
-				const data = {
-						chatRoomNo: new URLSearchParams(location.search).get("chatRoomNo"),
-						memberId: this.memberId,
-						chatMessageContent: this.jsonText,
-				};
-				console.log(data.chatRoomNo);
-				console.log(data.memberId);
-				console.log(data.chatMessageContent);
-				const resp = await axios.post(url, JSON.stringify(data));*/
 				// 입력창 초기화
 				this.clear();
-				// 목록 불러오기
-				this.loadMessage();
+				// 목록 불러오기 - 하면 안됨
+// 				this.loadMessage();
 			},
 			// 시간 포맷 설정
 			timeFormat(chatMessageTime) {
-//				console.log(chatMessageTime);
 				return moment(chatMessageTime).format("A h:mm");
+			},
+			// 보낸 메세지 삭제
+			async deleteMessage(index) {
+				const chatMessageNo = this.messageList[index].chatMessageNo;
+				console.log("chatMessageNo: " + chatMessageNo);
+				const url = "${pageContext.request.contextPath}/chat/message/" + chatMessageNo;
+				const resp = await axios.delete(url);
 			}
 		},
 		computed: {
-			jsonText() {
-				return JSON.stringify({chatMessageContent : this.text})
-			}
+			
 		},
 		created() {
 			// 웹소켓 연결

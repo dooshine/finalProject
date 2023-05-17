@@ -30,8 +30,8 @@ public class ChatRoomVO {
 	
 	/** 사용자 유무 확인 **/
 	public boolean memberExist(ChatMemberVO member) {
-		log.debug("member: " + member);
-		log.debug("contains: " + members.contains(member));
+		//log.debug("member: " + member);
+		//log.debug("contains: " + members.contains(member));
 		return members.contains(member);
 	}
 	
