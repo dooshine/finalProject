@@ -210,8 +210,6 @@ public class PointController {
 	}
 
 	
-	///////////////////////////
-	
 	
 
 	@GetMapping("/order") //사용 내역
@@ -221,6 +219,8 @@ public class PointController {
 		model.addAttribute("list", list);
 	
 		return "point/order";
+
+
 	}
 	
 
