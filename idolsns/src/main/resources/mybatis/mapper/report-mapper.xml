@@ -24,6 +24,9 @@
             report_target_primary_key = #{reportTargetPrimaryKey}
     </select>
     <!-- 신고 목록조회 -->
+    <select id="selectList" resultType="reportDto">
+        select * from report
+    </select>
 
     <!-- 신고 횟수 조회 (전체기간 - 전체 100회 이상 제재) -->
     <select id="selectAllReportCnt" resultType="Integer">
