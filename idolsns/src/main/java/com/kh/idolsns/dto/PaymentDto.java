@@ -17,14 +17,12 @@ public class PaymentDto {
 	//결제 상태
 	public String getPaymentStatus() {
 		if(paymentTotal == paymentRemain) {
-			return "승인완료";
-		}
-		else if(paymentRemain == 0) {
-			return "완전취소";
+			return "승인";
 		}
 		else {
-			return "부분취소";
+			return "취소";
 		}
+		
 	}
 	
 	

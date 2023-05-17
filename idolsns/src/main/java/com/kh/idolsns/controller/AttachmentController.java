@@ -131,4 +131,10 @@ public class AttachmentController {
 			)
 			.body(resource);
 	}
+	
+	// 업로드 모달창을 띄위기 위한 사이트
+	@GetMapping("post/test")
+	public String test() {
+		return "post/test";
+	}
 }

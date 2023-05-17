@@ -48,6 +48,7 @@ public class MemberRepoImpl implements MemberRepo{
 		Map<String, Object> params = new HashMap<>();
 	    params.put("memberId", memberId);
 	    params.put("paymentTotal", paymentTotal);
+	    
 	    sqlSession.update("member.decreasePoint", params);
 	}
 
@@ -100,6 +101,22 @@ public class MemberRepoImpl implements MemberRepo{
 	@Override
 	public List<MemberDto> adminSelectList(AdminMemberSearchVO adminMemberSearchVO) {
 		return sqlSession.selectList("member.selectList", adminMemberSearchVO);
+	}
+
+	//중복 검사
+	@Override
+	public int idDuplicatedCheck(String memberId) {
+		return sqlSession.selectOne("member.idDuplicatedCheck", memberId);
+	}
+
+	@Override
+	public int nickDuplicatedCheck(String memberNick) {
+		return sqlSession.selectOne("member.nickDuplicatedCheck", memberNick);
+	}
+
+	@Override
+	public int emailDuplicatedCheck(String memberEmail) {
+		return sqlSession.selectOne("member.emailDuplicatedCheck", memberEmail);
 	}
 
 }
