@@ -1,17 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>   
-
+    <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>  
 
 <jsp:include page="/WEB-INF/views/template/header.jsp"></jsp:include> 
 
     <title>내 지갑</title>
 
 
-    <script>
-    	const contextPath = "${pageContext.request.contextPath}";
-    </script>
-    
   <style>
    
 		   	section {
@@ -90,60 +85,54 @@
 	    
 	</style>
 
-
-
-<section id = "my_point">
-	
-
-      	<div class= "container-fluid d-flex justify-content-center">
-        	<div class="col-6"> 
-        	
-        		 <div class="container rounded p-3" style="background-color:white">
+     <div id="app">
+      <div class="container rounded p-3" style="background-color:white">
         		 
-		        <ul class="point_header_tab">
-		            <li class="tab_list"><a href="charge">포인트 충전</a></li>
-		            <li class="tab_list"><a href="history">충전 내역</a></li>
-		            <li class="tab_list active"><a href="#">사용 내역</a></li>
-		        </ul>
-		        
-		        
-		        
-		        <h3 class="title mt-5 mb-3" style="padding-left: 0.5em">사용 내역</h3>
+        <ul class="point_header_tab">
+            <li class="tab_list"><a href="charge">포인트 충전</a></li>
+            <li class="tab_list"><a href="history">충전 내역</a></li>
+            <li class="tab_list active"><a href="#">사용 내역</a></li>
+        </ul>
+	        
+	        
+	        
+	        <h3 class="title mt-5 mb-3" style="padding-left: 0.5em">사용 내역</h3>
 				
-				<div class="modal-body" style="padding-left: 0.5em; padding-right: 0.5em;">
-				  <table class="table">
-				    <thead>
-				      <tr>
-				        <th>사용일</th>
-				        <th>사용 내역</th>
-				        <th>사용포인트</th>
-				        <th>더보기</th>
-				      </tr>
-				    </thead>
-				    <tbody>
-				      <tr>
-				        <td>2023-05-09</td>
-				        <td>상품 구매</td>
-				        <td>-500</td>
-				        <td><button class="btn btn-sm btn-primary">더보기</button></td>
-				      </tr>
-				      <tr>
-				        <td>2023-05-08</td>
-				        <td>이벤트 참여</td>
-				        <td>100</td>
-				        <td><button class="btn btn-sm btn-primary">더보기</button></td>
-				      </tr>
-				      <tr>
-				        <td>2023-05-05</td>
-				        <td>상품 구매</td>
-				        <td>800</td>
-				        <td><button class="btn btn-sm btn-primary">더보기</button></td>
-				      </tr>
-				    </tbody>
-				  </table>
-				  </div>
-				</div>
-			</div>
+			<div class="modal-body" style="padding-left: 0.5em; padding-right: 0.5em;">
+			  <table class="table">
+			    <thead>
+			      <tr>
+			        <th>사용일</th>
+			        <th>사용포인트</th>
+			        <th>사용 내역</th>
+			        <th>더보기</th>
+			      </tr>
+			    </thead>
+				<tbody>
+			    	<c:forEach var="fundDto" items="${list}">
+			          
+			            <tr>
+			              <td>${fundDto.fundTime}</td>
+			              <td>${fundDto.fundPrice}</td>
+			              <td>${fundDto.fundName}</td>
+			              <td>
+			                
+			                <a href="detail?fundNo=${fundDto.fundNo}">
+			                <button class="btn btn-sm btn-primary">
+			               	더보기
+			               	</button>
+			                </a>
+			              	
+			              </td>
+			            
+			            </tr>
+			     	</c:forEach>
+			        </tbody>
+			  </table>
+		  </div>
 		</div>
-	</section>
-	
+		</div>
+
+
+
+	<jsp:include page="/WEB-INF/views/template/footer.jsp"></jsp:include> 

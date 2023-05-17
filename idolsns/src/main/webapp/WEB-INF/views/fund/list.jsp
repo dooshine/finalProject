@@ -1,15 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
 <jsp:include page="/WEB-INF/views/template/header.jsp"></jsp:include>
 
 
     <title>ㅇㅇㅇ</title>
 
-	
-    <script>
-    	const contextPath = "${pageContext.request.contextPath}";
-    </script>
 
 
 <style scoped>
@@ -130,10 +126,8 @@
 		</style>
 
 
-		
-	<section>
 		  <div id="app">
-	      	<div class= "container-fluid d-flex justify-content-center col-6">
+
 	    
         		 <div class="container rounded p-3" style="background-color:white;">
         		 
@@ -168,12 +162,11 @@
 					
 					
 			
-				</div>
+
 				</div>	
 			<c:forEach var="fundPostDto" items="${fundList}">
 			${fundPostDto}<br>
 			</c:forEach>
-</section>
 
 
 		<script>
