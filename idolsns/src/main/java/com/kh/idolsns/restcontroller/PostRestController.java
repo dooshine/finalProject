@@ -106,7 +106,14 @@ public class PostRestController {
 			tempDto.setTagName(tag);
 			tagRepo.insert(tempDto);    		
     	}
-    }	    // -------------------- 태그정보 등록 
+    }	
+    //--------------------- 태그정보 불러오기
+    @GetMapping("/tag/{postNo}")
+    public List<String> getTag(@PathVariable("postNo") Long postNo){
+    	return tagRepo.selectAll(postNo);
+    }
+    
+    // -------------------- 태그정보 등록 
 //    @PostMapping("/tag")
 //    public void taging(@RequestParam Long postNo, @RequestBody List<String> tagList) {
 //  
