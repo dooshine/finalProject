@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>   
-
+ 
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>  
 
 <jsp:include page="/WEB-INF/views/template/header.jsp"></jsp:include> 
 
@@ -110,36 +110,35 @@
         
 				<div class="modal-body" style="padding-left: 0.5em; padding-right: 0.5em;">
 				  <table class="table">
-				        <thead>
-				          <tr>
-				            <th>충전일</th>
-				            <th>충전 금액</th>
-				            <th>결제 수단</th>
-				            <th>상태</th>
-				            <th>더보기</th>
-				          </tr>
-				        </thead>
-				        <tbody>
-				          <c:forEach var="paymentDto" items="${list}">
-				            <tr>
-				              <td>${paymentDto.paymentTime}</td>
-				              <td>${paymentDto.paymentTotal}</td>
-				              <td>카카오페이</td>
-				            
-				              <td>
-				              	승인/취소
-      			
-				             </td>
-				             
-				               <td>
-				                <a href="detail?paymentNo=${paymentDto.paymentNo}">
-				                  더보기
-				                </a>
-				              </td>
-				            </tr>
-				          </c:forEach>
-				        </tbody>
-				      </table>
+			        <thead>
+			          <tr>
+			            <th>충전일</th>
+			            <th>충전 금액</th>
+			            <th>결제 수단</th>
+			            <th>상태</th>
+			            <th>더보기</th>
+			          </tr>
+			        </thead>
+			        <tbody>
+			          <c:forEach var="paymentDto" items="${list}">
+			            <tr>
+			              <td>${paymentDto.paymentTime}</td>
+			              <td>${paymentDto.paymentTotal}</td>
+			              <td>카카오페이</td>
+			              <td>${paymentDto.paymentStatus}</td>
+			              <td>
+			                
+			                <a href="detail?paymentNo=${paymentDto.paymentNo}">
+			                <button class="btn btn-sm btn-primary">
+			               	더보기
+			               	</button>
+			                </a>
+			              	
+			              </td>
+			            </tr>
+			          </c:forEach>
+			        </tbody>
+			      </table>
 				</div>
 			</div>
 			</div>
@@ -182,7 +181,7 @@
 	        		// Axios로 method 호출(await 사용, 전달 data-> 멤버아이디), 로 멤버DTO 정보 불러와서
 	        		// 멤버 DTO의 point를 this.amount 대입
 	        	}
-	            
+	        
 	        },
 	        created(){
 	        	

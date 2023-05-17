@@ -19,7 +19,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.kh.idolsns.dto.FundDto;
 import com.kh.idolsns.dto.PaymentDto;
+import com.kh.idolsns.repo.FundRepo;
 import com.kh.idolsns.repo.MemberRepo;
 import com.kh.idolsns.repo.PaymentRepo;
 import com.kh.idolsns.service.KakaoPayService;
@@ -46,12 +48,11 @@ public class PointController {
 	private MemberRepo memberRepo;
 	
 	
-
-	
 	@Autowired
 	private PaymentRepo paymentRepo;
 	
-	
+	@Autowired
+	private FundRepo fundRepo;
 
 	
 	//포인트 충전 페이지
@@ -214,7 +215,11 @@ public class PointController {
 	
 
 	@GetMapping("/order") //사용 내역
-	public String orderHistory() {
+	public String orderHistory(Model model, HttpSession session) {
+		String memberId = (String)session.getAttribute("memberId");
+		List<FundDto> list = fundRepo.selectByMember(memberId);
+		model.addAttribute("list", list);
+	
 		return "point/order";
 	}
 	
