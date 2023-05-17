@@ -37,8 +37,7 @@
     	const memberId = "${sessionScope.memberId}";
     	const memberLevel = "${sessionScope.memberLevel}";
     	const contextPath = "${pageContext.request.contextPath}";
-        const memberId = "${sessionScope.memberId}";
-        const memberLevel = "${sessionScope.memberLevel}";
+
     </script>
     
     <style>
@@ -102,6 +101,6 @@
                 <div class="col-3 d-flex left-aside">
                     <jsp:include page="/WEB-INF/views/template/sidebar.jsp"></jsp:include>
                 </div>
-                <div class="col-6 article container-fluid">
+                <div class="col-6 article container-fluid" style="padding:0px;">
 
                 

@@ -48,6 +48,7 @@ public class MemberRepoImpl implements MemberRepo{
 		Map<String, Object> params = new HashMap<>();
 	    params.put("memberId", memberId);
 	    params.put("paymentTotal", paymentTotal);
+	    
 	    sqlSession.update("member.decreasePoint", params);
 	}
 
