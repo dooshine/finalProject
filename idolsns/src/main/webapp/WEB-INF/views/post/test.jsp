@@ -32,43 +32,34 @@
 
 		<script>
 			// 페이지 로드
-			$(function(){
-				
+			$(function(){				
 				
 				// 1. 카테고리를 저장할 변수 선언 및 카테고리 전역 변수 categori에 저장
 				let categori = ""; 
 				$(".modal2").click(function(){
 					categori = this.innerText.trim();
-					console.log(categori);
-					
-				});
-				
+					console.log(categori);					
+				});				
 				
 				// 1-1. 행사일정의 날짜 및 시간 scheduleStart, scheduleEnd에 저장
-				let scheduleStart = "";
-				let scheduleEnd = "";
+				let scheduleStart = null;
+				let scheduleEnd = null;
 				$("#schedule-start").on("change",function(){
-					let scheduleStart = $(this).val();
-					console.log("일정 시작날짜 "+scheduleStart);
+					scheduleStart = $(this).val();
 				});
 				$("#schedule-end").on("change",function(){
-					let scheduleEnd = $(this).val();
-				});
-				
-				
+					scheduleEnd = $(this).val();
+				});				
 				
 				// 1-2. 같이가요의 날짜 및 시간 togetherStart, togetherEnd에 저장
-				let togetherStart = "";
-				let togetherEnd = ""; 
+				let togetherStart = null;
+				let togetherEnd = null; 
 				$("#together-start").on("change",function(){
-					let togetherStart = $(this).val();
+					togetherStart = $(this).val();
 				});
 				$("#together-end").on("change",function(){
-					let togetherEnd = $(this).val();
-				});
-				
-				
-				
+					togetherEnd = $(this).val();
+				});	
 				
 				// 2. 태그를 저장할 배열 선언 및 태그 전역 변수 tag에 저장
 				let tag = [];			
@@ -79,7 +70,6 @@
 										
 					if(tagInput==""||tagInput==null) // 태그 입력창에 아무것도 안적혀 있다면
 					{		
-						console.log("아무것도 안적혀 있습니다");
 						return
 					}
 					else{ // 태그 입력창에 적혀 있다면
@@ -102,12 +92,8 @@
 				// 3. 글 작성 버튼 클릭 시, 업로드 과정-----------------------------------------------
 				$(".write-finish").click(function(){
 					
-					let postText = $(".post").val();
-//					모달 작성 내용 저장 변수들 - categori, tag, postText
-// 					let data = {categori,tag, postText};
-// 					console.log(data);
 					
-					
+					let postText = $(".post").val();					
 					// postDto에 삽입하기 위해 post로 송신할 JSON 객체생성
 					let postDto = {
 						memberId: "testuser1",
@@ -123,120 +109,88 @@
 						  url: "http://localhost:8080/rest/post/",
 						  method: "post",
 						  data: postDto,
-						  success: function(postNo) {
-							  
-							  
+						  success: function(postNo) {		  
 						 	// 게시물 등록 성공 시에, 태그 정보를 비동기로 서버에 등록  
-						 	console.log("글번호는 ="+postNo);
-						 	console.log("jsp측 tag는 : "+tag);
-							$.ajax({
-									url: "http://localhost:8080/rest/post/tag?postNo="+postNo,
-									method: "post",
-									data: JSON.stringify(tag),
-									contentType: "application/json; charset=utf-8",
-									success: function(result) {
-										// 게시글 작성 이후 변수들 초기화 
-										categori ="";
-										$(".tag-input").val("");
-										tag=[];
-										allTag="";
-										$(".all-tag").text(""); 
-										$(".post").val("");
-									},
-									  error: function(xhr, status, error) {
-									    console.log(error);
-									}
+						 	let tagData = {
+						 		tag: tag,
+						 		postNo: postNo
+						 	}
+						 	$.ajax({
+								url: "http://localhost:8080/rest/post/tag",
+								method: "post",
+								data: JSON.stringify(tagData),
+								contentType: "application/json; charset=utf-8",
+								success: function(result) {
+									// 게시글 작성 이후 변수들 초기화 
+									categori ="";
+									$(".tag-input").val("");
+									tag=[];
+									allTag="";
+									$(".all-tag").text(""); 
+									$(".post").val("");
+								},
+								  error: function(xhr, status, error) {
+								    console.log(error);
+								}
 							});
+							// 게시물 등록 성공 시에, JSON 형태의 postData 전송
+							let postTypeData = {
+								postNo: postNo,
+								postDto: postDto,
+								togetherStart: togetherStart,
+								togetherEnd: togetherEnd,
+								scheduleStart: scheduleStart,
+								scheduleEnd: scheduleEnd
+							};
+							
+							console.log("게시물 일정 체크 scheduleStart : "+scheduleStart);
+							
+							// 게시물 타입 등록 
 							$.ajax({
-									url: "http://localhost:8080/rest/post/postType?postNo="+postNo,
+									url: "http://localhost:8080/rest/post/postType",
 									method: "post",
 									contentType: "application/json",
-								    data: JSON.stringify(postDto),
+								    data: JSON.stringify(postTypeData),
 									success: function(result){
 										console.log(result)
 									},
 									error: function(xhr,status,error){
 										console.log(error);
 									}
-							})
+							});														
 							
-// 							// 게시물 등록 성공 시에, 같이가요 정보를 비동기로 서버에 전송 
-// 							if(categori==="같이가요"){
-// 								$.ajax({
-// 									url: "http://localhost:8080/rest/post/together",
-// 									method: "post",
-// 									data: postDto,
-// 									success: function(result){
-// 										console.log(result)
-// 									},
-// 									error: function(xhr,status,error){
-// 										console.log(error);
-// 									}
-// 								})
-// 							}
-// 							// 게시물 등록 성공 시에, 행사일정 정보를 비동기로 서버에 전송 
-// 							if(categori==="행사일정"){
-// 								$.ajax({
-// 									url: "http://localhost:8080/rest/post/schedule",
-// 									method: "post",
-// 									data: postDto,
-// 									success: function(result){
-// 										console.log(result)
-// 									},
-// 									error: function(xhr,status,error){
-// 										console.log(error);
-// 									}
-									
-// 								})
-// 							}
-// 							// 게시물 등록 성공 시에, 자유 정보를 비동기로 서버에 전송 
-// 							if(categori==="자유"){
-// 								$.ajax({
-// 									url: "http://localhost:8080/rest/post/free",
-// 									method: "post",
-// 									data: postDto,
-// 									success: function(result){
-// 										console.log(result);
-// 									},
-// 									error: function(xhr,status,error){
-// 										console.log(error);
-// 									}
-								
-					
-// 								});
-// 							}
-								
-							
-							
+		
 							
 							// 게시물 등록 성공 시에, 파일 입력을 비동기로 서버에 전송 
 							var files = $("#fileInput").get(0).files;
 							for(var i =0; i < files.length;i++){
 								formData.append("attach",files[i]);						
 							}
-							console.log("총 "+files.length+"개의 파일이 전송되었습니다");
-							$.ajax({
-							      url: "http://localhost:8080/rest/attachment/upload2?postNo="+postNo,
-							      type: 'POST',
-							      data: formData,
-							      contentType: false, // do not set content type
-							      processData: false, // do not process data
-							      success: function(data) {
-							        console.log(data);
-									// 전송할 파일 초기화 기존에 선언했던 formData를 다시 재 선언함으로써 초기화 진행  
-									formData = new FormData();
-									// 미리보기에 존재하는 데이터를 모두 초기화
-									$('#preview').html("");
-									$("#fileInput").text("선택된 파일이 없습니다.");
-									
-									window.alert("글 게시가 완료되었습니다");	
-							      },
-							      error: function(xhr, status, error) {
-							        // handle error response
-							        console.log(error);
-							      }
-							});
-						 	
+							
+							if(files.length>0){
+								console.log("총 "+files.length+"개의 파일이 전송되었습니다");
+								$.ajax({
+								      url: "http://localhost:8080/rest/attachment/upload2?postNo="+postNo,
+								      type: 'POST',
+								      data: formData,
+								      contentType: false, // do not set content type
+								      processData: false, // do not process data
+								      success: function(data) {
+								        console.log(data);
+										// 전송할 파일 초기화 기존에 선언했던 formData를 다시 재 선언함으로써 초기화 진행  
+										formData = new FormData();
+										// 미리보기에 존재하는 데이터를 모두 초기화
+										$('#preview').html("");
+										$("#fileInput").text("선택된 파일이 없습니다.");
+										
+										window.alert("글 게시가 완료되었습니다");	
+								      },
+								      error: function(xhr, status, error) {
+								        // handle error response
+								        console.log(error);
+								      }
+								});
+							}
 				 	
 						  },
 						  error: function(xhr, status, error) {
