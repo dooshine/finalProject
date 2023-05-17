@@ -101,8 +101,8 @@
         <section class="container-fluid">
             <div class="row">
                 <div class="col-3 d-flex left-aside">
-                    <jsp:include page="/WEB-INF/views/template/sidebar.jsp"></jsp:include>
+                    <jsp:include page="/WEB-INF/views/admin/adminAside.jsp"></jsp:include>
                 </div>
-                <div class="col-6 article container-fluid" style="padding:0px;">
+                <div class="col-9 article container-fluid">
 
                 
