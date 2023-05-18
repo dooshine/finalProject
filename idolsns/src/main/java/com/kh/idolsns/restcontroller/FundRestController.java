@@ -16,7 +16,7 @@ import com.kh.idolsns.repo.FundRepo;
 
 @CrossOrigin
 @RestController
-@RequestMapping("/rest/fund")
+@RequestMapping("/fund")
 public class FundRestController {
 
 	@Autowired
@@ -25,15 +25,11 @@ public class FundRestController {
 	@PostMapping("/")
 	public void add(
 			@ParameterObject
-			@RequestBody FundDto fundDto,
-			@RequestParam Long postNo,
-			HttpSession session) {
-		String memberId = (String) session.getAttribute("memberId");
+			@RequestBody FundDto fundDto
+			) {
 		Long fundNo = fundRepo.sequence();
-		fundDto.setMemberId(memberId);
-		fundDto.setPostNo(postNo);
 		fundDto.setFundNo(fundNo);
-		
+		fundDto.setFundName("펀딩");
 		fundRepo.insert(fundDto);
 		
 	}

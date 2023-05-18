@@ -15,10 +15,10 @@
     <!-- 통합게시물 생성 -->
     <insert id="add">
         insert into fund (
-        fund_no, post_id, fund_price, fund_time, fund_name, member_id
+        fund_no, post_no, fund_price, fund_time, fund_name, member_id
         ) 
         values (
-        #{fundNo}, #{fundId}, #{fundPrice}, #{fundTime}, #{fundName}, #{memberId}
+        #{fundNo}, #{postNo}, #{fundPrice}, #{fundTime, jdbcType=DATE}, #{fundName}, #{memberId}
         )
     </insert>
 
