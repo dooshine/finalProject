@@ -42,7 +42,7 @@
 					
 					
 					
-					<!-- 태그와 글 태들 -->
+					<!-- 태그와 글 태그들 -->
 	                <div class="row">
 	                	<div class="col-1 col-md-1 col-lg-1 d-flex align-items-center justify-content-center">
 			               
@@ -55,7 +55,7 @@
 						<div class="col-1 col-md-1 col-lg-1 d-flex align-items-center justify-content-center"> 
 			            </div>	                
 	                </div>
-	                <!-- 태그와 글 태들 -->
+	                <!-- 태그와 글 태그들 -->
 	                
 	                
 	                
@@ -88,6 +88,7 @@
             data(){
                 return {
                 	posts: [],
+                	tags: [], 
                 	
                 	
                     //modal을	 제어할 수 있는 리모컨을 구비
@@ -127,7 +128,7 @@
                 this.posts.forEach(post => {
                     axios.get('http://localhost:8080/rest/post/tag')
                       .then(response => {                       
-                        console.log(response.data);
+                        this.tags = console.log(response.data);
                       })
                       .catch(error => {
                         console.error(error);
