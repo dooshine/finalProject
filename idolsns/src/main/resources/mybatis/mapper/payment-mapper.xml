@@ -41,20 +41,6 @@
 	
 	
 	
-	<!-- 유저의 포인트 증가 -->
-	<update id="increaseUserPoint" parameterType="map">
-	  UPDATE users
-	  SET member_point = member_point + #{paymentTotal}
-	  WHERE id = #{memberId}
-	</update>
-		
-	
-	
-	<!-- 포인트 차감 -->
-	<update id="decreasePoint" parameterType="map">
-	  UPDATE member SET member_point = member_point - #{paymentTotal} WHERE id = #{memberId}
-	</update>
-	
 	
 	
 	

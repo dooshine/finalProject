@@ -1,17 +1,23 @@
 package com.kh.idolsns.restcontroller;
 
-import javax.servlet.http.HttpSession;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.kh.idolsns.dto.MemberDto;
 import com.kh.idolsns.dto.ReportDto;
+import com.kh.idolsns.repo.MemberRepo;
 import com.kh.idolsns.repo.ReportRepo;
 import com.kh.idolsns.service.ReportService;
+import com.kh.idolsns.vo.AdminMemberSearchVO;
+import com.kh.idolsns.vo.SearchVO;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -25,20 +31,30 @@ public class ReportRestController {
     @Autowired
     private ReportRepo reportRepo;
 
+    // 테스트 repo(지울예정)
+    @Autowired
+    private MemberRepo memberRepo;
+
     @Autowired
     private ReportService reportService;
     // 신고 생성
     @PostMapping("/")
-    public void report(@ModelAttribute ReportDto reportDto, HttpSession session){
-        
-        // 신고자 아이디
-        String memberId = (String)session.getAttribute("memberId");
-        log.debug("memberId: {}" + memberId);
-        // reportDto.setMemberId(memberId);
-        // 신고 대상 타입, 신고 대상 PK, 신고 이유는 전달받은 reportDto에 있음
-
+    public void report(@RequestBody ReportDto reportDto){
         // 신고 생성
-        // reportService.report(reportDto);
+        reportService.report(reportDto);
     }
-    
+
+    // 신고 목록 조회
+    @PostMapping("/list")
+    public List<ReportDto> selectList(@RequestBody SearchVO searchVO){
+        return reportRepo.selectList(searchVO);
+    }
+
+
+    // 테스트
+    @PostMapping("/test")
+    public List<MemberDto> test(@RequestBody AdminMemberSearchVO adminMemberSearchVO){
+        // System.out.println(adminMemberSearchVO);
+        return memberRepo.adminSelectList(adminMemberSearchVO);
+    }
 }
