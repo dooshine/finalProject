@@ -18,7 +18,7 @@ public class FundRepoImpl implements FundRepo{
 	
 	
 	@Override
-	public int sequence() {
+	public Long sequence() {
 		return sqlSession.selectOne("fund.sequence");
 	}
 

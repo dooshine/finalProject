@@ -20,79 +20,54 @@
                 ['table', ['table']],
                 ['insert', ['link', 'picture']]
             ],
-            callbacks: {
-            onImageUpload: function(files) {
-               if(files.length != 1) return;
+//             callbacks: {
+//             onImageUpload: function(files) {
+//                if(files.length != 1) return;
                
-               var fd = new FormData();
-               fd.append("attach", files[0]);
+//                var fd = new FormData();
+//                fd.append("attach", files[0]);
                
-               $.ajax({
-                  url:"/rest/attachment/upload",
-                  method:"post",
-                  data:fd,
-                  processData:false,
-                  contentType:false,
-                  success:function(response){
-                     const inputAttachNo = $("<input>").attr("type", "hidden")
-                                                .attr("name", "attachmentNo")
-                                                .val(response.attachmentNo);
+//                $.ajax({
+//                   url:"/rest/attachment/upload",
+//                   method:"post",
+//                   data:fd,
+//                   processData:false,
+//                   contentType:false,
+//                   success:function(response){
+//                      const inputAttachNo = $("<input>").attr("type", "hidden")
+//                                                 .attr("name", "attachmentNo")
+//                                                 .val(response.attachmentNo);
                      
-                     $("form").prepend(inputAttachNo);
+//                      $("form").prepend(inputAttachNo);
 
-                     var imgNode = $("<img>").attr("src", "/rest/attachment/download/"+response.attachmentNo);
-                     $("[name=postContent]").summernote('insertNode', imgNode.get(0));
-                  },
-                  error:function(){}
-               });
+//                      var imgNode = $("<img>").attr("src", "/rest/attachment/download/"+response.attachmentNo);
+//                      $("[name=postContent]").summernote('insertNode', imgNode.get(0));
+//                   },
+//                   error:function(){}
+//                });
                
-            }
-         }
-        });
-        
-//         onImageUpload : function(files, editor, welEditable) {
-//             // 파일 업로드(다중업로드를 위해 반복문 사용)
-//             for (var i = files.length - 1; i >= 0; i--) {
-//             uploadSummernoteImageFile(files[i],
-//             this);
-//             		}
-//             	}
 //             }
-//          };
-//         $('#summernote').summernote(setting);
-//         });
-        
-//         function uploadSummernoteImageFile(file, el) {
-// 			data = new FormData();
-// 			data.append("file", file);
-// 			$.ajax({
-// 				data : data,
-// 				type : "POST",
-// 				url : "uploadSummernoteImageFile",
-// 				contentType : false,
-// 				enctype : 'multipart/form-data',
-// 				processData : false,
-// 				success : function(data) {
-// 					$(el).summernote('editor.insertImage', data.url);
-// 				}
-// 			});
-// 		}
+//          }
+        });
         
     });
 </script>
 
-<div style="width:600px";>
+<div style="width:600px">
 	<h2>게시글 작성</h2>
-	<form action="write2" method="post" > <!--enctype="multipart/form-data"  -->
+	<form action="write2" method="post" enctype="multipart/form-data"> 
 		제목 : <input type="text" name="fundTitle"><br><br>
 		시작일 : <input type="date" name="postStart"><br><br>
 		종료일 : <input type="date" name="postEnd"><br><br>
 		목표 금액 : <input type="text" name="fundGoal"><br><br>
 <!-- 		후원자 수 : <input type="text" name="fundSponsorCount"><br><br> -->
-		펀딩 상태 : <input type="text" name="fundState"><br><br>
+		펀딩 상태 : <select name="fundState">
+						<option selected>진행중</option>
+						<option>취소</option>
+						<option>완료</option>
+					</select><br><br>
 		내용 : <textarea name="postContent"></textarea><br><br>
-<!-- 		이미지 : <input type="file" name="attach"> -->
-<!-- 		이미지 : <input type="file" name="attaches" multiple> -->
+		이미지 : <input type="file" name="attaches" multiple>
 		<button type="submit">글쓰기</button>
 	</form>
 </div>
