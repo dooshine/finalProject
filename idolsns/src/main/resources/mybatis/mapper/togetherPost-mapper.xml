@@ -8,13 +8,13 @@
 <mapper namespace="togetherPost">
 	
 	<insert id="insert">
-		insert into
+		insert into together_post
 		(post_no, member_id, together_start,together_end)
 		values
 		(#{postNo}, #{memberId}, #{scheduleStart}, #{scheduleEnd})		
 	</insert>
 	
-	<select id= "selectOne" resultType="togetherPostDto">
+	<select id= "selectOne" resultType="TogetherPostDto">
 		select * from together_post where post_no = #{postNo}
 	</select>
 	

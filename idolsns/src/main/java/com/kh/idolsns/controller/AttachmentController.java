@@ -137,4 +137,10 @@ public class AttachmentController {
 	public String test() {
 		return "post/test";
 	}
+
+	// 업로드 모달창 뷰로 구현중 (5.16)
+	@GetMapping("post/vuetest")
+	public String vuetest() {
+		return "post/vuetest";
+	}
 }

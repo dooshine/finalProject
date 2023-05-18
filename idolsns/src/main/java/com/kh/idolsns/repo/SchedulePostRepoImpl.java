@@ -13,8 +13,8 @@ public class SchedulePostRepoImpl implements SchedulePostRepo{
 	private SqlSession sqlSession; 
 	
 	@Override
-	public void insert(SchedulePostDto scheduleDto) {
-		sqlSession.insert("schedulePost.insert",scheduleDto); 
+	public void insert(SchedulePostDto schedulePostDto) {
+		sqlSession.insert("schedulePost.insert",schedulePostDto); 
 	}
 
 	@Override

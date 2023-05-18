@@ -1,5 +1,7 @@
 package com.kh.idolsns.repo;
 
+import java.util.List;
+
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -30,6 +32,11 @@ public class TagRepoImpl implements TagRepo{
 	@Override
 	public Long selectOne(String tagName) {
 		return sqlSession.selectOne("tag.selectOne",tagName); 
+	}
+
+	@Override
+	public List<String> selectAll(Long postNo) {		
+		return sqlSession.selectList("tag.selectAll",postNo);
 	}
 
 }

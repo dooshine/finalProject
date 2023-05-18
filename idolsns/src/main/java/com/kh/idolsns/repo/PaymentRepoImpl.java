@@ -45,7 +45,15 @@ public class PaymentRepoImpl implements PaymentRepo {
 		return sqlSession.selectOne("payment.find", paymentNo);
 	}
 	
+	@Override
+	public PaymentDto find2(String paymentTid) {
+		return sqlSession.selectOne("payment.find2", paymentTid);
+	
+	}
 
+		
+	
+	
 	//전체취소
 	@Override
 	public void cancelRemain(int paymentNo) {
@@ -53,6 +61,7 @@ public class PaymentRepoImpl implements PaymentRepo {
 		
 	}
 
+	
 	
 	
 	

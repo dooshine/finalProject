@@ -1,6 +1,9 @@
 package com.kh.idolsns.restcontroller;
 
+
+import java.sql.Date;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
@@ -19,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.kh.idolsns.dto.TagDto;
 import com.kh.idolsns.dto.TogetherPostDto;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kh.idolsns.dto.FreePostDto;
 import com.kh.idolsns.dto.PostDto;
 import com.kh.idolsns.dto.PostImageDto;
@@ -30,7 +34,6 @@ import com.kh.idolsns.repo.PostImageRepo;
 import com.kh.idolsns.repo.PostRepo;
 import com.kh.idolsns.repo.PostWithNickRepo;
 import com.kh.idolsns.repo.SchedulePostRepo;
-import com.kh.idolsns.repo.SchedulePostRepoImpl;
 
 @CrossOrigin
 @RestController
@@ -78,32 +81,7 @@ public class PostRestController {
 		 
 		 // 5. 통합게시물 등록 
 		 postRepo.insert(postDto);
-		 
-         // # 해당 게시물에 해당하는 테이블에 데이터 추가
-		 String postType = postDto.getPostType();
-		 
-		 String memberId = postDto.getMemberId(); 
-		 if(postType.equals("자유")){
-			 FreePostDto freePostDto = new FreePostDto();
-			 freePostDto.setPostNo(postNo); 
-			 freePostDto.setMemberId(memberId);
-			 System.out.println("자유 게시글");
-			 freePostRepo.insert(freePostDto); 
-		 }
-		 else if(postType.equals("같이가요")) {
-			 TogetherPostDto togetherPostDto = new TogetherPostDto();
-			 togetherPostDto.setPostNo(postNo);
-			 togetherPostDto.setMemberId(memberId);
-			 System.out.println("같이가요 게시글");
-			 togetherPostRepo.insert(togetherPostDto);
-		 }
-		 else if(postType.equals("행사일정")) {
-			 SchedulePostDto schedulePostDto = new SchedulePostDto();
-			 schedulePostDto.setPostNo(postNo);
-			 schedulePostDto.setMemberId(memberId);
-			 System.out.println("행사일정 게시글");
-			 schedulePostRepo.insert(schedulePostDto);
-		 }
+			 
         
 		 // 등록된 게시글 번호를 바탕으로 다른 비동기 통신(ajax, axios)에서 태그, 
 		 // 사진 정보를 해당 테이블의 정규화 테이블 추가할 떄 사용한다.
@@ -112,26 +90,94 @@ public class PostRestController {
     
     // -------------------- 태그정보 등록 
     @PostMapping("/tag")
-    public void taging(@RequestParam Long postNo, @RequestBody List<String> tagList) {
-  
+    public void taging(@RequestBody Map<String,Object> tagData) {
+    	List<String> tagList = (List<String>) tagData.get("tag");
+    	Integer postNoI = (Integer) tagData.get("postNo"); 
+    	Long postNo = (Long) postNoI.longValue();
+    	
     	Long tempNo; // controller측 임시 시퀀스 번호 
     	TagDto tempDto = new TagDto();
-    	System.out.println("ajax로 수신받은 값들은 다음과 같아요 postNo : "+postNo+" tagList : "+tagList);
+    	
     	for(String tag : tagList) {
-    		// 태그 존재 하지 않을 때,(태그 명으로 조회했을 때 시퀀스가 있는 경우)
-//    		if(tagRepo.selectOne(tag)==null) 
-//    		{
-    			tempNo = tagRepo.sequence();
-    			tempDto.setTagNo(tempNo);
-    			tempDto.setPostNo(postNo);
-    			tempDto.setTagType("자유"); // 자유, 고정 둘 중 하나
-    			tempDto.setTagName(tag);
-    			tagRepo.insert(tempDto);
-//    		}
-    		
+			tempNo = tagRepo.sequence();
+			tempDto.setTagNo(tempNo);
+			tempDto.setPostNo(postNo);
+			tempDto.setTagType("자유"); // 자유, 고정 둘 중 하나
+			tempDto.setTagName(tag);
+			tagRepo.insert(tempDto);    		
     	}
     }	
+    //--------------------- 태그정보 불러오기
+    @GetMapping("/tag/{postNo}")
+    public List<String> getTag(@PathVariable("postNo") Long postNo){
+    	System.out.println("postNo는 : "+postNo);
+    	return tagRepo.selectAll(postNo);
+    	
+    }
+    
+    // -------------------- 태그정보 등록 
+//    @PostMapping("/tag")
+//    public void taging(@RequestParam Long postNo, @RequestBody List<String> tagList) {
+//  
+//    	Long tempNo; // controller측 임시 시퀀스 번호 
+//    	TagDto tempDto = new TagDto();
+//    	
+//    	for(String tag : tagList) {
+//			tempNo = tagRepo.sequence();
+//			tempDto.setTagNo(tempNo);
+//			tempDto.setPostNo(postNo);
+//			tempDto.setTagType("자유"); // 자유, 고정 둘 중 하나
+//			tempDto.setTagName(tag);
+//			tagRepo.insert(tempDto);    		
+//    	}
+//    }	
 
+    // --------------------- 게시글 타입 정보 등록 
+    @PostMapping("/postType")
+    public void postType(@RequestBody Map<String,Object> postTypeData){
+    	Integer postNoI = (Integer) postTypeData.get("postNo"); 
+    	Long postNo = (Long) postNoI.longValue();
+    	
+    	ObjectMapper objectMapper = new ObjectMapper();
+    	
+    	PostDto postDto = objectMapper.convertValue(postTypeData.get("postDto"),PostDto.class); 
+    	
+    	
+    	String postType = postDto.getPostType();
+    	if(postType.equals("자유"))
+    	{
+    		FreePostDto freePostDto = new FreePostDto();
+        	freePostDto.setPostNo(postNo);
+        	freePostDto.setMemberId(postDto.getMemberId());
+        	freePostRepo.insert(freePostDto);
+    		
+    	}
+    	else if (postType.equals("행사일정"))
+    	{
+    		Date scheduleStart = objectMapper.convertValue(postTypeData.get("scheduleStart"),Date.class);
+    		Date scheduleEnd = objectMapper.convertValue(postTypeData.get("scheduleEnd"),Date.class);
+    		
+        	SchedulePostDto schedulePostDto = new SchedulePostDto();
+        	schedulePostDto.setPostNo(postNo); 
+        	schedulePostDto.setMemberId(postDto.getMemberId());
+        	schedulePostDto.setScheduleStart(scheduleStart);
+        	schedulePostDto.setScheduleEnd(scheduleEnd);
+        	schedulePostRepo.insert(schedulePostDto); 
+    	}
+    	else if (postType.equals("같이가요"))
+    	{
+    		Date togetherStart = objectMapper.convertValue(postTypeData.get("togetherStart"),Date.class);
+    		Date togetherEnd = objectMapper.convertValue(postTypeData.get("togeherEnd"),Date.class);
+    		
+    		TogetherPostDto togetherPostDto = new TogetherPostDto();
+        	togetherPostDto.setPostNo(postNo); 
+        	togetherPostDto.setMemberId(postDto.getMemberId());
+        	togetherPostDto.setTogetherStart(togetherStart);
+        	togetherPostDto.setTogetherEnd(togetherEnd);
+        	togetherPostRepo.insert(togetherPostDto);
+    	}
+    }
+        
 
 //    // 통합게시물 목록조회, 해당 DTO로 전달
 //    @GetMapping("/")
@@ -144,6 +190,13 @@ public class PostRestController {
 //        return postWithNickRepo.selectOne(postNo);
 //    }
 
+    // 게시물 전체 목록 조회 
+    @GetMapping("/all")
+    public List<PostDto> allList(){
+    	List<PostDto> posts = postRepo.selectList();
+    	return posts;
+    }
+    
     // 통합게시물 수정
     @PutMapping("/")
     public boolean update(@ModelAttribute PostDto postDto){

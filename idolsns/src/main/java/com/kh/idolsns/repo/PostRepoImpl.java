@@ -1,5 +1,7 @@
 package com.kh.idolsns.repo;
 
+import java.util.List;
+
 import javax.servlet.http.HttpSession;
 
 import org.apache.ibatis.session.SqlSession;
@@ -41,4 +43,9 @@ public class PostRepoImpl implements PostRepo{
     public boolean delete(Long postNo) {
         return sqlSession.delete("post.delete", postNo) > 0;
     }
+
+	@Override
+	public List<PostDto> selectList() {
+		return sqlSession.selectList("post.selectList");
+	}
 }

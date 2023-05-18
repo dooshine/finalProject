@@ -33,6 +33,11 @@
 		select * from payment where payment_no = #{paymentNo}
 	</select>
 	
+	
+	<select id="find2" resultType="PaymentDto">
+		select * from payment where payment_tid = #{paymentTid}
+	</select>
+	
 	<update id="cancelRemain">
 		update payment
 		set payment_remain = 0
