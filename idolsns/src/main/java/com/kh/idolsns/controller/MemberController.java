@@ -1,17 +1,10 @@
 package com.kh.idolsns.controller;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.Scanner;
-
-import javax.mail.MessagingException;
-import javax.mail.internet.MimeMessage;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -68,7 +61,7 @@ public class MemberController {
 	@PostMapping("/login")
 	public String login(
 			@ModelAttribute MemberDto userDto,
-			RedirectAttributes attr, HttpSession session) {
+			RedirectAttributes attr, HttpSession session, @RequestParam(required = false, defaultValue = "") String prevPage) {
 		MemberDto findDto = memberRepo.selectOne(userDto.getMemberId());
 		
 		if(findDto == null) {
@@ -86,15 +79,15 @@ public class MemberController {
 		session.setAttribute("memberId", findDto.getMemberId());
 		session.setAttribute("memberLevel", findDto.getMemberLevel());
 		
-		return "redirect:/";
+		return "redirect:" + prevPage;
 	}
 	
 	//로그아웃
 	@GetMapping("/logout")
-	public String logout(HttpSession session) {
+	public String logout(HttpSession session, HttpServletRequest request) {
 		session.removeAttribute("memberId");
 		session.removeAttribute("memberLevel");
-		return "redirect:/";
+		return "redirect:" + request.getHeader("Referer");
 	}
 	
 	//마이페이지
