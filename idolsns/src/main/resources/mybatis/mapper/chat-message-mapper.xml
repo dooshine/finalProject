@@ -30,7 +30,7 @@
 	
 	<!-- 보낸 메세지 삭제 -->
 	<delete id="deleteMessage">
-		delete from chat_message where chat_message_no = #{chatMessageNo}
+		delete chat_message where chat_message_no = #{chatMessageNo}
 	</delete>
 
 </mapper>

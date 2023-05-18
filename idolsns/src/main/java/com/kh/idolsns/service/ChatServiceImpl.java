@@ -166,6 +166,14 @@ public class ChatServiceImpl implements ChatService {
 		}
 	}
 	
+	// 삭제 알림
+	public void broadcastDelete(int chatRoomNo, TextMessage jsonMessage) throws IOException {
+		//log.debug("roomExist: " + roomExist(chatRoomNo));
+		if(!roomExist(chatRoomNo)) return;
+		ChatRoomVO chatRoom = chatRooms.get(chatRoomNo);
+		chatRoom.broadcast(jsonMessage);
+	}
+	
 	// 메세지 삭제
 	public void deleteMessage(long chatMessageNo) {
 		chatMessageRepo.deleteMessage(chatMessageNo);
@@ -236,7 +244,7 @@ public class ChatServiceImpl implements ChatService {
 			//log.debug("ChatRoomNo: " + receiveVO.getChatRoomNo());
 			//log.debug("jsonMessage: " + jsonMessage);
 			//log.debug("ChatMessageNo: " + receiveVO.getChatMessageNo());
-			this.broadcastRoom(member, chatRoomNo, jsonMessage, chatMessageNo);
+			this.broadcastDelete(chatRoomNo, jsonMessage);
 		}
 	}
 
