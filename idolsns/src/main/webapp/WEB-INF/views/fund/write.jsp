@@ -54,18 +54,13 @@
 </script>
 
 <div style="width:600px">
-	<h2>게시글 작성</h2>
+	<h2>펀딩 게시글 작성</h2>
 	<form action="write2" method="post" enctype="multipart/form-data"> 
 		제목 : <input type="text" name="fundTitle"><br><br>
 		시작일 : <input type="date" name="postStart"><br><br>
 		종료일 : <input type="date" name="postEnd"><br><br>
 		목표 금액 : <input type="text" name="fundGoal"><br><br>
 <!-- 		후원자 수 : <input type="text" name="fundSponsorCount"><br><br> -->
-		펀딩 상태 : <select name="fundState">
-						<option selected>진행중</option>
-						<option>취소</option>
-						<option>완료</option>
-					</select><br><br>
 		내용 : <textarea name="postContent"></textarea><br><br>
 		이미지 : <input type="file" name="attaches" multiple>
 		<button type="submit">글쓰기</button>

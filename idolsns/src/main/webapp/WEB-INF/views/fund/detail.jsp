@@ -151,12 +151,6 @@
                 <label>후원금</label>
                 <input type="text" v-model="fund.fundPrice">
                 
-                <label>date</label>
-                <input type="date" v-model="fund.fundTime">
-                
-                
-                
-                
                 <button type="button" v-on:click="sendItem">
 				    후원하기
 				</button>
@@ -189,22 +183,9 @@
 			<div class="row">
 				<div class="col-12">
 					<h3>프로젝트 소개</h3>
-						<h5>이것저것
-						</h5>
+						<h5>이것저것</h5>
 					
 					<h3>일정</h3>
-						<h5>이것저것
-						ㄴㅁㅇㅁ
-						<br>
-						ㅁㄴㅇㅁㄴㅇㅁㄴ
-						<br>
-						ㄴㅁㅇㅇㅁㄴㅁㄴ
-						<br>
-						ㅇㅁㄴㄴㅁ<br>
-						ㅇㄴ<br>
-						ㅇㅁ<br>
-						</h5>
-					
 				</div>
 			</div>
 			

@@ -124,6 +124,10 @@
 				font-size: 0.9em;
 				}
 		</style>
+		
+		<c:forEach var="fundPostDto" items="${fundList}">
+			${fundPostDto}<br>
+		</c:forEach>
 
 
 		  <div id="app">
@@ -136,14 +140,12 @@
 					  <div class="funding-list justify-content-center mt-5">
 					  
 					  <div v-for="(funding, index) in fundings" v-bind:key="funding.memberId">
-						{{ funding }}
 						</div>
 						<div class="col">
 					  
 					    <div class="funding-item" v-for="(funding, index) in fundings" :key="funding.memberId">
 					      <img :src="funding.imageUrl" alt="Funding Image">
-					      <h3 class="title">{{ funding.fundTitle }}</h3>
-					      <h3>{{ funding.postNo }}</h3>
+					      <h3 class="title" v-on:click="link(funding)">{{ funding.fundTitle }}</h3>
 					      <p class="description">{{ funding.postContent }}</p>
 					      <div class="progress-bar">
 					        <div class="progress" :style="{ width: funding.progress + '%' }"></div>
@@ -167,11 +169,8 @@
 					</div>
 					
 				</div>	
-				</div>
+			</div>
 				
-				<c:forEach var="fundPostDto" items="${fundList}">
-				${fundPostDto}<br>
-				</c:forEach>
 				
 				
 </section>
@@ -185,78 +184,19 @@
 	            //데이터 설정 영역
 	            data(){
             	   return{
-				      fundings: [
-// 				        {
-// 				          id: 1,
-// 				          title: '지하철광고',
-// 				          description: '6/25 제 생일입니다',
-// 				          imageUrl: 'https://via.placeholder.com/400x300',
-// 				          amount: 1000000,
-// 				          progress: 75,
-// 				          daysLeft: 10,
-// 				          supporters: 20,
-// 				        },
-// 				        {
-// 				          id: 2,
-// 				          title: '성공적인 파이널프로젝트를 위해',
-// 				          description: '6/12 파이널 프로젝트 종료',
-// 				          imageUrl: 'https://via.placeholder.com/400x300',
-// 				          amount: 2000000,
-// 				          progress: 50,
-// 				          daysLeft: 20,
-// 				          supporters: 30,
-// 				        },
-// 				        {
-// 				          id: 3,
-// 				          title: '부자의 그릇',
-// 				          description: '돈을 주세요',
-// 				          imageUrl:'https://via.placeholder.com/400x300',
-// 				          amount: 5000000,
-// 				          progress: 30,
-// 				          daysLeft: 30,
-// 				          supporters: 40,
-// 				        },
-// 				        {
-// 					          id: 4,
-// 					          title: '지하철광고',
-// 					          description: '6/25 제 생일입니다2222',
-// 					          imageUrl: 'https://via.placeholder.com/400x300',
-// 					          amount: 1000000,
-// 					          progress: 75,
-// 					          daysLeft: 10,
-// 					          supporters: 20,
-// 					        },
-// 					        {
-// 					          id: 5,
-// 					          title: '성공적인 파이널프로젝트를 위해22',
-// 					          description: '6/12 파이널 프로젝트 종료',
-// 					          imageUrl: 'https://via.placeholder.com/400x300',
-// 					          amount: 2000000,
-// 					          progress: 50,
-// 					          daysLeft: 20,
-// 					          supporters: 30,
-// 					        },
-// 					        {
-// 					          id: 6,
-// 					          title: '부자의 그릇',
-// 					          description: '돈을 주세요',
-// 					          imageUrl:'https://via.placeholder.com/400x300',
-// 					          amount: 5000000,
-// 					          progress: 30,
-// 					          daysLeft: 30,
-// 					          supporters: 40,
-// 					        },
-				      ],
+				      fundings: [],
 				      postStart: "",
 				      postEnd: "",
 				      progress: "",
+				      postNo: ""
 	            	}
 	            	},
 	            	computed: {
 	            	},
 	            	methods: {
 	            		async loadData(){
-							const resp = await axios.get("http://localhost:8080/rest/fundpostview/")	            			
+							const resp = await axios.get("http://localhost:8080/fundpostview/")	  
+							console.log(resp.data);
 							this.fundings.push(...resp.data);
 							
 	            		},
@@ -264,7 +204,6 @@
 	            			const startDate = new Date(funding.postStart);
 	            		      const endDate = new Date(funding.postEnd);
 	            		      const timeDiff = endDate.getTime() - startDate.getTime();
-	            		      console.log(timeDiff);
 	            		      if (timeDiff >= 24 * 60 * 60 * 1000) {
 	            		        // 1일 이상인 경우
 	            		        return Math.ceil(timeDiff / (24 * 60 * 60 * 1000))+"일";
@@ -273,7 +212,6 @@
 	            		          const currentDate = new Date();
 	            		          const endOfDay = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate(), 23, 59, 59);
 	            		          const remainingTime = endOfDay.getTime() - currentDate.getTime();
-	            		          console.log(remainingTime)
 	            		          const remainingHours = Math.floor(remainingTime / (60 * 60 * 1000));
 	            		          const remainingMinutes = Math.floor((remainingTime % (60 * 60 * 1000)) / (60 * 1000));
 	            		          const remainingSeconds = Math.floor((remainingTime % (60 * 1000)) / 1000);
@@ -282,6 +220,12 @@
 	            		},
 	            		getProgress(funding) {
 	            			
+	            		},
+	            		link(funding){
+	            			console.log(funding.postNo)
+	            			const url = "http://localhost:8080/fund/detail?postNo="+funding.postNo;
+	            			window.location.href = url;
+	            			
 	            		}
 	            	},
 	            	created() {
@@ -289,6 +233,67 @@
 	            	}
 		  		}).mount("#app");
 		
+//	          id: 1,
+//	          title: '지하철광고',
+//	          description: '6/25 제 생일입니다',
+//	          imageUrl: 'https://via.placeholder.com/400x300',
+//	          amount: 1000000,
+//	          progress: 75,
+//	          daysLeft: 10,
+//	          supporters: 20,
+//	        },
+//	        {
+//	          id: 2,
+//	          title: '성공적인 파이널프로젝트를 위해',
+//	          description: '6/12 파이널 프로젝트 종료',
+//	          imageUrl: 'https://via.placeholder.com/400x300',
+//	          amount: 2000000,
+//	          progress: 50,
+//	          daysLeft: 20,
+//	          supporters: 30,
+//	        },
+//	        {
+//	          id: 3,
+//	          title: '부자의 그릇',
+//	          description: '돈을 주세요',
+//	          imageUrl:'https://via.placeholder.com/400x300',
+//	          amount: 5000000,
+//	          progress: 30,
+//	          daysLeft: 30,
+//	          supporters: 40,
+//	        },
+//	        {
+//		          id: 4,
+//		          title: '지하철광고',
+//		          description: '6/25 제 생일입니다2222',
+//		          imageUrl: 'https://via.placeholder.com/400x300',
+//		          amount: 1000000,
+//		          progress: 75,
+//		          daysLeft: 10,
+//		          supporters: 20,
+//		        },
+//		        {
+//		          id: 5,
+//		          title: '성공적인 파이널프로젝트를 위해22',
+//		          description: '6/12 파이널 프로젝트 종료',
+//		          imageUrl: 'https://via.placeholder.com/400x300',
+//		          amount: 2000000,
+//		          progress: 50,
+//		          daysLeft: 20,
+//		          supporters: 30,
+//		        },
+//		        {
+//		          id: 6,
+//		          title: '부자의 그릇',
+//		          description: '돈을 주세요',
+//		          imageUrl:'https://via.placeholder.com/400x300',
+//		          amount: 5000000,
+//		          progress: 30,
+//		          daysLeft: 30,
+//		          supporters: 40,
+//		        },
 		</script>
+
+		
 <jsp:include page="/WEB-INF/views/template/footer.jsp"></jsp:include>
 		

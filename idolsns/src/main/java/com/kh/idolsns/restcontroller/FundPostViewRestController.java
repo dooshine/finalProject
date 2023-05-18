@@ -13,7 +13,7 @@ import com.kh.idolsns.repo.FundPostViewRepo;
 
 @CrossOrigin
 @RestController
-@RequestMapping("/rest/fundpostview")
+@RequestMapping("/fundpostview")
 public class FundPostViewRestController {
 
 	@Autowired

@@ -26,7 +26,12 @@ public class FundRepoImpl implements FundRepo{
 
 	@Override
 	public void insert(FundDto dto) {
-			sqlSession.insert("fund.add", dto);
+//			if(dto.getFundTime()==null) {
+//				sqlSession.insert("fund.add2", dto);
+//			} else {
+//				sqlSession.insert("fund.add", dto);
+//			}
+			sqlSession.insert("fund.add2", dto);
 		}
 
 	

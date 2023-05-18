@@ -16,7 +16,7 @@
 					)
 		values(
 		#{postNo}, #{memberId}, #{fundTitle}, #{postStart}, 
-		#{postEnd}, #{fundGoal}, #{fundSponsorCount}, #{fundState}
+		#{postEnd}, #{fundGoal}, #{fundSponsorCount}, '진행중'
 		)
 	</insert>
 	
