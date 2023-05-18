@@ -12,4 +12,6 @@ public class ChatMessageReceiveVO {
 	private String chatMessageContent;
 	private int chatRoomNo;
 	
+	private long chatMessageNo;
+	
 }
