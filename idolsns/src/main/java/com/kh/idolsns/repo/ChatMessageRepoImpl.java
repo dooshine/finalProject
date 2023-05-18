@@ -1,7 +1,5 @@
 package com.kh.idolsns.repo;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -26,11 +24,8 @@ public class ChatMessageRepoImpl implements ChatMessageRepo {
 		return sql.selectList("chatMessage.listMessage", chatRoomNo);
 	}
 	@Override
-	public void deleteMessage(int chatMessageNo, String memberId) {
-		Map<String, Object> param = new HashMap<>();
-		param.put("chatMessageNo", chatMessageNo);
-		param.put("memberId", memberId);
-		sql.delete("chatMessage.deleteMessage", param);
+	public void deleteMessage(long chatMessageNo) {
+		sql.delete("chatMessage.deleteMessage", chatMessageNo);
 	}
 	
 }
