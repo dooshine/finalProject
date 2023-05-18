@@ -110,7 +110,7 @@
 
         <div style="padding-left: 0.5em; padding-right: 0.5em;">
             <p class="container rounded p-3 border">내 포인트: 
-            <span class="amount" style="color:#77E9CC; font-weight:bold" >{{ formattedAmount }}</span>원</p>
+            <span class="amount" style="color:#77E9CC; font-weight:bold">{{ formattedAmount }}</span>원</p>
         </div>
 
         <form id="chargeForm" method="post" style="padding-left: 0.7em; padding-right: 0.7em;">
@@ -217,7 +217,7 @@
 	            },
 			
 	           	 async loadMemberPoint() {
-	                     const url = "http://localhost:8080/rest/member/"+memberId;
+	                     const url = "http://localhost:8080/rest/member/" + memberId;
 	                     const data = {
 	                         memberId: this.memberId // 로그인된 멤버 아이디 사용
 	                     };
