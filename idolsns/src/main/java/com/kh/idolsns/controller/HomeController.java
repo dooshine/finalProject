@@ -1,7 +1,16 @@
 package com.kh.idolsns.controller;
 
+import java.util.List;
+
+import javax.servlet.http.HttpSession;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+
+import com.kh.idolsns.dto.PostDto;
+import com.kh.idolsns.repo.PostRepo;
 
 @Controller
 public class HomeController {
@@ -21,5 +30,12 @@ public class HomeController {
     @GetMapping("/write")
     public String write(){
         return "temp_write";
-    }  
+    }
+    
+    @GetMapping("/postMain")
+    public String postMain(Model model, HttpSession session) {
+    	String memberId = (String)session.getAttribute("memberId");
+    	model.addAttribute("memberId",memberId);     	
+    	return "post/postMain";
+    }
 }

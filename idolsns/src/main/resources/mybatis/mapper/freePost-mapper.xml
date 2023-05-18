@@ -14,7 +14,7 @@
 		(#{postNo},#{memberId})
 	</insert>
 	
-	<select id="selectOne" resultType="freePostDto">
+	<select id="selectOne" resultType="FreePostDto">
 		select * from free_post where post_no = #{postNo}
 	</select>
 	

@@ -16,7 +16,7 @@
 	</insert>
 	
 	<!-- 행사일정 게시물 조회 -->
-	<select id="selectOne" resultType="schedulePostDto">
+	<select id="selectOne" resultType="SchedulePostDto">
 		select * from schedule_post where post_no = #{postNo}
 	</select>
 	
