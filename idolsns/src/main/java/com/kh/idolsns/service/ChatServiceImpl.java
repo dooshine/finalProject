@@ -54,13 +54,15 @@ public class ChatServiceImpl implements ChatService {
 		if(roomExist(chatRoomNo)) return;
 		chatRooms.put(chatRoomNo, new ChatRoomVO());
 		// db처리
-		boolean isWatingRoom = chatRoomNo == WebSocketConstant.WAITING_ROOM;
+		/*boolean isWatingRoom = chatRoomNo == WebSocketConstant.WAITING_ROOM;
 		if(!isWatingRoom && chatRoomRepo.findRoom(chatRoomNo) == null) {
 			ChatRoomDto chatRoomDto = new ChatRoomDto();
-			ChatRoomPrivDto privRoomDto = new ChatRoomPrivDto();
+			chatRoomDto.setChatRoomNo(chatRoomNo);
 			chatRoomDto.setChatRoomName("나중에 바꾸기");
+			chatRoomDto.setChatRoomType('g');
+//			ChatRoomPrivDto privRoomDto = new ChatRoomPrivDto();
 			chatRoomRepo.createRoom(chatRoomDto);
-		}
+		}*/
 	}
 	
 	// 방 제거

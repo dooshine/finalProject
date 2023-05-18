@@ -29,7 +29,6 @@ public class FundRestController {
 			) {
 		Long fundNo = fundRepo.sequence();
 		fundDto.setFundNo(fundNo);
-		fundDto.setFundName("펀딩");
 		fundRepo.insert(fundDto);
 		
 	}

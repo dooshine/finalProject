@@ -10,18 +10,18 @@
 	<button data-bs-target="#createRoomModal" data-bs-toggle="modal">채팅방 만들기</button>
 	
 	<h3>채팅방 목록</h3>
-	<div class="chatRooms" v-for="(room, index) in chatRoomList" :key="index">
-		<button @click="chatRoomModal">{{ room.chatRoomNo }}</button>
+	<div class="chatRooms" v-for="(chatRoom, index) in chatRoomList" :key="index">
+		<button @click="chatRoomModal">{{ chatRoom.chatRoomNo }}</button>
 	</div>
 	
-<!----------------------------------------------------- 채팅방 생성 모달 ----------------------------------------------------->
+	<!---------------------------------- 채팅방 생성 모달 ---------------------------------->
 	<div class="modal"  tabindex="-1" role="dialog" data-bs-backdrop="static" ref="createRoomModal" id="createRoomModal">
 		<div class="modal-dialog" role="document">
 			<div class="modal-content">
 				<div class="modal-header">
 				    <h3 class="modal-title">채팅방 만들기</h3>
 				    <div class="d-flex justify-content-end">
-				    	<button type="button" class="btn btn-primary" @click="createChatRoom">
+				    	<button type="button" class="btn btn-primary">
 	           				생성
 	        			</button>
 					    <button type="button" class="btn bt-secondary" data-bs-dismiss="modal">
@@ -29,13 +29,8 @@
 	        			</button>
 				    </div>
 				</div>
-				<div class="modal-body">
-					<div class="form-floating">
-  						<input type="text" class="form-control" id="chatRoomNameInput" placeholder="채팅방이름" 
-  											v-model="chatRoom.chatRoomName" @input="chatRoom.chatRoomName = $event.target.value">
-					  	<label for="chatRoomNameInput">채팅방 이름</label>
-					</div>
-					<label class="d-flex justify-content-between" v-for="(follow, index) in followList" :key="index">
+				<div class="modal-body"  v-for="(follow, index) in followList" :key="index">
+					<label class="d-flex justify-content-between">
 				    	{{ follow.memberId }}
 				    	<input type="checkbox" :value="follow.memberId">
 				    </label>
@@ -43,10 +38,7 @@
 			</div>
 		</div>
 	</div>
-<!----------------------------------------------------- 채팅방 생성 모달 ----------------------------------------------------->
-	
-<!------------------------------------------------------- 채팅방 모달 ------------------------------------------------------->
-<!------------------------------------------------------- 채팅방 모달 ------------------------------------------------------->
+	<!---------------------------------- 채팅방 생성 모달 ---------------------------------->
 </div>
 
 <!-- Vue cdn -->
@@ -65,16 +57,10 @@
 	Vue.createApp({
 		data() {
 			return {
-				chatRoom: {
-					chatRoomNo: "",
-					chatRoomName: "",
-					chatRoomStart: "",
-					chatRoomType: "g"
-				},
 				memberId: "${sessionScope.memberId}",
 				chatRoomList: [],
 				followList: [],
-				createRoomModal: null
+				createRoomModal: null,
 			};
 		},
 		methods: {
@@ -88,7 +74,7 @@
 			async loadFollowList() {
 				const url = "${pageContext.request.contextPath}/chat/chatRoom/follow/";
 				const resp = await axios.get(url);
-				//console.log("data: " + resp.data);
+				console.log("data: " + resp.data);
 				this.followList.push(...resp.data);
 			},
 			chatRoomModal() {
@@ -103,24 +89,22 @@
 			hideCreateRoomModal() {
 				if(this.createRoomModal == null) return;
 				this.createRoomModal.hide();
-			},
-			// 채팅방 만들기
-			async createChatRoom() {
-				const url = "${pageContext.request.contextPath}/chat/chatRoom/";
-				const resp = await axios.post(url, this.chatRoom);
-				this.hideCreateRoomModal();
 			}
 		},
 		computed: {
 
 		},
 		created() {
-			// 접속하면 바로 채팅방, 팔로잉 리스트 가져오기
+			// 접속하면 바로 채팅방 목록 띄우기
 			this.loadRoomList();
 			this.loadFollowList();
 		},
 		mounted() {
-
+			// 채팅방 생성 모달 생성
+			//this.createRoomModal = new bootstrap.Modal(this.$refs.createRoomModal);
+			/*this.createRoomModal = new bootstrap.Modal(
+				document.querySelector("#createRoomModal")
+            );*/
 		}
 	}).mount("#app");
 </script>
