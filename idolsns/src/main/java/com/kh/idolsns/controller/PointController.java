@@ -19,14 +19,16 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.kh.idolsns.dto.FundDto;
 import com.kh.idolsns.dto.PaymentDto;
+import com.kh.idolsns.repo.FundRepo;
+import com.kh.idolsns.repo.MemberRepo;
 import com.kh.idolsns.repo.PaymentRepo;
 import com.kh.idolsns.service.KakaoPayService;
 import com.kh.idolsns.vo.KakaoPayApproveRequestVO;
 import com.kh.idolsns.vo.KakaoPayApproveResponseVO;
 import com.kh.idolsns.vo.KakaoPayCancelRequestVO;
 import com.kh.idolsns.vo.KakaoPayCancelResponseVO;
-
 import com.kh.idolsns.vo.KakaoPayChargeRequestVO;
 import com.kh.idolsns.vo.KakaoPayOrderRequestVO;
 import com.kh.idolsns.vo.KakaoPayOrderResponseVO;
@@ -42,19 +44,15 @@ public class PointController {
 	@Autowired
 	private KakaoPayService kakaoPayService;
 
-
-	
-	@GetMapping("/history") //충전 내역
-	public String history() {
-		return "point/history";
-	}
+	@Autowired
+	private MemberRepo memberRepo;
 	
 	
-	@GetMapping("/order") //사용 내역
-	public String orderHistory() {
-		return "point/order";
-	}
+	@Autowired
+	private PaymentRepo paymentRepo;
 	
+	@Autowired
+	private FundRepo fundRepo;
 
 	
 	//포인트 충전 페이지
@@ -124,30 +122,35 @@ public class PointController {
 	}
 	
 	@GetMapping("/charge/clear")
-	public String chargeClear(HttpSession session) {
-	    // memberId 정보를 세션에서 가져옴
-	    String memberId = (String) session.getAttribute("memberId");
-
-	    // 포인트 충전 완료 후 처리할 로직 작성
-
+	public String chargeClear(@RequestParam int paymentNo, Model model) throws URISyntaxException {
+		
+		PaymentDto paymentDto = paymentRepo.find(paymentNo);
+		
+	    // tid 값을 사용하여 주문 정보 조회
+	    KakaoPayOrderRequestVO vo = new KakaoPayOrderRequestVO();
+	    vo.setTid(paymentDto.getPaymentTid());
+	    KakaoPayOrderResponseVO response = kakaoPayService.order(vo);
+	  
+	    // 주문 정보를 모델에 추가
+	    model.addAttribute("response", response);
 	    return "point/clear";
 	}
-	/////
 	
+
 	
-	@Autowired
-	private PaymentRepo paymentRepo;
-	
-	@GetMapping("/point/history")
-	public String list(Model model, HttpSession session) {
+	@GetMapping("/history")
+	public String pointHistory(Model model, HttpSession session) {
 		String memberId = (String)session.getAttribute("memberId");
 		List<PaymentDto> list = paymentRepo.selectByMember(memberId);
 		model.addAttribute("list", list);
-		//return "/WEB-INF/views/pay/list.jsp";
+	
 		return "point/history";
 	}
 	
-	@GetMapping("/point/detail")
+	
+	
+	
+	@GetMapping("/detail")
 	public String detail(@RequestParam int paymentNo, Model model) throws URISyntaxException {
 		//우리 DB에서 정보를 찾아라
 		PaymentDto paymentDto = paymentRepo.find(paymentNo);
@@ -165,16 +168,17 @@ public class PointController {
 		return "point/detail"; //"/WEB-INF/views/pay/detail.jsp"
 	}
 	
-	@GetMapping("/point/cancel")
+	
+	
+	
+	
+	@GetMapping("/cancel")
 	public String chargeCancel(
 			@RequestParam int paymentNo, 
 			HttpServletResponse resp,
 			RedirectAttributes attr,
 			HttpSession session) throws URISyntaxException, IOException, NoHandlerFoundException {
 		
-
-		String memberId = (String)session.getAttribute("memberId");
-
 		 
 		//[1] paymentNo로 PaymentDto 정보를 조회
 		PaymentDto paymentDto = paymentRepo.find(paymentNo);
@@ -192,16 +196,34 @@ public class PointController {
 		KakaoPayCancelResponseVO response = kakaoPayService.cancel(vo);
 		
 		//[3] 내 DB의 잔여 금액을 0으로 변경(paymentRepo)
-		//paymentRepo.cancelRemain(paymentNo);
+		paymentRepo.cancelRemain(paymentNo);
 		
-		//[4] 상세 페이지로 돌려보낸다
-		//return "redirect:detail?paymentNo="+paymentNo;
-		attr.addAttribute("paymentNo", paymentNo);
-		
-		return "redirect:detail";
+		 //[4] 포인트 차감
+	    String memberId = paymentDto.getMemberId();
+	    int paymentTotal = paymentDto.getPaymentTotal();
+	    memberRepo.decreasePoint(memberId, paymentTotal);
+
+	    //[5] 상세 페이지로 돌려보낸다
+	    attr.addAttribute("paymentNo", paymentNo);
+	    
+	    return "redirect:detail";
+	
 	}
+
 	
 	
 
+	@GetMapping("/order") //사용 내역
+	public String orderHistory(Model model, HttpSession session) {
+		String memberId = (String)session.getAttribute("memberId");
+		List<FundDto> list = fundRepo.selectByMember(memberId);
+		model.addAttribute("list", list);
 	
+		return "point/order";
+
+
+	}
+	
+
+		
 }
