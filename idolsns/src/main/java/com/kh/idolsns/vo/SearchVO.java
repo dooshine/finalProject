@@ -14,4 +14,5 @@ public class SearchVO {
 
     // 게시판 종류
     private String postType;
+    
 }

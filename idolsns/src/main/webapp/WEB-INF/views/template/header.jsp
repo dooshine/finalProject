@@ -34,10 +34,7 @@
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/static/css/doo.css" />
 
     <script>
-    	const memberId = "${sessionScope.memberId}";
-    	const memberLevel = "${sessionScope.memberLevel}";
     	const contextPath = "${pageContext.request.contextPath}";
-
     </script>
     
     <style>
@@ -92,6 +89,9 @@
             		<a href="${pageContext.request.contextPath}/member/logout">로그아웃</a>
             		<a href="${pageContext.request.contextPath}/member/mypage">마이페이지</a>
             	</c:if>
+				<c:if test="${memberLevel == '관리자'}">
+					<a href="${pageContext.request.contextPath}/admin/">관리자 페이지</a>
+				</c:if>
             </div>
         </header>
           <hr>
