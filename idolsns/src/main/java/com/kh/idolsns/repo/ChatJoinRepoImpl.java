@@ -20,6 +20,10 @@ public class ChatJoinRepoImpl implements ChatJoinRepo {
 		return sql.selectList("chatJoin.findChatRoomById", memberId);
 	}
 	@Override
+	public int findChatRoomNoById(String memberId) {
+		return sql.selectOne("chatJoin.findChatRoomNoById", memberId);
+	}
+	@Override
 	public boolean doseAlreadyIn(ChatJoinDto dto) {
 		return sql.selectOne("chatJoin.doseAlreadyIn", dto) != null;
 	}

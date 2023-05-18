@@ -22,7 +22,7 @@ public class ChatRoomRepoImpl implements ChatRoomRepo {
 	}
 	@Override
 	public void createRoom(ChatRoomDto dto) {
-		sql.insert("chatRoom.creatChatRoom", dto);
+		sql.insert("chatRoom.creatRoom", dto);
 	}
 	@Override
 	public ChatRoomDto findRoom(int roomNo) {
