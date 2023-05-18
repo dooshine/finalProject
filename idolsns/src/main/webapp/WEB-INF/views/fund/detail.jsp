@@ -151,6 +151,11 @@
                 <label>후원금</label>
                 <input type="text" v-model="fund.fundPrice">
                 
+                <label>date</label>
+                <input type="date" v-model="fund.fundTime">
+                
+                
+                
                 
                 <button type="button" v-on:click="sendItem">
 				    후원하기
@@ -225,6 +230,11 @@
                     //화면에서 사용할 데이터 선언
                     fund:{
                         fundPrice:"",
+                        fundNo: "",
+                        postNo: "",
+                        memberId: memberId,
+                        fundName: "",
+                        fundTime: ""
                     },
                 };
             },
@@ -233,15 +243,26 @@
             methods:{
                 // 데이터 중 fund를 서버로 전송
                 async sendItem() {
-
+                	
+                	
                     // const resp = await axios.post("주소", {데이터});
-                    const url = "http://localhost:8080/rest/fund/";
+                    const url = "http://localhost:8080/fund/";
                     const resp = await axios.post(url, this.fund);
                     console.log(resp);
 
 
                 },
+               	//글 번호를 가져온다
+                setPostNo() {
+                	var params = new URLSearchParams(location.search);
+                	var postNo = params.get("postNo");
+                	this.fund.postNo = postNo;
+                	console.log(this.fund.postNo);
+                }
             },
+            created() {
+            	this.setPostNo();
+            }
         }).mount("#app");
     </script>
 			

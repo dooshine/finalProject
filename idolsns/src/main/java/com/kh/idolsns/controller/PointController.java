@@ -109,30 +109,24 @@ public class PointController {
 		
 		 // 결제 승인 요청
 	    KakaoPayApproveResponseVO response = kakaoPayService.approve(vo);
-
+	    
+	    
 	    // 충전된 금액을 포인트로 업데이트
 	    KakaoPayChargeRequestVO chargeRequestVO = new KakaoPayChargeRequestVO();
 	    chargeRequestVO.setMemberId((String) session.getAttribute("memberId"));
 	    chargeRequestVO.setPaymentTotal(response.getAmount().getTotal());
 	    System.out.println("chargeRequestVO: " + chargeRequestVO);
 	    kakaoPayService.charge(chargeRequestVO);
-
+	    
 	    // "redirect:clear"로 리다이렉트하여 clear 페이지로 이동
 	    return "redirect:clear";
 	}
 	
 	@GetMapping("/charge/clear")
-	public String chargeClear(@RequestParam int paymentNo, Model model) throws URISyntaxException {
+	public String chargeClear() {
 		
-		PaymentDto paymentDto = paymentRepo.find(paymentNo);
+
 		
-	    // tid 값을 사용하여 주문 정보 조회
-	    KakaoPayOrderRequestVO vo = new KakaoPayOrderRequestVO();
-	    vo.setTid(paymentDto.getPaymentTid());
-	    KakaoPayOrderResponseVO response = kakaoPayService.order(vo);
-	  
-	    // 주문 정보를 모델에 추가
-	    model.addAttribute("response", response);
 	    return "point/clear";
 	}
 	
@@ -165,7 +159,7 @@ public class PointController {
 		model.addAttribute("response", response);
 		
 		//상세 페이지 반환
-		return "point/detail"; //"/WEB-INF/views/pay/detail.jsp"
+		return "point/detail"; 
 	}
 	
 	

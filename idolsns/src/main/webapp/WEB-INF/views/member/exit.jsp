@@ -41,6 +41,10 @@
 				<h1>회원탈퇴</h1>
 			</div>
 			<div class="row">
+				<input type="checkbox" name="a">
+				<label for="a">회원탈퇴동의</label>
+			</div>
+			<div class="row">
 				<input type="password" name="memberPw" placeholder="비밀번호">
 			</div>
 			<div class="row">

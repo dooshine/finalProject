@@ -1,8 +1,17 @@
 package com.kh.idolsns.controller;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.Scanner;
+
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,6 +24,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.kh.idolsns.dto.MemberDto;
 import com.kh.idolsns.repo.MemberRepo;
+import com.kh.idolsns.service.emailService;
 
 @Controller
 @RequestMapping("/member")
@@ -22,6 +32,12 @@ public class MemberController {
 	
 	@Autowired
 	private MemberRepo memberRepo;
+	
+	@Autowired
+	private emailService emailService;
+	
+	@Autowired
+	private JavaMailSender sender;
 	
 	//회원가입
 	@GetMapping("/join")
@@ -31,6 +47,8 @@ public class MemberController {
 	
 	@PostMapping("/join")
 	public String join(@ModelAttribute MemberDto memberDto) {
+		
+		// 멤버 생성
 		memberRepo.insert(memberDto);
 		return "member/joinFinish";
 	}
@@ -55,11 +73,13 @@ public class MemberController {
 		
 		if(findDto == null) {
 			attr.addAttribute("mode", "error");
+			attr.addAttribute("msg", "존재하지 않는 아이디입니다.");
 			return "redirect:login";
 		}
 		
 		if(!userDto.getMemberPw().equals(findDto.getMemberPw())) {
 			attr.addAttribute("mode", "error");
+			attr.addAttribute("msg", "아이디 또는 비밀번호를 잘못입력하였습니다.");
 			return "redirect:login";
 		}
 		
@@ -232,5 +252,16 @@ public class MemberController {
 		else {
 			return "N";
 		}
+	}
+	
+	//이메일 인증
+	@GetMapping("/emailSend")
+	@ResponseBody
+	public String emailSend(@RequestParam String memberEmail) throws Exception {
+		
+		String key = emailService.createKey();
+		emailService.sendEmail(memberEmail,key);
+		
+		return key;
 	}
 }

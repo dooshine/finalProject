@@ -33,88 +33,79 @@
     </script>
 </head>
  <body>
-      <div id="app" class="container">
+    <div class="container rounded p-3" style="background-color:white">
+      <div id="app">
         
-
         <div class="row page">
             <form action="join" method="post" autocomplete="off">
-
+            <div v-show="page==1">
+            	<h1>약관 동의</h1>
+            	<input type="checkbox">
+            	<button type="button" class="btn btn-info w-100" @click="pagePlus()">동의합니다.</button>
+            </div>
+			<div v-show="page==2">
             <div class="row mb-5">
-                <div class="col-3"></div>
-                <div class="col-6 text-center">
-                    <h1>회원가입</h1>
-                </div>
-                <div class="col-3"></div>
+                    <h1 style="text-align:center;">회원가입</h1>
             </div>
 
             <div class="row mb-3">
-                <div class="col-3"></div>
-                <div class="col-6">
                     <input type="text" v-model="memberId" class="form-control" 
                     	:class="{ 'is-valid': memberIdValid && !idDuplicated, 'is-invalid': memberId !== '' && (!memberIdValid || idDuplicated)}" placeholder="아이디" 
                     	@blur="idDuplicatedCheck(memberId)" name="memberId" id="memberId">
                     <div class="valid-feedback">{{memberIdMessage}}</div>
   					<div class="invalid-feedback">{{memberIdMessage}}</div>
-                </div>
-                <div class="col-3"></div>
             </div>
 
             <div class="row mb-3">
-                <div class="col-3"></div>
-                <div class="col-6">
                     <input type="password" v-model="memberPw" class="form-control" 
                     	:class="{'is-valid' : memberPwValid, 'is-invalid' : memberPw !== '' && !memberPwValid}" placeholder="비밀번호" name="memberPw">
                     <div class="valid-feedback">{{memberPwMessage}}</div>
                     <div class="invalid-feedback">{{memberPwMessage}}</div>
-                </div> 
-                <div class="col-3"></div>
             </div>
 
             <div class="row mb-3">
-                <div class="col-3"></div>
-                <div class="col-6">
                     <input type="password" v-model="memberPwRe" class="form-control" 
                     	:class="{'is-valid':memberPwReValid, 'is-invalid':memberPwRe !== '' && (!memberPwReValid || memberPw.length==0)}" placeholder="비밀번호 확인" name="memberPwRe">
                     <div class="valid-feedback">{{memberPwReMessage}}</div>
                     <div class="invalid-feedback">{{memberPwReMessage}}</div>
-                </div>
-                <div class="col-3"></div>
             </div>
 
             <div class="row mb-3">
-                <div class="col-3"></div>
-                <div class="col-6">
                     <input type="text" v-model="memberNick" class="form-control" placeholder="닉네임" 
                     	:class="{'is-valid':memberNickValid && !nickDuplicated, 'is-invalid':memberNick !== '' && (!memberNickValid || nickDuplicated)}" 
                     	@blur="nickDuplicatedCheck(memberNick)" name="memberNick">
                     <div class="valid-feedback">{{memberNickMessage}}</div>
                     <div class="invalid-feedback">{{memberNickMessage}}</div>
-                </div>
-                <div class="col-3"></div>
             </div>
 
             <div class="row mb-3">
-                <div class="col-3"></div>
-                <div class="col-6">
                     <input type="email" v-model="memberEmail" class="form-control" placeholder="이메일" 
                     	:class="{'is-valid':memberEmailValid && !emailDuplicated, 'is-invalid':memberEmail !== '' && (!memberEmailValid || emailDuplicated)}" 
                     	@blur="emailDuplicatedCheck(memberEmail)" name="memberEmail">
                     <div class="valid-feedback">{{memberEmailMessage}}</div>
                     <div class="invalid-feedback">{{memberEmailMessage}}</div>
-                </div>
-                <div class="col-3"></div>
             </div>
 
             <div class="row mb-3">
-                <div class="col-3"></div>
-                <div class="col-6">
-                    <button type="submit" class="btn btn-info w-100" v-bind:disabled="!allValid">다음단계</button>
-                </div>
-                <div class="col-3"></div>
+                    <button type="button" class="btn btn-info w-100" v-bind:disabled="!allValid" @click="pagePlus()">다음단계</button>
+            </div>
+            </div>
+            
+            <div v-show="page==3">
+            	<div class="row mt-3">
+            		<h1>이메일 인증</h1>
+            		<h3>입력하신 이메일주소로 인증번호를 발송하였습니다.</h3>
+            		<h4>{{memberEmail}}</h4>
+            		<button type="button" @click="sendEmail()">wjsthd</button>
+            	</div>
+            	<div class="row">
+            		<input type="text" v-model.number="code" placeholder="인증번호입력" @blur="isKeyValid">
+            		<button type="submit" :disabled="!keyValid">회원가입</button>
+            	</div>
             </div>
             </form>
         </div>    
-        
+       </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
@@ -135,6 +126,9 @@
                     idDuplicated:false,
                     nickDuplicated:false,
                     emailDuplicated:false,
+                    code:"",
+                    key:"",
+                    keyValid:false,
                 };
             },
             methods:{
@@ -183,6 +177,27 @@
                         this.emailDuplicated = false;
                     }
                   },
+                  
+                  async sendEmail(memberEmail){
+                  	const response = await axios.get("/member/emailSend",{
+                  		params : {
+                  			memberEmail : this.memberEmail
+                  		}
+                  	})
+                  	// 인증번호
+                  	 this.key = response.data;
+                  	
+                  },
+                  isKeyValid(){
+                	  if(this.key == this.code){
+                		  this.keyValid=true;
+                	  }else{
+                		  this.keyValid=false;
+                	  }
+                  },
+                  pagePlus(){
+                	  this.page++;
+                  }
 
             },
             computed:{
@@ -285,6 +300,8 @@
                                 && !this.nickDuplicated
                                 && !this.emailDuplicated;
                 },
+                
+             
             },
         }).mount("#app");
     </script>

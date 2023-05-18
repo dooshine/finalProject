@@ -11,6 +11,5 @@ public class FundDto {
 	private Long postNo;
 	private int fundPrice;
 	private Date fundTime;
-	private String fundName;
 	private String memberId;
 }
