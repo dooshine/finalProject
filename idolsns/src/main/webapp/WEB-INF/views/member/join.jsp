@@ -33,17 +33,15 @@
     </script>
 </head>
  <body>
-        		 <div class="container rounded p-3" style="background-color:white">
+    <div class="container rounded p-3" style="background-color:white">
       <div id="app">
         
-
-        		 
         <div class="row page">
             <form action="join" method="post" autocomplete="off">
             <div v-show="page==1">
             	<h1>약관 동의</h1>
             	<input type="checkbox">
-            	<button type="button" class="btn btn-info w-100" @click="page++"></button>
+            	<button type="button" class="btn btn-info w-100" @click="pagePlus()">동의합니다.</button>
             </div>
 			<div v-show="page==2">
             <div class="row mb-5">
@@ -89,22 +87,25 @@
             </div>
 
             <div class="row mb-3">
-                    <button type="button" class="btn btn-info w-100" v-bind:disabled="!allValid" @click="page++;">다음단계</button>
+                    <button type="button" class="btn btn-info w-100" v-bind:disabled="!allValid" @click="pagePlus()">다음단계</button>
             </div>
             </div>
+            
             <div v-show="page==3">
             	<div class="row mt-3">
             		<h1>이메일 인증</h1>
-            		<button @click="sendEmail"></button>
             		<h3>입력하신 이메일주소로 인증번호를 발송하였습니다.</h3>
+            		<h4>{{memberEmail}}</h4>
+            		<button type="button" @click="sendEmail()">wjsthd</button>
             	</div>
             	<div class="row">
-            		<input type="text" placeholder="인증번호입력"><button type="submit"></button>
+            		<input type="text" v-model.number="code" placeholder="인증번호입력" @blur="isKeyValid">
+            		<button type="submit" :disabled="!keyValid">회원가입</button>
             	</div>
             </div>
             </form>
         </div>    
-        </div>
+       </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
@@ -125,6 +126,9 @@
                     idDuplicated:false,
                     nickDuplicated:false,
                     emailDuplicated:false,
+                    code:"",
+                    key:"",
+                    keyValid:false,
                 };
             },
             methods:{
@@ -180,8 +184,19 @@
                   			memberEmail : this.memberEmail
                   		}
                   	})
+                  	// 인증번호
+                  	 this.key = response.data;
                   	
-                  	console.log(response.data);
+                  },
+                  isKeyValid(){
+                	  if(this.key == this.code){
+                		  this.keyValid=true;
+                	  }else{
+                		  this.keyValid=false;
+                	  }
+                  },
+                  pagePlus(){
+                	  this.page++;
                   }
 
             },

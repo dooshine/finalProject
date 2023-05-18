@@ -34,9 +34,9 @@ public class emailServiceImpl implements emailService{
 	}
 
 	@Override
-	public String sendEmail(String recipientEmail) throws Exception {
+	public String sendEmail(String recipientEmail,String key) throws Exception {
 		
-		String key = createKey();
+		 //key = createKey();
 		
 		MimeMessage message = sender.createMimeMessage();
 		MimeMessageHelper helper = 
@@ -57,11 +57,11 @@ public class emailServiceImpl implements emailService{
 				Document doc = Jsoup.parse(text);
 				
 				Element target = doc.getElementById("custom-email-target");
-				target.text("피카츄");
+				target.text(key);
 				
 				
 				
-				helper.setText(buffer.toString(), true);//불러온 내용을 첨부
+				helper.setText(doc.toString(), true);//불러온 내용을 첨부
 				
 				
 				sender.send(message);//전송
@@ -69,5 +69,7 @@ public class emailServiceImpl implements emailService{
 				return key;
 	}
 
-
 }
+
+
+

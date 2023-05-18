@@ -73,11 +73,13 @@ public class MemberController {
 		
 		if(findDto == null) {
 			attr.addAttribute("mode", "error");
+			attr.addAttribute("msg", "존재하지 않는 아이디입니다.");
 			return "redirect:login";
 		}
 		
 		if(!userDto.getMemberPw().equals(findDto.getMemberPw())) {
 			attr.addAttribute("mode", "error");
+			attr.addAttribute("msg", "아이디 또는 비밀번호를 잘못입력하였습니다.");
 			return "redirect:login";
 		}
 		
@@ -252,8 +254,14 @@ public class MemberController {
 		}
 	}
 	
+	//이메일 인증
 	@GetMapping("/emailSend")
-	public void emailSend(@RequestParam String memberEmail) throws Exception {
-		emailService.sendEmail(memberEmail);
+	@ResponseBody
+	public String emailSend(@RequestParam String memberEmail) throws Exception {
+		
+		String key = emailService.createKey();
+		emailService.sendEmail(memberEmail,key);
+		
+		return key;
 	}
 }
