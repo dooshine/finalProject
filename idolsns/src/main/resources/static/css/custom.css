@@ -1,0 +1,46 @@
+@charset "UTF-8";
+
+/*
+	버튼스타일 등 부트스트랩과 별개의 커스텀 디자인입니다.
+	
+	메인 색
+		- 100%: #6A53FB
+	검은색
+		- 100%: 
+		- 30%: #b3b9b8
+		- 10%: #e6e8e7
+		- 5%: #f2f3f3
+*/
+
+/*
+    검색창(form-input-search)
+    - 검색창은 부모 div(search-box), 자식 input(search-input)으로 만듭니다.
+    - html 코드 예시
+        <div class="row">
+            <div class="search-box">
+                <input class="search-input w-100">
+            </div>
+        </div>
+*/
+.search-box {
+    border: 0.3px solid #b3b9b8;
+    border-radius: 100px;
+    display: flex;
+    background-image: url("../image/search.png");
+    background-size: auto 45%;
+    background-repeat: no-repeat;
+    background-position: 13px center;
+    box-shadow: 0px 0px 3px 0px #e6e8e7 inset;
+}
+.search-input {
+    color: #22201e;
+    font-size: 16px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    margin-left: 40px;
+    border: none;
+    outline: none;
+    background: none;
+    height: 18.4px;
+    line-height: 18.4px;
+}

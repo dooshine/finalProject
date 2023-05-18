@@ -14,11 +14,14 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.kh.idolsns.configuration.KakaoPayProperties;
 import com.kh.idolsns.dto.PaymentDto;
+import com.kh.idolsns.repo.MemberRepo;
 import com.kh.idolsns.repo.PaymentRepo;
 import com.kh.idolsns.vo.KakaoPayApproveRequestVO;
 import com.kh.idolsns.vo.KakaoPayApproveResponseVO;
 import com.kh.idolsns.vo.KakaoPayCancelRequestVO;
 import com.kh.idolsns.vo.KakaoPayCancelResponseVO;
+import com.kh.idolsns.vo.KakaoPayChargeRequestVO;
+import com.kh.idolsns.vo.KakaoPayChargeResponseVO;
 import com.kh.idolsns.vo.KakaoPayOrderRequestVO;
 import com.kh.idolsns.vo.KakaoPayOrderResponseVO;
 import com.kh.idolsns.vo.KakaoPayReadyRequestVO;
@@ -42,6 +45,8 @@ public class KakaoPayServiceImpl implements KakaoPayService {
 	@Autowired
 	private PaymentRepo paymentRepo;
 	
+	@Autowired
+	private MemberRepo memberRepo;
 	
 	
 	@Override
@@ -66,10 +71,11 @@ public class KakaoPayServiceImpl implements KakaoPayService {
 		String currentPath = ServletUriComponentsBuilder
 								.fromCurrentRequestUri()
 								.toUriString();
+		boolean endSlash = currentPath.endsWith("/");
 		
-		body.add("approval_url", currentPath + "/success");
-		body.add("fail_url", currentPath + "/fail");
-		body.add("cancel_url", currentPath + "cancel");
+		body.add("approval_url", currentPath + (endSlash ? "success" : "/success"));
+		body.add("fail_url", currentPath + (endSlash ? "fail" : "/fail") );
+		body.add("cancel_url", currentPath + (endSlash ? "cancel" : "/cancel") );
 		log.debug("currentPath = {}", currentPath);
 		
 		//바디+헤더
@@ -123,6 +129,19 @@ public class KakaoPayServiceImpl implements KakaoPayService {
 		return response;
 	}
 
+	
+	//포인트 충전
+	@Override
+	public KakaoPayChargeResponseVO charge(KakaoPayChargeRequestVO vo) throws URISyntaxException {
+	   
+		// MyBatis를 사용하여 SQL 실행
+	    memberRepo.chargePoint(vo.getMemberId(), vo.getPaymentTotal());
+
+	    // 결과 반환
+	    KakaoPayChargeResponseVO response = new KakaoPayChargeResponseVO();
+	    response.setSuccess(true);
+	    return response;
+	}
 
 	
 	@Override
@@ -160,5 +179,6 @@ public class KakaoPayServiceImpl implements KakaoPayService {
 		//반환
 		return response;
 	}
-	
+
+
 }

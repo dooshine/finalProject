@@ -4,6 +4,7 @@
 <!DOCTYPE mapper
     PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<<<<<<< HEAD
 
 <mapper namespace="fund">
 
@@ -19,5 +20,42 @@
 	<select id="sequence" resultType="Long">
 		select * from fund_seq.nextval from dual
 	</select>
+=======
+    
+<!-- mapper -->
+<mapper namespace="fund">
+
+
+   	<select id="sequence" resultType="Long">
+        select fund_seq.nextval from dual
+    </select>
+    <!-- 통합게시물 생성 -->
+    <insert id="add">
+        insert into fund (
+        fund_no, post_id, fund_price, fund_time, fund_name, member_id
+        ) 
+        values (
+        #{fundNo}, #{fundId}, #{fundPrice}, #{fundTime}, #{fundName}, #{memberId}
+        )
+    </insert>
+
+
+
+	<!-- 결제내역 조회 기능(전체/회원별/...) -->
+	<select id="selectAll" resultType="FundDto">
+		select * from fund order by fund_no desc
+	</select>
+	
+	<select id="selectByMember" resultType="FundDto">
+		select * from fund 
+		where member_id = #{memberId}
+		order by fund_no desc
+	</select>
+	
+	<select id="find" resultType="FundDto">
+		select * from fund where fund_no = #{fundNo}
+	</select>
+
+>>>>>>> refs/remotes/origin/main
 
 </mapper>

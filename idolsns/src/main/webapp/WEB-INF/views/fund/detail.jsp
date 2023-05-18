@@ -1,15 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
 <jsp:include page="/WEB-INF/views/template/header.jsp"></jsp:include>
 
 
     <title>타이틀</title>
 
-    
-    
-
-    
     <style>
     
           /*조건부 스타일 - 태블릿*/
@@ -74,14 +71,7 @@
     </style>
     
     
-    
-    
-<section id = "fund_detail">
-	
 
-	<div class= "container-fluid d-flex justify-content-center">
-
-		
 			<div class="container rounded p-3" style="background-color:white">
 			
 				  
@@ -176,11 +166,12 @@
 	        </div>
 				</div>
 				</div>
+				</div>
+				</div>
+				</div>
 				
 				
 				
-			</div>
-			</div>
 		
 			
 				</div>
@@ -213,9 +204,6 @@
 			</div>
 			
 			
-				</div>
-			</div>
-			
 			
 			
 				postImageDto : ${postImageList}<br>
@@ -224,6 +212,7 @@
 				<c:forEach var="postImageDto" items="${postImageList}">
 					<img src="${postImageDto.imageURL}">
 				</c:forEach>
+	</section>
 			
 			
     <script src="https://unpkg.com/vue@3.2.36"></script>
@@ -259,8 +248,6 @@
 	
 		
 
-	
-	</section>
 	
 	<jsp:include page="/WEB-INF/views/template/footer.jsp"></jsp:include>
 	

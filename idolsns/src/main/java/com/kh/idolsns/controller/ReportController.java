@@ -22,23 +22,33 @@ public class ReportController {
     private MemberRepo memberRepo;
 
     @GetMapping("/board")
-    private String board(){
+    public String board(){
         return "/report/reportBoard";
     }
     // @GetMapping("/member")
-    // private String member(@ModelAttribute AdminMemberSearchVO adminMemberSearchVO, Model model){
+    // public String member(@ModelAttribute AdminMemberSearchVO adminMemberSearchVO, Model model){
     //     List<MemberDto> list = memberRepo.selectList(adminMemberSearchVO);
     //     model.addAttribute("list", list);
     //     return "/report/reportMember";
     // }
+
+    // 회원목록 조회, 신고생성
     @GetMapping("/memberVue")
-    private String member(HttpSession session, Model model){
+    public String member(HttpSession session, Model model){
         String memberId = (String)session.getAttribute("memberId");
         model.addAttribute("memberId", memberId);
         return "/report/reportMemberVue";
     }
+
+    // 신고목록 조회
+    @GetMapping("/list")
+    public String reportList(){
+        return "/report/reportList";
+    }
+
+
     @GetMapping("/reply")
-    private String reply(){
+    public String reply(){
         return "/report/reportReply";
     }
 }

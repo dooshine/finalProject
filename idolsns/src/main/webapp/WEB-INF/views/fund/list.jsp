@@ -6,10 +6,6 @@
 
     <title>ㅇㅇㅇ</title>
 
-	
-    <script>
-//     	const contextPath = "${pageContext.request.contextPath}";
-    </script>
 
 
 <style scoped>
@@ -130,10 +126,8 @@
 		</style>
 
 
-		
-	<section>
 		  <div id="app">
-	      	<div class= "container-fluid d-flex justify-content-center col-6">
+
 	    
         		 <div class="container rounded p-3" style="background-color:white;">
         		 
@@ -172,12 +166,16 @@
 					  </div>
 					</div>
 					
-				</div>
 				</div>	
+				</div>
 				
+				<c:forEach var="fundPostDto" items="${fundList}">
+				${fundPostDto}<br>
+				</c:forEach>
 				
 				
 </section>
+			
 
 		<script src="https://unpkg.com/vue@3.2.36"></script>
 	    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>

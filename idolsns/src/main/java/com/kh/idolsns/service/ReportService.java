@@ -15,12 +15,18 @@ public class ReportService {
 
     // 신고 생성
     public void report(@ModelAttribute ReportDto reportDto){
-        // reportDto로 해당 정보 존재하는지 확인 후
-        // 존재하지 않으면 insert, 존재하면 update
+        // reportDto로 해당 존재 확인, 존재하지 않으면 insert, 존재하면 update
         if(reportRepo.reportExist(reportDto)){
             reportRepo.update(reportDto);
         } else {
             reportRepo.insert(reportDto);
+
+            // 신고 카운트 조사
+            // 신고 카운트 전체 100개 시 제재 
+            int reportCnt = reportRepo.selectAllReportCnt(reportDto);
+            if(reportCnt == 100){
+                // 1단계 제재
+            } 
         }
     }
 }

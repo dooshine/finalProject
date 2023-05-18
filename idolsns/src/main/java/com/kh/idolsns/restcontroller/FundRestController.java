@@ -30,7 +30,7 @@ public class FundRestController {
 			HttpSession session) {
 		String memberId = (String) session.getAttribute("memberId");
 		Long fundNo = fundRepo.sequence();
-		fundDto.setFundId(memberId);
+		fundDto.setMemberId(memberId);
 		fundDto.setPostNo(postNo);
 		fundDto.setFundNo(fundNo);
 		
