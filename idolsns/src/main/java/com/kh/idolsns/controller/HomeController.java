@@ -2,6 +2,8 @@ package com.kh.idolsns.controller;
 
 import java.util.List;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -31,7 +33,9 @@ public class HomeController {
     }
     
     @GetMapping("/postMain")
-    public String postMain() {
+    public String postMain(Model model, HttpSession session) {
+    	String memberId = (String)session.getAttribute("memberId");
+    	model.addAttribute("memberId",memberId);     	
     	return "post/postMain";
     }
 }

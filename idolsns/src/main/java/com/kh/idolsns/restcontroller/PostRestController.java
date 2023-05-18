@@ -110,7 +110,9 @@ public class PostRestController {
     //--------------------- 태그정보 불러오기
     @GetMapping("/tag/{postNo}")
     public List<String> getTag(@PathVariable("postNo") Long postNo){
+    	System.out.println("postNo는 : "+postNo);
     	return tagRepo.selectAll(postNo);
+    	
     }
     
     // -------------------- 태그정보 등록 

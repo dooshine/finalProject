@@ -1,8 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <jsp:include page="/WEB-INF/views/template/header.jsp"></jsp:include>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
-	
+
+	<!-- 게시글 작성 코드 async-post.js -->
+	<script src="/static/js/async-post.js"></script>
 	
 	<div class="container-fluid" id="app">
 		
@@ -13,13 +14,213 @@
 	               <img class="rounded-circle img-fluid" src="static/image/profileDummy.png">
 	            </div>
 	            <div class="col-11 col-md-11 col-lg-11 d-flex align-items-center justify-content-center">
-	                <button type="button" class="btn btn-white btn-outline-dark rounded-pill col-12 ">무슨 생각을 하고 계신가요?</button>
+	                <button type="button" class="btn btn-white btn-outline-dark rounded-pill col-12 " data-bs-target="#modal1" data-bs-toggle="modal">${memberId}님 무슨 생각을 하고 계신가요?</button>
 <!-- 	                <button type="button" class="btn btn-white btn-outline-dark rounded-pill col-12 " v-on:click="showModal">무슨 생각을 하고 계신가요?</button> -->
 	            </div>
 	        </div>	        
 	    </div>
 	    <br><br>
 	    <!----------- 글쓰기 구간 ------------>
+	    
+	    <!----------------------------------- 네개의 모달창 구성------------------------------------------------->
+		<!-- 1. 카테고리 선택 -->
+        <div class="modal" tabindex="-1" role="dialog" id="modal1"
+                            data-bs-backdrop="static"> <!-- static이면 모달창 외부 클릭해도 안꺼짐 -->
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                
+                	<!-- header -->
+                    <div class="modal-header">
+                        <h5 class="modal-title">글 카테고리 설정</h5>
+                    </div>
+                    
+                    <!-- body -->
+                    <div class="modal-body">
+                        <!-- 태그 버튼 선택 -->
+                        <p class="text-center">무엇에 대한 글인가요?(카테고리 설정)</p>
+                        <div class="row justify-content-center"> 
+                        	<button type="button" class="col-3 btn btn-primary modal2"
+	                        	data-bs-target="#modal2" data-bs-toggle="modal">
+	                        	자유
+	                        </button>
+	                        &nbsp;&nbsp;
+	                        <button type="button" class="col-3 btn btn-primary modal2"
+	                        	data-bs-target="#modal1-1" data-bs-toggle="modal">
+	                        	행사일정
+	                        </button>
+                     	    &nbsp;&nbsp;
+	                        <button type="button" class="col-3 btn btn-primary modal2"
+	                        	data-bs-target="#modal1-2" data-bs-toggle="modal">
+	                        	같이가요
+	                        </button>
+                        </div>
+                    </div>
+                   
+                    <!-- footer -->
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary"
+                                data-bs-dismiss="modal">닫기</button>
+                    </div>
+                    
+                </div>      
+            </div>
+        </div>
+       
+        <!-- 1-1. 행사일정 기간 -->
+        <div class="modal" tabindex="-1" role="dialog" id="modal1-1"
+                            data-bs-backdrop="static"> <!-- static이면 모달창 외부 클릭해도 안꺼짐 -->
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                
+                	<!-- header -->
+                    <div class="modal-header">
+                        <h5 class="modal-title">행사일정 기간</h5>
+                    </div>
+                    
+                    <!-- body -->
+                    <div class="modal-body">
+                        <!-- 태그 버튼 선택 -->
+                        <p class="text-center">행사일정의 시작, 종료 날짜 및 시간을 선택하세요</p>
+                        <div class="row justify-content-center"> 
+                        	<h6 class="col-5 text-center">시작 날짜 및 시간</h6>
+                        	<input type="datetime-local" id="schedule-start" class="col-7">
+                        </div>
+                        <br>
+                        <div class="row justify-content-center"> 
+                        	<h6 class="col-5 text-center">종료 날짜 및 시간</h6>
+                        	<input type="datetime-local" id="schedule-end" class="col-7">
+                        </div>
+                    </div>
+                   
+                    <!-- footer -->
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary"
+	                        	data-bs-target="#modal2" data-bs-toggle="modal">
+	                        	다음
+	                    </button>
+                        <button type="button" class="btn btn-secondary"
+                                data-bs-dismiss="modal">닫기</button>
+                    </div>
+                    
+                </div>      
+            </div>
+        </div>
+   
+        <!-- 1-2. 같이가요 기간 -->
+        <div class="modal" tabindex="-1" role="dialog" id="modal1-2"
+                            data-bs-backdrop="static"> <!-- static이면 모달창 외부 클릭해도 안꺼짐 -->
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                
+                	<!-- header -->
+                    <div class="modal-header">
+                        <h5 class="modal-title">같이가요 기간</h5>
+                    </div>
+                    
+                    <!-- body -->
+                    <div class="modal-body">
+                        <!-- 태그 버튼 선택 -->
+                        <p class="text-center">같이가요의 시작, 종료 날짜 및 시간을 선택하세요</p>
+                        <div class="row justify-content-center"> 
+                        	<h6 class="col-5 text-center">시작 날짜</h6>
+                        	<input type="datetime-local" id="together-start" class="col-7">
+                        </div>
+                        <br>
+                        <div class="row justify-content-center"> 
+                        	<h6 class="col-5 text-center">종료 날짜</h6>
+                        	<input type="datetime-local" id="together-end" class="col-7">
+                        </div>
+                    </div>
+                   
+                    <!-- footer -->
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary"
+	                        	data-bs-target="#modal2" data-bs-toggle="modal">
+	                        	다음
+	                    </button>
+                        <button type="button" class="btn btn-secondary"
+                                data-bs-dismiss="modal">닫기</button>
+                    </div>
+                    
+                </div>      
+            </div>
+        </div>
+         
+         
+		<!-- 2.  태그 창 (첫번 째 창에서 다음 버튼이 클릭 되었을 때, 비동기로 현존하는 이벤트 태그들을 가져옴)-->
+        <div class="modal" tabindex="-1" role="dialog" id="modal2"
+                            data-bs-backdrop="static">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                
+                	<!-- header -->
+                    <div class="modal-header">
+                        <h5 class="modal-title">태그 연결</h5>
+                    </div>
+                    
+                    <!-- body -->
+                    <div class="modal-body">
+                        <p class="text-center">글에 적용할 태그를 입력해주세요</p>
+                        <div class="row text-center">
+                     	    <div class="col-1"></div>
+                        	<input type="text" class="tag-input col-7" placeholder="태그를 입력하세요">
+                        	<div class="col-1"></div>
+                        	<button class="col-2 tag-btn">입력</button>
+                        </div>
+                        <div class="row">
+                        	<h6 class="all-tag"></h6>
+                        </div>                         
+                    </div>
+                    
+                    <!-- footer -->
+                    <div class="modal-footer">
+                       	<button type="button" class="btn btn-primary"
+                            data-bs-target="#modal3" data-bs-toggle="modal">
+                        	글작성하기
+                        </button>
+                        <button type="button" class="btn btn-secondary"
+                                data-bs-dismiss="modal">닫기</button>
+                    </div>
+                    
+                </div>      
+            </div>
+         </div>
+         
+         
+        <!-- 3. 글 및 업로드 창 (두 번째 창에서 다음 버튼이 클릭 되었을 때, 비동기로 현존하는 아이돌 태그들을 가져옴)-->
+        <div class="modal" tabindex="-1" role="dialog" id="modal3"
+                            data-bs-backdrop="static">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                
+                	<!-- header -->
+                    <div class="modal-header">
+                        <h5 class="modal-title">글 작성</h5>
+                    </div>
+                    
+                    <!-- body -->
+                    <div class="modal-body">
+                        <textarea class="col-12 post" style="height: 200px;" placeholder="글 작성란"></textarea>
+                        <div id="preview" contenteditable="true"></div>
+                        
+                    </div>
+                    
+                    <!-- footer -->
+                    <div class="modal-footer">
+                    	<input type="file" id="fileInput" multiple>
+                    	<button type="button" class="btn btn-primary write-finish"
+                                data-bs-dismiss="modal">작성완료</button>
+                    
+                        <button type="button" class="btn btn-secondary"
+                                data-bs-dismiss="modal">닫기</button>
+                    </div>
+                    
+                </div>      
+            </div>
+         </div>
+	    
+	    
+	    
 	    
 	    
 	    <!--------------- 게시물들 반복구간 ------------->
@@ -50,7 +251,16 @@
 			            <div class="col-10 col-md-10 col-lg-10 d-flex align-items-center justify-content-start">
 							<div class="row bg-info rounded-pill align-items-center justify-content-center">
 								<p >{{ post.postType }}</p>
-							</div>							       
+							</div>
+<!-- 							<div v-if="post.postNo !== null"> -->
+<!-- 							{{this.getTags(post.postNo)}} -->
+<!-- 				                <div v-for="(tag, tagidx) in tags[index]" :key="tagidx"> -->
+<!-- 				                    <div class="row bg-info rounded-pill align-items-center justify-content-center"> -->
+<!-- 				                        <p>{{ tag }}</p> -->
+<!-- 				                    </div> -->
+<!-- 				                </div> -->
+<!-- 				             </div> -->
+				             					       
 			            </div>
 						<div class="col-1 col-md-1 col-lg-1 d-flex align-items-center justify-content-center"> 
 			            </div>	                
@@ -79,7 +289,9 @@
                 
                 <br><br>
        	 </div>
-       	 <!--------------- 게시물들 반복구간 ------------->	   
+       	 <!--------------- 게시물들 반복구간 ------------->
+       	 
+      
 	</div>
 
     
@@ -88,52 +300,40 @@
             data(){
                 return {
                 	posts: [],
-                	tags: [], 
-                	
-                	
-                    //modal을	 제어할 수 있는 리모컨을 구비
-					// modal:null,
                 };
             },
             methods:{
-//                 showModal(){
-//                     if(this.modal == null) return;
-//                     this.modal.show();
-//                 },
-//                 hideModal(){
-//                     if(this.modal == null) return;
-//                     this.modal.hide();
-//                 },
-				
 				// 모든 게시글 불러오기 
                 fetchPosts: function() {
-                axios.get('http://localhost:8080/rest/post/all')
-                    .then(response => {
-                        this.posts = response.data; // 데이터를 할당
-                    })
-                    .catch(error => {
-                        console.error(error);                           
-                    });
-                
-            }
+	                axios.get('http://localhost:8080/rest/post/all')
+	                    .then(response => {
+	                        this.posts = response.data; // 데이터를 할당
+	                    })
+	                    .catch(error => {
+	                        console.error(error);                           
+	                    }) 
+	                
+            	},
+            	getTags(postNo) {
+            	    for (const post of this.posts) {
+            	        try {
+            	            const response = axios.get(`http://localhost:8080/rest/post/tag/`+postNo);
+//             	            this tags = response.data;            	            
+            	        } catch (error) {
+            	            console.error(error);
+            	        }
+            	    }
+            	},
+            	
             },
             mounted(){
-                //[1] Vue Ref를 이용한 모달 생성
-				// this.modal = new bootstrap.Modal(this.$refs.modal01);
+
                 
                
                 this.fetchPosts();
-                
+//                 this.getTags();
                 // 
-                this.posts.forEach(post => {
-                    axios.get('http://localhost:8080/rest/post/tag')
-                      .then(response => {                       
-                        this.tags = console.log(response.data);
-                      })
-                      .catch(error => {
-                        console.error(error);
-                      });
-                  });
+                
             },
         }).mount("#app");
     </script>

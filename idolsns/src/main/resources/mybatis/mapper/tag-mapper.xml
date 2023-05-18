@@ -28,7 +28,7 @@
 	</select>
 	
 	<!-- 태그 전체 조회 -->
-	<select id="seletAll" resultType="String">
+	<select id="selectAll" resultType="String">
 		select * from tag where post_no = #{post_no}
 	</select>
 	
