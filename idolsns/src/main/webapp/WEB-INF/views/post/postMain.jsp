@@ -4,7 +4,7 @@
 
 	<!-- 게시글 작성 코드 async-post.js -->
 	<script src="/static/js/async-post.js"></script>
-	
+	<script src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=047888df39ba653ff171c5d03dc23d6a"></script>
 	<div class="container-fluid" id="app">
 		
 		<!----------- 글쓰기 구간 ------------>
@@ -16,6 +16,7 @@
 	            <div class="col-11 col-md-11 col-lg-11 d-flex align-items-center justify-content-center">
 	                <button type="button" class="btn btn-white btn-outline-dark rounded-pill col-12 " data-bs-target="#modal1" data-bs-toggle="modal">${memberId}님 무슨 생각을 하고 계신가요?</button>
 <!-- 	                <button type="button" class="btn btn-white btn-outline-dark rounded-pill col-12 " v-on:click="showModal">무슨 생각을 하고 계신가요?</button> -->
+					<div id="map" style="width: 400px; height: 400px;"></div>
 	            </div>
 	        </div>	        
 	    </div>
@@ -245,8 +246,7 @@
 					
 					<!-- 태그와 글 태그들 -->
 	                <div class="row">
-	                	<div class="col-1 col-md-1 col-lg-1 d-flex align-items-center justify-content-center">
-			               
+	                	<div class="col-1 col-md-1 col-lg-1 d-flex align-items-center justify-content-center">			            
 			            </div>
 			            <div class="col-10 col-md-10 col-lg-10 d-flex align-items-center justify-content-start">
 							<div class="row bg-info rounded-pill align-items-center justify-content-center">
@@ -276,7 +276,8 @@
 			            </div>
 			            <div class="col-10 col-md-10 col-lg-10 d-flex align-items-center justify-content-start">
 							<!-- 	                <p>{{ post.postTime }}</p> -->
-	                	<p>{{ post.postContent }}</p>	  
+	                	<p>{{ post.postContent }}</p>
+	                		  
 			            </div>
 						<div class="col-1 col-md-1 col-lg-1 d-flex align-items-center justify-content-center"> 
 			            </div>                
@@ -327,8 +328,7 @@
             	
             },
             mounted(){
-
-                
+            	
                
                 this.fetchPosts();
 //                 this.getTags();
