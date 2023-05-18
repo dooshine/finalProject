@@ -48,4 +48,3 @@ CREATE TABLE chat_room_priv(
 	chat_room_priv_u REFERENCES member(member_id) ON DELETE SET NULL,
 	PRIMARY KEY(chat_room_priv_i, chat_room_priv_u)
 );
-CREATE SEQUENCE chat_room_priv_seq;
