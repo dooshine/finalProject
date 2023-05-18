@@ -4,8 +4,6 @@
 <jsp:include page="/WEB-INF/views/template/header.jsp"></jsp:include> 
 
 
-    <title>내 지갑</title>
-    
    <style>
    	     @media screen and (max-width:992px) {
 		  	.col-6 {
