@@ -176,7 +176,8 @@ public class PointController {
 	public String chargeCancel(
 			@RequestParam int paymentNo, 
 			HttpServletResponse resp,
-			RedirectAttributes attr) throws URISyntaxException, IOException, NoHandlerFoundException {
+			RedirectAttributes attr,
+			HttpSession session) throws URISyntaxException, IOException, NoHandlerFoundException {
 		
 		 
 		//[1] paymentNo로 PaymentDto 정보를 조회

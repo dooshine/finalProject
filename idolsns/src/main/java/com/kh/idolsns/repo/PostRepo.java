@@ -1,5 +1,7 @@
 package com.kh.idolsns.repo;
 
+import java.util.List;
+
 import com.kh.idolsns.dto.PostDto;
 
 public interface PostRepo {
@@ -11,4 +13,6 @@ public interface PostRepo {
     boolean update(PostDto postDto);
     // 통합게시물 삭제
     boolean delete(Long postNo);
+    // 모든 리스트 불러오기
+    List<PostDto> selectList();
 }

@@ -1,18 +1,19 @@
 package com.kh.idolsns.vo;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@JsonIgnoreProperties
 @Data @NoArgsConstructor
 @AllArgsConstructor @Builder
-public class ChatMemberMessageVO {
+public class ChatMessageVO {
 
+	private long chatMessageNo;
+	private int chatRoomNo;
+	
 	private String memberId;
-	private String memberLevel;
+	private long chatMessageTime;
+	
 	private String chatMessageContent;
-	private long time;
 	
 }
