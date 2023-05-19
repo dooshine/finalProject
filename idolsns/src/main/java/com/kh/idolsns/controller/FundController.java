@@ -41,8 +41,8 @@ public class FundController {
 	@Autowired
 	private PostRepo postRepo;
 	
-	@Autowired
-	private FundRepo fundRepo; 
+	//@Autowired
+	//private FundRepo fundRepo; 
 	
 	@Autowired
 	private FundPostRepo fundPostRepo;
