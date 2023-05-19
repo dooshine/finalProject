@@ -34,6 +34,8 @@
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/static/css/doo.css" />
 
     <script>
+    	
+    	
     	const contextPath = "${pageContext.request.contextPath}";
 		const memberId = "${sessionScope.memberId}";
         const memberLevel = "${sessionScope.memberLevel}";
