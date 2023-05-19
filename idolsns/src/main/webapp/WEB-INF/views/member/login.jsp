@@ -66,30 +66,18 @@
 			
 			<div class="row mb-3">
 				<button type="button" 
-					onclick="location.href='${pageContext.request.contextPath}/member/findId'"
-					>아이디 찾기</button>
+					onclick="location.href='${pageContext.request.contextPath}/member/findId'">아이디 찾기</button>
+			</div>
+			
+			<div class="row mb-3">
+				<button type="button" onclick="location.href='${pageContext.request.contextPath}/member/findPw'">비밀번호 찾기</button>
 			</div>
 			
 		</div>
 	</div>
-	
-	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://unpkg.com/vue@3.2.36"></script>
-    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js"></script>
-    <script>
-    	Vue.createApp({
-    		data(){
-    			return{
-    				memberId:"",
-    				memberPw:"",
-    			};
-    		},
-    		methods:{},
-    		computed:{},
-    	}).mount("#app");
     </script>
 </body>    
+<jsp:include page="/WEB-INF/views/template/footer.jsp"></jsp:include>
 
 
 

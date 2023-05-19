@@ -215,6 +215,24 @@ public class MemberController {
 		return "member/findIdFinish";
 	}
 	
+	@GetMapping("/findPw")
+	public String findPw() {
+		return "member/findPw";
+	}
+	
+	@GetMapping("/emailExist")
+	@ResponseBody
+	public String emailExist(@RequestParam String memberId) {
+		MemberDto memberDto = memberRepo.emailExist(memberId);
+		return memberDto.getMemberEmail();
+	}
+	
+	
+	@GetMapping("/findPwFinish")
+	public String findPwFinish() {
+		return "member/findPwFinish";
+	}
+	
 	//중복 검사
 	@GetMapping("/idDuplicatedCheck")
 	@ResponseBody
@@ -246,15 +264,16 @@ public class MemberController {
 	public String emailDuplicatedCheck(@RequestParam String memberEmail) {
 		int result = memberRepo.emailDuplicatedCheck(memberEmail);
 		
-		if(result == 0) {
-			return "Y";
-		}
-		else {
-			return "N";
-		}
+//		if(result == 0) {
+//			return "Y";
+//		}
+//		else {
+//			return "N";
+//		}
+		return result == 0 ? "Y" : "N";
 	}
 	
-	//이메일 인증
+	//이메일 인증번호 발급
 	@GetMapping("/emailSend")
 	@ResponseBody
 	public String emailSend(@RequestParam String memberEmail) throws Exception {

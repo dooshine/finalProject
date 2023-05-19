@@ -27,6 +27,9 @@
     <!-- custom 테스트 css -->
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/static/css/test.css">
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/static/css/commons mye.css">
+     <!-- toastify -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 
     <script>
     	const contextPath = "${pageContext.request.contextPath}";
@@ -96,7 +99,7 @@
             		<h1>이메일 인증</h1>
             		<h3>입력하신 이메일주소로 인증번호를 발송하였습니다.</h3>
             		<h4>{{memberEmail}}</h4>
-            		<button type="button" @click="sendEmail()">wjsthd</button>
+            		<button type="button" @click="sendEmail()">전송</button>
             	</div>
             	<div class="row">
             		<input type="text" v-model.number="code" placeholder="인증번호입력" @blur="isKeyValid">
@@ -179,6 +182,18 @@
                   },
                   
                   async sendEmail(memberEmail){
+	                  	Toastify({
+	                        text: "이메일 전송 완료",
+	                        duration: 1000,
+	                        newWindow: false,
+	                        close: true,
+	                        gravity: "bottom", // `top` or `bottom`
+	                        position: "right", // `left`, `center` or `right`
+	                        style: {
+	                            background: "linear-gradient(to right, #84FAB0, #8FD3F4)",
+	                        },
+	                        // onClick: function(){} // Callback after click
+	                    }).showToast();
                   	const response = await axios.get("/member/emailSend",{
                   		params : {
                   			memberEmail : this.memberEmail
@@ -308,4 +323,4 @@
   </body>
 </html>
 
-
+<jsp:include page="/WEB-INF/views/template/footer.jsp"></jsp:include>
