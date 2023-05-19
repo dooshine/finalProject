@@ -14,6 +14,9 @@ public interface PaymentRepo {
 	
 	
 	void cancelRemain(int paymentNo); //전체 취소
+
+
+	
 	
 
 }

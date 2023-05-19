@@ -222,7 +222,8 @@
                         postNo: "",
                         memberId: memberId,
                         fundName: "",
-                        fundTime: ""
+                        fundTime: "",
+                        imageUrl: ""
                     },
                     attachmentNo: attachmentNoArray,
                 };
@@ -233,20 +234,24 @@
                 // 데이터 중 fund를 서버로 전송
                 async sendItem() {
                 	
-                    
-                	
                     // const resp = await axios.post("주소", {데이터});
                     const url = "http://localhost:8080/rest/fund/";
                     const resp = await axios.post(url, this.fund);
 
-
                 },
                	//글 번호를 가져온다
                 setPostNo() {
-                	var params = new URLSearchParams(location.search);
-                	var postNo = params.get("postNo");
+                	const params = new URLSearchParams(location.search);
+                	const postNo = params.get("postNo");
                 	this.fund.postNo = postNo;
                 	
+                },
+                setImageUrl() {
+                	if(this.attachmentNo.size() > 1){
+                		for()
+                	const url = "http://localhost:8080/download?attachmentNo="+;
+                		
+                	}
                 }
             },
             created() {
