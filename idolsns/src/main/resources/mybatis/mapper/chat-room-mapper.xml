@@ -19,9 +19,9 @@
 	</select>
 
 	<!-- 채팅방 생성 -->
-	<insert id="createChatRoom">
+	<insert id="createRoom">
 		insert into chat_room(chat_room_no, chat_room_name, chat_room_start, chat_room_type)
-		values(#{chatRoomNo}, #{chatRoomName}, sysdate, #{chat_room_type})
+		values(#{chatRoomNo}, #{chatRoomName}, sysdate, #{chatRoomType})
 	</insert>
 	
 	<!-- 채팅방 상세조회 -->
