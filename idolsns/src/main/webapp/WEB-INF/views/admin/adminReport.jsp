@@ -101,7 +101,7 @@
         // 신고 삭제
         async deleteReport(){
             
-            const selectedReportList = Object.keys(this.selectedReportList).map(item=>parseInt(item));
+            const selectedReportList = Object.keys(this.selectedReportList);
             const selectedReportCnt = selectedReportList.length;
 
             // 선택된 항목 0개면 실행 X
