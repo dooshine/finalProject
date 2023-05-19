@@ -15,7 +15,9 @@
     </insert>
 
     <!-- 제재 조회 -->
-	
+	<select id="selectListComplex" resultType="SanctionDto">
+        select * from sanction order by sanction_no desc
+    </select>
     <!-- 제재 수정 -->
     <!-- 제재 삭제 -->
     <delete id="delete">

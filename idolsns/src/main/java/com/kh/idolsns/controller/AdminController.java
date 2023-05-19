@@ -1,11 +1,10 @@
 package com.kh.idolsns.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-
-import com.kh.idolsns.configuration.CustomHomepageProperties;
 
 @Controller
 @RequestMapping("/admin")
@@ -27,5 +26,10 @@ public class AdminController {
     @GetMapping("/report")
     public String adminReport(){
         return "/admin/adminReport";
+    }
+    // 관리자페이지 제재리스트
+    @GetMapping("/sanction")
+    public String adminSanction(){
+        return "/admin/adminSanction";
     }
 }

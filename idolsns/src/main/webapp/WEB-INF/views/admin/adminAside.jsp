@@ -24,8 +24,8 @@
         	<i class="fa-solid fa-user">회원목록</i></a>
         <a href="${pageContext.request.contextPath}/admin/report">
         	<i class="fa-solid fa-star">신고목록</i></a>
-        <a href="${pageContext.request.contextPath}/admin/">
-        	<i class="fa-solid fa-sack-dollar">메뉴3</i></a>
+        <a href="${pageContext.request.contextPath}/admin/sanction">
+        	<i class="fa-solid fa-sack-dollar">제재목록</i></a>
         <a href="${pageContext.request.contextPath}/admin/">
         	<i class="fa-sharp fa-solid fa-coins">메뉴4</i></a>
   	</div>
