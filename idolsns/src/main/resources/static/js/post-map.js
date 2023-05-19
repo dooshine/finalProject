@@ -3,8 +3,8 @@ var markers = [];
 
 var mapContainer = document.getElementById('map'), // 지도를 표시할 div 
     mapOption = {
-        center: new kakao.maps.LatLng(37.566826, 126.9786567), // 지도의 중심좌표
-        level: 3 // 지도의 확대 레벨
+        center: new kakao.maps.LatLng(37.606826, 126.8956567), // 지도의 중심좌표
+        level: 8 // 지도의 확대 레벨
     };  
 
 // 지도를 생성합니다    
@@ -56,6 +56,7 @@ function placesSearchCB(data, status, pagination) {
 
     }
 }
+
 
 // 검색 결과 목록과 마커를 표출하는 함수입니다
 function displayPlaces(places) {
@@ -120,14 +121,14 @@ function getListItem(index, places) {
 
     var el = document.createElement('li'),
     itemStr = '<span class="markerbg marker_' + (index+1) + '"></span>' +
-                '<div class="info">' +
+                '<div class="info" onclick="ifClick();">' +
                 '   <h5>' + places.place_name + '</h5>';
 
     if (places.road_address_name) {
-        itemStr += '    <span>' + places.road_address_name + '</span>' +
+        itemStr += '    <span class="roadName">' + places.road_address_name + '</span>' +
                     '   <span class="jibun gray">' +  places.address_name  + '</span>';
     } else {
-        itemStr += '    <span>' +  places.address_name  + '</span>'; 
+        itemStr += '    <span class="roadName">' +  places.address_name  + '</span>'; 
     }
                  
       itemStr += '  <span class="tel">' + places.phone  + '</span>' +
@@ -137,6 +138,29 @@ function getListItem(index, places) {
     el.className = 'item';
 
     return el;
+}
+
+// 버튼 클릭 시 위치 정보 표시 및 해당 좌표로 이동 
+function ifClick(){
+	var infoDivs = document.querySelectorAll('.info');
+
+	// 각 div 태그에 클릭 이벤트 리스너를 추가합니다.
+	infoDivs.forEach(function(div) {
+	  div.addEventListener('click', function() {
+	    
+	    // div 내부의 road 클래스를 가진 span 태그들을 선택합니다.
+	    var roadSpans = div.querySelectorAll('.roadName');
+	
+	    // 각 span 태그에 적힌 내용을 콘솔에 출력합니다.
+	    roadSpans.forEach(function(span) {
+	     	var addressElement = document.querySelector('span.address');
+			addressElement.textContent = span.innerText;
+	    });
+	  });
+	});
+	
+	
+    
 }
 
 // 마커를 생성하고 지도 위에 마커를 표시하는 함수입니다
@@ -156,6 +180,7 @@ function addMarker(position, idx, title) {
 
     marker.setMap(map); // 지도 위에 마커를 표출합니다
     markers.push(marker);  // 배열에 생성된 마커를 추가합니다
+	map.relayout();
 
     return marker;
 }
@@ -213,4 +238,9 @@ function removeAllChildNods(el) {
     while (el.hasChildNodes()) {
         el.removeChild (el.lastChild);
     }
+}
+
+// 처음 버튼을 눌러서 함수가 호출될 때, map을 relayout
+function relayout(){
+	map.relayout();
 }
