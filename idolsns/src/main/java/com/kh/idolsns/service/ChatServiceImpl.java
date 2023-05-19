@@ -13,12 +13,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kh.idolsns.dto.ChatJoinDto;
 import com.kh.idolsns.dto.ChatMessageDto;
 import com.kh.idolsns.dto.ChatReadDto;
-import com.kh.idolsns.dto.ChatRoomDto;
-import com.kh.idolsns.dto.ChatRoomPrivDto;
 import com.kh.idolsns.repo.ChatJoinRepo;
 import com.kh.idolsns.repo.ChatMessageRepo;
 import com.kh.idolsns.repo.ChatReadRepo;
-import com.kh.idolsns.repo.ChatRoomRepo;
 import com.kh.idolsns.vo.ChatMemberVO;
 import com.kh.idolsns.vo.ChatMessageReceiveVO;
 import com.kh.idolsns.vo.ChatMessageVO;
@@ -30,8 +27,6 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 public class ChatServiceImpl implements ChatService {
 	
-	@Autowired
-	private ChatRoomRepo chatRoomRepo;
 	@Autowired
 	private ChatJoinRepo chatJoinRepo;
 	@Autowired
@@ -53,16 +48,6 @@ public class ChatServiceImpl implements ChatService {
 	public void createRoom(int chatRoomNo) {
 		if(roomExist(chatRoomNo)) return;
 		chatRooms.put(chatRoomNo, new ChatRoomVO());
-		// db처리
-		/*boolean isWatingRoom = chatRoomNo == WebSocketConstant.WAITING_ROOM;
-		if(!isWatingRoom && chatRoomRepo.findRoom(chatRoomNo) == null) {
-			ChatRoomDto chatRoomDto = new ChatRoomDto();
-			chatRoomDto.setChatRoomNo(chatRoomNo);
-			chatRoomDto.setChatRoomName("나중에 바꾸기");
-			chatRoomDto.setChatRoomType('g');
-//			ChatRoomPrivDto privRoomDto = new ChatRoomPrivDto();
-			chatRoomRepo.createRoom(chatRoomDto);
-		}*/
 	}
 	
 	// 방 제거
@@ -109,7 +94,6 @@ public class ChatServiceImpl implements ChatService {
 		if(!roomExist(chatRoomNo)) return;
 		ChatRoomVO chatRoom = chatRooms.get(chatRoomNo);
 		chatRoom.leave(member);
-		// 참여자 삭제(db 처리) - 테스트 해보고 처리
 	}
 	
 	// 사용자가 존재하는 방의 번호를 찾는 기능
@@ -135,7 +119,6 @@ public class ChatServiceImpl implements ChatService {
 		messageDto.setChatMessageNo(chatMessageNo);
 		messageDto.setChatRoomNo(chatRoomNo);
 		messageDto.setMemberId(member.getMemberId());
-		//log.debug("payload: " + jsonMessage.getPayload());
 		// chatMessageContent에 내용만 빼서 저장
 		ObjectMapper objectMapper = new ObjectMapper();
 		JsonNode jsonNode = objectMapper.readTree(jsonMessage.getPayload());

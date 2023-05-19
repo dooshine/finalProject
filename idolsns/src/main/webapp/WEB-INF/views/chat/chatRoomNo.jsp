@@ -105,13 +105,11 @@
 				const chatRoomNo = new URLSearchParams(location.search).get("chatRoomNo");
 				const url = "${pageContext.request.contextPath}/chat/message/" + chatRoomNo;
 				const resp = await axios.get(url);
-				//console.log("data: " + resp.data[0].chatMessageTime);
 				for(let i=0; i<resp.data.length; i++) {
 					if(resp.data[i].chatMessageTime >= this.chatJoin) {
 						this.messageList.push(resp.data[i]);
 					}
 				}
-				//this.messageList.push(...resp.data);
 			},
 			// 메세지 보내기
 			sendMessage() {
@@ -120,6 +118,13 @@
 				this.socket.send(JSON.stringify(data));
 				// 입력창 초기화
 				this.clear();
+			},
+			// 사진 보내기
+			async sendPic() {
+				if(this.text.length == 0) return;
+				// 비동기로 파일 정보 저장
+				// 소켓 샌드로 메세지 보내기
+				// constant에 사진메세지 번호 등록(4)
 			},
 			// 시간 포맷 설정
 			timeFormat(chatMessageTime) {
@@ -141,8 +146,6 @@
 						chatRoomNo: chatRoomNo,
 						memberId: memberId
 				}
-				//console.log("no: " + data.chatRoomNo);
-				//console.log("id: " + data.memberId);
 				const resp = await axios.post(url, data);
 				this.chatJoin = resp.data;
 			}
