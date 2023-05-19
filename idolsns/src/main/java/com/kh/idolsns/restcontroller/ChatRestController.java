@@ -10,13 +10,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.kh.idolsns.dto.ChatJoinDto;
 import com.kh.idolsns.dto.ChatMessageDto;
-import com.kh.idolsns.dto.ChatRoomDto;
 import com.kh.idolsns.dto.MemberDto;
 import com.kh.idolsns.repo.ChatJoinRepo;
 import com.kh.idolsns.repo.ChatMessageRepo;
-import com.kh.idolsns.repo.ChatRoomPrivRepo;
-import com.kh.idolsns.repo.ChatRoomRepo;
 import com.kh.idolsns.repo.MemberRepo;
+import com.kh.idolsns.service.ChatRoomService;
+import com.kh.idolsns.vo.ChatCreateRoomVO;
+import com.kh.idolsns.vo.ChatMemberJoinVO;
 import com.kh.idolsns.vo.ChatMessageVO;
 
 @RestController
@@ -26,13 +26,11 @@ public class ChatRestController {
 	@Autowired
 	private ChatMessageRepo chatMessageRepo;
 	@Autowired
-	private ChatRoomRepo chatRoomRepo;
-	@Autowired
 	private ChatJoinRepo chatJoinRepo;
 	@Autowired
-	private ChatRoomPrivRepo chatRoomPrivRepo;
-	@Autowired
 	private MemberRepo memberRepo;
+	@Autowired
+	private ChatRoomService chatRoomService;
 	
 	// 채팅방 목록 불러오기
 	@GetMapping("/chatRoom/{memberId}")
@@ -73,19 +71,14 @@ public class ChatRestController {
 	
 	// 채팅방 생성
 	@PostMapping("/chatRoom")
-	public void createRoom(@RequestBody ChatRoomDto chatRoomDto, @PathVariable List<ChatJoinDto> members) {
-		// 채팅방 테이블에 저장
-		int chatRoomNo = chatRoomRepo.sequence();
-		chatRoomDto.setChatRoomNo(chatRoomNo);
-		chatRoomRepo.createRoom(chatRoomDto);
-		// 참여자 테이블에 저장
-		for(ChatJoinDto member : members) {
-			ChatJoinDto.builder()
-				.memberId(member.getMemberId())
-				.chatJoinTime(member.getChatJoinTime())
-				.chatRoomNo(member.getChatRoomNo())
-			.build();
-		}
+	public void createRoom(@RequestBody ChatCreateRoomVO vo) {
+		chatRoomService.createChatRoom(vo);
+	}
+	
+	// 채팅방에 참여한 시간 내보내기
+	@PostMapping("/chatRoom/join")
+	public long getJoinTime(@RequestBody ChatMemberJoinVO vo) {
+		return chatJoinRepo.findJoinTime(vo.getChatRoomNo(), vo.getMemberId());
 	}
 	
 }

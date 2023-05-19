@@ -14,5 +14,9 @@ public class ChatRoomPrivRepoImpl implements ChatRoomPrivRepo {
 	public void createRoom(ChatRoomPrivDto dto) {
 		sql.insert("chatRoomPriv.createRoom", dto);
 	}
+	@Override
+	public ChatRoomPrivDto findRoom(ChatRoomPrivDto dto) {
+		return sql.selectOne("chatRoomPriv.findRoom", dto);
+	}
 	
 }

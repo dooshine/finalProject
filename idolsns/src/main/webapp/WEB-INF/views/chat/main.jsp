@@ -21,7 +21,8 @@
 				<div class="modal-header">
 				    <h3 class="modal-title">채팅방 만들기</h3>
 				    <div class="d-flex justify-content-end">
-				    	<button type="button" class="btn btn-primary" @click="createChatRoom">
+				    	<button type="button" class="btn btn-primary" @click="createChatRoom" 
+				    				data-bs-dismiss="modal" :disabled="selectedMemberList.length === 0">
 	           				생성
 	        			</button>
 					    <button type="button" class="btn bt-secondary" data-bs-dismiss="modal">
@@ -30,15 +31,10 @@
 				    </div>
 				</div>
 				<div class="modal-body">
-					<div class="form-floating">
-  						<input type="text" class="form-control" id="chatRoomNameInput" placeholder="채팅방이름" 
-  											v-model="chatRoom.chatRoomName" @input="chatRoom.chatRoomName = $event.target.value">
-					  	<label for="chatRoomNameInput">채팅방 이름</label>
-					</div>
-					<label class="d-flex justify-content-between" v-for="(follow, index) in followList" :key="index">
+					<label class="d-flex justify-content-between" v-for="(follow, index) in followList">
 				    	{{ follow.memberId }}
-				    	<input type="checkbox" :value="follow.memberId">
-				    </label>
+				    	<input type="checkbox" v-model="selectedMemberList" :value="follow.memberId">
+					</label>
 				</div>
 			</div>
 		</div>
@@ -69,11 +65,12 @@
 					chatRoomNo: "",
 					chatRoomName: "",
 					chatRoomStart: "",
-					chatRoomType: "g"
+					chatRoomType: ""
 				},
-				memberId: "${sessionScope.memberId}",
+				memberId: memberId,
 				chatRoomList: [],
 				followList: [],
+				selectedMemberList: [memberId],
 				createRoomModal: null
 			};
 		},
@@ -106,10 +103,21 @@
 			},
 			// 채팅방 만들기
 			async createChatRoom() {
+				this.chatRoom.memberList = this.selectedMemberList;
+				if(this.selectedMemberList.length > 2) {
+					this.chatRoom.chatRoomType = 'g';
+				}
+				else {
+					this.chatRoom.chatRoomType = 'p';
+				}
 				const url = "${pageContext.request.contextPath}/chat/chatRoom/";
-				const resp = await axios.post(url, this.chatRoom);
-				this.hideCreateRoomModal();
-			}
+				const data = {
+						memberId: this.memberId,
+						chatRoomDto: this.chatRoom,
+						memberList: this.selectedMemberList
+				}
+				const resp = await axios.post(url, data);
+			},
 		},
 		computed: {
 

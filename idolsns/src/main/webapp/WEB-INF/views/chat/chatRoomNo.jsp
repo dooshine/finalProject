@@ -45,6 +45,7 @@
 				text: "",
 				messageList: [],
 				memberId: "${sessionScope.memberId}",
+				chatJoin: "",
 				socket: null,
 				
 				// 입력창 초기화
@@ -103,8 +104,14 @@
 			async loadMessage() {
 				const chatRoomNo = new URLSearchParams(location.search).get("chatRoomNo");
 				const url = "${pageContext.request.contextPath}/chat/message/" + chatRoomNo;
-				let resp = await axios.get(url);
-				this.messageList.push(...resp.data);
+				const resp = await axios.get(url);
+				//console.log("data: " + resp.data[0].chatMessageTime);
+				for(let i=0; i<resp.data.length; i++) {
+					if(resp.data[i].chatMessageTime >= this.chatJoin) {
+						this.messageList.push(resp.data[i]);
+					}
+				}
+				//this.messageList.push(...resp.data);
 			},
 			// 메세지 보내기
 			sendMessage() {
@@ -124,6 +131,20 @@
 				const data = { type: 3, chatMessageNo: this.messageList[index].chatMessageNo, chatRoomNo: chatRoomNo };
 				this.socket.send(JSON.stringify(data));
 				this.messageList.splice(index, 1);
+			},
+			// 해당 채팅방에 참여한 날짜와 시간 가져오기
+			async getChatJoin() {
+				const chatRoomNo = new URLSearchParams(location.search).get("chatRoomNo");
+				const memberId = this.memberId;
+				const url = "${pageContext.request.contextPath}/chat/chatRoom/join/";
+				const data = {
+						chatRoomNo: chatRoomNo,
+						memberId: memberId
+				}
+				//console.log("no: " + data.chatRoomNo);
+				//console.log("id: " + data.memberId);
+				const resp = await axios.post(url, data);
+				this.chatJoin = resp.data;
 			}
 		},
 		computed: {
@@ -133,6 +154,7 @@
 			// 웹소켓 연결
 			this.connect();
 			this.loadMessage();
+			this.getChatJoin();
 		},
 		mounted() {
 

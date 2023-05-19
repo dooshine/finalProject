@@ -11,5 +11,12 @@
 		values(#{chatRoomPrivNo}, #{chatRoomPrivI}, #{chatRoomPrivU})
 	</insert>
 
+	<!-- 중복 확인 -->
+	<select id="findRoom" resultType="ChatRoomPrivDto">
+		select * from chat_room_priv 
+		where chat_room_priv_i = #{chatRoomPrivI} 
+		and chat_room_priv_u = #{chatRoomPrivU}
+	</select>
+	
 </mapper>
     

@@ -135,7 +135,7 @@ public class ChatServiceImpl implements ChatService {
 		messageDto.setChatMessageNo(chatMessageNo);
 		messageDto.setChatRoomNo(chatRoomNo);
 		messageDto.setMemberId(member.getMemberId());
-		log.debug("payload: " + jsonMessage.getPayload());
+		//log.debug("payload: " + jsonMessage.getPayload());
 		// chatMessageContent에 내용만 빼서 저장
 		ObjectMapper objectMapper = new ObjectMapper();
 		JsonNode jsonNode = objectMapper.readTree(jsonMessage.getPayload());

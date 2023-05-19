@@ -9,5 +9,6 @@ public interface ChatJoinRepo {
 	int findChatRoomNoById(String memberId);
 	boolean doseAlreadyIn(ChatJoinDto dto);
 	List<ChatJoinDto> findMembersByRoomNo(int chatRoomNo);
+	long findJoinTime(int chatRoomNo, String memberId);
 	
 }
