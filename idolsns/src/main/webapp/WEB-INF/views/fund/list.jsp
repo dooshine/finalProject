@@ -195,7 +195,7 @@
 	            	},
 	            	methods: {
 	            		async loadData(){
-							const resp = await axios.get("http://localhost:8080/fundpostview/")	  
+							const resp = await axios.get("http://localhost:8080/rest/fundpostview/")	  
 							console.log(resp.data);
 							this.fundings.push(...resp.data);
 							

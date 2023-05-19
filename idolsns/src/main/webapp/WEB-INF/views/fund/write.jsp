@@ -55,14 +55,15 @@
 
 <div style="width:600px">
 	<h2>펀딩 게시글 작성</h2>
-	<form action="write2" method="post" enctype="multipart/form-data"> 
+	<form action="write3" method="post" enctype="multipart/form-data"> 
 		제목 : <input type="text" name="fundTitle"><br><br>
 		시작일 : <input type="date" name="postStart"><br><br>
 		종료일 : <input type="date" name="postEnd"><br><br>
 		목표 금액 : <input type="text" name="fundGoal"><br><br>
 <!-- 		후원자 수 : <input type="text" name="fundSponsorCount"><br><br> -->
 		내용 : <textarea name="postContent"></textarea><br><br>
-		이미지 : <input type="file" name="attaches" multiple>
+<!-- 		이미지(여러 개) : <input type="file" name="attaches" multiple> -->
+		대표 이미지(1개) : <input type="file" name="attach">
 		<button type="submit">글쓰기</button>
 	</form>
 </div>

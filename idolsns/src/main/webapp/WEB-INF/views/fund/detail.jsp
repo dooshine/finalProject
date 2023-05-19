@@ -77,19 +77,19 @@
 			
 				  
 			<div>
-				<h2 class="title text-center mt-5 mb-5">펀딩 제목 위치</h2>
+				<h2 class="title text-center mt-5 mb-5">${fundPostDto.fundTitle }</h2>
 			</div>
 				
 			
 			
 				<div class="col-12 d-flex">
-					<img class="col-7" src="" alt="예시사진">
+					<img class="col-7" :src="" alt="예시사진">
 				
 			
 				<div class="col-5">
 		
 					<label class="fund_label">모인 금액</label>
-					<span class="fund_span">15,000,000</span>원<span style="font-weight:bold">150</span>%
+					<span class="fund_span">100</span>원<span style="font-weight:bold">150</span>%
 			
 				
 			
@@ -152,7 +152,7 @@
                 <label>후원금</label>
                 <input type="text" v-model="fund.fundPrice">
                 
-                <button type="button" v-on:click="sendItem">
+                <button type="button" v-on:click="">
 				    후원하기
 				</button>
                         
@@ -216,48 +216,61 @@
             data(){
                 return {
                     //화면에서 사용할 데이터 선언
-                    fund:{
-                        fundPrice:"",
-                        fundNo: "",
-                        postNo: "",
-                        memberId: memberId,
-                        fundName: "",
-                        fundTime: "",
-                        imageUrl: ""
-                    },
-                    attachmentNo: attachmentNoArray,
+//                     fund:{
+//                         fundPrice:"",
+//                         fundNo: "",
+//                         postNo: "",
+//                         memberId: memberId,
+//                         fundName: "",
+//                         fundTime: "",
+//                         imageUrl: ""
+//                     },
+                    fundPostImage:[],
+//                     attachmentNo: attachmentNoArray,
                 };
             },
             computed:{
 	            },
             methods:{
-                // 데이터 중 fund를 서버로 전송
-                async sendItem() {
-                	
-                    // const resp = await axios.post("주소", {데이터});
-                    const url = "http://localhost:8080/rest/fund/";
-                    const resp = await axios.post(url, this.fund);
+            	// loading FundPostImageView
+            	async loadData(){
+					const resp = await axios.get("http://localhost:8080/rest/fundpostimageview/195");	  
+					console.log(resp.data);
+// 					this.fundPostImage.push(...resp.data);
+					
+        		},
+                // 데이터 중 fund를 서버로 전송 (후원하기)
+//                 async sendItem() {
+//                     // const resp = await axios.post("주소", {데이터});
+//                     const url = "http://localhost:8080/rest/fund/";
+//                     const resp = await axios.post(url, this.fund);
 
-                },
+//                 },
                	//글 번호를 가져온다
-                setPostNo() {
-                	const params = new URLSearchParams(location.search);
-                	const postNo = params.get("postNo");
-                	this.fund.postNo = postNo;
+//                 setPostNo() {
+//                 	const params = new URLSearchParams(location.search);
+//                 	const postNo = params.get("postNo");
+//                 	this.fund.postNo = postNo;
                 	
-                },
-                setImageUrl() {
-                	if(this.attachmentNo.size() > 1){
-                		for()
-                	const url = "http://localhost:8080/download?attachmentNo="+;
+//                 },
+                // 대표이미지 설정
+//                 setImageUrl() {
+//                 	const url = "http://localhost:8080/download?attachmentNo="+this.attachmentNo;
+//                 	console.log("imageUrl = " + url);
+//                 	this.fund.imageUrl = url;
+//                 	if(this.attachmentNo.size() > 1){
+//                 		for()
                 		
-                	}
-                }
-            },
+//                 	}
+//                 }
+            }, 
             created() {
-            	this.setPostNo();
-            	console.log("attachmentNo = " + this.attachmentNo);
-            	console.log("postNo = " + this.fund.postNo);
+//             	this.setPostNo();
+//             	this.setImageUrl();
+            	this.loadData();
+//             	console.log("attachmentNo = " + this.attachmentNo);
+//             	console.log("postNo = " + this.fund.postNo);
+				
             }
         }).mount("#app");
     </script>

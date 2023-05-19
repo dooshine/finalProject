@@ -70,6 +70,7 @@ public class FundController {
 		return "fund/write";
 	}
 	
+	// 펀딩 게시물 등록(다중파일 업로드)
 //	@PostMapping("/write")
 //	public String write(
 //							HttpSession session,
@@ -131,13 +132,79 @@ public class FundController {
 //		return "redirect:fund/detail";
 //	}
 	
-	@PostMapping("/write2")
-	public String write2(
+//	@PostMapping("/write2")
+//	public String write2(
+//							HttpSession session,
+//							@ModelAttribute FundPostDto fundPostDto,
+//							@ModelAttribute PostDto postDto,
+//							@ModelAttribute PostImageDto postImageDto,
+//							@RequestParam List<MultipartFile> attaches,
+//							RedirectAttributes attr
+//							) throws IllegalStateException, IOException {
+//		
+//		// # 통합게시물 등록
+//		// 1. 통합게시물 시퀀스 발행
+//        Long postNo = postRepo.sequence();
+//        postDto.setPostNo(postNo);
+//
+//        // 2. 통합게시물 작성자
+//        String memberId = (String)session.getAttribute("memberId");
+//        postDto.setMemberId(memberId);
+//
+//        // 3. 통합게시물 게시물종류 설정(Fix!!)
+//        postDto.setPostType("펀딩");
+//
+//        // 4. 통합게시물 등록
+//        postRepo.insert(postDto);
+//
+//		// # 펀딩게시물 등록
+//        // 1. 펀딩게시물 시퀀스 설정
+//        fundPostDto.setPostNo(postNo);
+//        
+//        // 2. 펀딩게시물 작성자
+//        fundPostDto.setMemberId(memberId);
+//        
+//        // 3. 펀딩게시물 등록
+//		fundPostRepo.insert(fundPostDto);
+//		
+//		// # DB 저장
+//		if(!attaches.isEmpty()) {
+//			for(MultipartFile attach : attaches) {
+//				int attachmentNo = attachmentRepo.sequence();   
+//				File target = new File(dir, String.valueOf(attachmentNo));
+//				attach.transferTo(target);	
+//				
+//				attachmentRepo.insert(AttachmentDto.builder()
+//						.attachmentNo(attachmentNo)
+//						.attachmentName(attach.getOriginalFilename())
+//						.attachmentType(attach.getContentType())
+//						.attachmentSize(attach.getSize())
+//						.build()
+//						);
+//				
+//				postImageRepo.insert(PostImageDto.builder()
+//						.attachmentNo(attachmentNo)
+//						.postNo(postNo)
+//						.build()
+//						);
+//			}
+//	      }
+//		
+//				
+//		// 리디렉트어트리뷰트 추가
+//        attr.addAttribute("postNo", postNo);
+//		
+//		return "redirect:detail";
+//	}
+	
+	// 펀딩게시물 등록
+	@PostMapping("/write3")
+	public String write3(
 							HttpSession session,
 							@ModelAttribute FundPostDto fundPostDto,
 							@ModelAttribute PostDto postDto,
 							@ModelAttribute PostImageDto postImageDto,
-							@RequestParam List<MultipartFile> attaches,
+							@RequestParam MultipartFile attach,
 							RedirectAttributes attr
 							) throws IllegalStateException, IOException {
 		
@@ -167,8 +234,7 @@ public class FundController {
 		fundPostRepo.insert(fundPostDto);
 		
 		// # DB 저장
-		if(!attaches.isEmpty()) {
-			for(MultipartFile attach : attaches) {
+		if(!attach.isEmpty()) {
 				int attachmentNo = attachmentRepo.sequence();   
 				File target = new File(dir, String.valueOf(attachmentNo));
 				attach.transferTo(target);	
@@ -186,7 +252,6 @@ public class FundController {
 						.postNo(postNo)
 						.build()
 						);
-			}
 	      }
 		
 				

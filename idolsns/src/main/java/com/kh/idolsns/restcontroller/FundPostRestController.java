@@ -8,19 +8,19 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.kh.idolsns.dto.FundPostViewDto;
-import com.kh.idolsns.repo.FundPostViewRepo;
+import com.kh.idolsns.dto.FundPostDto;
+import com.kh.idolsns.repo.FundPostRepo;
 
 @CrossOrigin
 @RestController
-@RequestMapping("/rest/fundpostview")
-public class FundPostViewRestController {
+@RequestMapping("/rest/fundpost")
+public class FundPostRestController {
 
 	@Autowired
-	private FundPostViewRepo fundPostViewRepo;
+	private FundPostRepo fundPostRepo;
 	
 	@GetMapping("/")
-	public List<FundPostViewDto> list() {
-		return fundPostViewRepo.selectList();
+	public List<FundPostDto> list() {
+		return fundPostRepo.selectList();
 	}
 }
