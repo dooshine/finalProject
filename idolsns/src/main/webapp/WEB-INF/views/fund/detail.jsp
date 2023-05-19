@@ -71,7 +71,8 @@
     </style>
     
     
-
+			<div id="app">
+			
 			<div class="container rounded p-3" style="background-color:white">
 			
 				  
@@ -82,7 +83,7 @@
 			
 			
 				<div class="col-12 d-flex">
-					<img class="col-7" src="http://via.placeholder.com/500x400" alt="예시사진">
+					<img class="col-7" src="" alt="예시사진">
 				
 			
 				<div class="col-5">
@@ -119,7 +120,7 @@
 			
 				<div class="d-flex row mt-3" style="padding-left: 1em">
 				
-				<div id="app">
+				
 	
 					    <button class="btn btn-primary like-btn col-2" @click="likeCount++">
 					      <i class="fa fa-heart"></i> 
@@ -163,6 +164,9 @@
         	        </div>      
     	        </div>
 	        </div>
+	        
+	        
+	        
 				</div>
 				</div>
 				</div>
@@ -195,15 +199,18 @@
 				postImageDto : ${postImageList}<br>
 				fundPostDto: ${fundPostDto }<br>
 				
-				<c:forEach var="postImageDto" items="${postImageList}">
-					<img src="${postImageDto.imageURL}">
-				</c:forEach>
+				
 	</section>
 			
 			
     <script src="https://unpkg.com/vue@3.2.36"></script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script>
+	    const attachmentNoArray = [];
+	    <c:forEach var="postImageDto" items="${postImageList}">
+	      attachmentNoArray.push(${postImageDto.attachmentNo});
+	    </c:forEach>
+	    
         Vue.createApp({
             //데이터 설정 영역
             data(){
@@ -217,19 +224,20 @@
                         fundName: "",
                         fundTime: ""
                     },
+                    attachmentNo: attachmentNoArray,
                 };
             },
             computed:{
-            },
+	            },
             methods:{
                 // 데이터 중 fund를 서버로 전송
                 async sendItem() {
                 	
+                    
                 	
                     // const resp = await axios.post("주소", {데이터});
-                    const url = "http://localhost:8080/fund/";
+                    const url = "http://localhost:8080/rest/fund/";
                     const resp = await axios.post(url, this.fund);
-                    console.log(resp);
 
 
                 },
@@ -238,11 +246,13 @@
                 	var params = new URLSearchParams(location.search);
                 	var postNo = params.get("postNo");
                 	this.fund.postNo = postNo;
-                	console.log(this.fund.postNo);
+                	
                 }
             },
             created() {
             	this.setPostNo();
+            	console.log("attachmentNo = " + this.attachmentNo);
+            	console.log("postNo = " + this.fund.postNo);
             }
         }).mount("#app");
     </script>

@@ -13,12 +13,13 @@ import com.kh.idolsns.repo.FundRepo;
 
 @CrossOrigin
 @RestController
-@RequestMapping("/fund")
+@RequestMapping("/rest/fund")
 public class FundRestController {
 
 	@Autowired
 	private FundRepo fundRepo;
 	
+	// 후원하기 
 	@PostMapping("/")
 	public void add(
 			@ParameterObject
@@ -26,8 +27,12 @@ public class FundRestController {
 			) {
 		Long fundNo = fundRepo.sequence();
 		fundDto.setFundNo(fundNo);
+		// memberId는 header.jsp에서 가져와서 사용
+		// 
 		fundRepo.insert(fundDto);
 		
 	}
+	
+	
 	
 }
