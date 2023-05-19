@@ -27,6 +27,7 @@ public interface MemberRepo {
 	List<MemberDto> selectAll();
 	MemberDto joinNick(String memberNick);
 	MemberDto joinEmail(String memberEmail);
+	MemberDto emailExist(String memberId);
 	
 	//중복 검사
 	int idDuplicatedCheck(String memberId);

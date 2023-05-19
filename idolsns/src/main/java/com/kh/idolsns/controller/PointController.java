@@ -101,7 +101,9 @@ public class PointController {
 		vo.setPartner_user_id((String)session.getAttribute("partner_user_id"));
 		vo.setTid((String)session.getAttribute("tid"));
 		
-	
+		String dump = (String)session.getAttribute("tid");
+		System.out.println("dump="+dump);
+		
 		
 		session.removeAttribute("partner_order_id");
 		session.removeAttribute("partner_user_id");
@@ -118,17 +120,28 @@ public class PointController {
 	    System.out.println("chargeRequestVO: " + chargeRequestVO);
 	    kakaoPayService.charge(chargeRequestVO);
 	    
+	
+	    
 	    // "redirect:clear"로 리다이렉트하여 clear 페이지로 이동
-	    return "redirect:clear";
+	    return "redirect:clear?tid=" + dump;
 	}
 	
 	@GetMapping("/charge/clear")
-	public String chargeClear() {
+	public String chargeClear(@RequestParam("tid") String paymentTid, Model model) throws URISyntaxException {
+		PaymentDto paymentDto = paymentRepo.find2(paymentTid);
 		
-
+	    // tid 값을 사용하여 주문 정보 조회
+	    KakaoPayOrderRequestVO vo = new KakaoPayOrderRequestVO();
+	    vo.setTid(paymentDto.getPaymentTid());
+	    KakaoPayOrderResponseVO response = kakaoPayService.order(vo);
+	  
+	    // 주문 정보를 모델에 추가
+		model.addAttribute("paymentDto", paymentDto);
+		model.addAttribute("response", response);
 		
 	    return "point/clear";
 	}
+	
 	
 
 	
