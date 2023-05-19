@@ -25,7 +25,7 @@
     </select>
     <!-- 신고 목록조회 -->
     <select id="selectList" resultType="reportDto">
-        select * from report
+        select * from report order by report_no desc
     </select>
 
     <!-- 신고 횟수 조회 (전체기간 - 전체 N회 이상 제재) -->
@@ -44,7 +44,7 @@
             and
             REPORT_TARGET_PRIMARY_KEY = #{reportTargetPrimaryKey}
             and
-            WHERE report_time BETWEEN SYSDATE - 7 AND SYSDATE;
+            report_time BETWEEN SYSDATE - 7 AND SYSDATE
     </select>
     <!-- 신고 수정(신고사유 변경) -->
     <update id="update">
