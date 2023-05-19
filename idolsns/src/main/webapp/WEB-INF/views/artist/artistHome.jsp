@@ -159,7 +159,7 @@
             const resp = await axios.get(url, {
                 params: this.followObj,
             });
-            console.log(resp.data);
+            return resp.data;
         },
         // 팔로우 생성
         async createFollow(){
@@ -176,9 +176,12 @@
             await axios.delete(url, {
                 data: this.followObj,
             });
-            console.log(this.followObj);
-            console.log("팔로우 제거");
         },
+        // 팔로우 토글
+        async toggleFollow(){
+            // 팔로우 확인 url
+            console.log(this.checkFollow()); 
+        }
       },
       watch: {
   
