@@ -308,5 +308,15 @@ public class FundController {
     }
     
     
+    
+    
+    // 펀딩결제
+ 	@GetMapping("/order")
+ 	public String order() {
+ 		
+ 		return "fund/order";
+ 	}
+    
+    
 
 }

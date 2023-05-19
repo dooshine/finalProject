@@ -220,7 +220,7 @@
 	        		// Axios로 method 호출(await 사용, 전달 data-> 멤버아이디), 로 멤버DTO 정보 불러와서
 	        		// 멤버 DTO의 point를 this.amount 대입
 	        	},
-	        	 async loadPaymentHistory() {
+	        	 async loadOrdertHistory() {
 	                try {
 	                  const url = "http://localhost:8080/rest/point/order/" + memberId;
 	                  const response = await axios.get(url);
@@ -245,7 +245,7 @@
 	            },
 	            created() {
 	              this.loadMemberPoint();
-	              this.loadPaymentHistory();
+	              this.loadOrdertHistory();
 	            }
 	    }).mount("#app");
 

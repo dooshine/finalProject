@@ -113,8 +113,8 @@
 			        <thead>
 			          <tr>
 			            <th>충전일</th>
-			            <th>충전 금액</th>
-			            <th>결제 수단</th>
+			            <th>구분</th>
+						<th>충전 금액</th>
 			            <th>상태</th>
 			            <th>더보기</th>
 			          </tr>
@@ -122,9 +122,14 @@
 			       <tbody>
 				      <tr v-for="paymentDto in paginatedItems" :key="paymentDto.paymentNo">
 				        <td>{{ paymentDto.paymentTime }}</td>
-				        <td>{{ paymentDto.paymentTotal }}</td>
-				        <td>카카오페이</td>
-				        <td>{{ paymentDto.paymentStatus }}</td>
+				        <td>{{ paymentDto.paymentName }}</td>
+				        <td>
+				        	<span :style="paymentDto.paymentStatus === '취소' ? 'text-decoration: line-through; color: grey;' : ''">{{ paymentDto.paymentTotal }}</span>
+				        </td>
+				      
+				        <td>
+					      <span :style="paymentDto.paymentStatus === '취소' ? 'text-decoration: line-through; color: grey;' : ''">{{ paymentDto.paymentStatus }}</span>
+					    </td>
 				        <td>
 				          <a :href="'detail?paymentNo=' + paymentDto.paymentNo">
 				            <button class="btn btn-sm btn-primary">

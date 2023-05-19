@@ -42,7 +42,11 @@
     			<h4 class="title">결제정보</h4>
     		</div>
     		
-    		<hr>
+    		
+    		
+    		
+    		<hr style="background-color: black; height: 2px">
+    		
     	
 			<table class="table">
 				<tr>
