@@ -14,6 +14,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
@@ -21,12 +22,14 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.kh.idolsns.configuration.CustomFileuploadProperties;
 import com.kh.idolsns.dto.AttachmentDto;
+import com.kh.idolsns.dto.FundDto;
 import com.kh.idolsns.dto.FundPostDto;
 import com.kh.idolsns.dto.PostDto;
 import com.kh.idolsns.dto.PostImageDto;
 import com.kh.idolsns.repo.AttachmentRepo;
 import com.kh.idolsns.repo.FundPostRepo;
 import com.kh.idolsns.repo.FundPostViewRepo;
+import com.kh.idolsns.repo.FundRepo;
 import com.kh.idolsns.repo.PostImageRepo;
 import com.kh.idolsns.repo.PostRepo;
 import com.kh.idolsns.vo.SearchVO;
@@ -37,6 +40,9 @@ public class FundController {
 	
 	@Autowired
 	private PostRepo postRepo;
+	
+	@Autowired
+	private FundRepo fundRepo; 
 	
 	@Autowired
 	private FundPostRepo fundPostRepo;
@@ -284,7 +290,7 @@ public class FundController {
 		model.addAttribute("postImageList", list);
 		return "fund/detail";
 	}
-	
+
 	// 펀딩게시물 수정
     @GetMapping("/update")
     public String update(
@@ -307,23 +313,41 @@ public class FundController {
         return "redirect:fund/detail";
     }
     
-    
-    
-    
-    // 펀딩결제
- 	@GetMapping("/order")
- 	public String order(@RequestParam Long postNo, Model model) {
- 		FundPostDto fundPostDto = fundPostRepo.selectOne(postNo);
-		
-		List<PostImageDto> list = postImageRepo.selectList(postNo);
-		
-		model.addAttribute("fundPostDto", fundPostDto);
-		model.addAttribute("postImageList", list);
 
- 	
- 		
- 		return "fund/order";
- 	}
+	 // 펀딩 주문 페이지
+	 @GetMapping("/order")
+	 public String fundOrder(@RequestParam Long postNo, Model model) {
+	     FundPostDto fundPostDto = fundPostRepo.selectOne(postNo);
+	     
+	     model.addAttribute("fundPostDto", fundPostDto);
+	     
+	     return "fund/order";
+	 }
+	
+	 // 펀딩 주문 처리
+	 @PostMapping("/order")
+	 public String processFundOrder(@RequestParam Long postNo, @RequestParam Integer fundPrice, Model model) {
+	     // 후원 정보 처리 및 필요한 동작 수행
+	     FundPostDto fundPostDto = fundPostRepo.selectOne(postNo);
+	     
+	     // 후원금액 처리 등 추가 동작 수행
+	     
+	     model.addAttribute("fundPostDto", fundPostDto);
+	     model.addAttribute("fundPrice", fundPrice);
+	     
+	     return "fund/clear";
+	 }
+	
+	 // 펀딩 주문 완료 페이지
+	 @GetMapping("/order/clear")
+	 public String fundOrderClear(@RequestParam Long postNo, @RequestParam Integer fundPrice, Model model) {
+	     FundPostDto fundPostDto = fundPostRepo.selectOne(postNo);
+	     
+	     model.addAttribute("fundPostDto", fundPostDto);
+	     model.addAttribute("fundPrice", fundPrice);
+	     
+	     return "fund/clear";
+	 }
     
     
 

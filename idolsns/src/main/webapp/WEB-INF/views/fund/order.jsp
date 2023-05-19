@@ -5,10 +5,6 @@
 <jsp:include page="/WEB-INF/views/template/header.jsp"></jsp:include>
 
 
-    <title>타이틀</title>
-
-
-
     
     <style>
     
@@ -46,16 +42,16 @@
     		
     		
     		
-    		
+    		  <form id="orderForm" method="post" style="padding-left: 0.7em; padding-right: 0.7em;">
     		
     		
     		
     		<div class="container border mt-5 d-flex" style="padding:1em;">
     			<img src="http://via.placeholder.com/200x150" class="col-5">
     			
-    			<div  class="col-7">
-    			${fundPostDto.fundTitle}펀딩제목~~ <br>
-    			${fundPostDto.fundGoal}펀딩목표금액~~<br>
+    			<div class="col-7">
+    			${fundPostDto.fundTitle} <br>
+    			${fundPostDto.fundGoal}원 <br>
     			<button class="btn btn-primary">메시지</button>
     			</div>
     		
@@ -71,7 +67,7 @@
 			<table class="table">
 				<tr>
 					<th>펀딩 상태</th>
-					<td>${fundPostDto.fundStatus}</td>
+					<td>${fundPostDto.fundState}</td>
 				</tr>
 				
 				<tr>
@@ -81,7 +77,7 @@
 				
 				<tr>
 					<th>후원 날짜</th>
-					<td>${fundPostDto.fundDate}</td>
+					<td>${fundDto.fundDate}</td>
 				</tr>
 				
 				<tr>
@@ -89,14 +85,23 @@
 					<td>${fundDto.fundTime}</td>
 				</tr>
 				
+				<tr>
+					<th>결제 금액</th>
+					<td>${fundDto.fundPrice}</td>
+				</tr>
+				
+				
 				
 				<tr>
 					<th>펀딩 마감일</th>
-					<td>${fundPostDto.post_end}</td>
+					<td>${fundPostDto.postEnd}</td>
 				</tr>
 				
 				
 			</table>
+			
+			
+		
 			
 			
 			<div class="input-group mt-5 mb-3">
@@ -131,6 +136,7 @@
 			  후원하기</button>
 			
 			
+				</form>
 			
 			
 		</div>
