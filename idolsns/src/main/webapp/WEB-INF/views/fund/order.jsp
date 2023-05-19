@@ -126,7 +126,8 @@
 			
 						
 			
-			  <button class="btn btn-lg btn-primary mt-3 mb-5" style="width:100%" v-bind:disabled="!isCheckboxChecked">
+			  <button class="btn btn-lg btn-primary mt-3 mb-5" style="width:100%" 
+			  v-bind:disabled="!isCheckboxChecked">
 			  후원하기</button>
 			
 			
@@ -161,6 +162,8 @@
 				      
 				      this.isCheckboxChecked = privacyCheckbox.checked && guidelinesCheckbox.checked;
 				    }
+				    
+				  
 				  }
 	       
 	        }).mount("#app");

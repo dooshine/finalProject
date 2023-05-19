@@ -312,7 +312,15 @@ public class FundController {
     
     // 펀딩결제
  	@GetMapping("/order")
- 	public String order() {
+ 	public String order(@RequestParam Long postNo, Model model) {
+ 		FundPostDto fundPostDto = fundPostRepo.selectOne(postNo);
+		
+		List<PostImageDto> list = postImageRepo.selectList(postNo);
+		
+		model.addAttribute("fundPostDto", fundPostDto);
+		model.addAttribute("postImageList", list);
+
+ 	
  		
  		return "fund/order";
  	}
