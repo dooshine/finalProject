@@ -1,6 +1,7 @@
 package com.kh.idolsns.controller;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -10,8 +11,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class ArtistController {
     
     @GetMapping("/{artistName}")
-    public String home(@PathVariable String artistName){
-        System.out.println("artistName: " + artistName);
-        return "/artist/home";
+    public String home(@PathVariable String artistName, Model model){
+        model.addAttribute("artistName", artistName);
+        return "/artist/artistHome";
     }
 }
