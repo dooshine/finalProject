@@ -28,7 +28,6 @@ public class FundRestController {
 		Long fundNo = fundRepo.sequence();
 		fundDto.setFundNo(fundNo);
 		// memberId는 header.jsp에서 가져와서 사용
-		// 
 		fundRepo.insert(fundDto);
 		
 	}

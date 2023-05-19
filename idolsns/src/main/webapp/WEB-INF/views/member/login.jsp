@@ -59,6 +59,8 @@
 			<h5 style="color:red; font-size:11px;">${param.msg}</h5>
 			<br>
 			
+			<input style="display: none;" name="prevPage" value="${header.referer}">
+
 			<div class="row mb-3">
 				<button type="submit" class="btn btn-info w-100">로그인</button>
 			</div>
@@ -69,6 +71,7 @@
 					onclick="location.href='${pageContext.request.contextPath}/member/findId'"
 					>아이디 찾기</button>
 			</div>
+			
 			
 		</div>
 	</div>
