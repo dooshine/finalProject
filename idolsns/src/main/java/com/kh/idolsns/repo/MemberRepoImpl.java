@@ -119,4 +119,11 @@ public class MemberRepoImpl implements MemberRepo{
 		return sqlSession.selectOne("member.emailDuplicatedCheck", memberEmail);
 	}
 
+	//비밀번호 찾기_이메일 조회
+	@Override
+	public MemberDto emailExist(String memberId) {
+		return sqlSession.selectOne("member.emailExist", memberId);
+	}
+
+
 }
