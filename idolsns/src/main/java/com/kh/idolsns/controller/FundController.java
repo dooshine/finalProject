@@ -321,6 +321,7 @@ public class FundController {
 	     
 	     model.addAttribute("fundPostDto", fundPostDto);
 	     
+	     
 	     return "fund/order";
 	 }
 	
