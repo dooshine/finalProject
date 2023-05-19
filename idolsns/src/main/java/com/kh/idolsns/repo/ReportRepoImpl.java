@@ -45,6 +45,12 @@ public class ReportRepoImpl implements ReportRepo{
         return sqlSession.selectOne("report.selectAllReportCnt", reportDto);
     }
 
+    // 신고 횟수 조회 (지정기간 - 한달 30회 이상 제재)
+    @Override
+    public Integer selectTermReportCnt(ReportDto reportDto) {
+        return sqlSession.selectOne("report.selectTermReportCnt", reportDto);
+    }
+
     // 신고 사유 수정
     @Override
     public boolean update(ReportDto reportDto) {
@@ -56,6 +62,5 @@ public class ReportRepoImpl implements ReportRepo{
     public boolean delete(Long reportNo) {
         return sqlSession.delete("report.delete", reportNo) > 0;
     }
-
     
 }

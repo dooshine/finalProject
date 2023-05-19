@@ -54,27 +54,34 @@
 				<td>${paymentDto.paymentTime}</td>
 			</tr>
 			
+			<tr>
+				<th>결제 수단</th>
+				<td>카카오페이</td>
+			</tr>
 
 			
 			<tr>
 				<th>결제 상태</th>
 				<td>${paymentDto.paymentStatus}</td>
 			</tr>
-			
+				
 			
 		
 		</table>
 		</div>
-			
+			  ${response.status} 
+			<div class="d-flex justify-content-end">
 			<!--  결제 취소 버튼 : 잔여 금액이 존재한다면 -->
 			<c:if test="${paymentDto.paymentRemain > 0}">
 			
 				<a href = "cancel?paymentNo=${paymentDto.paymentNo}" style="padding-left: 0.5em">
-				 <button class="btn btn-sm btn-danger">
+				 <button class="btn btn-sm btn-danger ">
 				 결제 취소
 				 </button>
 				 </a>
 			</c:if>
+		
+			</div>
 		
 		
 	</div>

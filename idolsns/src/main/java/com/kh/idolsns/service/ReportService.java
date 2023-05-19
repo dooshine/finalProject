@@ -1,5 +1,7 @@
 package com.kh.idolsns.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -36,12 +38,24 @@ public class ReportService {
             if(reportTotalCnt == customHomepageProperties.getSANCTION_CRITERIA_TOTAL_1()){
                 // 1단계 제재
 
-                // 누적 제재 생성
+                // 전체누적 제재 생성
                 sanctionRepo.insert(SanctionDto.builder().sanctionTargetType(reportDto.getReportTargetType()).sanctionTargetPrimaryKey(reportDto.getReportTargetPrimaryKey()).sanctionFor("총 신고 " + customHomepageProperties.getSANCTION_CRITERIA_TOTAL_1() + "회 누적").sanctionTerm(customHomepageProperties.getSANCTION_TERM_TOTAL_1()).build());
             }
-            // 신고 기간카운트 제재
-            // int reportTermCnt = reportRepo.select
 
+            // 신고 기간카운트 제재
+            int reportTermCnt = reportRepo.selectTermReportCnt(reportDto);
+            if(reportTermCnt == customHomepageProperties.getSANCTION_TERM_MONTH()){
+                // 기간누적 제재 생성
+                sanctionRepo.insert(SanctionDto.builder().sanctionTargetType(reportDto.getReportTargetType()).sanctionTargetPrimaryKey(reportDto.getReportTargetPrimaryKey()).sanctionFor("한달 내 신고 " + customHomepageProperties.getSANCTION_CRITERIA_TOTAL_1() + "회 이상").sanctionTerm(customHomepageProperties.getSANCTION_TERM_TOTAL_1()).build());
+            }
+
+        }
+    }
+
+    // 신고 삭제
+    public void delete(List<Long> reportNoList){
+        for(Long reportNo : reportNoList){
+            reportRepo.delete(reportNo);
         }
     }
 }
