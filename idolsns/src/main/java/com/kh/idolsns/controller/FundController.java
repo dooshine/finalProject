@@ -347,6 +347,7 @@ public class FundController {
 	     model.addAttribute("fundPrice", fundPrice);
 	     
 	     return "fund/clear";
+	     
 	 }
     
     
