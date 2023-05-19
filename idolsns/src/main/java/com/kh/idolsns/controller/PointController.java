@@ -101,7 +101,9 @@ public class PointController {
 		vo.setPartner_user_id((String)session.getAttribute("partner_user_id"));
 		vo.setTid((String)session.getAttribute("tid"));
 		
-	
+		String dump = (String)session.getAttribute("tid");
+		System.out.println("dump="+dump);
+		
 		
 		session.removeAttribute("partner_order_id");
 		session.removeAttribute("partner_user_id");
@@ -109,22 +111,24 @@ public class PointController {
 		
 		 // 결제 승인 요청
 	    KakaoPayApproveResponseVO response = kakaoPayService.approve(vo);
-
+	    
+	    
 	    // 충전된 금액을 포인트로 업데이트
 	    KakaoPayChargeRequestVO chargeRequestVO = new KakaoPayChargeRequestVO();
 	    chargeRequestVO.setMemberId((String) session.getAttribute("memberId"));
 	    chargeRequestVO.setPaymentTotal(response.getAmount().getTotal());
 	    System.out.println("chargeRequestVO: " + chargeRequestVO);
 	    kakaoPayService.charge(chargeRequestVO);
-
+	    
+	
+	    
 	    // "redirect:clear"로 리다이렉트하여 clear 페이지로 이동
-	    return "redirect:clear";
+	    return "redirect:clear?tid=" + dump;
 	}
 	
 	@GetMapping("/charge/clear")
-	public String chargeClear(@RequestParam int paymentNo, Model model) throws URISyntaxException {
-		
-		PaymentDto paymentDto = paymentRepo.find(paymentNo);
+	public String chargeClear(@RequestParam("tid") String paymentTid, Model model) throws URISyntaxException {
+		PaymentDto paymentDto = paymentRepo.find2(paymentTid);
 		
 	    // tid 값을 사용하여 주문 정보 조회
 	    KakaoPayOrderRequestVO vo = new KakaoPayOrderRequestVO();
@@ -132,9 +136,12 @@ public class PointController {
 	    KakaoPayOrderResponseVO response = kakaoPayService.order(vo);
 	  
 	    // 주문 정보를 모델에 추가
-	    model.addAttribute("response", response);
+		model.addAttribute("paymentDto", paymentDto);
+		model.addAttribute("response", response);
+		
 	    return "point/clear";
 	}
+	
 	
 
 	
@@ -165,7 +172,7 @@ public class PointController {
 		model.addAttribute("response", response);
 		
 		//상세 페이지 반환
-		return "point/detail"; //"/WEB-INF/views/pay/detail.jsp"
+		return "point/detail"; 
 	}
 	
 	

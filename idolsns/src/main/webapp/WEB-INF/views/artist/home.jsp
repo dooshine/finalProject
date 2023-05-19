@@ -2,14 +2,14 @@
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-<jsp:include page="/WEB-INF/views/admin/adminHeader.jsp"></jsp:include>
+<jsp:include page="/WEB-INF/views/template/header.jsp"></jsp:include>
 
 <!-- 제어영역 설정 -->
 <div class="container" id="app">
     <!-- # 신고조회 타이틀 -->
     <div class="row">
         <div class="col">
-            <h1>신고 리스트</h1>
+            <h1>대표 페이지</h1>
         </div>
     </div>
 
@@ -132,6 +132,4 @@
     }).mount('#app')
 </script>
 
-<jsp:include page="/WEB-INF/views/admin/adminFooter.jsp"></jsp:include>
-	
-	
+<jsp:include page="/WEB-INF/views/template/footer.jsp"></jsp:include>

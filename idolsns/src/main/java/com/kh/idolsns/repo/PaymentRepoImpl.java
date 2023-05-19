@@ -1,8 +1,6 @@
 package com.kh.idolsns.repo;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,7 +43,13 @@ public class PaymentRepoImpl implements PaymentRepo {
 		return sqlSession.selectOne("payment.find", paymentNo);
 	}
 	
+	@Override
+	public PaymentDto find2(String paymentTid) {
+		return sqlSession.selectOne("payment.find2", paymentTid);
+	
+	}
 
+	
 	//전체취소
 	@Override
 	public void cancelRemain(int paymentNo) {
@@ -53,7 +57,7 @@ public class PaymentRepoImpl implements PaymentRepo {
 		
 	}
 
-	
+
 	
 	
 	

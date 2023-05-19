@@ -15,7 +15,7 @@
 	
 	<!-- 메세지가 표시될 공간 -->
 	<div class="message-wrapper">
-		<div class="message" v-for="(message, index) in messageList" :key="index" v-if="messageList.type != 3">
+		<div class="message" v-for="(message, index) in messageList" :key="index">
 			<div>
 				<h4>{{ message.memberId }}</h4>
 				<button v-if="message.memberId == memberId" @click="deleteMessage(index)">x</button>
@@ -36,7 +36,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/locale/ko.min.js"></script>
 <!-- axios cdn -->
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-<!-- lodash cdn (throttle) -->
+<!-- lodash cdn -->
 <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js"></script>
 <script>
 	Vue.createApp({
@@ -45,6 +45,7 @@
 				text: "",
 				messageList: [],
 				memberId: "${sessionScope.memberId}",
+				chatJoin: "",
 				socket: null,
 				
 				// 입력창 초기화
@@ -86,14 +87,14 @@
 				this.connected = false;
 			},
 			messageHandler(e) {
-				//console.log(JSON.parse(e.data));
-				//console.log("type: " + JSON.parse(e.data).type);
-				// 타입이 3인 메세지는 삭제 메세지라 list에 push되지 않게 했는데, 이러니까 상대방한테는 list 업데이트가 없어서 삭제 반영이 실시간으로 이루어지지 않음
 				const parsedData = JSON.parse(e.data);
-				this.messageList.push(parsedData);
+				// 타입이 3인(삭제인) 메세지는 리스트에 추가하지 않음
 				if(parsedData.type == 3) {
-					this.messageList.splice(this.messageList.findIndex(message => message.chatMessageNo == parsedData.chatMessageNo), 1);
+					this.clearMessageList();
+					this.loadMessage();
+					return;
 				}
+				this.messageList.push(parsedData);
 			},
 			// 메세지 목록 지우기
 			clearMessageList() {
@@ -103,8 +104,14 @@
 			async loadMessage() {
 				const chatRoomNo = new URLSearchParams(location.search).get("chatRoomNo");
 				const url = "${pageContext.request.contextPath}/chat/message/" + chatRoomNo;
-				let resp = await axios.get(url);
-				this.messageList.push(...resp.data);
+				const resp = await axios.get(url);
+				//console.log("data: " + resp.data[0].chatMessageTime);
+				for(let i=0; i<resp.data.length; i++) {
+					if(resp.data[i].chatMessageTime >= this.chatJoin) {
+						this.messageList.push(resp.data[i]);
+					}
+				}
+				//this.messageList.push(...resp.data);
 			},
 			// 메세지 보내기
 			sendMessage() {
@@ -121,11 +128,23 @@
 			// 보낸 메세지 삭제
 			deleteMessage(index) {
 				const chatRoomNo = new URLSearchParams(location.search).get("chatRoomNo");
-				//console.log("채팅번호: " + this.messageList[index].chatMessageNo);
 				const data = { type: 3, chatMessageNo: this.messageList[index].chatMessageNo, chatRoomNo: chatRoomNo };
 				this.socket.send(JSON.stringify(data));
-				//console.log("index: " + index)
 				this.messageList.splice(index, 1);
+			},
+			// 해당 채팅방에 참여한 날짜와 시간 가져오기
+			async getChatJoin() {
+				const chatRoomNo = new URLSearchParams(location.search).get("chatRoomNo");
+				const memberId = this.memberId;
+				const url = "${pageContext.request.contextPath}/chat/chatRoom/join/";
+				const data = {
+						chatRoomNo: chatRoomNo,
+						memberId: memberId
+				}
+				//console.log("no: " + data.chatRoomNo);
+				//console.log("id: " + data.memberId);
+				const resp = await axios.post(url, data);
+				this.chatJoin = resp.data;
 			}
 		},
 		computed: {
@@ -135,6 +154,7 @@
 			// 웹소켓 연결
 			this.connect();
 			this.loadMessage();
+			this.getChatJoin();
 		},
 		mounted() {
 

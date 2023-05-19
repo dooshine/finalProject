@@ -34,7 +34,11 @@
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/static/css/doo.css" />
 
     <script>
+    	
+    	
     	const contextPath = "${pageContext.request.contextPath}";
+		const memberId = "${sessionScope.memberId}";
+        const memberLevel = "${sessionScope.memberLevel}";
     </script>
     
     <style>
@@ -79,19 +83,28 @@
 			  	</div>
 			</nav>
         	<!----------------------------------------------- 헤더 끝 ----------------------------------------------->
-
-            <div class="row">
-            	<c:if test="${memberId == null}">
-            		<a href="${pageContext.request.contextPath}/member/login">로그인</a>
-            		<a href="${pageContext.request.contextPath}/member/join">회원가입</a>
-            	</c:if>
-            	<c:if test="${memberId != null}">
-            		<a href="${pageContext.request.contextPath}/member/logout">로그아웃</a>
-            		<a href="${pageContext.request.contextPath}/member/mypage">마이페이지</a>
-            	</c:if>
-				<c:if test="${memberLevel == '관리자'}">
-					<a href="${pageContext.request.contextPath}/admin/">관리자 페이지</a>
-				</c:if>
+            
+			<div class="row">
+				<!-- (개발)로그인 버튼 -->
+				<div class="col-4">
+					<button><a href="/dev/login?memberId=testuser1">testuser1</a></button>
+					<button><a href="/dev/login?memberId=testuser2">testuser2</a></button>
+					<button><a href="/dev/login?memberId=testuser3">testuser3</a></button>
+					<button><a href="/dev/login?memberId=adminuser1">adminuser3</a></button>
+				</div>
+				<div class="offset-5 col-3">
+					<c:if test="${memberId == null}">
+						<a href="${pageContext.request.contextPath}/member/login">로그인</a>
+						<a href="${pageContext.request.contextPath}/member/join">회원가입</a>
+					</c:if>
+					<c:if test="${memberId != null}">
+						<a href="${pageContext.request.contextPath}/member/logout">로그아웃</a>
+						<a href="${pageContext.request.contextPath}/member/mypage">마이페이지</a>
+					</c:if>
+					<c:if test="${memberLevel == '관리자'}">
+						<a href="${pageContext.request.contextPath}/admin/">관리자 페이지</a>
+					</c:if>
+				</div>
             </div>
         </header>
           <hr>
