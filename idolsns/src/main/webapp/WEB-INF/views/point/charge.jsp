@@ -118,27 +118,27 @@
             
                 <label class="point_select">
                     <input type="radio" name="total_amount" v-model="selectedAmount" value="1000"> 
-                    <span class="amount">1,000</span>원
+                    <span class="amount"> 1,000</span>원
                 </label>        
 
                 <label class="point_select">
                     <input type="radio" name="total_amount" v-model="selectedAmount" value="5000"> 
-                   <span class="amount">5,000</span>원
+                   <span class="amount"> 5,000</span>원
                 </label>        
 
                 <label class="point_select">
                     <input type="radio" name="total_amount" v-model="selectedAmount" value="10000"> 
-                    <span class="amount">10,000</span>원
+                    <span class="amount"> 10,000</span>원
                 </label>        
 
                 <label class="point_select">
                     <input type="radio" name="total_amount" v-model="selectedAmount" value="20000"> 
-                    <span class="amount">20,000</span>원
+                    <span class="amount"> 20,000</span>원
                 </label>        
 
                 <label class="point_select">
                     <input type="radio" name="total_amount" v-model="selectedAmount" value="50000"> 
-                    <span class="amount">50,000</span>원
+                    <span class="amount"> 50,000</span>원
                 </label>        
 				
 				

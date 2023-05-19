@@ -66,15 +66,18 @@
 		</table>
 		</div>
 			
+			<div class="d-flex justify-content-end">
 			<!--  결제 취소 버튼 : 잔여 금액이 존재한다면 -->
 			<c:if test="${paymentDto.paymentRemain > 0}">
 			
 				<a href = "cancel?paymentNo=${paymentDto.paymentNo}" style="padding-left: 0.5em">
-				 <button class="btn btn-sm btn-danger">
+				 <button class="btn btn-sm btn-danger ">
 				 결제 취소
 				 </button>
 				 </a>
 			</c:if>
+		
+			</div>
 		
 		
 	</div>

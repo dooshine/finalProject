@@ -119,31 +119,42 @@
 			            <th>더보기</th>
 			          </tr>
 			        </thead>
-			        <tbody>
-			          <c:forEach var="paymentDto" items="${list}">
-			            <tr>
-			              <td>${paymentDto.paymentTime}</td>
-			              <td>${paymentDto.paymentTotal}</td>
-			              <td>카카오페이</td>
-			              <td>${paymentDto.paymentStatus}</td>
-			              <td>
-			                
-			                <a href="detail?paymentNo=${paymentDto.paymentNo}">
-			                <button class="btn btn-sm btn-primary">
-			               	더보기
-			               	</button>
-			                </a>
-			              	
-			              </td>
-			            </tr>
-			          </c:forEach>
-			        </tbody>
+			       <tbody>
+				      <tr v-for="paymentDto in paginatedItems" :key="paymentDto.paymentNo">
+				        <td>{{ paymentDto.paymentTime }}</td>
+				        <td>{{ paymentDto.paymentTotal }}</td>
+				        <td>카카오페이</td>
+				        <td>{{ paymentDto.paymentStatus }}</td>
+				        <td>
+				          <a :href="'detail?paymentNo=' + paymentDto.paymentNo">
+				            <button class="btn btn-sm btn-primary">
+				              더보기
+				            </button>
+				          </a>
+				        </td>
+				      </tr>
+				    </tbody>
 			      </table>
 				</div>
-			</div>
-			</div>
 			
-	
+			    <!-- 이전/다음 페이지로 이동하는 버튼 -->
+	  <div class="pagination justify-content-center mt-5">
+      <ul class="pagination">
+        <li class="page-item" :class="{ disabled: currentPage === 1 }">
+          <a class="page-link" href="#" @click="previousPage">&lt;</a>
+        </li>
+        <li v-for="pageNumber in displayedPages" :key="pageNumber" class="page-item" :class="{ active: pageNumber === currentPage }">
+          <a class="page-link" href="#" @click="goToPage(pageNumber)">{{ pageNumber }}</a>
+        </li>
+        <li class="page-item" :class="{ disabled: currentPage === totalPages }">
+          <a class="page-link" href="#" @click="nextPage">&gt;</a>
+        </li>
+      </ul>
+    </div>
+
+
+			</div>
+			</div>
     
     <script>
    
@@ -155,6 +166,11 @@
 	                amount: '',
 	                selectedAmount: null,
 	                memberId: '',
+	                
+	                <!--페이지네이션-->
+		            itemsPerPage: 10,
+		            currentPage: 1,
+		            items: [], // 전체 항목 배열
 	              
 	            }
 	        },
@@ -164,7 +180,23 @@
 	                return this.amount.toLocaleString();
 	            },
 	            
-                
+                <!--페이지네이션-->
+	            
+	            totalPages() {
+	                return Math.ceil(this.items.length / this.itemsPerPage);
+	              },
+	              paginatedItems() {
+	                const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+	                const endIndex = startIndex + this.itemsPerPage;
+	                return this.items.slice(startIndex, endIndex);
+	              },
+	              displayedPages() {
+	                const startPage = Math.max(1, this.currentPage - 2);
+	                const endPage = Math.min(this.totalPages, startPage + 4);
+	                return Array(endPage - startPage + 1)
+	                  .fill()
+	                  .map((_, index) => startPage + index);
+	              },
 	        },
 	        methods: {
 	   
@@ -180,12 +212,37 @@
 	            	// MemberRestController(rest/member)에 getMapping method 추가 후
 	        		// Axios로 method 호출(await 사용, 전달 data-> 멤버아이디), 로 멤버DTO 정보 불러와서
 	        		// 멤버 DTO의 point를 this.amount 대입
-	        	}
+	        	},
+	        	async loadPaymentHistory() {
+	        		  try {
+	        		    const url = "http://localhost:8080/rest/point/history/" +memberId;
+	        		    const response = await axios.get(url);
+	        		    this.items = response.data;
+	        		  } catch (error) {
+	        		    console.error(error);
+	        		  }
+	        		},
+	        	
+	        	<!--페이지네이션-->
+	        	 previousPage() {
+	        	      if (this.currentPage > 1) {
+	        	        this.currentPage--;
+	        	      }
+	        	    },
+	        	    nextPage() {
+	        	      if (this.currentPage < this.totalPages) {
+	        	        this.currentPage++;
+	        	      }
+	        	    },
+	        	    goToPage(page) {
+	        	      this.currentPage = page;
+	        	    },
 	        
 	        },
 	        created(){
 	        	
 	        	this.loadMemberPoint();
+	        	this.loadPaymentHistory();
 	        }
 	    }).mount("#app");
 
