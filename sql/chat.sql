@@ -43,7 +43,7 @@ CREATE TABLE chat_like(
 
 -- 1대1 채팅방
 CREATE TABLE chat_room_priv(
-	chat_room_priv_no REFERENCES chat_room(chat_room_no) ON DELETE CASCADE NOT NULL,
+	chat_room_no REFERENCES chat_room(chat_room_no) ON DELETE CASCADE NOT NULL,
 	chat_room_priv_i REFERENCES member(member_id) ON DELETE CASCADE NOT NULL,
 	chat_room_priv_u REFERENCES member(member_id) ON DELETE SET NULL,
 	PRIMARY KEY(chat_room_priv_i, chat_room_priv_u)
