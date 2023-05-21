@@ -19,6 +19,9 @@ public interface MemberRepo {
 	void decreasePoint(String memberId, int paymentTotal);
 	
 	
+	//포인트 차감 (펀딩 시)
+	void minusPoint(String memberId, int fundPrice);
+	
 
 	boolean delete(String memberId);
 	boolean updatePw(String memberId, String memberPw);

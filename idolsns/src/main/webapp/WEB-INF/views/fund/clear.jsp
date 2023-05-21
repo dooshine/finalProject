@@ -43,18 +43,50 @@
     		
     		00번째 후원자입니다 ㅊㅋㅊㅋ
 			
+			<table class="table">
 			
-			카카오톡으로 공유하기
-			카카오톡으로 공유하기
-			카카오톡으로 공유하기
-			카카오톡으로 공유하기
-			카카오톡으로 공유하기
-			카카오톡으로 공유하기
-			카카오톡으로 공유하기
-			카카오톡으로 공유하기
-			카카오톡으로 공유하기
-			카카오톡으로 공유하기
-			카카오톡으로 공유하기
+				<tr>
+					<th>펀딩 프로젝트</th>
+					<td>${fundInfoDto.fundTitle}</td>
+				</tr>
+			
+			
+			
+			
+				<tr>
+					<th>펀딩 상태</th>
+					<td>${fundPostDto.fundState}</td>
+				</tr>
+				
+				<tr>
+					<th>후원 번호</th>
+					<td>${fundDto.fundNo}</td>
+				</tr>
+				
+				<tr>
+					<th>후원 날짜</th>
+					<td>${fundDto.fundTime}</td>
+				</tr>
+				
+				<tr>
+					<th>결제일</th>
+					<td>${fundDto.fundTime}</td>
+				</tr>
+				
+				<tr>
+					<th>결제 금액</th>
+					<td>${fundDto.fundPrice}</td>
+				</tr>
+				
+				
+				
+				<tr>
+					<th>펀딩 마감일</th>
+					<td>${fundPostDto.postEnd}</td>
+				</tr>
+				
+				
+			</table>
 			
 			
 		</div>
