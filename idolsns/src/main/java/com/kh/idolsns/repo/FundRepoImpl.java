@@ -41,7 +41,7 @@ public class FundRepoImpl implements FundRepo{
 	}
 	
 	@Override
-	public FundDto find(int fundNo) {
+	public FundDto find(Long fundNo) {
 		return sqlSession.selectOne("fund.find", fundNo);
 	}
 

@@ -118,7 +118,7 @@
 				
 					
 						<button type="submit" class="btn btn-primary" @click="order">
-						이 프로젝트 후원하기</button>
+						후원하기</button>
 			</div>	
              
 		
@@ -166,13 +166,17 @@
 		      	},
 		       
                 // 데이터 중 fund를 서버로 전송
-            	order(event) {
- 			       
-	                var orderForm = document.getElementById("orderForm");
-	               
-	                orderForm.submit();
-	                
-	            },
+		      	order() {
+		      	  var orderForm = document.getElementById("orderForm");
+		      	  var postNo = this.fund.postNo; // Vue 데이터의 postNo 값을 사용
+		      	  
+		      	  // form action 설정
+		      	  orderForm.action = "http://localhost:8080/fund/order?postNo=" + postNo;
+		      	  
+		      	  // form 서버 전송
+		      	  orderForm.submit();
+		      	},
+		        
 		    }
 		    
 		    created() {
