@@ -24,6 +24,11 @@
     <!-- 부트스트랩 css(공식) -->
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css">
 
+
+
+
+
+
     <!-- custom 테스트 css -->
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/static/css/test.css">
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/static/css/custom.css">
@@ -32,6 +37,10 @@
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/static/css/load.css" />
     <!-- doo-css -->
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/static/css/doo.css" />
+
+	
+	
+
 
     <script>
     	
@@ -114,6 +123,6 @@
                 <div class="col-3 d-flex left-aside">
                     <jsp:include page="/WEB-INF/views/template/sidebar.jsp"></jsp:include>
                 </div>
-                <div class="col-6 article container-fluid" style="padding:0px;">
+                <div class="col-6 article container-fluid py-5" style="padding:0px;">
 
                 

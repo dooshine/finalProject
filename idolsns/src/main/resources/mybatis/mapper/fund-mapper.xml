@@ -12,14 +12,14 @@
    	<select id="sequence" resultType="Long">
         select fund_seq.nextval from dual
     </select>
-    <!-- 통합게시물 생성 -->
+    
     <insert id="add">
-        insert into fund (
-        fund_no, post_no, fund_price, fund_time, member_id
-        ) 
-        values (
-        #{fundNo}, #{postNo}, #{fundPrice}, #{fundTime, jdbcType=DATE}, #{memberId}
-        )
+         insert into fund (
+		    fund_no, post_no, fund_price, fund_time, member_id
+		    ) 
+		    values (
+		    #{fundNo}, #{postNo}, #{fundPrice}, sysdate, #{memberId}
+		    )
     </insert>
 
 

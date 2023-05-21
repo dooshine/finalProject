@@ -28,9 +28,11 @@
        	
    	<div class="container rounded p-3" style="background-color:white">
 
+			
 	   <h3 class="title mt-5 mb-3" style="padding-left: 0.5em">결제 상세 정보</h3>
 
 		<div style="padding-left:0.5em; padding-right:0.5em;">
+
 		<table class="table" >
 			<tr>
 				<th>주문번호</th>
@@ -83,7 +85,7 @@
 		
 			</div>
 		
-		
+	
 	</div>
 	
 </div>

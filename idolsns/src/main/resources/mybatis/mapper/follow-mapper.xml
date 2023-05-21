@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ↑ XML 헤더(반드시 첫 번째 줄에 위치) -->
+
+<!-- dtd선언 -->
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- mapper -->
+<mapper namespace="follow">
+    <!-- 팔로우 생성 -->
+    <insert id="createFollow">
+        insert into follow (FOLLOW_NO, MEMBER_ID, FOLLOW_TARGET_TYPE, FOLLOW_TARGET_PRIMARY_KEY, FOLLOW_TIME) values (follow_seq.nextval, #{memberId}, #{followTargetType}, #{followTargetPrimaryKey}, sysdate)
+    </insert>
+    <!-- 팔로우 개별조회(팔로우한 사람, 팔로우 대상 타입, 팔로우 대상 PK) -->
+    <select id="selectFollowOne" resultType="FollowDto">
+        select * from follow where member_id = #{memberId} and follow_target_type = #{followTargetType} and follow_target_primary_key = #{followTargetPrimaryKey}
+    </select>
+    <!-- 팔로우 삭제(팔로우한 사람, 팔로우 대상 타입, 팔로우 대상 PK) -->
+    <delete id="deleteFollow">
+        delete from follow where member_id = #{memberId} and follow_target_type = #{followTargetType} and follow_target_primary_key = #{followTargetPrimaryKey}
+    </delete>
+</mapper>

@@ -144,7 +144,7 @@
 
 	
 	
-	<!-- 유저의 포인트 증가 -->
+	<!-- 충전: 유저의 포인트 증가 -->
 	<update id="chargePoint">
 	  UPDATE member 
 	  SET member_point = member_point + #{paymentTotal} 
@@ -152,13 +152,20 @@
 	</update>
 			
 
-	<!-- 포인트 차감 -->
+	<!-- 충전취소: 포인트 차감 -->
 	<update id="decreasePoint">
 	  UPDATE member 
 	  SET member_point =  member_point - #{paymentTotal} 
 	  WHERE member_id = #{memberId}
 	</update>
 	
+	
+	<!-- 펀딩 시 포인트 차감 -->
+	<update id="minusPoint">
+	  UPDATE member 
+	  SET member_point =  member_point - #{fundPrice} 
+	  WHERE member_id = #{memberId}
+	</update>
 	
 	
 	<delete id="delete">
@@ -199,6 +206,10 @@
 	
 	<select id="emailDuplicatedCheck" resultType="int">
 		select count(*) from member where member_email=#{memberEmail}
+	</select>
+	
+	<select id="emailExist" resultType="MemberDto">
+		select * from member where member_id=#{memberId}
 	</select>
 		
 </mapper>
