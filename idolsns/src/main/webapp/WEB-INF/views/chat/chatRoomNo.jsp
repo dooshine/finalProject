@@ -5,6 +5,8 @@
 	<h1>채팅 테스트</h1>
 	<p>${sessionScope.memberId}</p>
 	
+	<a @click="leaveRoom" href="#">나가기</a>
+	
 	<hr>
 	
 	<!-- 메세지 입력창 + 전송버튼 -->
@@ -148,6 +150,18 @@
 				}
 				const resp = await axios.post(url, data);
 				this.chatJoin = resp.data;
+			},
+			// 채팅방 나가기
+			async leaveRoom() {
+				const memberId = this.memberId;
+				const chatRoomNo = new URLSearchParams(location.search).get("chatRoomNo");
+				const data = {
+						memberId: memberId,
+						chatRoomNo: chatRoomNo
+				}
+				const url = "${pageContext.request.contextPath}/chat/chatRoom/leave/";
+				const resp = await axios.post(url, data);
+				window.location.href = "${pageContext.request.contextPath}/chat/";
 			}
 		},
 		computed: {

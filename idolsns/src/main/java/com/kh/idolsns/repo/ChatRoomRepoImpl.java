@@ -32,5 +32,9 @@ public class ChatRoomRepoImpl implements ChatRoomRepo {
 	public List<ChatRoomDto> listRoom() {
 		return sql.selectList("chatRoom.listRoom");
 	}
+	@Override
+	public void deleteRoom(ChatRoomDto dto) {
+		sql.delete("chatRoom.deleteRoom", dto);
+	}
 	
 }
