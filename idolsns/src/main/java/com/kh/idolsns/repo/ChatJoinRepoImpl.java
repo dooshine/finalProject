@@ -45,5 +45,9 @@ public class ChatJoinRepoImpl implements ChatJoinRepo {
 		//log.debug("joinTime: {}", joinTime);
 		return joinTime.getTime();
 	}
+	@Override
+	public void leaveRoom(ChatJoinDto dto) {
+		sql.delete("chatJoin.leaveRoom", dto);
+	}
 	
 }

@@ -7,8 +7,8 @@
 
 	<!-- 채팅방 생성 -->
 	<insert id="createRoom">
-		insert into chat_room_priv(chat_room_priv_no, chat_room_priv_i, chat_room_priv_u)
-		values(#{chatRoomPrivNo}, #{chatRoomPrivI}, #{chatRoomPrivU})
+		insert into chat_room_priv(chat_room_no, chat_room_priv_i, chat_room_priv_u)
+		values(#{chatRoomNo}, #{chatRoomPrivI}, #{chatRoomPrivU})
 	</insert>
 
 	<!-- 중복 확인 -->
@@ -16,6 +16,16 @@
 		select * from chat_room_priv 
 		where chat_room_priv_i = #{chatRoomPrivI} 
 		and chat_room_priv_u = #{chatRoomPrivU}
+	</select>
+	
+	<!-- 채팅방 나가기 -->
+	<delete id="leaveRoom">
+		delete chat_room_priv where chat_room_priv_i = #{chatRoomPrivI} and chat_room_no = #{chatRoomNo}
+	</delete>
+	
+	<!-- 갠톡 여부 확인 -->
+	<select id="checkPriv" resultType="ChatRoomPrivDto">
+		select * from chat_room_priv where chat_room_priv_i = #{chatRoomPrivI} and chat_room_no = #{chatRoomNo}
 	</select>
 	
 </mapper>

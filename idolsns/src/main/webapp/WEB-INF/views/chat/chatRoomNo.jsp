@@ -5,6 +5,8 @@
 	<h1>채팅 테스트</h1>
 	<p>${sessionScope.memberId}</p>
 	
+	<a @click="leaveRoom" href="#">나가기</a>
+	
 	<hr>
 	
 	<!-- 메세지 입력창 + 전송버튼 -->
@@ -105,13 +107,11 @@
 				const chatRoomNo = new URLSearchParams(location.search).get("chatRoomNo");
 				const url = "${pageContext.request.contextPath}/chat/message/" + chatRoomNo;
 				const resp = await axios.get(url);
-				//console.log("data: " + resp.data[0].chatMessageTime);
 				for(let i=0; i<resp.data.length; i++) {
 					if(resp.data[i].chatMessageTime >= this.chatJoin) {
 						this.messageList.push(resp.data[i]);
 					}
 				}
-				//this.messageList.push(...resp.data);
 			},
 			// 메세지 보내기
 			sendMessage() {
@@ -120,6 +120,13 @@
 				this.socket.send(JSON.stringify(data));
 				// 입력창 초기화
 				this.clear();
+			},
+			// 사진 보내기
+			async sendPic() {
+				if(this.text.length == 0) return;
+				// 비동기로 파일 정보 저장
+				// 소켓 샌드로 메세지 보내기
+				// constant에 사진메세지 번호 등록(4)
 			},
 			// 시간 포맷 설정
 			timeFormat(chatMessageTime) {
@@ -141,17 +148,26 @@
 						chatRoomNo: chatRoomNo,
 						memberId: memberId
 				}
-				//console.log("no: " + data.chatRoomNo);
-				//console.log("id: " + data.memberId);
 				const resp = await axios.post(url, data);
 				this.chatJoin = resp.data;
+			},
+			// 채팅방 나가기
+			async leaveRoom() {
+				const memberId = this.memberId;
+				const chatRoomNo = new URLSearchParams(location.search).get("chatRoomNo");
+				const data = {
+						memberId: memberId,
+						chatRoomNo: chatRoomNo
+				}
+				const url = "${pageContext.request.contextPath}/chat/chatRoom/leave/";
+				const resp = await axios.post(url, data);
+				window.location.href = "${pageContext.request.contextPath}/chat/";
 			}
 		},
 		computed: {
 
 		},
 		created() {
-			// 웹소켓 연결
 			this.connect();
 			this.loadMessage();
 			this.getChatJoin();

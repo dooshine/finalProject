@@ -18,5 +18,13 @@ public class ChatRoomPrivRepoImpl implements ChatRoomPrivRepo {
 	public ChatRoomPrivDto findRoom(ChatRoomPrivDto dto) {
 		return sql.selectOne("chatRoomPriv.findRoom", dto);
 	}
+	@Override
+	public void leaveRoom(ChatRoomPrivDto dto) {
+		sql.delete("chatRoomPriv.leaveRoom", dto);
+	}
+	@Override
+	public ChatRoomPrivDto checkPriv(ChatRoomPrivDto dto) {
+		return sql.selectOne("chatRoomPriv.checkPriv", dto);
+	}
 	
 }

@@ -37,6 +37,11 @@
 		select chat_join_time from chat_join 
 		where chat_room_no = #{chatRoomNo} and member_id = #{memberId}
 	</select>
+	
+	<!-- 채팅방 나가기 -->
+	<delete id="leaveRoom">
+		delete chat_join where member_id = #{memberId} and chat_room_no = #{chatRoomNo}
+	</delete>
 
 </mapper>
     
