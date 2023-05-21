@@ -77,7 +77,7 @@
 			
 				  
 			<div>
-				<h2 class="title text-center mt-5 mb-5">${fundPostDto.fundTitle }</h2>
+				<h2 class="title text-center mt-5 mb-5">${fundPostViewDto.fundTitle }</h2>
 			</div>
 				
 			
@@ -89,7 +89,7 @@
 				<div class="col-5">
 		
 					<label class="fund_label">모인 금액</label>
-					<span class="fund_span">100</span>원<span style="font-weight:bold">150</span>%
+					<span class="fund_span">${fundDto.fundTotal }</span>원<span style="font-weight:bold">150</span>%
 			
 				
 			
@@ -98,7 +98,7 @@
 				
 		
 					<label class="fund_label">후원자</label>
-					<span class="fund_span">3,421</span>명
+					<span class="fund_span">${fundPostViewDto.fundSponsorCount}</span>명
 		
 				
 				
@@ -196,8 +196,7 @@
 			
 			
 			
-				postImageDto : ${postImageList}<br>
-				fundPostDto: ${fundPostDto }<br>
+				fundPostViewDto: ${fundPostViewDto }<br>
 				
 				
 	</section>
@@ -205,75 +204,6 @@
 			
     <script src="https://unpkg.com/vue@3.2.36"></script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-    <script>
-	    const attachmentNoArray = [];
-	    <c:forEach var="postImageDto" items="${postImageList}">
-	      attachmentNoArray.push(${postImageDto.attachmentNo});
-	    </c:forEach>
-	    
-        Vue.createApp({
-            //데이터 설정 영역
-            data(){
-                return {
-                    //화면에서 사용할 데이터 선언
-//                     fund:{
-//                         fundPrice:"",
-//                         fundNo: "",
-//                         postNo: "",
-//                         memberId: memberId,
-//                         fundName: "",
-//                         fundTime: "",
-//                         imageUrl: ""
-//                     },
-                    fundPostImage:[],
-//                     attachmentNo: attachmentNoArray,
-                };
-            },
-            computed:{
-	            },
-            methods:{
-            	// loading FundPostImageView
-            	async loadData(){
-					const resp = await axios.get("http://localhost:8080/rest/fundpostimageview/195");	  
-					console.log(resp.data);
-// 					this.fundPostImage.push(...resp.data);
-					
-        		},
-                // 데이터 중 fund를 서버로 전송 (후원하기)
-//                 async sendItem() {
-//                     // const resp = await axios.post("주소", {데이터});
-//                     const url = "http://localhost:8080/rest/fund/";
-//                     const resp = await axios.post(url, this.fund);
-
-//                 },
-               	//글 번호를 가져온다
-//                 setPostNo() {
-//                 	const params = new URLSearchParams(location.search);
-//                 	const postNo = params.get("postNo");
-//                 	this.fund.postNo = postNo;
-                	
-//                 },
-                // 대표이미지 설정
-//                 setImageUrl() {
-//                 	const url = "http://localhost:8080/download?attachmentNo="+this.attachmentNo;
-//                 	console.log("imageUrl = " + url);
-//                 	this.fund.imageUrl = url;
-//                 	if(this.attachmentNo.size() > 1){
-//                 		for()
-                		
-//                 	}
-//                 }
-            }, 
-            created() {
-//             	this.setPostNo();
-//             	this.setImageUrl();
-            	this.loadData();
-//             	console.log("attachmentNo = " + this.attachmentNo);
-//             	console.log("postNo = " + this.fund.postNo);
-				
-            }
-        }).mount("#app");
-    </script>
 			
 	
 		

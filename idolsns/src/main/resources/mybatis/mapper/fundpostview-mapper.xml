@@ -10,5 +10,10 @@
 	<select id="selectList" resultType="FundPostViewDto">
 		select * from fundpost_view where post_type='펀딩' order by post_time desc
 	</select>
+	
+	<select id="detail" resultType="FundPostViewDto">
+		select * from fundpost_view where post_type='펀딩' and post_no=#{postNo}
+		order by post_time desc
+	</select>
 
 </mapper>

@@ -10,6 +10,7 @@ public interface FundRepo {
 	List<FundDto> selectAll();
 	List<FundDto> selectByMember(String memberId);
 	FundDto find(int paymentNo);
+	FundDto selectOneWithTotal(Long postNo);
 	
 	
 }

@@ -1,6 +1,8 @@
 package com.kh.idolsns.repo;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,5 +35,14 @@ public class FundPostRepoImpl implements FundPostRepo{
 	public boolean update(FundPostDto dto) {
 		return sqlSession.update("fundPost.edit", dto) > 0;
 	}
+
+	@Override
+	public void connect(Long postNo, int attachmentNo) {
+		Map<String, Object> parameters = new HashMap<>();
+		parameters.put("param1", postNo);
+		parameters.put("param2", attachmentNo);
+		sqlSession.insert("fundPost.connect", parameters);
+	}
+
 
 }

@@ -47,6 +47,19 @@
 	<select id="find" resultType="FundDto">
 		select * from fund where fund_no = #{fundNo}
 	</select>
+	
+	<select id="selectOne" resultType="FundDto" parameterType="Long">
+		select * from fund where post_no = #{postNo}
+	</select>
+	
+	<!-- 후원된 금액 total -->
+	<select id="fundtotal" resultType="int" parameterType="Long">
+		select fund_no, post_no, fund_price, fund_time, member_id,
+           sum(fund_price) as fund_total
+           from fund
+	</select>
+	
+	
 
 
 </mapper>

@@ -37,4 +37,9 @@
 		where post_no=#{postNo}
 	</update>
 	
+	<insert id="connect" parameterType="HashMap">
+		insert into post_image(post_no, attachment_no)
+		value(#{postNo}, #{attachmentNo})
+	</insert>
+	
 </mapper>

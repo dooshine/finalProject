@@ -12,4 +12,5 @@ public class FundDto {
 	private int fundPrice;
 	private Date fundTime;
 	private String memberId;
+	private int fundTotal;
 }

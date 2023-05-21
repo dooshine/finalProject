@@ -51,6 +51,13 @@ public class FundRepoImpl implements FundRepo{
 	}
 
 
+
+	@Override
+	public FundDto selectOneWithTotal(Long postNo) {
+		return sqlSession.selectOne("fund.fundtotal", postNo);
+	}
+
+
 		
 
 	
