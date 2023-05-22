@@ -27,5 +27,9 @@ public class ChatMessageRepoImpl implements ChatMessageRepo {
 	public void deleteMessage(long chatMessageNo) {
 		sql.delete("chatMessage.deleteMessage", chatMessageNo);
 	}
+	@Override
+	public void sendPic(ChatMessageDto dto) {
+		sql.insert("chatMessage.sendPic", dto);
+	}
 	
 }

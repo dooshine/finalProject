@@ -12,6 +12,7 @@
 	<!-- 메세지 입력창 + 전송버튼 -->
 	<input type="text" class="user-input" v-model="text" @input="text = $event.target.value">
 	<button class="btn-send" @click="sendMessage">전송</button>
+	<input class="form-control d-none" type="file" accept=".png, .jpg, .gif" @change="sendPic">
 	
 	<hr>
 	
@@ -22,8 +23,11 @@
 				<h4>{{ message.memberId }}</h4>
 				<button v-if="message.memberId == memberId" @click="deleteMessage(index)">x</button>
 			</div>
-			<div>{{ message.chatMessageContent }}</div>
-			<div>{{ timeFormat(message.time) }}</div>
+			<!-- 텍스트 메세지일 때 -->
+			<div v-if="message.attachmentNo == 0">{{ message.chatMessageContent }}</div>
+			<!-- 이미지 메세지일 때 -->
+			<img class="photo" v-if="message.attachmentNo != 0" :src="'${pageContext.request.contextPath}/download?attachmentNo=' + message.attachmentNo">
+			<div>{{ timeFormat(message.chatMessageTime) }}</div>
 		</div>
 	</div>
 </div>
@@ -93,8 +97,7 @@
 				// 타입이 3인(삭제인) 메세지는 리스트에 추가하지 않음
 				if(parsedData.type == 3) {
 					this.clearMessageList();
-					this.loadMessage();
-					return;
+					this.loadMessage(); return;
 				}
 				this.messageList.push(parsedData);
 			},
@@ -108,9 +111,8 @@
 				const url = "${pageContext.request.contextPath}/chat/message/" + chatRoomNo;
 				const resp = await axios.get(url);
 				for(let i=0; i<resp.data.length; i++) {
-					if(resp.data[i].chatMessageTime >= this.chatJoin) {
+					if(resp.data[i].chatMessageTime >= this.chatJoin)
 						this.messageList.push(resp.data[i]);
-					}
 				}
 			},
 			// 메세지 보내기
@@ -123,19 +125,40 @@
 			},
 			// 사진 보내기
 			async sendPic() {
-				if(this.text.length == 0) return;
 				// 비동기로 파일 정보 저장
+				const fileInput = document.querySelector('input[type=file]');
+			    const file = fileInput.files[0];
+				const formData = new FormData();
+				formData.append("attach", file);
+				const url = "${pageContext.request.contextPath}/rest/attachment/upload";
+				const resp = await axios.post(url, formData);
 				// 소켓 샌드로 메세지 보내기
-				// constant에 사진메세지 번호 등록(4)
+				//console.log("attachmentNo: " + resp.data.attachmentNo);
+				if(resp.data) {
+					const data = {
+							type: 4, 
+							attachmentNo: resp.data.attachmentNo,
+							chatMessageContent: "사진 " + resp.data.attachmentNo
+					}
+					this.socket.send(JSON.stringify(data));
+					this.clear();
+					this.fileInput = [];
+				}
 			},
 			// 시간 포맷 설정
 			timeFormat(chatMessageTime) {
-				return moment(chatMessageTime).format("A h:mm");
+				//return moment(chatMessageTime).format("A h:mm");
+				return moment(chatMessageTime).format("YYYY-M-D A h:mm");
 			},
 			// 보낸 메세지 삭제
 			deleteMessage(index) {
 				const chatRoomNo = new URLSearchParams(location.search).get("chatRoomNo");
-				const data = { type: 3, chatMessageNo: this.messageList[index].chatMessageNo, chatRoomNo: chatRoomNo };
+				const data = {
+						type: 3, 
+						chatMessageNo: this.messageList[index].chatMessageNo, 
+						chatRoomNo: chatRoomNo,
+						attachmentNo: this.messageList[index].attachmentNo
+				};
 				this.socket.send(JSON.stringify(data));
 				this.messageList.splice(index, 1);
 			},
@@ -173,7 +196,7 @@
 			this.getChatJoin();
 		},
 		mounted() {
-
+			
 		}
 	}).mount("#app");
 </script>
