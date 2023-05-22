@@ -117,9 +117,9 @@
 				}
 		</style>
 		
-		<c:forEach var="fundPostDto" items="${fundList}">
-			${fundPostDto}<br>
-		</c:forEach>
+<%-- 		<c:forEach var="fundPostDto" items="${fundList}"> --%>
+<%-- 			${fundPostDto}<br> --%>
+<%-- 		</c:forEach> --%>
 
 
 		  <div id="app">
@@ -223,8 +223,7 @@
 	            			console.log(funding.postNo)
 	            			const url = "http://localhost:8080/fund/detail?postNo="+funding.postNo;
 	            			window.location.href = url;
-	            			
-	            		}
+	            		},
 	            	},
 	            	created() {
 	            		this.loadData();

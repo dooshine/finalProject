@@ -22,12 +22,13 @@
 		    )
     </insert>
     
+    <!-- 사용 -->
     <insert id="add2">
         insert into fund (
-        fund_no, post_no, fund_price, fund_time, member_id
+        fund_no, post_no, fund_price, fund_time, member_id, fund_title
         ) 
         values (
-        #{fundNo}, #{postNo}, #{fundPrice}, sysdate, #{memberId}
+        #{fundNo}, #{postNo}, #{fundPrice}, sysdate, #{memberId}, #{fundTitle}
         )
     </insert>
 
@@ -54,9 +55,9 @@
 	
 	<!-- 후원된 금액 total -->
 	<select id="fundtotal" resultType="int" parameterType="Long">
-		select fund_no, post_no, fund_price, fund_time, member_id,
-           sum(fund_price) as fund_total
-           from fund
+		select sum(fund_price) as fund_total
+           from fund 
+           where post_no=#{postNo}
 	</select>
 	
 	

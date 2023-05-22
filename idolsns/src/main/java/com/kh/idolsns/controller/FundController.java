@@ -22,10 +22,12 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.kh.idolsns.configuration.CustomFileuploadProperties;
 import com.kh.idolsns.dto.AttachmentDto;
 import com.kh.idolsns.dto.FundDto;
+import com.kh.idolsns.dto.FundMainImageDto;
 import com.kh.idolsns.dto.FundPostDto;
 import com.kh.idolsns.dto.PostDto;
 import com.kh.idolsns.dto.PostImageDto;
 import com.kh.idolsns.repo.AttachmentRepo;
+import com.kh.idolsns.repo.FundMainImageRepo;
 import com.kh.idolsns.repo.FundPostRepo;
 import com.kh.idolsns.repo.FundPostViewRepo;
 import com.kh.idolsns.repo.FundRepo;
@@ -57,6 +59,9 @@ public class FundController {
 	
 	@Autowired
 	private FundPostViewRepo fundPostViewRepo;
+	
+	@Autowired
+	private FundMainImageRepo fundMainImageRepo;
 	
 	@Autowired
 	private CustomFileuploadProperties customFileuploadProperties;
@@ -259,7 +264,7 @@ public class FundController {
 						.build()
 						);
 				
-				postImageRepo.insert(PostImageDto.builder()
+				fundMainImageRepo.insert(FundMainImageDto.builder()
 						.attachmentNo(attachmentNo1)
 						.postNo(postNo)
 						.build()
@@ -321,11 +326,14 @@ public class FundController {
 	@GetMapping("/detail")
 	public String detail(@RequestParam Long postNo, Model model) {
 		FundPostDto fundPostDto = fundPostRepo.selectOne(postNo);
-		
 		List<PostImageDto> list = postImageRepo.selectList(postNo);
+		FundMainImageDto fundMainImageDto = fundMainImageRepo.selectOne(postNo);
+		int total = fundRepo.selectTotal(postNo);
 		
+		model.addAttribute("fundTotal", total);
 		model.addAttribute("fundPostDto", fundPostDto);
 		model.addAttribute("postImageList", list);
+		model.addAttribute("fundMainImageDto", fundMainImageDto);
 		return "fund/detail";
 	}
 
@@ -338,7 +346,6 @@ public class FundController {
     public String orderTo(
     		@RequestParam Long postNo, Model model){
     	FundPostDto fundPostDto = fundPostRepo.selectOne(postNo);
-		
 		List<PostImageDto> list = postImageRepo.selectList(postNo);
 		
 		model.addAttribute("fundPostDto", fundPostDto);
@@ -351,8 +358,11 @@ public class FundController {
     @GetMapping("/order")
     public String order(@RequestParam Long postNo, Model model) {
         FundPostDto fundPostDto = fundPostRepo.selectOne(postNo);
+        FundMainImageDto fundMainImageDto = fundMainImageRepo.selectOne(postNo);
+        
+        model.addAttribute("fundMainImageDto", fundMainImageDto);
         model.addAttribute("fundPostDto", fundPostDto);
-        System.out.println(fundPostDto);
+//        System.out.println(fundPostDto);
         return "fund/order";
     }
 
@@ -365,10 +375,12 @@ public class FundController {
     		RedirectAttributes attr) {
     	
         String memberId = (String) session.getAttribute("memberId");
+        String fundTitle = (fundPostRepo.selectOne(postNo)).getFundTitle();
         
         fundDto.setMemberId(memberId);
         fundDto.setPostNo(postNo);
         fundDto.setFundNo(fundRepo.sequence());
+        fundDto.setFundTitle(fundTitle);
         
         fundRepo.insert(fundDto);
        
