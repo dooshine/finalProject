@@ -19,6 +19,9 @@ import com.kh.idolsns.vo.ChatMemberJoinVO;
 import com.kh.idolsns.vo.ChatMessageVO;
 import com.kh.idolsns.vo.ChatRoomVO;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @RestController
 @RequestMapping("/chat")
 public class ChatRestController {
@@ -51,15 +54,18 @@ public class ChatRestController {
 		List<ChatMessageDto> tempList = chatMessageRepo.messageList(chatRoomNo);
 		List<ChatMessageVO> list = new ArrayList<>();
 		for(ChatMessageDto chatMessageDto : tempList) {
+			//log.debug("dto attachmentNo: " + chatMessageDto.getAttachmentNo());
 			list.add(ChatMessageVO.builder()
 							.chatMessageNo(chatMessageDto.getChatMessageNo())
 							.chatRoomNo(chatRoomNo)
 							.memberId(chatMessageDto.getMemberId())
 							.chatMessageTime(chatMessageDto.getChatMessageTime().getTime())
 							.chatMessageContent(chatMessageDto.getChatMessageContent())
+							.attachmentNo(chatMessageDto.getAttachmentNo())
 						.build()
 			);
 		}
+		//log.debug("rest attachmentNo: " + list);
 		return list;
 	}
 	
