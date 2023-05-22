@@ -5,10 +5,6 @@
 <jsp:include page="/WEB-INF/views/template/header.jsp"></jsp:include>
 
 
-    <title>타이틀</title>
-
-
-
     
     <style>
     
@@ -46,16 +42,16 @@
     		
     		
     		
-    		
+    		  <form id="orderProcess" method="post" action="/fund/order">
     		
     		
     		
     		<div class="container border mt-5 d-flex" style="padding:1em;">
     			<img src="http://via.placeholder.com/200x150" class="col-5">
     			
-    			<div  class="col-7">
-    			${fundPostDto.fundTitle}펀딩제목~~ <br>
-    			${fundPostDto.fundGoal}펀딩목표금액~~<br>
+    			<div class="col-7">
+    			${fundPostDto.fundTitle} <br>
+    			${fundPostDto.fundGoal}원 <br>
     			<button class="btn btn-primary">메시지</button>
     			</div>
     		
@@ -71,32 +67,19 @@
 			<table class="table">
 				<tr>
 					<th>펀딩 상태</th>
-					<td>${fundPostDto.fundStatus}</td>
+					<td>${fundPostDto.fundState}</td>
 				</tr>
-				
-				<tr>
-					<th>후원 번호</th>
-					<td>${fundDto.fundNo}</td>
-				</tr>
-				
-				<tr>
-					<th>후원 날짜</th>
-					<td>${fundPostDto.fundDate}</td>
-				</tr>
-				
-				<tr>
-					<th>결제일</th>
-					<td>${fundDto.fundTime}</td>
-				</tr>
-				
-				
+
 				<tr>
 					<th>펀딩 마감일</th>
-					<td>${fundPostDto.post_end}</td>
+					<td>${fundPostDto.postEnd}</td>
 				</tr>
 				
 				
 			</table>
+			
+			<input type="hidden" name="postNo" value="${fundPostDto.postNo}">
+		
 			
 			
 			<div class="input-group mt-5 mb-3">
@@ -126,11 +109,12 @@
 			
 						
 			
-			  <button class="btn btn-lg btn-primary mt-3 mb-5" style="width:100%" 
-			  v-bind:disabled="!isCheckboxChecked">
+			  <button type="submit" class="btn btn-lg btn-primary mt-3 mb-5" 
+			  style="width:100%" v-bind:disabled="!isCheckboxChecked">
 			  후원하기</button>
 			
 			
+				</form>
 			
 			
 		</div>
@@ -147,7 +131,7 @@
 	            return {
 			    isCheckboxChecked: false
 	            }
-				  },
+				  },	
 				  mounted() {
 				    const privacyCheckbox = document.getElementById('privacyCheck');
 				    const guidelinesCheckbox = document.getElementById('guidelinesCheck');

@@ -4,9 +4,6 @@
 <jsp:include page="/WEB-INF/views/template/header.jsp"></jsp:include>
 
 
-    <title>ㅇㅇㅇ</title>
-
-
 
 <style scoped>
 		
@@ -17,10 +14,7 @@
             
               }
             
-  
-            
-            
-            
+              
       
         .funding-list {
             display:flex;
@@ -70,8 +64,6 @@
 			  
 			  
 			}
-			
-			
 			
 			
 			.funding-item img {
@@ -136,12 +128,15 @@
         		 <div class="container rounded p-3" style="background-color:white;">
         		 
         		 
-		
+	
 					  <div class="funding-list justify-content-center mt-5">
 					  
+					  
+					  <!-- 
 					  <div v-for="(funding, index) in fundings" v-bind:key="funding.memberId">
 						</div>
-						<div class="col">
+						<div>
+					   -->
 					  
 					    <div class="funding-item" v-for="(funding, index) in fundings" :key="funding.memberId">
 					      <img :src="funding.imageUrl" alt="Funding Image">
@@ -151,15 +146,15 @@
 					        <div class="progress" :style="{ width: funding.progress + '%' }"></div>
 					      </div>
 					      <div class="info">
-					        <div class="col">
+					        <div>
 					          <span class="value">{{ funding.fundGoal }}원</span>
 					          <span class="label">목표금액</span>
 					        </div>
-					        <div class="col">
+					        <div>
 					          <span class="value">{{ getTimeDiff(funding) }}</span>
 					          <span class="label">남은 기간</span>
 					        </div>
-					        <div class="col">
+					        <div>
 					          <span class="value">{{ funding.fundSponsorCount }}명</span>
 					          <span class="label">서포터</span>
 					        </div>
@@ -169,13 +164,16 @@
 					</div>
 					
 				</div>	
-			</div>
 				
 				
 				
-</section>
-			
-
+					  <!-- 
+				<c:forEach var="fundPostDto" items="${fundList}">
+				${fundPostDto}<br>
+				</c:forEach>
+				
+  					-->
+  					
 		<script src="https://unpkg.com/vue@3.2.36"></script>
 	    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 	    
