@@ -21,7 +21,8 @@ CREATE TABLE CHAT_MESSAGE(
 	member_id REFERENCES member(member_id) ON DELETE SET NULL,
 	chat_room_no REFERENCES chat_room(chat_room_no) ON DELETE CASCADE NOT NULL,
 	chat_message_time DATE DEFAULT sysdate NOT NULL,
-	chat_message_content varchar2(900) NOT NULL
+	chat_message_content varchar2(900) NOT NULL,
+	attachment_no REFERENCES attachment(attachment_no) ON DELETE CASCADE
 );
 CREATE SEQUENCE chat_message_seq;
 
