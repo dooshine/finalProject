@@ -16,9 +16,11 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.kh.idolsns.configuration.CustomFileuploadProperties;
+import com.kh.idolsns.dto.AttachmentDto;
 import com.kh.idolsns.dto.FundDto;
 import com.kh.idolsns.dto.FundPostDto;
 import com.kh.idolsns.dto.FundPostViewDto;
@@ -206,7 +208,7 @@ public class FundController {
 							HttpSession session,
 							@ModelAttribute FundPostDto fundPostDto,
 							@ModelAttribute PostDto postDto,
-//							@RequestParam MultipartFile attach,
+							@RequestParam MultipartFile attach,
 							@RequestParam(required=false) List<Integer> attachmentNo,
 							RedirectAttributes attr
 							) throws IllegalStateException, IOException {
@@ -237,28 +239,31 @@ public class FundController {
 		fundPostRepo.insert(fundPostDto);
 		
 		// # DB 저장
-//		if(!attach.isEmpty()) {
-//				int attachmentNo = attachmentRepo.sequence();   
-//				File target = new File(dir, String.valueOf(attachmentNo));
-//				attach.transferTo(target);	
-//				
-//				attachmentRepo.insert(AttachmentDto.builder()
-//						.attachmentNo(attachmentNo)
-//						.attachmentName(attach.getOriginalFilename())
-//						.attachmentType(attach.getContentType())
-//						.attachmentSize(attach.getSize())
-//						.build()
-//						);
-//				
-//				postImageRepo.insert(PostImageDto.builder()
-//						.attachmentNo(attachmentNo)
-//						.postNo(postNo)
-//						.build()
-//						);
-//	      }
+		if(!attach.isEmpty()) {
+				int attachmentNo1 = attachmentRepo.sequence();   
+				File target = new File(dir, String.valueOf(attachmentNo1));
+				attach.transferTo(target);	
+				
+				attachmentRepo.insert(AttachmentDto.builder()
+						.attachmentNo(attachmentNo1)
+						.attachmentName(attach.getOriginalFilename())
+						.attachmentType(attach.getContentType())
+						.attachmentSize(attach.getSize())
+						.build()
+						);
+				
+				postImageRepo.insert(PostImageDto.builder()
+						.attachmentNo(attachmentNo1)
+						.postNo(postNo)
+						.build()
+						);
+	      }
 		if(attachmentNo != null) {
 			for(int no : attachmentNo) {
-				fundPostRepo.connect(postNo, no);
+				PostImageDto postImageDto = new PostImageDto();
+				postImageDto.setPostNo(postNo);
+				postImageDto.setAttachmentNo(no);
+				postImageRepo.insert(postImageDto);
 			}
 		}
 		
@@ -285,9 +290,7 @@ public class FundController {
 	@GetMapping("/detail")
 	public String detail(@RequestParam Long postNo, Model model) {
 		FundPostViewDto fundPostViewDto = fundPostViewRepo.selectOne(postNo);
-		FundDto fundDto = fundRepo.selectOneWithTotal(postNo);
 		
-		model.addAttribute("fundDto", fundDto);
 		model.addAttribute("fundPostViewDto", fundPostViewDto);
 		return "fund/detail";
 	}

@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.kh.idolsns.dto.FundPostDto;
+import com.kh.idolsns.dto.PostImageDto;
 
 @Repository
 public class FundPostRepoImpl implements FundPostRepo{
@@ -37,12 +38,18 @@ public class FundPostRepoImpl implements FundPostRepo{
 	}
 
 	@Override
-	public void connect(Long postNo, int attachmentNo) {
-		Map<String, Object> parameters = new HashMap<>();
-		parameters.put("param1", postNo);
-		parameters.put("param2", attachmentNo);
-		sqlSession.insert("fundPost.connect", parameters);
+	public void connect(PostImageDto postImageDto) {
+		sqlSession.insert("fundPost.connect", postImageDto);
 	}
+	
+//	@Override
+//	public void connect(Long postNo, int attachmentNo) {
+//		Map<String, Object> parameters = new HashMap<>();
+//		parameters.put("param1", postNo);
+//		parameters.put("param2", attachmentNo);
+//		sqlSession.insert("fundPost.connect", parameters);
+//	}
+
 
 
 }

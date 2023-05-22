@@ -11,6 +11,6 @@ public interface FundPostRepo {
 	List<FundPostDto> selectList();
 	FundPostDto selectOne(Long postNo);
 	boolean update(FundPostDto dto);
-	void connect(Long postNo, int attachmentNo);
+	void connect(PostImageDto postImageDto);
 
 }
