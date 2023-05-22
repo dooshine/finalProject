@@ -138,9 +138,10 @@
 						<div>
 					   -->
 					  
-					    <div class="funding-item" v-for="(funding, index) in fundings" :key="funding.memberId">
+					    <div class="funding-item" v-for="(funding, index) in fundings" :key="funding.memberId"
+					    									v-on:click="link(funding)">
 					      <img :src="funding.imageUrl" alt="Funding Image">
-					      <h3 class="title" v-on:click="link(funding)">{{ funding.fundTitle }}</h3>
+					      <h3 class="title">{{ funding.fundTitle }}</h3>
 					      <p class="description">{{ funding.postContent }}</p>
 					      <div class="progress-bar">
 					        <div class="progress" :style="{ width: funding.progress + '%' }"></div>
