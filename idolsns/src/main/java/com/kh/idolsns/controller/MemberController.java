@@ -1,17 +1,10 @@
 package com.kh.idolsns.controller;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.Scanner;
-
-import javax.mail.MessagingException;
-import javax.mail.internet.MimeMessage;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -68,7 +61,7 @@ public class MemberController {
 	@PostMapping("/login")
 	public String login(
 			@ModelAttribute MemberDto userDto,
-			RedirectAttributes attr, HttpSession session) {
+			RedirectAttributes attr, HttpSession session, @RequestParam(required = false, defaultValue = "") String prevPage) {
 		MemberDto findDto = memberRepo.selectOne(userDto.getMemberId());
 		
 		if(findDto == null) {
@@ -86,15 +79,15 @@ public class MemberController {
 		session.setAttribute("memberId", findDto.getMemberId());
 		session.setAttribute("memberLevel", findDto.getMemberLevel());
 		
-		return "redirect:/";
+		return "redirect:" + prevPage;
 	}
 	
 	//로그아웃
 	@GetMapping("/logout")
-	public String logout(HttpSession session) {
+	public String logout(HttpSession session, HttpServletRequest request) {
 		session.removeAttribute("memberId");
 		session.removeAttribute("memberLevel");
-		return "redirect:/";
+		return "redirect:" + request.getHeader("Referer");
 	}
 	
 	//마이페이지
@@ -215,6 +208,24 @@ public class MemberController {
 		return "member/findIdFinish";
 	}
 	
+	@GetMapping("/findPw")
+	public String findPw() {
+		return "member/findPw";
+	}
+	
+	@GetMapping("/emailExist")
+	@ResponseBody
+	public String emailExist(@RequestParam String memberId) {
+		MemberDto memberDto = memberRepo.emailExist(memberId);
+		return memberDto.getMemberEmail();
+	}
+	
+	
+	@GetMapping("/findPwFinish")
+	public String findPwFinish() {
+		return "member/findPwFinish";
+	}
+	
 	//중복 검사
 	@GetMapping("/idDuplicatedCheck")
 	@ResponseBody
@@ -246,15 +257,16 @@ public class MemberController {
 	public String emailDuplicatedCheck(@RequestParam String memberEmail) {
 		int result = memberRepo.emailDuplicatedCheck(memberEmail);
 		
-		if(result == 0) {
-			return "Y";
-		}
-		else {
-			return "N";
-		}
+//		if(result == 0) {
+//			return "Y";
+//		}
+//		else {
+//			return "N";
+//		}
+		return result == 0 ? "Y" : "N";
 	}
 	
-	//이메일 인증
+	//이메일 인증번호 발급
 	@GetMapping("/emailSend")
 	@ResponseBody
 	public String emailSend(@RequestParam String memberEmail) throws Exception {

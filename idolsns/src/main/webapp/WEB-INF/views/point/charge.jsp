@@ -110,7 +110,7 @@
 
         <div style="padding-left: 0.5em; padding-right: 0.5em;">
             <p class="container rounded p-3 border">내 포인트: 
-            <span class="amount" style="color:#77E9CC; font-weight:bold" >{{ formattedAmount }}</span>원</p>
+            <span class="amount" style="color:#77E9CC; font-weight:bold">{{ formattedAmount }}</span>원</p>
         </div>
 
         <form id="chargeForm" method="post" style="padding-left: 0.7em; padding-right: 0.7em;">
@@ -118,27 +118,27 @@
             
                 <label class="point_select">
                     <input type="radio" name="total_amount" v-model="selectedAmount" value="1000"> 
-                    <span class="amount">1,000</span>원
+                    <span class="amount"> 1,000</span>원
                 </label>        
 
                 <label class="point_select">
                     <input type="radio" name="total_amount" v-model="selectedAmount" value="5000"> 
-                   <span class="amount">5,000</span>원
+                   <span class="amount"> 5,000</span>원
                 </label>        
 
                 <label class="point_select">
                     <input type="radio" name="total_amount" v-model="selectedAmount" value="10000"> 
-                    <span class="amount">10,000</span>원
+                    <span class="amount"> 10,000</span>원
                 </label>        
 
                 <label class="point_select">
                     <input type="radio" name="total_amount" v-model="selectedAmount" value="20000"> 
-                    <span class="amount">20,000</span>원
+                    <span class="amount"> 20,000</span>원
                 </label>        
 
                 <label class="point_select">
                     <input type="radio" name="total_amount" v-model="selectedAmount" value="50000"> 
-                    <span class="amount">50,000</span>원
+                    <span class="amount"> 50,000</span>원
                 </label>        
 				
 				
@@ -217,7 +217,7 @@
 	            },
 			
 	           	 async loadMemberPoint() {
-	                     const url = "http://localhost:8080/rest/member/"+memberId;
+	                     const url = "http://localhost:8080/rest/member/" + memberId;
 	                     const data = {
 	                         memberId: this.memberId // 로그인된 멤버 아이디 사용
 	                     };

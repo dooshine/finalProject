@@ -22,7 +22,7 @@ public class ChatRoomRepoImpl implements ChatRoomRepo {
 	}
 	@Override
 	public void createRoom(ChatRoomDto dto) {
-		sql.insert("chatRoom.creatChatRoom", dto);
+		sql.insert("chatRoom.createRoom", dto);
 	}
 	@Override
 	public ChatRoomDto findRoom(int roomNo) {
@@ -31,6 +31,10 @@ public class ChatRoomRepoImpl implements ChatRoomRepo {
 	@Override
 	public List<ChatRoomDto> listRoom() {
 		return sql.selectList("chatRoom.listRoom");
+	}
+	@Override
+	public void deleteRoom(ChatRoomDto dto) {
+		sql.delete("chatRoom.deleteRoom", dto);
 	}
 	
 }

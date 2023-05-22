@@ -6,66 +6,59 @@
 
 <!-- 제어영역 설정 -->
 <div class="container" id="app">
-    <table>
-        <thead>
-            <tr>
-                <th>체크박스</th>
-                <th>신고번호</th>
-                <th>신고시간</th>
-                <th>신고한사람</th>
-                <th>신고대상타입</th>
-                <th>신고대상PK</th>
-                <th>신고이유</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr style="text-align: center;">
-                <td>
-                    <input type="checkbox">
-                </td>
-                <td>1</td>
-                <td>시간</td>
-                <td>사람</td>
-                <td>타입</td>
-                <td>PK</td>
-                <td>이유</td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table">
-        <thead>
-            <tr>
-                <th scope="col">신고 번호</th>
-                <th scope="col">신고 </th>
-                <th scope="col">회원포인트</th>
-                <th scope="col">회원이메일</th>
-                <th scope="col">회원가입날짜</th>
-                <th scope="col">최근로그인날짜</th>
-                <th scope="col">관리도구</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr v-for="(report, i) in reportList" :key="i">
-                <td>
-                    {{member.memberId}}
-                </td>
-                <td>{{member.memberNick}}</td>
-                <td>{{member.memberPoint}}</td>
-                <td>{{member.memberEmail}}</td>
-                <td>{{member.memberJoin}}</td>
-                <td>{{member.memberLogin === null ? "미접속": member.memberLogin }}</td>
-                <td><i class="fa-solid fa-user-xmark" data-bs-toggle="modal" data-bs-target="#repotModal1" @click="setReportDto(member.memberId)"></i></td>
-            </tr>
-        </tbody>
-    </table>
-
+    <!-- # 신고조회 타이틀 -->
     <div class="row">
         <div class="col">
+            <h1>신고 리스트</h1>
         </div>
     </div>
-    <div class="row" v-for="(report, i) in reportList" :key="i">
+
+    <!-- # 신고 목록-->
+    <div class="row">
         <div class="col">
-            {{report}}
+            <h3>목록</h3>
+        </div>
+    </div>
+    <!-- 신고삭제 버튼 -->
+    <div class="row text-end">
+        <div class="col">
+            <button @click="deleteReport"><i class="fa-solid fa-xmark"></i>삭제</button>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">
+                            <input type="checkbox">
+                        </th>
+                        <th scope="col">신고번호</th>
+                        <th scope="col">신고한사람</th>
+                        <th scope="col">신고대상타입</th>
+                        <th scope="col">신고대상PK</th>
+                        <th scope="col">신고이유</th>
+                        <th scope="col">신고시간</th>
+                        <th scope="col">관리도구</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="(report, i) in reportList" :key="i">
+                        <td>
+                            <input type="checkbox" @change="checkReport($event, report.reportNo)">
+                        </td>
+                        <td>{{report.reportNo}}</td>
+                        <td>{{report.memberId}}</td>
+                        <td>{{report.reportTargetType}}</td>
+                        <td>{{report.reportTargetPrimaryKey}}</td>
+                        <td>{{report.reportFor}}</td>
+                        <td>{{report.reportTime}}</td>
+                        <td>
+                            <i class="fa-solid fa-xmark" @click="deleteReport(report.reportNo)"></i>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </div>
 </div>
@@ -76,23 +69,59 @@
       data() {
         return {
           reportList: [],
+          selectedReportList: {
+
+          },
         };
       },
       computed: {
   
       },
       methods: {
+        // Load 신고 리스트
         async loadReportList () {
-
             // 신고리스트 조회 URL
             const url = "http://localhost:8080/rest/report/list";
-
             // 비동기 신고리스트 조회 실행
             const resp = await axios.post(url, {});
-
             // vue.data.reportList에 resp.data 복사
             this.reportList = _.cloneDeep(resp.data);
-        }
+        },
+        // 신고 리스트 개별선택
+        checkReport(e, reportNo){
+            // console.log(e.target.checked);
+            // console.log("reportNo: " + reportNo);
+            if(e.target.checked){
+                this.selectedReportList[reportNo] = true;
+            } else {
+                delete this.selectedReportList[reportNo];
+            }
+            console.log(this.selectedReportList);
+        },
+        // 신고 삭제
+        async deleteReport(){
+            
+            const selectedReportList = Object.keys(this.selectedReportList);
+            const selectedReportCnt = selectedReportList.length;
+
+            // 선택된 항목 0개면 실행 X
+            if(selectedReportCnt === 0) return;
+            // 삭제확인
+            if(!confirm(selectedReportCnt + "개의 신고 내역을 정말 삭제하시겠습니까?")) return;
+
+            // 신고 api url
+            const url = "http://localhost:8080/rest/report/"
+            
+            // 신고 삭제 호출
+            const resp = await axios.delete(url, { 
+                data: selectedReportList,
+            });
+            this.selectedReportList = {};
+
+            // 신고목록 load
+            this.loadReportList();
+
+        },
       },
       watch: {
   

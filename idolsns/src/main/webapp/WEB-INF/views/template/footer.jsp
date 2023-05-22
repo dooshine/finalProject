@@ -1,8 +1,21 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
             </div>
-            <div class="col-3"></div>
-        </div>
+       
+            
+		
+
+	<div class="col-3">
+	  	
+	  	캘린더자리입니다
+	</div>
+
+
+
+
+
+
+
         
         </section>
         <hr>
@@ -12,7 +25,16 @@
             <h2>세션 memberLevel: ${sessionScope.memberLevel}</h2>
         </footer>
     </main>
-    <!-- 부트스트랩 js -->
+ 
+ 
+ 
+	<!-- 부트스트랩 js -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+ 
+ 
+
+ 
+    
 </body>
 </html>
+

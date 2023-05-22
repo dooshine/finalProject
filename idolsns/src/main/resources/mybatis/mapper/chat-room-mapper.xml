@@ -19,9 +19,9 @@
 	</select>
 
 	<!-- 채팅방 생성 -->
-	<insert id="createChatRoom">
+	<insert id="createRoom">
 		insert into chat_room(chat_room_no, chat_room_name, chat_room_start, chat_room_type)
-		values(#{chatRoomNo}, #{chatRoomName}, sysdate, #{chat_room_type})
+		values(#{chatRoomNo}, #{chatRoomName}, sysdate, #{chatRoomType})
 	</insert>
 	
 	<!-- 채팅방 상세조회 -->
@@ -33,6 +33,11 @@
 	<select id="listRoom" resultType="ChatRoomDto">
 		select * from chat_room
 	</select>
+	
+	<!-- 채팅방 삭제 -->
+	<delete id="deleteRoom">
+		delete chat_room where chat_room_no = #{chatRoomNo}
+	</delete>
 
 </mapper>
     

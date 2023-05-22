@@ -33,25 +33,33 @@
     </script>
 </head>
 <body>
-
-	<form action="exit" method="post" autocomplete="off">
-	
-		<div class="container">
-			<div class="row center">
-				<h1>회원탈퇴</h1>
+	 <div class="container rounded p-3" style="background-color:white">
+     <div id="app">
+		<form action="exit" method="post" autocomplete="off">
+		
+			<div class="container">
+				<div class="row center">
+					<h1>회원탈퇴</h1>
+				</div>
+				
+				<div class="row">
+				    <label for="agreement">
+				        <input type="checkbox" id="agreement"  >
+				        회원탈퇴동의
+				    </label>
+				</div>
+				<div class="row">
+					<input type="password" name="memberPw"  placeholder="비밀번호" >
+				</div>
+				<div class="row">
+					<button type="submit"  :disabled="!agree">탈퇴</button>
+				</div>
 			</div>
-			<div class="row">
-				<input type="checkbox" name="a">
-				<label for="a">회원탈퇴동의</label>
-			</div>
-			<div class="row">
-				<input type="password" name="memberPw" placeholder="비밀번호">
-			</div>
-			<div class="row">
-				<button type="submit">탈퇴</button>
-			</div>
-		</div>
-	
-	</form>
+		
+		</form>
+	</div>
+	</div>	
 
 </body>    
+
+<jsp:include page="/WEB-INF/views/template/footer.jsp"></jsp:include>
