@@ -51,6 +51,22 @@ public class MemberRepoImpl implements MemberRepo{
 	    
 	    sqlSession.update("member.decreasePoint", params);
 	}
+	
+	
+	//펀딩 시 포인트 차감
+	@Override
+	public void minusPoint(String memberId, int fundPrice) {
+		Map<String, Object> params = new HashMap<>();
+	    params.put("memberId", memberId);
+	    params.put("fundPrice", fundPrice);
+	    
+	    sqlSession.update("member.minusPoint", params);
+		
+	}
+	
+	
+	
+	
 
 	
 	
@@ -124,6 +140,8 @@ public class MemberRepoImpl implements MemberRepo{
 	public MemberDto emailExist(String memberId) {
 		return sqlSession.selectOne("member.emailExist", memberId);
 	}
+
+
 
 
 }

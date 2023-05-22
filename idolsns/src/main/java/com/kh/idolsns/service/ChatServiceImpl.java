@@ -13,12 +13,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kh.idolsns.dto.ChatJoinDto;
 import com.kh.idolsns.dto.ChatMessageDto;
 import com.kh.idolsns.dto.ChatReadDto;
-import com.kh.idolsns.dto.ChatRoomDto;
-import com.kh.idolsns.dto.ChatRoomPrivDto;
+import com.kh.idolsns.repo.AttachmentRepo;
 import com.kh.idolsns.repo.ChatJoinRepo;
 import com.kh.idolsns.repo.ChatMessageRepo;
 import com.kh.idolsns.repo.ChatReadRepo;
-import com.kh.idolsns.repo.ChatRoomRepo;
 import com.kh.idolsns.vo.ChatMemberVO;
 import com.kh.idolsns.vo.ChatMessageReceiveVO;
 import com.kh.idolsns.vo.ChatMessageVO;
@@ -31,13 +29,13 @@ import lombok.extern.slf4j.Slf4j;
 public class ChatServiceImpl implements ChatService {
 	
 	@Autowired
-	private ChatRoomRepo chatRoomRepo;
-	@Autowired
 	private ChatJoinRepo chatJoinRepo;
 	@Autowired
 	private ChatMessageRepo chatMessageRepo;
 	@Autowired
 	private ChatReadRepo chatReadRepo;
+	@Autowired
+	private AttachmentRepo attachmentRepo;
 	
 	// 저장소
 	private Map<Integer, ChatRoomVO> chatRooms = Collections.synchronizedMap(new HashMap<>());
@@ -53,16 +51,6 @@ public class ChatServiceImpl implements ChatService {
 	public void createRoom(int chatRoomNo) {
 		if(roomExist(chatRoomNo)) return;
 		chatRooms.put(chatRoomNo, new ChatRoomVO());
-		// db처리
-		/*boolean isWatingRoom = chatRoomNo == WebSocketConstant.WAITING_ROOM;
-		if(!isWatingRoom && chatRoomRepo.findRoom(chatRoomNo) == null) {
-			ChatRoomDto chatRoomDto = new ChatRoomDto();
-			chatRoomDto.setChatRoomNo(chatRoomNo);
-			chatRoomDto.setChatRoomName("나중에 바꾸기");
-			chatRoomDto.setChatRoomType('g');
-//			ChatRoomPrivDto privRoomDto = new ChatRoomPrivDto();
-			chatRoomRepo.createRoom(chatRoomDto);
-		}*/
 	}
 	
 	// 방 제거
@@ -109,7 +97,6 @@ public class ChatServiceImpl implements ChatService {
 		if(!roomExist(chatRoomNo)) return;
 		ChatRoomVO chatRoom = chatRooms.get(chatRoomNo);
 		chatRoom.leave(member);
-		// 참여자 삭제(db 처리) - 테스트 해보고 처리
 	}
 	
 	// 사용자가 존재하는 방의 번호를 찾는 기능
@@ -135,13 +122,46 @@ public class ChatServiceImpl implements ChatService {
 		messageDto.setChatMessageNo(chatMessageNo);
 		messageDto.setChatRoomNo(chatRoomNo);
 		messageDto.setMemberId(member.getMemberId());
-		//log.debug("payload: " + jsonMessage.getPayload());
 		// chatMessageContent에 내용만 빼서 저장
 		ObjectMapper objectMapper = new ObjectMapper();
 		JsonNode jsonNode = objectMapper.readTree(jsonMessage.getPayload());
 		String chatMessageContent = jsonNode.get("chatMessageContent").asText();
 		messageDto.setChatMessageContent(chatMessageContent);
 		chatMessageRepo.sendMessage(messageDto);
+		// [2] 전송 테이블에 저장
+		// 채팅방 사용자 저장
+		List<ChatJoinDto> recieverList = chatJoinRepo.findMembersByRoomNo(chatRoomNo);
+		String memberId = member.getMemberId();
+		for(int i=0; i<recieverList.size(); i++) {
+			// 수신자 = 발신자면 저장 x
+			if(memberId.equals(recieverList.get(i).getMemberId())) continue;
+			ChatReadDto readDto = new ChatReadDto();
+			readDto.setChatRoomNo(chatRoomNo);
+			readDto.setChatMessageNo(messageDto.getChatMessageNo());
+			readDto.setChatSender(member.getMemberId());
+			readDto.setChatReciever(recieverList.get(i).getMemberId());
+			chatReadRepo.saveMessage(readDto);
+		}
+	}
+	
+	// 사진 전송
+	public void broadcastRoom(ChatMemberVO member, int chatRoomNo, TextMessage jsonMessage, long chatMessageNo, int attachmentNo) throws IOException {
+		if(!roomExist(chatRoomNo)) return;
+		ChatRoomVO chatRoom = chatRooms.get(chatRoomNo);
+		chatRoom.broadcast(jsonMessage);
+		// 보낸 메세지 db 처리
+		// [1] 메세지 테이블에 저장
+		ChatMessageDto messageDto = new ChatMessageDto();
+		messageDto.setChatMessageNo(chatMessageNo);
+		messageDto.setChatRoomNo(chatRoomNo);
+		messageDto.setMemberId(member.getMemberId());
+		messageDto.setAttachmentNo(attachmentNo);
+		// chatMessageContent에 내용만 빼서 저장
+		ObjectMapper objectMapper = new ObjectMapper();
+		JsonNode jsonNode = objectMapper.readTree(jsonMessage.getPayload());
+		String chatMessageContent = jsonNode.get("chatMessageContent").asText();
+		messageDto.setChatMessageContent(chatMessageContent);
+		chatMessageRepo.sendPic(messageDto);
 		// [2] 전송 테이블에 저장
 		// 채팅방 사용자 저장
 		List<ChatJoinDto> recieverList = chatJoinRepo.findMembersByRoomNo(chatRoomNo);
@@ -168,6 +188,11 @@ public class ChatServiceImpl implements ChatService {
 	// 메세지 삭제
 	public void deleteMessage(long chatMessageNo) {
 		chatMessageRepo.deleteMessage(chatMessageNo);
+	}
+	
+	// 사진 삭제
+	public void deletePic(int attachmentNo) {
+		attachmentRepo.delete(attachmentNo);
 	}
 	
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -214,6 +239,23 @@ public class ChatServiceImpl implements ChatService {
 			TextMessage jsonMessage = new TextMessage(json);
 			this.broadcastRoom(member, chatRoomNo, jsonMessage, chatMessageNo);
 		}
+		// 이미지 메세지인 경우
+		else if(receiveVO.getType() == WebSocketConstant.PIC) {
+			int chatRoomNo = this.findRoomHasMember(member);
+			if(chatRoomNo == -1) return;
+			if(chatRoomNo == WebSocketConstant.WAITING_ROOM) return;
+			ChatMessageVO msg = new ChatMessageVO();
+			msg.setChatRoomNo(chatRoomNo);
+			msg.setMemberId(member.getMemberId());
+			msg.setChatMessageTime(System.currentTimeMillis());
+			msg.setChatMessageContent(receiveVO.getChatMessageContent());
+			msg.setAttachmentNo(receiveVO.getAttachmentNo());
+			int chatMessageNo = chatMessageRepo.sequence();
+			msg.setChatMessageNo(chatMessageNo);
+			String json = mapper.writeValueAsString(msg);
+			TextMessage jsonMessage = new TextMessage(json);
+			this.broadcastRoom(member, chatRoomNo, jsonMessage, chatMessageNo, receiveVO.getAttachmentNo());
+		}
 		// 채팅방 입장 메세지인 경우
 		else if(receiveVO.getType() == WebSocketConstant.JOIN) {
 			int chatRoomNo = receiveVO.getChatRoomNo();
@@ -222,8 +264,12 @@ public class ChatServiceImpl implements ChatService {
 		// 삭제인 경우
 		else if(receiveVO.getType() == WebSocketConstant.DELETE) {
 			int chatRoomNo = receiveVO.getChatRoomNo();
+			int attachmentNo = receiveVO.getAttachmentNo();
+			log.debug("attachmentNo: " + attachmentNo);
 			long chatMessageNo = receiveVO.getChatMessageNo();
 			this.deleteMessage(chatMessageNo);
+			// 이미지 번호가 있으면 첨부파일 테이블에서 이미지 삭제
+			if(attachmentNo > 0) this.deletePic(attachmentNo);
 			String json = mapper.writeValueAsString(receiveVO);
 			TextMessage jsonMessage = new TextMessage(json);
 			this.broadcastDelete(chatRoomNo, jsonMessage);

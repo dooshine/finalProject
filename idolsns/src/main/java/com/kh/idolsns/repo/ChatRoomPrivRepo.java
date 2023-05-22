@@ -5,5 +5,7 @@ public interface ChatRoomPrivRepo {
 
 	void createRoom(ChatRoomPrivDto dto);
 	ChatRoomPrivDto findRoom(ChatRoomPrivDto dto);
+	void leaveRoom(ChatRoomPrivDto dto);
+	ChatRoomPrivDto checkPriv(ChatRoomPrivDto dto);
 	
 }

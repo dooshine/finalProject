@@ -13,7 +13,7 @@ import com.kh.idolsns.repo.FundRepo;
 
 @CrossOrigin
 @RestController
-@RequestMapping("/fund")
+@RequestMapping("/rest/order")
 public class FundRestController {
 
 	@Autowired
