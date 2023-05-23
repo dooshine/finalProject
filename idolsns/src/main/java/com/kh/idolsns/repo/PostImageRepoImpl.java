@@ -25,7 +25,7 @@ public class PostImageRepoImpl implements PostImageRepo{
 	}
 
 	@Override
-	public List<Long> selectAttachNoList(Long postNo) {
+	public List<String> selectAttachNoList(Long postNo) {
 		return sqlSession.selectList("postImage.selectAttachNoList",postNo);
 	}
 

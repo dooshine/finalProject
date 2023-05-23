@@ -1,5 +1,8 @@
 package com.kh.idolsns.service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,7 +26,7 @@ public class PostShowService {
 	@Autowired
 	private PostImageRepo postImageRepo;
 	
-	public void postShow(Long postNo) 
+	public void postShowOne(Long postNo) 
 	{
 		PostShowVO postShowVO = postShowRepo.selectOne(postNo);
 		postShowVO.setTagList(tagRepo.selectAll(postNo));
@@ -31,5 +34,26 @@ public class PostShowService {
 		log.debug("postShowVO is {}",postShowVO);
 	}
 	
+	public List<PostShowVO> postShowAll()
+	{
+		List<PostShowVO> postShowList = postShowRepo.selectAll();
+		Long postNo = 0l; 
+		
+		for(PostShowVO postShowVO : postShowList)
+		{	
+			postNo = postShowVO.getPostNo();
+			postShowVO.setTagList(tagRepo.selectAll(postNo));
+			if(postImageRepo.selectAttachNoList(postNo).size()>0) {
+				postShowVO.setAttachmentList(postImageRepo.selectAttachNoList(postNo));
+			}
+			else {
+				postShowVO.setAttachmentList(null);
+			}
+			
+			//  log.debug("postImageRepo.selectAttachNoList(postNo) is {}", postImageRepo.selectAttachNoList(postNo));
+			//	log.debug("postShowVO is {}", postShowVO); 
+		}
+		return postShowList;
+	}
 	
 }

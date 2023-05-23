@@ -10,12 +10,26 @@
 	<select id="selectOne" resultType="PostShowVO">	
 		select p.*, sp.schedule_start, sp.schedule_end,
 		            tp.together_start, tp.together_end,
-		            m.map_place
+		            m.map_place, mb.member_nick , mpi.attachment_no
 		from post p
 		full outer join schedule_post sp on p.post_no = sp.post_no
-		full outer join together_post tp on p.post_no = tp.post_no
-		full outer join map m on p.post_no = m.post_no
+		Left outer join together_post tp on p.post_no = tp.post_no
+		Left outer join map m on p.post_no = m.post_no
+		Left OUTER JOIN member mb ON p.member_id = mb.member_id
+		Left OUTER JOIN member_profile_image mpi ON p.member_id = mpi.member_id
 		where p.post_no = #{postNo}		
+	</select>
+	
+	<select id="selectAll" resultType="PostShowVO">
+		select p.*, sp.schedule_start, sp.schedule_end,
+            tp.together_start, tp.together_end,
+            m.map_place, mb.member_nick , mpi.attachment_no
+			from post p 
+			full outer join schedule_post sp on p.post_no = sp.post_no
+			Left outer join together_post tp on p.post_no = tp.post_no
+			Left outer join map m on p.post_no = m.post_no
+			Left OUTER JOIN member mb ON p.member_id = mb.member_id
+			Left OUTER JOIN member_profile_image mpi ON p.member_id = mpi.member_id
 	</select>
 
 </mapper>

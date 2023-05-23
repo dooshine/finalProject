@@ -1,5 +1,7 @@
 package com.kh.idolsns.controller;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -10,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 import com.kh.idolsns.repo.MemberRepo;
 import com.kh.idolsns.service.PostShowService;
+import com.kh.idolsns.vo.PostShowVO;
 
 @Controller
 public class HomeController {
@@ -39,7 +42,7 @@ public class HomeController {
     public String postMain(Model model, HttpSession session) {
     	String memberId = (String)session.getAttribute("memberId");
     	model.addAttribute("memberId",memberId);
-    	postShowService.postShow(37l);
+//    	postShowService.postShowOne(48l);    	
     	return "post/postMain";
     }
 }

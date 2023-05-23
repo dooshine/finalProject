@@ -38,8 +38,9 @@ public class PostShowVO {
 	// 태그 정보,게시물 이미지는 DTO List형태로 받기
 	private List<String> tagList;
 	
-	private List<Long> attachmentList;
+	private List<String> attachmentList;
 	// ----------------------------------
-	
+	// 프로필 사진 번호 
+	private Integer attachmentNo; 
 	
 }

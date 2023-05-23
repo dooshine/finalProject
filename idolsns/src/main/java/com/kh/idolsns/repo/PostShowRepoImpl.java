@@ -1,5 +1,7 @@
 package com.kh.idolsns.repo;
 
+import java.util.List;
+
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -15,6 +17,11 @@ public class PostShowRepoImpl implements PostShowRepo{
 	@Override
 	public PostShowVO selectOne(Long postNo) {
 		return sqlSession.selectOne("postShow.selectOne",postNo); 
+	}
+
+	@Override
+	public List<PostShowVO> selectAll() {
+		return sqlSession.selectList("postShow.selectAll");		
 	}
 
 }

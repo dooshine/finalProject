@@ -19,6 +19,12 @@
     	.grey{
     	color: grey;
     	}
+    	.fs-7{
+    	font-size: 10px;
+    	}
+    	.h-20{
+    	height: 20px;
+    	}
     </style>
    
 
@@ -332,14 +338,15 @@
 			               <img class="rounded-circle img-fluid" src="static/image/profileDummy.png">
 			            </div>
 <!-- 			            	<p>{{ post.postNo }}</p> -->
-			            <div class="col-11 col-md-11 col-lg-11 d-flex align-items-center justify-content-start">
-							<div class="row">
-								
-								<p>{{ post.memberId }}</p>   
-							</div>         
-							<div class="row">
-								<p>{{post.memberNick }} </p>
-							</div>
+			            <div class="col-11 col-md-11 col-lg-11 align-items-center justify-content-start">
+														
+								<div class="row">
+								<h4>{{ post.memberId }}</h4>   
+								</div>
+								<div class="row">
+								<p class="text-secondary">@{{post.memberNick }} </p>
+								</div>
+							
 			            </div>
 	       			</div>	
 					<!-- 프로필 사진과 아이디 -->
@@ -351,15 +358,36 @@
 	                	<div class="col-1 col-md-1 col-lg-1 d-flex align-items-center justify-content-center">			            
 			            </div>
 			            <div class="col-10 col-md-10 col-lg-10 d-flex align-items-center justify-content-start">
-							<div class="row bg-info rounded-pill align-items-center justify-content-center">
-								<p>{{ post.postType }}</p>
-							</div>	       
+							<div class="mx-1 px-2 h-20 bg-info rounded-4 align-items-center justify-content-center">
+								<p class="fs-7 text-light">{{ post.postType }}</p>										 
+							</div>
+							<div v-for="tag in post.tagList" :key="tag" class="mx-1 px-2 h-20 bg-info rounded-pill align-items-center justify-content-center">
+								<p class="fs-7 text-light">{{ tag }}</p>
+							</div>
+														 													    
 			            </div>
 						<div class="col-1 col-md-1 col-lg-1 d-flex align-items-center justify-content-center"> 
 			            </div>	                
 	                </div>
 	                <!-- 태그와 글 태그들 -->
 	                
+	                
+	                
+	                <!-- 지도 맵이 있는 경우에만 지도 정보 표기 -->
+					<div v-if="post.mapPlace !== '' && post.mapPlace !== null && post.mapPlace !== undefined">
+						<br>
+		                <div class="row">
+		                	<div class="col-1 col-md-1 col-lg-1 d-flex align-items-center justify-content-center">			            
+				            </div>
+				            <div class="col-10 col-md-10 col-lg-10 d-flex align-items-center justify-content-start fs-6 text-secondary">
+								 <i class="fa-solid fa-location-dot"></i>&nbsp;{{ post.mapPlace}}
+				            </div>
+							<div class="col-1 col-md-1 col-lg-1 d-flex align-items-center justify-content-center"> 
+				            </div>	                
+		                </div>
+		            </div>
+	                <br>
+	                <!-- 지도 -->
 	                
 	                
 	                <!-- 글 내용 -->
@@ -408,25 +436,10 @@
 	                    }) 
 	                
             	},
-            	getTags(postNo) {
-            	    for (const post of this.posts) {
-            	        try {
-            	            const response = axios.get(`http://localhost:8080/rest/post/tag/`+postNo);
-//             	            this tags = response.data;            	            
-            	        } catch (error) {
-            	            console.error(error);
-            	        }
-            	    }
-            	},
-            	getMap(){
-            		
-            	}
             },
             mounted(){
                 
                 this.fetchPosts();
-//                 this.getTags();
-                // 
                 
             },
         }).mount("#app");

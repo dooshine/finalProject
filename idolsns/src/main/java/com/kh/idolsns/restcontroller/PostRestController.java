@@ -30,6 +30,8 @@ import com.kh.idolsns.dto.PostImageDto;
 import com.kh.idolsns.dto.SchedulePostDto;
 import com.kh.idolsns.repo.TagRepo;
 import com.kh.idolsns.repo.TogetherPostRepo;
+import com.kh.idolsns.service.PostShowService;
+import com.kh.idolsns.vo.PostShowVO;
 import com.kh.idolsns.repo.FreePostRepo;
 import com.kh.idolsns.repo.MapRepo;
 import com.kh.idolsns.repo.PostImageRepo;
@@ -53,6 +55,9 @@ public class PostRestController {
     
     @Autowired
     private MapRepo mapRepo;
+    
+    @Autowired
+    private PostShowService postShowService;
     
     // 자유 게시물
     @Autowired
@@ -207,8 +212,8 @@ public class PostRestController {
 
     // 게시물 전체 목록 조회 
     @GetMapping("/all")
-    public List<PostDto> allList(){
-    	List<PostDto> posts = postRepo.selectList();
+    public List<PostShowVO> allList(){
+    	List<PostShowVO> posts = postShowService.postShowAll();
     	return posts;
     }
     
