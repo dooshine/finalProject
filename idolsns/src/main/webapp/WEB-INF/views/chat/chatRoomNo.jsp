@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<jsp:include page="/WEB-INF/views/template/header.jsp"></jsp:include>
 
 <div id="app">
 	<h1 v-if="roomInfo.chatRoomType == 'P'">상대방 이름</h1>
@@ -18,7 +19,7 @@
 	<p>${sessionScope.memberId}</p>
 	
 	<button type="button" @click="leaveRoom">나가기</button>
-	<button type="button" @click="inviteMember">초대</button>
+	<button type="button" data-bs-target="#inviteMemberModal" data-bs-toggle="modal">초대</button>
 	
 	<hr>
 	
@@ -44,12 +45,40 @@
 				<div>{{ timeFormat(message.chatMessageTime) }}</div>
 			</div>
 			<!-- 시스템 메세지일 때 -->
-			<div v-if="message.chatMessageType === 5">
+			<div v-if="message.chatMessageType === 5 || message.chatMessageType === 6">
 				<div>{{ timeFormat(message.chatMessageTime) }}</div>
 				<div>{{ message.chatMessageContent }}</div>
 			</div>
 		</div>
 	</div>
+	
+	<!----------------------------------------------------- 사용자 초대 모달 ----------------------------------------------------->
+	<div class="modal"  tabindex="-1" role="dialog" data-bs-backdrop="static" ref="createRoomModal" id="inviteMemberModal">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+				    <h3 class="modal-title">회원 추가</h3>
+				    <div class="d-flex justify-content-end">
+				    	<button type="button" class="btn btn-primary" @click="inviteMember" data-bs-dismiss="modal" 
+				    		:disabled="selectedMemberList.length === 0">
+	           				초대
+	        			</button>
+					    <button type="button" class="btn bt-secondary" data-bs-dismiss="modal">
+	           				닫기
+	        			</button>
+				    </div>
+				</div>
+				<div class="modal-body">
+					<label class="d-flex justify-content-between" v-for="(follow, index) in followList">
+				    	{{ follow.memberId }}
+				    	<input type="checkbox" v-model="selectedMemberList" :value="follow.memberId">
+					</label>
+				</div>
+			</div>
+		</div>
+	</div>
+<!----------------------------------------------------- 사용자 초대 모달 ----------------------------------------------------->
+	
 </div>
 
 <!-- Vue cdn -->
@@ -73,12 +102,14 @@
 					chatRoomNo: "",
 					chatRoomName: "",
 					chatRoomStart: "",
-					chatRoomType: "",
+					chatRoomType: ""
 				},
 				roomInfoCopy: {
 					chatRoomName:"",
 				},
 				chatMemberList: [],
+				followList: [],
+				selectedMemberList: [],
 				messageList: [],
 				memberId: "${sessionScope.memberId}",
 				chatJoin: "",
@@ -261,6 +292,31 @@
 				const data = this.roomInfo;
 				const resp = await axios.put(url, data);
 				this.roomInfo.edit = false;
+			},
+			// 팔로우 목록 불러오기
+			async loadFollowList() {
+				const url = "${pageContext.request.contextPath}/chat/chatRoom/follow/";
+				const resp = await axios.get(url);
+				//console.log("data: " + resp.data);
+				this.followList.push(...resp.data);
+			},
+			// 사용자 초대
+			async inviteMember() {
+				const chatRoomNo = new URLSearchParams(location.search).get("chatRoomNo");
+				const url = "${pageContext.request.contextPath}/chat/chatRoom/invite";
+				console.log("roomInfo: " + this.roomInfo);
+				const data1 = {
+						chatRoomNo: chatRoomNo,
+						memberList: this.selectedMemberList
+				}
+				const resp = await axios.post(url, data1);
+				const data2 = {
+						type: 6,
+						chatRoomNo: chatRoomNo,
+						chatMessageContent: this.selectedMemberList[0] + " 님이 입장했습니다."
+				};
+				this.socket.send(JSON.stringify(data2));
+				this.selectedMemberList = "";
 			}
 		},
 		computed: {
@@ -272,6 +328,7 @@
 			this.loadChatMember();
 			this.loadMessage();
 			this.getChatJoin();
+			this.loadFollowList();
 		},
 		mounted() {
 			
@@ -285,3 +342,5 @@
 		padding: 10px;
 	}
 </style>
+
+<jsp:include page="/WEB-INF/views/template/footer.jsp"></jsp:include>

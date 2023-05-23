@@ -281,11 +281,13 @@ public class ChatServiceImpl implements ChatService {
 			TextMessage jsonMessage = new TextMessage(json);
 			this.broadcastDelete(chatRoomNo, jsonMessage);
 		}
-		// 채팅방 나가기인 경우
-		else if(receiveVO.getType() == WebSocketConstant.LEAVE) {
+		// 채팅방 나가기, 초대인 경우
+		else if(receiveVO.getType() == WebSocketConstant.LEAVE || receiveVO.getType() == WebSocketConstant.INVITE) {
 			int chatRoomNo = receiveVO.getChatRoomNo();
 			int chatMessageType = receiveVO.getType();
-			this.exit(member, chatRoomNo);
+			if(chatMessageType == WebSocketConstant.LEAVE) {
+				this.exit(member, chatRoomNo);
+			}
 			ChatMessageVO msg = new ChatMessageVO();
 			msg.setChatRoomNo(chatRoomNo);
 			msg.setMemberId(member.getMemberId());

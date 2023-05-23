@@ -88,6 +88,12 @@ public class ChatRestController {
 		chatRoomRepo.changeName(chatRoomDto);
 	}
 	
+	// (이미 있는) 채팅방에 사용자 초대
+	@PostMapping("/chatRoom/invite")
+	public void inviteMember(@RequestBody ChatRoomVO vo) {
+		chatRoomService.inviteMember(vo);
+	}
+	
 	// 채팅방 참여자 목록 조회
 	@GetMapping("/chatRoom/chatMember/{chatRoomNo}")
 	public List<MemberDto> loadChatMember(@PathVariable int chatRoomNo) {

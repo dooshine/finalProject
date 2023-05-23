@@ -111,7 +111,7 @@ public class ChatRoomServiceImpl implements ChatRoomService {
 		}
 
 	}
-
+	
 	// 채팅방 나가기, 지우기
 	@Override
 	public void leaveChatRoom(ChatRoomVO vo) {
@@ -145,6 +145,21 @@ public class ChatRoomServiceImpl implements ChatRoomService {
 			ChatRoomDto chatRoomDto = new ChatRoomDto();
 			chatRoomDto.setChatRoomNo(chatRoomNo);
 			chatRoomRepo.deleteRoom(chatRoomDto);
+		}
+	}
+	
+	// (이미 있는) 채팅방에 사용자 초대
+	@Override
+	public void inviteMember(ChatRoomVO vo) {
+		int chatRoomNo = vo.getChatRoomNo();
+		//log.debug("chatRoomNo: " + chatRoomNo);
+		List<String> memberList = vo.getMemberList();
+		// 참여자 테이블에 저장
+		for(String member : memberList) {
+			ChatJoinDto joinDto = new ChatJoinDto();
+			joinDto.setMemberId(member);
+			joinDto.setChatRoomNo(chatRoomNo);
+			chatJoinRepo.joinChatRoom(joinDto);
 		}
 	}
 
