@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ↑ XML 헤더(반드시 첫 번째 줄에 위치) -->
+
+<!-- dtd선언 -->
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- mapper -->
+<mapper namespace="adminTag">
+    <!-- 태그 전체 조회 -->
+    <select id="selectList" resultType="TagDto">
+        select * from tag
+    </select>
+
+    <!-- 태그별 사용량 조회 -->
+    <select id="selectCnt" resultType="TagDto">
+        select count(*) from tag group by tag_name
+    </select>
+</mapper>
