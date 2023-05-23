@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- dtd -->
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+<mapper namespace="fundpostlist">
+
+	<resultMap type="FundDetailVO" id="fdvo">
+		<association property="fundPostListDto">
+			<result column="post_no" property="postNo"/>
+			<result column="fund_no" property="fundNo"/>
+			<result column="member_id" property="memberId"/>
+			<result column="fund_title" property="fundTitle"/>
+			<result column="post_start" property="postStart"/>
+			<result column="post_end" property="postEnd"/>
+			<result column="fund_time" property="fundTime"/>
+			<result column="post_time" property="postTime"/>
+			<result column="fund_goal" property="fundGoal"/>
+			<result column="fund_sponsor_count" property="fundSponsorCount"/>
+			<result column="fund_state" property="fundState"/>
+			<result column="fund_price" property="fundPrice"/>
+			<result column="post_type" property="postType"/>
+			<result column="post_content" property="postContent"/>
+			<result column="attachment_no" property="attachmentNo"/>
+		</association>
+		<collection property="attachmentNos" javaType="java.util.List"
+				ofType="PostImageDto" select="attachByPostNo" column="post_no"/>
+	</resultMap>
+	
+	<select id="fundByPostNo" resultMap="fdvo" parameterType="Long">
+		select * from fundpost_list 
+		where post_type='펀딩' and post_no=#{postNo} 
+	</select>
+	
+	<select id="attachByPostNo" resultType="PostImageDto" parameterType="Long">
+		select * from post_image where post_no=#{postNo}
+	</select>
+	
+	<select id="list" resultType="FundPostListDto">
+		select * from fundpost_list where post_type='펀딩'
+		order by post_time desc
+	</select>
+	
+</mapper>

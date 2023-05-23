@@ -28,8 +28,8 @@ import com.kh.idolsns.dto.PostDto;
 import com.kh.idolsns.dto.PostImageDto;
 import com.kh.idolsns.repo.AttachmentRepo;
 import com.kh.idolsns.repo.FundMainImageRepo;
+import com.kh.idolsns.repo.FundPostListRepo;
 import com.kh.idolsns.repo.FundPostRepo;
-import com.kh.idolsns.repo.FundPostViewRepo;
 import com.kh.idolsns.repo.FundRepo;
 import com.kh.idolsns.repo.MemberRepo;
 import com.kh.idolsns.repo.PostImageRepo;
@@ -58,7 +58,7 @@ public class FundController {
 	private PostImageRepo postImageRepo;
 	
 	@Autowired
-	private FundPostViewRepo fundPostViewRepo;
+	private FundPostListRepo fundPostListRepo;
 	
 	@Autowired
 	private FundMainImageRepo fundMainImageRepo;
@@ -318,7 +318,7 @@ public class FundController {
 						Model model,
 						@ModelAttribute SearchVO searchVO
 						) {
-		model.addAttribute("fundList", fundPostViewRepo.selectList());
+		model.addAttribute("fundList", fundPostListRepo.selectList());
 		return "fund/list";
 	}
 	
@@ -328,9 +328,12 @@ public class FundController {
 		FundPostDto fundPostDto = fundPostRepo.selectOne(postNo);
 		List<PostImageDto> list = postImageRepo.selectList(postNo);
 		FundMainImageDto fundMainImageDto = fundMainImageRepo.selectOne(postNo);
-		int total = fundRepo.selectTotal(postNo);
+		Integer total = fundRepo.selectTotal(postNo);
+		if(total == null) {
+			model.addAttribute("fundTotal", 0);
+		}
+		else model.addAttribute("fundTotal", total);
 		
-		model.addAttribute("fundTotal", total);
 		model.addAttribute("fundPostDto", fundPostDto);
 		model.addAttribute("postImageList", list);
 		model.addAttribute("fundMainImageDto", fundMainImageDto);

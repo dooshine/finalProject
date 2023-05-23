@@ -9,7 +9,7 @@ public interface FundRepo {
 	void insert(FundDto dto);
 	List<FundDto> selectAll();
 	List<FundDto> selectByMember(String memberId);
-	int selectTotal(Long postNo);
+	Integer selectTotal(Long postNo);
 	FundDto find(Long fundNo);
 	
 }

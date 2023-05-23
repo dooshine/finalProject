@@ -158,9 +158,10 @@
 		          postNo: "",
 		          memberId: "{{ memberId }}", // memberId를 Vue 데이터에 추가하고, 값을 바인딩합니다.
 		          fundName: "",
-		          fundTime: ""
+		          fundTime: "",
+		          attachmentNos: [],
+		          attachmentNo: ""
 		        },
-		        fundPosts: [],
 		      };
 		    },
 		    methods: {
@@ -169,24 +170,31 @@
 			      const params = new URLSearchParams(location.search);
 			      const postNo = params.get("postNo");
 			      this.fund.postNo = postNo;
-			      console.log(this.fund.postNo);
+			      console.log("postNo=" + this.fund.postNo);
 			    },
 			    async loadFundPosts(){
-					const resp = await axios.get("http://localhost:8080/rest/fundpost/")	  
-					console.log(resp.data);
-					this.fundPosts.push(...resp.data);
-					
+			    	const postNo = this.fund.postNo;
+					const resp = await axios.get("http://localhost:8080/rest/fundlist/"+postNo)	  
+					console.log("FundPostDto=" + resp.data);
+					this.fund.push(...resp.data);
+        		},
+        		async loadAttachNos(){
+        			const postNo = this.fund.postNo;
+					const resp = await axios.get("http://localhost:8080/rest/fundlist/attaches/"+postNo)	  
+					console.log("attachmentNos=" + resp.data);
+					this.fund.push(...resp.data);
         		},
 		       
                 // 데이터 중 fund를 서버로 전송
 		      	order() {
-		      	  var postNo = this.fund.postNo; // Vue 데이터의 postNo 값을 사용
+		      	  const postNo = this.fund.postNo; // Vue 데이터의 postNo 값을 사용
 		      	  window.location.href = "http://localhost:8080/fund/order?postNo=" + postNo;
 		      	},
 		    },
 		    created() {
 		    	  this.setPostNo();
 		    	  this.loadFundPosts();
+		    	  this.loadAttachNos();
 		    	}
 		  
 		  }).mount("#app");

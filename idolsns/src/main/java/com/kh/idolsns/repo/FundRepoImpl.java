@@ -53,7 +53,7 @@ public class FundRepoImpl implements FundRepo{
 
 
 	@Override
-	public int selectTotal(Long postNo) {
+	public Integer selectTotal(Long postNo) {
 		return sqlSession.selectOne("fund.fundtotal", postNo);
 	}
 
