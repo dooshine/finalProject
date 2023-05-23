@@ -6,4 +6,6 @@ import com.kh.idolsns.dto.FundPostViewDto;
 
 public interface FundPostViewRepo {
 	List<FundPostViewDto> selectList();
+
+	FundPostViewDto selectOne(Long postNo);
 }

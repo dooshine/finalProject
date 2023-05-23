@@ -56,93 +56,98 @@
 		
     </style>
     
-    	
-    	<div id="app">
-			<div class="container rounded p-3" style="background-color:white">
-			<form id="orderForm" method="POST">
-				  
+   	<div id="app">
+		<div class="container rounded p-3" style="background-color:white">
+			  
+		<div v-for="(fundpost, index) in fundPosts" :key="fundpost.memberId">
+			
+		<div>
+			<h2 class="title text-center mt-5 mb-5">${fundPostDto.fundTitle}</h2>
+		</div>
+			
+		
+		<img src="/download?attachmentNo=${fundMainImageDto.attachmentNo}" alt="예시사진">
+			
+		
 			<div>
-				<h2 class="title text-center mt-5 mb-5">${fundInfoDto.fundTitle}</h2>
-			</div>
-				
-			
-					<img src="http://via.placeholder.com/500x400" alt="예시사진">
-				
-			
-				<div>
+	
+				<label>모인 금액</label>
+				<span class="fund_span">${fundTotal}</span>원
+				<span style="font-weight:bold">${fundTotal / fundPostDto.fundGoal * 100}</span>%
 		
-					<label>모인 금액</label>
-					<span class="fund_span">15,000,000</span>원<span style="font-weight:bold">150</span>%
 			
-				
-			
-					<label>남은 시간</label>
-					<span class="fund_span">3</span>일
-				
 		
-					<label>후원자</label>
-					<span class="fund_span">3,421</span>명
-		
-				
-				</div>
-			
-			<div class="d-flex row mt-3" style="padding-left: 1em">
-			
-				<hr>
-			
-				<div>목표 금액		</div>
-				<div>${fundPostDto.fundGoal}원</div>
-				<br>
-				
-				<div>펀딩 기간		</div>
-				<div>${fundPostDto.postStart}~${fundPostDto.postEnd}</div>
-				
-				<div >결제		</div>
-				<div>${fundPostDto.postEnd} 결제 진행</div>
-				
-			
-				<div class="row mt-3" style="padding-left: 1em">
-				
+				<label>남은 시간</label>
+				<span class="fund_span"></span>일
 			
 	
-					    <button class="btn btn-primary like-btn">
-					      <i class="fa fa-heart"></i> 
-					      <!-- {{ likeCount }}  -->
-					    </button>
+				<label>후원자</label>
+				<span class="fund_span">3,421</span>명
+	
+			
+			</div>
+		
+		<div class="d-flex row mt-3" style="padding-left: 1em">
+		
+			<hr>
+		
+			<div>목표 금액		</div>
+			<div>${fundPostDto.fundGoal}원</div>
+			<br>
+			
+			<div>펀딩 기간		</div>
+			<div>${fundPostDto.postStart}~${fundPostDto.postEnd}</div>
+			
+			<div >결제		</div>
+			<div>${fundPostDto.postEnd} 결제 진행</div>
+			
+		
+			<div class="row mt-3" style="padding-left: 1em">
+			
+				    <button class="btn btn-primary like-btn">
+				      <i class="fa fa-heart"></i> 
+				      <!-- {{ likeCount }}  -->
+				    </button>
+		
+			
+					 <button class="btn btn-primary share-btn">
+				      <i class="fa fa-share"></i>
+				      <!-- {{ likeCount }}  -->
+				    </button>
 			
 				
-						 <button class="btn btn-primary share-btn">
-					      <i class="fa fa-share"></i> 
-					      <!-- {{ likeCount }}  -->
-					    </button>
-				
+					<button type="submit" class="btn btn-primary" @click="order">
+					후원하기</button>
 					
-						<button type="submit" class="btn btn-primary" @click="order">
-						후원하기</button>
-			</div>	
-             
-		
+					</div>	
+					
+					<div class="row mt-3" style="padding-left: 1em">
+						<c:forEach var="image" items="${postImageList}">
+							<img src="/download?attachmentNo=${image.attachmentNo}">
+						</c:forEach>
+					</div>
+					
+				</div>
+		</div>
+	</div>             
+	</div>
 				<hr>
 			
 			
-				postImageDto : ${postImageList}<br>
+				postImageList : ${postImageList}<br>
+				<br>
 				fundPostDto: ${fundPostDto}<br>
+				<br>
+				fundMainImageDto: ${fundMainImageDto }
 				
-				<c:forEach var="postImageDto" items="${postImageList}">
-					<img src="${postImageDto.imageURL}">
-				</c:forEach>
 				
-				</div>
-              
-              </form>
-              </div>
-              
-              
-  	     </div>      
-    	   
-
-
 			
+			
+    <script src="https://unpkg.com/vue@3.2.36"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+			
+	
+		
 		<script>
 		  Vue.createApp({
 		    data() {
@@ -154,38 +159,38 @@
 		          memberId: "{{ memberId }}", // memberId를 Vue 데이터에 추가하고, 값을 바인딩합니다.
 		          fundName: "",
 		          fundTime: ""
-		        }
+		        },
+		        fundPosts: [],
 		      };
 		    },
 		    methods: {
-		      setPostNo() {
-		        var params = new URLSearchParams(location.search);
-		        var postNo = params.get("postNo");
-		        this.fund.postNo = postNo;
-		        console.log(this.fund.postNo);
-		      	},
+				// postNo 설정		    	
+			    setPostNo() {
+			      const params = new URLSearchParams(location.search);
+			      const postNo = params.get("postNo");
+			      this.fund.postNo = postNo;
+			      console.log(this.fund.postNo);
+			    },
+			    async loadFundPosts(){
+					const resp = await axios.get("http://localhost:8080/rest/fundpost/")	  
+					console.log(resp.data);
+					this.fundPosts.push(...resp.data);
+					
+        		},
 		       
                 // 데이터 중 fund를 서버로 전송
 		      	order() {
-		      	  var orderForm = document.getElementById("orderForm");
 		      	  var postNo = this.fund.postNo; // Vue 데이터의 postNo 값을 사용
-		      	  
-		      	  // form action 설정
-		      	  orderForm.action = "http://localhost:8080/fund/order?postNo=" + postNo;
-		      	  
-		      	  // form 서버 전송
-		      	  orderForm.submit();
+		      	  window.location.href = "http://localhost:8080/fund/order?postNo=" + postNo;
 		      	},
-		        
-		    }
-		    
+		    },
 		    created() {
-		      this.setPostNo();
-		    }
+		    	  this.setPostNo();
+		    	  this.loadFundPosts();
+		    	}
 		  
 		  }).mount("#app");
 		</script>
-
 
 	
 	<jsp:include page="/WEB-INF/views/template/footer.jsp"></jsp:include>

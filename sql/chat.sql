@@ -1,4 +1,4 @@
--- 단체 채팅방
+-- 채팅방
 CREATE TABLE chat_room(
 	chat_room_no NUMBER PRIMARY KEY,
 	chat_room_name varchar2(60),
@@ -22,7 +22,8 @@ CREATE TABLE CHAT_MESSAGE(
 	chat_room_no REFERENCES chat_room(chat_room_no) ON DELETE CASCADE NOT NULL,
 	chat_message_time DATE DEFAULT sysdate NOT NULL,
 	chat_message_content varchar2(900) NOT NULL,
-	attachment_no number
+	attachment_no number,
+	chat_message_type NUMBER NOT NULL
 );
 CREATE SEQUENCE chat_message_seq;
 

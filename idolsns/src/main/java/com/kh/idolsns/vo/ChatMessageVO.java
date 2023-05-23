@@ -16,5 +16,6 @@ public class ChatMessageVO {
 	
 	private String chatMessageContent;
 	private int attachmentNo;
+	private int chatMessageType;
 	
 }
