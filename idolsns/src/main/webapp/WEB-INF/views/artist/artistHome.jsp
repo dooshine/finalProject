@@ -127,10 +127,10 @@
     <div>
         <!-- 팔로우 비동기통신 테스트 -->
         <h2>팔로우 버튼</h2>
-        <button class="btn-primary" @click="checkFollow">팔로우 확인</button><br>
-        <button class="btn-secondary" @click="createFollow">팔로우 생성</button><br>
-        <button class="btn-alert" @click="deleteFollow">팔로우 제거</button><br>
-        <button class="btn-warning" @click="toggleFollow">팔로우 토글</button><br>
+        <button class="btn btn-primary" @click="checkFollow">팔로우 확인</button><br>
+        <button class="btn btn-secondary" @click="createFollow">팔로우 생성</button><br>
+        <button class="btn btn-alert" @click="deleteFollow">팔로우 제거</button><br>
+        <button class="btn rounded-pill text-white" @click="toggleFollow" style="background-color: #6A53FB;">팔로우하기</button><br>
     </div>
 </div>
 
@@ -141,11 +141,10 @@
         return {
             followObj: {
                 memberId: memberId,
-                // followTargetType: "",
-                // followTargetPrimaryKey: "",
                 followTargetType: "회원",
                 followTargetPrimaryKey: "testuser1",
             },
+            artistFollowing: "",
         };
       },
       computed: {
@@ -159,6 +158,12 @@
             const resp = await axios.get(url, {
                 params: this.followObj,
             });
+            // [develope]
+            if(this.followObj.followTargetType === "회원"){
+                console.log(this.followObj.memberId + "님의 " + this.followObj.followTargetPrimaryKey + "님 팔로우 여부: " + resp.data);
+            } else {
+                console.log(this.followObj.memberId + "님의 " + this.followObj.followTargetPrimaryKey + " 대표페이지 팔로우 여부: " + resp.data);
+            }
             return resp.data;
         },
         // 팔로우 생성
@@ -166,8 +171,8 @@
             // 팔로우 생성 url
             const url = "http://localhost:8080/rest/follow/";
             await axios.post(url, this.followObj);
-            console.log(this.followObj);
-            console.log("팔로우 생성");
+            // [develope] 
+            console.log(this.followObj.memberId + "님의 " + this.followObj.followTargetPrimaryKey + "님 팔로우 생성");
         },
         // 팔로우 취소
         async deleteFollow(){
@@ -176,17 +181,46 @@
             await axios.delete(url, {
                 data: this.followObj,
             });
+            // [develope]
+            console.log(this.followObj.memberId + "님의 " + this.followObj.followTargetPrimaryKey + "님 팔로우 제거");
         },
         // 팔로우 토글
         async toggleFollow(){
+            // 1. 회원 로그인 확인
+            if(memberId === ""){
+                if(confirm("로그인 한 회원만 사용할 수 있는 기능입니다. 로그인 하시겠습니까?")) {
+                    window.location.href = contextPath + "/member/login";
+                }
+            }
             // 팔로우 확인 url
             console.log(this.checkFollow()); 
-        }
+        },
+        // 페이지 팔로우 버튼
+        async followBtn(){
+            // 1. 대표페이지 팔로우 대상 설정
+            this.setArtistFollow();
+
+            // 2. 대표페이지 팔로우 확인
+            const isFollowing = this.checkFollow();
+            this.artistFollowing = isFollowing;
+        },
+
+
+        // 대표페이지 팔로우 대상 설정
+        setArtistFollow (){
+            // 아티스트 이름
+            const artistName = window.location.pathname.split("/").at(-1);
+            // 팔로우 대상 유형
+            this.followObj.followTargetType = "대표페이지";
+            // 팔로우 대상 PK
+            this.followObj.followTargetPrimaryKey = artistName;
+        },
       },
       watch: {
   
       },
       created(){
+        this.followBtn();
       },
     }).mount('#app')
 </script>
