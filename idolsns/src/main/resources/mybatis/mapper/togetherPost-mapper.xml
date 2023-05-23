@@ -11,7 +11,7 @@
 		insert into together_post
 		(post_no, member_id, together_start,together_end)
 		values
-		(#{postNo}, #{memberId}, #{scheduleStart, jdbcType=DATE}, #{scheduleEnd, jdbcType=DATE})		
+		(#{postNo}, #{memberId}, #{togetherStart, jdbcType=DATE}, #{togetherEnd, jdbcType=DATE})		
 	</insert>
 	
 	<select id= "selectOne" resultType="TogetherPostDto">

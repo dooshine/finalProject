@@ -15,9 +15,9 @@
     <!-- 통합게시물 생성 -->
     <insert id="insert">
         insert into post 
-        (post_no, member_id, post_type, post_time, post_content) 
+        (post_no, member_id, member_nick, post_type, post_time, post_content) 
         values
-        (#{postNo}, #{memberId}, #{postType}, sysdate, #{postContent})
+        (#{postNo}, #{memberId}, #{memberNick}, #{postType}, sysdate, #{postContent})
     </insert>
     <!-- 통합게시물 1개 조회 -->
     <select id="selectOne" resultType="PostDto">

@@ -24,12 +24,14 @@ import com.kh.idolsns.dto.TagDto;
 import com.kh.idolsns.dto.TogetherPostDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kh.idolsns.dto.FreePostDto;
+import com.kh.idolsns.dto.MapDto;
 import com.kh.idolsns.dto.PostDto;
 import com.kh.idolsns.dto.PostImageDto;
 import com.kh.idolsns.dto.SchedulePostDto;
 import com.kh.idolsns.repo.TagRepo;
 import com.kh.idolsns.repo.TogetherPostRepo;
 import com.kh.idolsns.repo.FreePostRepo;
+import com.kh.idolsns.repo.MapRepo;
 import com.kh.idolsns.repo.PostImageRepo;
 import com.kh.idolsns.repo.PostRepo;
 import com.kh.idolsns.repo.PostWithNickRepo;
@@ -48,6 +50,9 @@ public class PostRestController {
 
     @Autowired
     private TagRepo tagRepo;
+    
+    @Autowired
+    private MapRepo mapRepo;
     
     // 자유 게시물
     @Autowired
@@ -115,6 +120,16 @@ public class PostRestController {
     	
     }
     
+    // ---------------------- 지도정보 등록
+    @PostMapping("/map")
+    public void maping(MapDto mapDto) {
+    	if(mapDto!=null) {
+    		System.out.println(mapDto+"는 mapDto입니다.");
+    		mapRepo.insert(mapDto);
+    	}
+    	
+    }
+    
     // -------------------- 태그정보 등록 
 //    @PostMapping("/tag")
 //    public void taging(@RequestParam Long postNo, @RequestBody List<String> tagList) {
@@ -148,7 +163,7 @@ public class PostRestController {
     	{
     		FreePostDto freePostDto = new FreePostDto();
         	freePostDto.setPostNo(postNo);
-        	freePostDto.setMemberId(postDto.getMemberId());
+        	freePostDto.setMemberId(postDto.getMemberId());        	
         	freePostRepo.insert(freePostDto);
     		
     	}
@@ -167,7 +182,7 @@ public class PostRestController {
     	else if (postType.equals("같이가요"))
     	{
     		Date togetherStart = objectMapper.convertValue(postTypeData.get("togetherStart"),Date.class);
-    		Date togetherEnd = objectMapper.convertValue(postTypeData.get("togeherEnd"),Date.class);
+    		Date togetherEnd = objectMapper.convertValue(postTypeData.get("togetherEnd"),Date.class);
     		
     		TogetherPostDto togetherPostDto = new TogetherPostDto();
         	togetherPostDto.setPostNo(postNo); 

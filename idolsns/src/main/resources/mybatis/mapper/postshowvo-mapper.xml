@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ↑ XML 헤더(반드시 첫 번째 줄에 위치) -->
+
+<!-- dtd선언 -->
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="postShow">
+	<select id="selectOne" resultType="PostShowVO">	
+		select p.*, sp.schedule_start, sp.schedule_end,
+		            tp.together_start, tp.together_end,
+		            m.map_place
+		from post p
+		full outer join schedule_post sp on p.post_no = sp.post_no
+		full outer join together_post tp on p.post_no = tp.post_no
+		full outer join map m on p.post_no = m.post_no
+		where p.post_no = #{postNo}		
+	</select>
+
+</mapper>

@@ -1,6 +1,9 @@
 // 마커를 담을 배열입니다
 var markers = [];
 
+// 지도 정보를 담을 변수
+let mapPlace = "기본";
+
 var mapContainer = document.getElementById('map'), // 지도를 표시할 div 
     mapOption = {
         center: new kakao.maps.LatLng(37.606826, 126.8956567), // 지도의 중심좌표
@@ -155,6 +158,7 @@ function ifClick(){
 	    roadSpans.forEach(function(span) {
 	     	var addressElement = document.querySelector('span.address');
 			addressElement.textContent = span.innerText;
+			mapPlace = addressElement.textContent; 
 	    });
 	  });
 	});

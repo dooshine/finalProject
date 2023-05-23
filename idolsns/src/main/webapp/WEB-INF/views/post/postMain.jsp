@@ -47,8 +47,7 @@
 	    
 	   
         <!-- 지도 테스트 모달 버튼 (클릭 시 지도 relayout함수 호출 -> 안하면 지도 이미지 깨짐)-->
-        
-	    <button type="button" onclick="relayout();" class="btn btn-white btn-outline-dark rounded-pill col-12 " data-bs-target="#modalmap" data-bs-toggle="modal">지도 테스트 모달</button>
+<!-- 	    <button type="button" onclick="relayout();" class="btn btn-white btn-outline-dark rounded-pill col-12 " data-bs-target="#modalmap" data-bs-toggle="modal">지도 테스트 모달</button> -->
 	    
 	    <!----------------------------------- 단계별 모달창 구성------------------------------------------------->
 		<!-- 1. 카테고리 선택 -->
@@ -295,9 +294,12 @@
 						  <div class="col-5 ">
 						  	<div class="row justify-content-end">
 						  		 <div class="col-7">
-						  		 	<button type="button" class="btn btn-primary btn-sm">
-						  		 	작성완료</button>
-						  		 		
+<!-- 						  		 	<button type="button" class="btn btn-primary btn-sm"> -->
+<!-- 						  		 	작성완료</button> -->
+						  		 	<button type="button" class="btn btn-primary btn-sm bttest"
+                            			data-bs-target="#modal3" data-bs-toggle="modal">
+                        			글쓰기
+                        			</button>
 						  		 </div>
 						  		 
 						  		 <div class="col-5">
@@ -322,7 +324,7 @@
 	    <div v-for="(post, index) in posts" :key="index">
 	    
 	    		<!-- 글 박스 루프 1개-->
-                <div class="bg-white p-2 rounded-4">
+                <div class="bg-white p-3 rounded-4">
                 
                 	<!-- 프로필 사진과 아이디 -->
                 	<div class="row mt-1">
@@ -331,7 +333,13 @@
 			            </div>
 <!-- 			            	<p>{{ post.postNo }}</p> -->
 			            <div class="col-11 col-md-11 col-lg-11 d-flex align-items-center justify-content-start">
-							<p>{{ post.memberId }}</p>            
+							<div class="row">
+								
+								<p>{{ post.memberId }}</p>   
+							</div>         
+							<div class="row">
+								<p>{{post.memberNick }} </p>
+							</div>
 			            </div>
 	       			</div>	
 					<!-- 프로필 사진과 아이디 -->
@@ -344,17 +352,8 @@
 			            </div>
 			            <div class="col-10 col-md-10 col-lg-10 d-flex align-items-center justify-content-start">
 							<div class="row bg-info rounded-pill align-items-center justify-content-center">
-								<p >{{ post.postType }}</p>
-							</div>
-<!-- 							<div v-if="post.postNo !== null"> -->
-<!-- 							{{this.getTags(post.postNo)}} -->
-<!-- 				                <div v-for="(tag, tagidx) in tags[index]" :key="tagidx"> -->
-<!-- 				                    <div class="row bg-info rounded-pill align-items-center justify-content-center"> -->
-<!-- 				                        <p>{{ tag }}</p> -->
-<!-- 				                    </div> -->
-<!-- 				                </div> -->
-<!-- 				             </div> -->
-				             					       
+								<p>{{ post.postType }}</p>
+							</div>	       
 			            </div>
 						<div class="col-1 col-md-1 col-lg-1 d-flex align-items-center justify-content-center"> 
 			            </div>	                
