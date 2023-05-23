@@ -79,9 +79,9 @@
 				    	<a class="navbar-brand" href="/">STARLINK</a>
 				    </div>
 			    	<div class="col-6 d-flex collapse navbar-collapse" id="navbarSupportedContent">
-			      		<form class="d-flex w-100">
+			      		<form action="/search" class="d-flex w-100">
 			      			<div class="search-box w-100">
-				        		<input class="search-input me-2 w-100" placeholder="STARLINK 검색" type="text">
+				        		<input name="q" class="search-input me-2 w-100" placeholder="STARLINK 검색" type="text">
 				        	</div>
 			      		</form>
 			    	</div>
