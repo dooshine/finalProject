@@ -22,7 +22,9 @@
     <!-- 태그삭제 버튼 -->
     <div class="row text-end">
         <div class="col">
-            <button @click="deleteTag"><i class="fa-solid fa-xmark"></i>삭제</button>
+            <button @click="updateTagFree"><i class="fa-solid fa-pen-to-square"></i>자유 태그로</button>
+            <button @click="updateTagFix"><i class="fa-solid fa-pen-to-square"></i>고정 태그로</button>
+            <button @click="deleteTagByName"><i class="fa-solid fa-xmark"></i>삭제</button>
         </div>
     </div>
     <div class="row">
@@ -47,7 +49,7 @@
                         <td>{{tagCnt.tagType}}</td>
                         <td>{{tagCnt.tagCnt}}</td>
                         <td>
-                            <i class="fa-solid fa-xmark" @click="deleteTag(tag.tagName)"></i>
+                            <!-- <i class="fa-solid fa-xmark" @click="deleteTagByName(tag.tagName)"></i> -->
                         </td>
                     </tr>
                 </tbody>
@@ -62,8 +64,8 @@
       data() {
         return {
           tagCntList: [],
-          selectedTagCntList: {
-          },
+          selectedTagNameObj: {},
+          selectedTagNameList: [],
         };
       },
       computed: {
@@ -73,41 +75,103 @@
         // Load 신고 리스트
         async loadTagCntList () {
             // 신고리스트 조회 URL
-            const url = "http://localhost:8080/rest/admin/tagCnt";
+            const url = "http://localhost:8080/rest/admin/tagName";
             // 비동기 신고리스트 조회 실행
             const resp = await axios.get(url);
             // vue.data.reportList에 resp.data 복사
             this.tagCntList = _.cloneDeep(resp.data);
         },
-        
         // 제재 리스트 개별선택
         checkTag(e, tagName){
             if(e.target.checked){
-                this.selectedTagCntList[tagName] = true;
+                this.selectedTagNameObj[tagName] = true;
             } else {
-                delete this.selectedTagCntList[tagName];
+                delete this.selectedTagNameObj[tagName];
             }
         },
+        // 선택된 태그 배열 생성
+        setSelectedTagNameList(){
+            this.selectedTagNameList = Object.keys(this.selectedTagNameObj);
+        },
+        // 선택된 태그 존재여부 확인
+        isSelectedTagNameExist(){
+            // 선택된 태그 갯수
+            const selectedTagNameLeng = this.selectedTagNameList.length;
+            // 선택된 태그 존재여부
+            const selectedTagNameExist = selectedTagNameLeng !== 0;
+            return selectedTagNameExist;
+        },
+        // 태그변경(타입 수정-자유,고정, 삭제-태그이름) 전처리 함수
+        preTagAccess(parentFunction){
+            // 1. 선택된 태그 이름 리스트 초기화
+            this.setSelectedTagNameList();
 
-        // 신고 삭제
-        async deleteTag(){
-            
-            const selectedTagCntList = Object.keys(this.selectedTagCntList);
-            const selectedTagCntLeng = selectedTagList.length;
+            // 2. 선택된 항목이 없다면 실행 X
+            if(!this.isSelectedTagNameExist()) return false;
 
-            // 선택된 항목 0개면 실행 X
-            if(selectedTagCntLeng === 0) return;
-            // 삭제확인
-            if(!confirm(selectedTagCntLeng + "개의 태그를 정말 삭제하시겠습니까?")) return;
+            // 3. 사용자 confirm
+            let conditionalStr = "";
+            if(parentFunction === "updateTagFree"){
+                conditionalStr = "자유 태그로 변경";
+            } else if(parentFunction === "updateTagFix"){
+                conditionalStr = "고정 태그로 변경";
+            } else if(parentFunction === "deleteTagByName"){
+                conditionalStr = "정말 삭제";
+            }
+            if(!confirm(this.selectedTagNameList.length + "개의 태그를 " + conditionalStr + "하시겠습니까?")) return false;
 
-            // 신고 api url
-            const url = "http://localhost:8080/rest/admin/tagCnt"
-            
-            // 신고 삭제 호출
-            const resp = await axios.delete(url, { 
-                data: selectedTagCntList,
+            return true;
+        },
+        // 선택된 태그 초기화
+        setSelectedTagNameEmpty(){
+            this.selectedTagNameObj = {};
+            this.selectedTagNameList = [];
+        },
+
+
+
+
+        // # 자유 태그로 변경
+        async updateTagFree(){
+            // 태그변경 전처리 함수
+            if(!this.preTagAccess("updateTagFree")) return;
+
+            // 태그수정(자유) api url
+            const url = "http://localhost:8080/rest/admin/tagName"
+            // 태그수정(자유) 호출
+            const resp = await axios.put(url, { 
+                data: this.selectedTagNameList,
             });
-            this.selectedTagCntList = {};
+        },
+
+        // # 고정 태그로 변경
+        async updateTagFix(){
+            // 태그변경 전처리 함수
+            if(!this.preTagAccess("updateTagFix")) return;
+
+            // 태그수정(고정) api url
+            const url = "http://localhost:8080/rest/admin/tagName"
+            // 태그수정(고정) 호출
+            const resp = await axios.put(url, {
+                tagType: "고정",
+                tagNameList: this.selectedTagNameList,
+            });
+        },
+
+        // # 태그 이름으로 삭제
+        async deleteTagByName(){
+            // 태그변경 전처리 함수
+            if(!this.preTagAccess("deleteTagByName")) return;
+
+            // 태그삭제 api url
+            const url = "http://localhost:8080/rest/admin/tagName"
+            // 태그삭제 호출
+            const resp = await axios.delete(url, { 
+                data: this.selectedTagNameList,
+            });
+
+            // 선택항목 초기화
+            this.setSelectedTagNameEmpty();
 
             // 신고목록 load
             this.loadTagCntList();

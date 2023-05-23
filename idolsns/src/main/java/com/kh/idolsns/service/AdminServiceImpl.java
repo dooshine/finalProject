@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 import com.kh.idolsns.dto.TagCntDto;
 import com.kh.idolsns.dto.TagDto;
 import com.kh.idolsns.repo.AdminRepo;
-import com.kh.idolsns.repo.TagRepo;
 
 @Service
 public class AdminServiceImpl implements AdminService {
@@ -21,11 +20,18 @@ public class AdminServiceImpl implements AdminService {
     public List<TagDto> adminTagSelectList() {
         return adminRepo.adminTagSelectList();
     }
+    // 태그 타입 수정
+    @Override
+    public void updateTagTypeByName(String tagType, List<String> tagNameList) {
+        for(String tagName : tagNameList){
+            adminRepo.updateTagTypeByName(TagDto.builder().tagType(tagType).tagName(tagName).build());
+        }
+    }
     // 태그 삭제
     @Override
-    public void deleteTag(List<Long> tagNoList) {
-        for(Long tagNo : tagNoList){
-            adminRepo.adminTagDelete(tagNo);
+    public void deleteTagByName(List<String> tagNameList) {
+        for(String tagName : tagNameList){
+            adminRepo.adminTagDelete(tagName);
         }
     }
     // 태그Cnt 조회
@@ -33,5 +39,6 @@ public class AdminServiceImpl implements AdminService {
     public List<TagCntDto> adminTagCntSelectList() {
         return adminRepo.adminTagCntSelectList();
     }
+
     
 }
