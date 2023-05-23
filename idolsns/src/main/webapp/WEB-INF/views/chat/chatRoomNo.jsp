@@ -17,7 +17,8 @@
 	
 	<p>${sessionScope.memberId}</p>
 	
-	<a @click="leaveRoom" href="#">나가기</a>
+	<button type="button" @click="leaveRoom">나가기</button>
+	<button type="button" @click="inviteMember">초대</button>
 	
 	<hr>
 	
