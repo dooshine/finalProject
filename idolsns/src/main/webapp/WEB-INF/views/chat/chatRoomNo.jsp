@@ -69,7 +69,7 @@
 				    </div>
 				</div>
 				<div class="modal-body">
-					<label class="d-flex justify-content-between" v-for="(follow, index) in followList">
+					<label class="d-flex justify-content-between" v-for="(follow, index) in filteredFollowList">
 				    	{{ follow.memberId }}
 				    	<input type="checkbox" v-model="selectedMemberList" :value="follow.memberId">
 					</label>
@@ -297,7 +297,6 @@
 			async loadFollowList() {
 				const url = "${pageContext.request.contextPath}/chat/chatRoom/follow/";
 				const resp = await axios.get(url);
-				//console.log("data: " + resp.data);
 				this.followList.push(...resp.data);
 			},
 			// 사용자 초대
@@ -310,17 +309,24 @@
 						memberList: this.selectedMemberList
 				}
 				const resp = await axios.post(url, data1);
+				const memberIds = this.selectedMemberList.join(", ");
 				const data2 = {
 						type: 6,
 						chatRoomNo: chatRoomNo,
-						chatMessageContent: this.selectedMemberList[0] + " 님이 입장했습니다."
+						chatMessageContent: memberIds + " 님이 입장했습니다."
 				};
 				this.socket.send(JSON.stringify(data2));
-				this.selectedMemberList = "";
+				this.selectedMemberList.splice(0);
+				this.chatMemberList.splice(0);
+				this.loadChatMember();
 			}
 		},
 		computed: {
-
+			filteredFollowList() {
+				return this.followList.filter(follow => 
+							!this.chatMemberList.some(member => 
+								member.memberId === follow.memberId));
+			}
 		},
 		created() {
 			this.connect();
