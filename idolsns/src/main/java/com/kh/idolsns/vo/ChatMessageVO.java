@@ -15,5 +15,6 @@ public class ChatMessageVO {
 	private long chatMessageTime;
 	
 	private String chatMessageContent;
+	private int attachmentNo;
 	
 }

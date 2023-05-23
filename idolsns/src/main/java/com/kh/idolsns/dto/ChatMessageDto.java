@@ -13,4 +13,6 @@ public class ChatMessageDto {
 	
 	private String chatMessageContent;
 	
+	private int attachmentNo;
+	
 }
