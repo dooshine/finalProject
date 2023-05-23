@@ -33,6 +33,11 @@
 	<select id="listRoom" resultType="ChatRoomDto">
 		select * from chat_room
 	</select>
+	
+	<!-- 채팅방 삭제 -->
+	<delete id="deleteRoom">
+		delete chat_room where chat_room_no = #{chatRoomNo}
+	</delete>
 
 </mapper>
     

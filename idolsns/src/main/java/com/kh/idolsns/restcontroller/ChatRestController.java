@@ -15,10 +15,13 @@ import com.kh.idolsns.repo.ChatJoinRepo;
 import com.kh.idolsns.repo.ChatMessageRepo;
 import com.kh.idolsns.repo.MemberRepo;
 import com.kh.idolsns.service.ChatRoomService;
-import com.kh.idolsns.vo.ChatCreateRoomVO;
 import com.kh.idolsns.vo.ChatMemberJoinVO;
 import com.kh.idolsns.vo.ChatMessageVO;
+import com.kh.idolsns.vo.ChatRoomVO;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @RestController
 @RequestMapping("/chat")
 public class ChatRestController {
@@ -51,15 +54,18 @@ public class ChatRestController {
 		List<ChatMessageDto> tempList = chatMessageRepo.messageList(chatRoomNo);
 		List<ChatMessageVO> list = new ArrayList<>();
 		for(ChatMessageDto chatMessageDto : tempList) {
+			//log.debug("dto attachmentNo: " + chatMessageDto.getAttachmentNo());
 			list.add(ChatMessageVO.builder()
 							.chatMessageNo(chatMessageDto.getChatMessageNo())
 							.chatRoomNo(chatRoomNo)
 							.memberId(chatMessageDto.getMemberId())
 							.chatMessageTime(chatMessageDto.getChatMessageTime().getTime())
 							.chatMessageContent(chatMessageDto.getChatMessageContent())
+							.attachmentNo(chatMessageDto.getAttachmentNo())
 						.build()
 			);
 		}
+		//log.debug("rest attachmentNo: " + list);
 		return list;
 	}
 	
@@ -71,7 +77,7 @@ public class ChatRestController {
 	
 	// 채팅방 생성
 	@PostMapping("/chatRoom")
-	public void createRoom(@RequestBody ChatCreateRoomVO vo) {
+	public void createRoom(@RequestBody ChatRoomVO vo) {
 		chatRoomService.createChatRoom(vo);
 	}
 	
@@ -79,6 +85,12 @@ public class ChatRestController {
 	@PostMapping("/chatRoom/join")
 	public long getJoinTime(@RequestBody ChatMemberJoinVO vo) {
 		return chatJoinRepo.findJoinTime(vo.getChatRoomNo(), vo.getMemberId());
+	}
+	
+	// 채팅방 나가기, 삭제
+	@PostMapping("/chatRoom/leave")
+	public void leaveRoom(@RequestBody ChatRoomVO vo) {
+		chatRoomService.leaveChatRoom(vo);
 	}
 	
 }

@@ -10,5 +10,6 @@ public interface ChatJoinRepo {
 	boolean doseAlreadyIn(ChatJoinDto dto);
 	List<ChatJoinDto> findMembersByRoomNo(int chatRoomNo);
 	long findJoinTime(int chatRoomNo, String memberId);
+	void leaveRoom(ChatJoinDto dto);
 	
 }
