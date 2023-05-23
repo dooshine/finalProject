@@ -26,7 +26,7 @@
 	<!-- 메세지 입력창 + 전송버튼 -->
 	<input type="text" class="user-input" v-model="text" @input="text = $event.target.value">
 	<button class="btn-send" @click="sendMessage">전송</button>
-	<input class="form-control d-none" type="file" accept=".png, .jpg, .gif" @change="sendPic">
+	<input class="form-control" type="file" accept=".png, .jpg, .gif" @change="sendPic">
 	
 	<hr>
 	
