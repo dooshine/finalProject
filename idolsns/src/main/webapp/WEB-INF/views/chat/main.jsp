@@ -11,7 +11,7 @@
 	
 	<h3>채팅방 목록</h3>
 	<div class="chatRooms" v-for="(room, index) in chatRoomList" :key="index">
-		<button @click="chatRoomModal">{{ room.chatRoomNo }}</button>
+		<button @click="chatRoomModal">{{ room.chatRoomName }}</button>
 	</div>
 	
 <!----------------------------------------------------- 채팅방 생성 모달 ----------------------------------------------------->
@@ -21,8 +21,8 @@
 				<div class="modal-header">
 				    <h3 class="modal-title">채팅방 만들기</h3>
 				    <div class="d-flex justify-content-end">
-				    	<button type="button" class="btn btn-primary" @click="createChatRoom" 
-				    				data-bs-dismiss="modal" :disabled="selectedMemberList.length === 0">
+				    	<button type="button" class="btn btn-primary" @click="createChatRoom" data-bs-dismiss="modal" 
+				    		:disabled="(selectedMemberList.length === 0 && nameCount < 1) || (selectedMemberList.length >= 3 && nameCount === 0)">
 	           				생성
 	        			</button>
 					    <button type="button" class="btn bt-secondary" data-bs-dismiss="modal">
@@ -31,6 +31,11 @@
 				    </div>
 				</div>
 				<div class="modal-body">
+					<div class="form-floating" v-if="memberCount > 2">
+  						<input type="text" class="form-control" id="chatRoomNameInput" placeholder="채팅방이름" 
+  											v-model="chatRoom.chatRoomName" @input="chatRoom.chatRoomName = $event.target.value">
+					  	<label for="chatRoomNameInput">채팅방 이름</label>
+					</div>
 					<label class="d-flex justify-content-between" v-for="(follow, index) in followList">
 				    	{{ follow.memberId }}
 				    	<input type="checkbox" v-model="selectedMemberList" :value="follow.memberId">
@@ -105,10 +110,10 @@
 			async createChatRoom() {
 				this.chatRoom.memberList = this.selectedMemberList;
 				if(this.selectedMemberList.length > 2) {
-					this.chatRoom.chatRoomType = 'g';
+					this.chatRoom.chatRoomType = 'G';
 				}
 				else {
-					this.chatRoom.chatRoomType = 'p';
+					this.chatRoom.chatRoomType = 'P';
 				}
 				const url = "${pageContext.request.contextPath}/chat/chatRoom/";
 				const data = {
@@ -120,7 +125,12 @@
 			},
 		},
 		computed: {
-
+			memberCount() {
+				return this.selectedMemberList.length;
+			},
+			nameCount() {
+				return this.chatRoom.chatRoomName.length;
+			}
 		},
 		created() {
 			// 접속하면 바로 채팅방, 팔로잉 리스트 가져오기

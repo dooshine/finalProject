@@ -141,7 +141,13 @@ public class MemberRepoImpl implements MemberRepo{
 		return sqlSession.selectOne("member.emailExist", memberId);
 	}
 
-
-
-
+	
+	
+	
+	// (채팅)
+	@Override
+	public List<MemberDto> chatMembers(List<String> memberIdList) {
+		return sqlSession.selectList("member.chatMembers", memberIdList);
+	}
+	
 }

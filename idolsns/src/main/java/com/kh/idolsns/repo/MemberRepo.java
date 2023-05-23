@@ -39,5 +39,10 @@ public interface MemberRepo {
 	
 	// 관리자 회원목록 조회
 	List<MemberDto> adminSelectList(AdminMemberSearchVO adminMemberSearchVO);
+	
+	
+	
+	// (채팅) 회원 아이디 리스트로 상세조회
+	List<MemberDto> chatMembers(List<String> memberIdList);
 
 }

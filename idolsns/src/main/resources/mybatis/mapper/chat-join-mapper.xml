@@ -11,7 +11,7 @@
 		values(#{chatRoomNo}, #{memberId}, sysdate)
 	</insert>
 	
-	<!-- 특정 회원이 참여중인 채팅방 조회 -->
+	<!-- 특정 회원이 참여중인 채팅방 번호 조회 -->
 	<select id="findChatRoomById" resultType="ChatJoinDto">
 		select * from chat_join where member_id = #{memberId}
 	</select>

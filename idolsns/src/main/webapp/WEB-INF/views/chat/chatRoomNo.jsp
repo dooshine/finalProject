@@ -2,7 +2,19 @@
     pageEncoding="UTF-8"%>
 
 <div id="app">
-	<h1>채팅 테스트</h1>
+	<h1 v-if="roomInfo.chatRoomType == 'P'">상대방 이름</h1>
+	<div v-if="roomInfo.chatRoomType == 'G'">
+		<div v-if="roomInfo.edit == true">
+			<input v-model="roomInfo.chatRoomName" @input="roomInfo.chatRoomName = $event.target.value">
+			<button type="button" @click="cancelChange">취소</button>
+			<button type="button" @click="saveRoomName">변경 완료</button>
+		</div>
+		<div v-else>
+			<h1>{{ roomInfo.chatRoomName }}</h1>
+			<button type="button" @click="changeRoomName">채팅방 이름 변경</button>
+		</div>
+	</div>
+	
 	<p>${sessionScope.memberId}</p>
 	
 	<a @click="leaveRoom" href="#">나가기</a>
@@ -19,15 +31,22 @@
 	<!-- 메세지가 표시될 공간 -->
 	<div class="message-wrapper">
 		<div class="message" v-for="(message, index) in messageList" :key="index">
-			<div>
+			<!-- 사용자가 보내는 메세지일 때 -->
+			<div v-if="message.chatMessageType === 1 || message.chatMessageType === 4">
 				<h4>{{ message.memberId }}</h4>
 				<button v-if="message.memberId == memberId" @click="deleteMessage(index)">x</button>
+				<!-- 텍스트 메세지일 때 -->
+				<div v-if="message.attachmentNo === 0">{{ message.chatMessageContent }}</div>
+				<!-- 이미지 메세지일 때 -->
+				<img class="photo" v-if="message.attachmentNo != 0" 
+						:src="'${pageContext.request.contextPath}/download?attachmentNo=' + message.attachmentNo">
+				<div>{{ timeFormat(message.chatMessageTime) }}</div>
 			</div>
-			<!-- 텍스트 메세지일 때 -->
-			<div v-if="message.attachmentNo == 0">{{ message.chatMessageContent }}</div>
-			<!-- 이미지 메세지일 때 -->
-			<img class="photo" v-if="message.attachmentNo != 0" :src="'${pageContext.request.contextPath}/download?attachmentNo=' + message.attachmentNo">
-			<div>{{ timeFormat(message.chatMessageTime) }}</div>
+			<!-- 시스템 메세지일 때 -->
+			<div v-if="message.chatMessageType === 5">
+				<div>{{ timeFormat(message.chatMessageTime) }}</div>
+				<div>{{ message.chatMessageContent }}</div>
+			</div>
 		</div>
 	</div>
 </div>
@@ -49,6 +68,16 @@
 		data() {
 			return {
 				text: "",
+				roomInfo: {
+					chatRoomNo: "",
+					chatRoomName: "",
+					chatRoomStart: "",
+					chatRoomType: "",
+				},
+				roomInfoCopy: {
+					chatRoomName:"",
+				},
+				chatMemberList: [],
 				messageList: [],
 				memberId: "${sessionScope.memberId}",
 				chatJoin: "",
@@ -101,6 +130,26 @@
 				}
 				this.messageList.push(parsedData);
 			},
+			// 채팅방 정보 불러오기
+			async loadRoomInfo() {
+				const chatRoomNo = new URLSearchParams(location.search).get("chatRoomNo");
+				const url = "${pageContext.request.contextPath}/chat/chatRoom/chatRoomNo/" + chatRoomNo;
+				const resp = await axios.get(url);
+				//console.log("data: " + resp.data.chatRoomName);
+				//this.roomInfo.push(resp.data);
+				this.roomInfo.chatRoomNo = resp.data.chatRoomNo;
+				this.roomInfo.chatRoomName = resp.data.chatRoomName;
+				this.roomInfo.chatRoomStart = resp.data.chatRoomStart;
+				this.roomInfo.chatRoomType = resp.data.chatRoomType;
+				this.roomInfoCopy.chatRoomName = _.cloneDeep(resp.data.chatRoomName);
+			},
+			// 참여자 정보 불러오기
+			async loadChatMember() {
+				const chatRoomNo = new URLSearchParams(location.search).get("chatRoomNo");
+				const url = "${pageContext.request.contextPath}/chat/chatRoom/chatMember/" + chatRoomNo;
+				const resp = await axios.get(url);
+				this.chatMemberList.push(...resp.data);
+			},
 			// 메세지 목록 지우기
 			clearMessageList() {
 				this.messageList.splice(0);
@@ -118,7 +167,10 @@
 			// 메세지 보내기
 			sendMessage() {
 				if(this.text.length == 0) return;
-				const data = { type: 1, chatMessageContent: this.text };
+				const data = { 
+						type: 1, 
+						chatMessageContent: this.text 
+				};
 				this.socket.send(JSON.stringify(data));
 				// 입력창 초기화
 				this.clear();
@@ -178,13 +230,36 @@
 			async leaveRoom() {
 				const memberId = this.memberId;
 				const chatRoomNo = new URLSearchParams(location.search).get("chatRoomNo");
-				const data = {
+				const data1 = {
+						type: 5,
+						memberId: memberId,
+						chatRoomNo: chatRoomNo,
+						chatMessageContent: this.memberId + " 님이 위즈를 떠났습니다."
+				};
+				this.socket.send(JSON.stringify(data1));
+				const data2 = {
 						memberId: memberId,
 						chatRoomNo: chatRoomNo
-				}
+				};
 				const url = "${pageContext.request.contextPath}/chat/chatRoom/leave/";
-				const resp = await axios.post(url, data);
+				const resp = await axios.post(url, data2);
 				window.location.href = "${pageContext.request.contextPath}/chat/";
+			},
+			// 채팅방 이름 변경 모드
+			changeRoomName() {
+				this.roomInfo.edit = true;
+			},
+			// 이름 변경 취소
+			cancelChange() {
+				this.roomInfo.chatRoomName = this.roomInfoCopy.chatRoomName;
+				this.roomInfo.edit = false;
+			},
+			// 채팅방 이름 변경
+			async saveRoomName() {
+				const url = "${pageContext.request.contextPath}/chat/chatRoom/changeName";
+				const data = this.roomInfo;
+				const resp = await axios.put(url, data);
+				this.roomInfo.edit = false;
 			}
 		},
 		computed: {
@@ -192,6 +267,8 @@
 		},
 		created() {
 			this.connect();
+			this.loadRoomInfo();
+			this.loadChatMember();
 			this.loadMessage();
 			this.getChatJoin();
 		},
