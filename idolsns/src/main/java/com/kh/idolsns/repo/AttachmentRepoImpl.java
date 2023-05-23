@@ -29,4 +29,9 @@ public class AttachmentRepoImpl implements AttachmentRepo{
         return sqlSession.selectOne("attachment.selectOne", attachmentNo);
     }
 
+
+	@Override
+	public void delete(int attachmentNo) {
+		sqlSession.delete("attachment.remove", attachmentNo);
+	}
 }

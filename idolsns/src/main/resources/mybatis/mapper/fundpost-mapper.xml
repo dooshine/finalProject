@@ -16,7 +16,7 @@
 					)
 		values(
 		#{postNo}, #{memberId}, #{fundTitle}, #{postStart}, 
-		#{postEnd}, #{fundGoal}, #{fundSponsorCount}, #{fundState}
+		#{postEnd}, #{fundGoal}, #{fundSponsorCount}, '진행중'
 		)
 	</insert>
 	
@@ -36,5 +36,10 @@
 		set fund_state=#{fundState}
 		where post_no=#{postNo}
 	</update>
+	
+	<insert id="connect" parameterType="PostImageDto">
+		insert into post_image(post_no, attachment_no)
+		value(#{postNo}, #{attachmentNo})
+	</insert>
 	
 </mapper>

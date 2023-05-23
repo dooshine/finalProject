@@ -8,5 +8,6 @@ public interface ChatMessageRepo {
 	void sendMessage(ChatMessageDto dto);
 	List<ChatMessageDto> messageList(int chatRoomNo);
 	void deleteMessage(long chatMessageNo);
+	void sendPic(ChatMessageDto dto);
 	
 }

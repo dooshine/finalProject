@@ -18,6 +18,11 @@ public class FundPostViewRepoImpl implements FundPostViewRepo{
 	public List<FundPostViewDto> selectList() {
 		return sqlSession.selectList("fundPostView.selectList");
 	}
+
+	@Override
+	public FundPostViewDto selectOne(Long postNo) {
+		return sqlSession.selectOne("fundPostView.detail", postNo);
+	}
 	
 
 }

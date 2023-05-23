@@ -8,4 +8,5 @@ public interface AttachmentRepo {
     int sequence();
     void insert(AttachmentDto attachmentDto);
     AttachmentDto selectOne(int attachmentNo);
+    void delete(int attachmentNo);
 }
