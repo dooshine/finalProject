@@ -122,6 +122,7 @@ public class ChatServiceImpl implements ChatService {
 		messageDto.setChatMessageNo(chatMessageNo);
 		messageDto.setChatRoomNo(chatRoomNo);
 		messageDto.setMemberId(member.getMemberId());
+		messageDto.setChatMessageType(1);
 		// chatMessageContent에 내용만 빼서 저장
 		ObjectMapper objectMapper = new ObjectMapper();
 		JsonNode jsonNode = objectMapper.readTree(jsonMessage.getPayload());
@@ -231,6 +232,7 @@ public class ChatServiceImpl implements ChatService {
 			msg.setMemberId(member.getMemberId());
 			msg.setChatMessageTime(System.currentTimeMillis());
 			msg.setChatMessageContent(receiveVO.getChatMessageContent());
+			msg.setChatMessageType(receiveVO.getType());
 			// JSON으로 변환
 			// 메세지 번호 생성
 			int chatMessageNo = chatMessageRepo.sequence();
@@ -250,6 +252,7 @@ public class ChatServiceImpl implements ChatService {
 			msg.setChatMessageTime(System.currentTimeMillis());
 			msg.setChatMessageContent(receiveVO.getChatMessageContent());
 			msg.setAttachmentNo(receiveVO.getAttachmentNo());
+			msg.setChatMessageType(receiveVO.getType());
 			int chatMessageNo = chatMessageRepo.sequence();
 			msg.setChatMessageNo(chatMessageNo);
 			String json = mapper.writeValueAsString(msg);
@@ -258,14 +261,15 @@ public class ChatServiceImpl implements ChatService {
 		}
 		// 채팅방 입장 메세지인 경우
 		else if(receiveVO.getType() == WebSocketConstant.JOIN) {
+			//log.debug("chatRooms: " + chatRooms);
 			int chatRoomNo = receiveVO.getChatRoomNo();
 			this.join(member, chatRoomNo);
 		}
-		// 삭제인 경우
+		// 메세지 삭제인 경우
 		else if(receiveVO.getType() == WebSocketConstant.DELETE) {
 			int chatRoomNo = receiveVO.getChatRoomNo();
 			int attachmentNo = receiveVO.getAttachmentNo();
-			log.debug("attachmentNo: " + attachmentNo);
+			//log.debug("attachmentNo: " + attachmentNo);
 			long chatMessageNo = receiveVO.getChatMessageNo();
 			this.deleteMessage(chatMessageNo);
 			// 이미지 번호가 있으면 첨부파일 테이블에서 이미지 삭제
@@ -273,6 +277,22 @@ public class ChatServiceImpl implements ChatService {
 			String json = mapper.writeValueAsString(receiveVO);
 			TextMessage jsonMessage = new TextMessage(json);
 			this.broadcastDelete(chatRoomNo, jsonMessage);
+		}
+		// 채팅방 나가기인 경우
+		else if(receiveVO.getType() == WebSocketConstant.LEAVE) {
+			int chatRoomNo = receiveVO.getChatRoomNo();
+			this.exit(member, chatRoomNo);
+			ChatMessageVO msg = new ChatMessageVO();
+			msg.setChatRoomNo(chatRoomNo);
+			msg.setMemberId(member.getMemberId());
+			msg.setChatMessageTime(System.currentTimeMillis());
+			msg.setChatMessageContent(receiveVO.getChatMessageContent());
+			msg.setChatMessageType(receiveVO.getType());
+			int chatMessageNo = chatMessageRepo.sequence();
+			msg.setChatMessageNo(chatMessageNo);
+			String json = mapper.writeValueAsString(msg);
+			TextMessage jsonMessage = new TextMessage(json);
+			this.broadcastRoom(member, chatRoomNo, jsonMessage, chatMessageNo);
 		}
 	}
 

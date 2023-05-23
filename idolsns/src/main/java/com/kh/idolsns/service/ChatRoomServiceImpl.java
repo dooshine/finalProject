@@ -98,7 +98,6 @@ public class ChatRoomServiceImpl implements ChatRoomService {
 			// 채팅방 테이블에 저장
 			int chatRoomNo = chatRoomRepo.sequence();
 			chatRoomDto.setChatRoomNo(chatRoomNo);
-			chatRoomDto.setChatRoomName(memberId + " 외 " + (memberList.size() - 1) + "명");
 			chatRoomRepo.createRoom(chatRoomDto);
 			ChatRoomDto roomDto = chatRoomRepo.findRoom(chatRoomNo);
 			// 참여자 테이블에 저장
