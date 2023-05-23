@@ -43,6 +43,6 @@ public class PointRestController {
         // page와 size를 활용하여 페이지네이션을 구현하고, 조회 결과인 PaymentDto 리스트를 반환합니다.
         // 예시로 임시로 생성한 PaymentDto 리스트를 반환합니다.
         
-	return fundRepo.selectByMember(memberId);
+		return fundRepo.selectByMember(memberId);
     }
 }

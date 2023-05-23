@@ -35,6 +35,14 @@ public class FundRepoImpl implements FundRepo{
 		}
 
 	
+	//후원 취소
+	@Override
+	public void fundCancel(long fundNo) {
+		sqlSession.update("fund.fundCancel", fundNo);
+	}
+
+		
+	
 	@Override
 	public List<FundDto> selectAll() {
 		return sqlSession.selectList("fund.selectAll");

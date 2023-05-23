@@ -231,65 +231,7 @@
 	            	}
 		  		}).mount("#app");
 		
-//	          id: 1,
-//	          title: '지하철광고',
-//	          description: '6/25 제 생일입니다',
-//	          imageUrl: 'https://via.placeholder.com/400x300',
-//	          amount: 1000000,
-//	          progress: 75,
-//	          daysLeft: 10,
-//	          supporters: 20,
-//	        },
-//	        {
-//	          id: 2,
-//	          title: '성공적인 파이널프로젝트를 위해',
-//	          description: '6/12 파이널 프로젝트 종료',
-//	          imageUrl: 'https://via.placeholder.com/400x300',
-//	          amount: 2000000,
-//	          progress: 50,
-//	          daysLeft: 20,
-//	          supporters: 30,
-//	        },
-//	        {
-//	          id: 3,
-//	          title: '부자의 그릇',
-//	          description: '돈을 주세요',
-//	          imageUrl:'https://via.placeholder.com/400x300',
-//	          amount: 5000000,
-//	          progress: 30,
-//	          daysLeft: 30,
-//	          supporters: 40,
-//	        },
-//	        {
-//		          id: 4,
-//		          title: '지하철광고',
-//		          description: '6/25 제 생일입니다2222',
-//		          imageUrl: 'https://via.placeholder.com/400x300',
-//		          amount: 1000000,
-//		          progress: 75,
-//		          daysLeft: 10,
-//		          supporters: 20,
-//		        },
-//		        {
-//		          id: 5,
-//		          title: '성공적인 파이널프로젝트를 위해22',
-//		          description: '6/12 파이널 프로젝트 종료',
-//		          imageUrl: 'https://via.placeholder.com/400x300',
-//		          amount: 2000000,
-//		          progress: 50,
-//		          daysLeft: 20,
-//		          supporters: 30,
-//		        },
-//		        {
-//		          id: 6,
-//		          title: '부자의 그릇',
-//		          description: '돈을 주세요',
-//		          imageUrl:'https://via.placeholder.com/400x300',
-//		          amount: 5000000,
-//		          progress: 30,
-//		          daysLeft: 30,
-//		          supporters: 40,
-//		        },
+
 		</script>
 
 		
