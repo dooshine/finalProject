@@ -87,12 +87,14 @@
 				const resp = await axios.get(url);
 				this.chatRoomList.push(...resp.data);
 			},
+			// 팔로우 목록 불러오기
 			async loadFollowList() {
 				const url = "${pageContext.request.contextPath}/chat/chatRoom/follow/";
 				const resp = await axios.get(url);
 				//console.log("data: " + resp.data);
 				this.followList.push(...resp.data);
 			},
+			// 채팅방 모달 (구현 예정)
 			chatRoomModal() {
 				
 			},

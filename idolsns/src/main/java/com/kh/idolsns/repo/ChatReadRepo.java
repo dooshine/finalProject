@@ -4,6 +4,6 @@ import com.kh.idolsns.dto.ChatReadDto;
 public interface ChatReadRepo {
 
 	void saveMessage(ChatReadDto dto);
-	void updateReadTime(int chatMessageNo, String chatReciever);
+	void updateReadTime(int chatMessageNo, String chatReceiver);
 	
 }
