@@ -22,10 +22,12 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.kh.idolsns.configuration.CustomFileuploadProperties;
 import com.kh.idolsns.dto.AttachmentDto;
 import com.kh.idolsns.dto.FundDto;
+import com.kh.idolsns.dto.FundMainImageDto;
 import com.kh.idolsns.dto.FundPostDto;
 import com.kh.idolsns.dto.PostDto;
 import com.kh.idolsns.dto.PostImageDto;
 import com.kh.idolsns.repo.AttachmentRepo;
+import com.kh.idolsns.repo.FundMainImageRepo;
 import com.kh.idolsns.repo.FundPostRepo;
 import com.kh.idolsns.repo.FundPostViewRepo;
 import com.kh.idolsns.repo.FundRepo;
@@ -59,6 +61,9 @@ public class FundController {
 	private FundPostViewRepo fundPostViewRepo;
 	
 	@Autowired
+	private FundMainImageRepo fundMainImageRepo;
+	
+	@Autowired
 	private CustomFileuploadProperties customFileuploadProperties;
 	
 	@Autowired
@@ -82,6 +87,7 @@ public class FundController {
 		return "fund/write";
 	}
 	
+	// 펀딩 게시물 등록(다중파일 업로드)
 //	@PostMapping("/write")
 //	public String write(
 //							HttpSession session,
@@ -143,13 +149,79 @@ public class FundController {
 //		return "redirect:fund/detail";
 //	}
 	
-	@PostMapping("/write2")
-	public String write2(
+//	@PostMapping("/write2")
+//	public String write2(
+//							HttpSession session,
+//							@ModelAttribute FundPostDto fundPostDto,
+//							@ModelAttribute PostDto postDto,
+//							@ModelAttribute PostImageDto postImageDto,
+//							@RequestParam List<MultipartFile> attaches,
+//							RedirectAttributes attr
+//							) throws IllegalStateException, IOException {
+//		
+//		// # 통합게시물 등록
+//		// 1. 통합게시물 시퀀스 발행
+//        Long postNo = postRepo.sequence();
+//        postDto.setPostNo(postNo);
+//
+//        // 2. 통합게시물 작성자
+//        String memberId = (String)session.getAttribute("memberId");
+//        postDto.setMemberId(memberId);
+//
+//        // 3. 통합게시물 게시물종류 설정(Fix!!)
+//        postDto.setPostType("펀딩");
+//
+//        // 4. 통합게시물 등록
+//        postRepo.insert(postDto);
+//
+//		// # 펀딩게시물 등록
+//        // 1. 펀딩게시물 시퀀스 설정
+//        fundPostDto.setPostNo(postNo);
+//        
+//        // 2. 펀딩게시물 작성자
+//        fundPostDto.setMemberId(memberId);
+//        
+//        // 3. 펀딩게시물 등록
+//		fundPostRepo.insert(fundPostDto);
+//		
+//		// # DB 저장
+//		if(!attaches.isEmpty()) {
+//			for(MultipartFile attach : attaches) {
+//				int attachmentNo = attachmentRepo.sequence();   
+//				File target = new File(dir, String.valueOf(attachmentNo));
+//				attach.transferTo(target);	
+//				
+//				attachmentRepo.insert(AttachmentDto.builder()
+//						.attachmentNo(attachmentNo)
+//						.attachmentName(attach.getOriginalFilename())
+//						.attachmentType(attach.getContentType())
+//						.attachmentSize(attach.getSize())
+//						.build()
+//						);
+//				
+//				postImageRepo.insert(PostImageDto.builder()
+//						.attachmentNo(attachmentNo)
+//						.postNo(postNo)
+//						.build()
+//						);
+//			}
+//	      }
+//		
+//				
+//		// 리디렉트어트리뷰트 추가
+//        attr.addAttribute("postNo", postNo);
+//		
+//		return "redirect:detail";
+//	}
+	
+	// 펀딩게시물 등록
+	@PostMapping("/write3")
+	public String write3(
 							HttpSession session,
 							@ModelAttribute FundPostDto fundPostDto,
 							@ModelAttribute PostDto postDto,
-							@ModelAttribute PostImageDto postImageDto,
-							@RequestParam List<MultipartFile> attaches,
+							@RequestParam MultipartFile attach,
+							@RequestParam(required=false) List<Integer> attachmentNo,
 							RedirectAttributes attr
 							) throws IllegalStateException, IOException {
 		
@@ -179,27 +251,33 @@ public class FundController {
 		fundPostRepo.insert(fundPostDto);
 		
 		// # DB 저장
-		if(!attaches.isEmpty()) {
-			for(MultipartFile attach : attaches) {
-				int attachmentNo = attachmentRepo.sequence();   
-				File target = new File(dir, String.valueOf(attachmentNo));
+		if(!attach.isEmpty()) {
+				int attachmentNo1 = attachmentRepo.sequence();   
+				File target = new File(dir, String.valueOf(attachmentNo1));
 				attach.transferTo(target);	
 				
 				attachmentRepo.insert(AttachmentDto.builder()
-						.attachmentNo(attachmentNo)
+						.attachmentNo(attachmentNo1)
 						.attachmentName(attach.getOriginalFilename())
 						.attachmentType(attach.getContentType())
 						.attachmentSize(attach.getSize())
 						.build()
 						);
 				
-				postImageRepo.insert(PostImageDto.builder()
-						.attachmentNo(attachmentNo)
+				fundMainImageRepo.insert(FundMainImageDto.builder()
+						.attachmentNo(attachmentNo1)
 						.postNo(postNo)
 						.build()
 						);
-			}
 	      }
+		if(attachmentNo != null) {
+			for(int no : attachmentNo) {
+				PostImageDto postImageDto = new PostImageDto();
+				postImageDto.setPostNo(postNo);
+				postImageDto.setAttachmentNo(no);
+				postImageRepo.insert(postImageDto);
+			}
+		}
 		
 				
 		// 리디렉트어트리뷰트 추가
@@ -209,72 +287,8 @@ public class FundController {
 	}
 	
 	
-	@PostMapping("/write3")
-	public String write3(
-							HttpSession session,
-							@ModelAttribute FundPostDto fundPostDto,
-							@ModelAttribute PostDto postDto,
-							@RequestParam List<MultipartFile> attaches,
-							RedirectAttributes attr
-							) throws IllegalStateException, IOException {
-		
-		// # 통합게시물 등록
-		// 1. 통합게시물 시퀀스 발행
-        Long postNo = postRepo.sequence();
-        postDto.setPostNo(postNo);
-
-        // 2. 통합게시물 작성자
-        String memberId = (String)session.getAttribute("memberId");
-        postDto.setMemberId(memberId);
-
-        // 3. 통합게시물 게시물종류 설정(Fix!!)
-        postDto.setPostType("펀딩");
-
-        // 4. 통합게시물 등록
-        postRepo.insert(postDto);
-
-		// # 펀딩게시물 등록
-        // 1. 펀딩게시물 시퀀스 설정
-        fundPostDto.setPostNo(postNo);
-        
-        // 2. 펀딩게시물 작성자
-        fundPostDto.setMemberId(memberId);
-        
-        // 3. 펀딩게시물 등록
-		fundPostRepo.insert(fundPostDto);
-		
-		// # DB 저장
-		if(!attaches.isEmpty()) {
-			for(MultipartFile attach : attaches) {
-				int attachmentNo = attachmentRepo.sequence();   
-				File target = new File(dir, String.valueOf(attachmentNo));
-				attach.transferTo(target);	
-				
-				attachmentRepo.insert(AttachmentDto.builder()
-						.attachmentNo(attachmentNo)
-						.attachmentName(attach.getOriginalFilename())
-						.attachmentType(attach.getContentType())
-						.attachmentSize(attach.getSize())
-						.build()
-						);
-				
-				postImageRepo.insert(PostImageDto.builder()
-						.attachmentNo(attachmentNo)
-						.postNo(postDto.getPostNo())
-						.build()
-						);
-			}
-	      }
-		
-		// 리디렉트어트리뷰트 추가
-        attr.addAttribute("postNo", postNo);
-        attr.addAttribute("fundPostDto", fundPostDto);
-		
-		return "redirect:detail/";
-	}
 	
 	
-
 	// 펀딩게시물 수정
     @GetMapping("/update")
     public String update(
@@ -298,9 +312,6 @@ public class FundController {
     }
     
 	
-	
-	
-	
 	// 펀딩게시물 목록조회
 	@GetMapping("/list")
 	public String list(
@@ -315,11 +326,14 @@ public class FundController {
 	@GetMapping("/detail")
 	public String detail(@RequestParam Long postNo, Model model) {
 		FundPostDto fundPostDto = fundPostRepo.selectOne(postNo);
-		
 		List<PostImageDto> list = postImageRepo.selectList(postNo);
+		FundMainImageDto fundMainImageDto = fundMainImageRepo.selectOne(postNo);
+		int total = fundRepo.selectTotal(postNo);
 		
+		model.addAttribute("fundTotal", total);
 		model.addAttribute("fundPostDto", fundPostDto);
 		model.addAttribute("postImageList", list);
+		model.addAttribute("fundMainImageDto", fundMainImageDto);
 		return "fund/detail";
 	}
 
@@ -332,7 +346,6 @@ public class FundController {
     public String orderTo(
     		@RequestParam Long postNo, Model model){
     	FundPostDto fundPostDto = fundPostRepo.selectOne(postNo);
-		
 		List<PostImageDto> list = postImageRepo.selectList(postNo);
 		
 		model.addAttribute("fundPostDto", fundPostDto);
@@ -345,8 +358,11 @@ public class FundController {
     @GetMapping("/order")
     public String order(@RequestParam Long postNo, Model model) {
         FundPostDto fundPostDto = fundPostRepo.selectOne(postNo);
+        FundMainImageDto fundMainImageDto = fundMainImageRepo.selectOne(postNo);
+        
+        model.addAttribute("fundMainImageDto", fundMainImageDto);
         model.addAttribute("fundPostDto", fundPostDto);
-        System.out.println(fundPostDto);
+//        System.out.println(fundPostDto);
         return "fund/order";
     }
 
@@ -359,10 +375,12 @@ public class FundController {
     		RedirectAttributes attr) {
     	
         String memberId = (String) session.getAttribute("memberId");
+        String fundTitle = (fundPostRepo.selectOne(postNo)).getFundTitle();
         
         fundDto.setMemberId(memberId);
         fundDto.setPostNo(postNo);
         fundDto.setFundNo(fundRepo.sequence());
+        fundDto.setFundTitle(fundTitle);
         
         fundRepo.insert(fundDto);
        
