@@ -135,22 +135,22 @@
 					    									v-on:click="link(funding)">
 					      <img :src="getImageUrl(funding)" alt="Funding Image">
 					      <h3 class="title">{{ funding.fundTitle }}</h3>
-					      <p class="description">{{ funding.postContent }}</p>
+					      <p class="description">{{ funding.fundShortTitle }}</p>
 					      <div class="progress-bar">
 					        <div class="progress" :style="{ width: funding.progress + '%' }"></div>
 					      </div>
 					      <div class="info">
 					        <div>
+<!-- 					          <span class="label">목표금액</span> -->
 					          <span class="value">{{ funding.fundGoal }}원</span>
-					          <span class="label">목표금액</span>
 					        </div>
 					        <div>
-					          <span class="value">{{ getTimeDiff(funding) }}</span>
-					          <span class="label">남은 기간</span>
-					        </div>
-					        <div>
+					          <span class="label">후원자</span>
 					          <span class="value">{{ funding.fundSponsorCount }}명</span>
-					          <span class="label">서포터</span>
+					        </div>
+					        <div>
+<!-- 					          <span class="label">남은 기간</span> -->
+					          <span class="value">{{ getTimeDiff(funding) }}</span>
 					        </div>
 					      </div>
 					    </div>
@@ -175,7 +175,8 @@
 				      postStart: "",
 				      postEnd: "",
 				      progress: "",
-				      postNo: ""
+				      postNo: "",
+				      fundShortTitle: "",
 	            	}
 	            	},
 	            	computed: {
@@ -196,13 +197,7 @@
 	            		        return Math.ceil(timeDiff / (24 * 60 * 60 * 1000))+"일";
 	            		      } else {
 	            		    	// 1일 미만인 경우
-	            		          const currentDate = new Date();
-	            		          const endOfDay = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate(), 23, 59, 59);
-	            		          const remainingTime = endOfDay.getTime() - currentDate.getTime();
-	            		          const remainingHours = Math.floor(remainingTime / (60 * 60 * 1000));
-	            		          const remainingMinutes = Math.floor((remainingTime % (60 * 60 * 1000)) / (60 * 1000));
-	            		          const remainingSeconds = Math.floor((remainingTime % (60 * 1000)) / 1000);
-	            		          return remainingHours+"시간"+ remainingMinutes+"분";
+	            		          return "오늘마감";
 	            		        }
 	            		},
 	            		getProgress(funding) {

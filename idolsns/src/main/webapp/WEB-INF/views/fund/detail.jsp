@@ -180,7 +180,7 @@
         		          const remainingHours = Math.floor(remainingTime / (60 * 60 * 1000));
         		          const remainingMinutes = Math.floor((remainingTime % (60 * 60 * 1000)) / (60 * 1000));
         		          const remainingSeconds = Math.floor((remainingTime % (60 * 1000)) / 1000);
-        		          return remainingHours+"시간"+ remainingMinutes+"분";
+        		          return remainingHours+"시간";
         		        }
         		},
 		    },
