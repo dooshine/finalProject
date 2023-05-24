@@ -26,7 +26,11 @@
         	<i class="fa-solid fa-star">신고목록</i></a>
         <a href="${pageContext.request.contextPath}/admin/sanction">
         	<i class="fa-solid fa-sack-dollar">제재목록</i></a>
-        <a href="${pageContext.request.contextPath}/admin/">
-        	<i class="fa-sharp fa-solid fa-coins">메뉴4</i></a>
+        <a href="${pageContext.request.contextPath}/admin/tag">
+        	<i class="fa-sharp fa-solid fa-coins">태그 목록조회</i></a>
+        <a href="${pageContext.request.contextPath}/admin/tagCnt">
+        	<i class="fa-sharp fa-solid fa-coins">태그별 사용량 조회</i></a>
+		<a href="${pageContext.request.contextPath}/admin/artist">
+			<i class="fa-sharp fa-solid fa-coins">아티스트 조회</i></a>
   	</div>
   </aside>

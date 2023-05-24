@@ -134,5 +134,3 @@
 
 
 <jsp:include page="/WEB-INF/views/admin/adminFooter.jsp"></jsp:include>
-	
-	
