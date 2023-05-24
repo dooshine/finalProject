@@ -17,4 +17,5 @@ public class MemberDto {
 	private Date memberJoin;
 	private String memberLevel;
 	private Date memberLogin;
+	private Date memberExitDate;
 }

@@ -46,14 +46,14 @@
 			<div class="row mb-3">
 				<div class="col"></div>
 					<input type="email" class="form-control" placeholder="이메일" v-model="memberEmail"  name="memberEmail"
-					   :class="{'is-invalid':emailDuplicated && memberEmail !== ''}" 
+					   :class="{'is-invalid':!emailDuplicated && memberEmail !== ''}" 
 					   @blur="emailDuplicatedCheck(memberEmail)">
 					<div class="invalid-feedback">{{memberEmailMessage}}</div>
 				<div class="col"></div>
 			</div>
 			<div class="row mb-3">
 				<div class="col"></div>
-				<button type=button class="btn btn-info"  v-bind:disabled="emailDuplicated" @click="pagePlus(), findId(memberEmail)" >아이디 조회</button>
+				<button type=button class="btn btn-info"  v-bind:disabled="!emailDuplicated" @click="pagePlus(), findId(memberEmail)" >아이디 조회</button>
 				<div class="col"></div>
 			</div>
 		</div>	
@@ -61,9 +61,7 @@
 		<div v-show="page==2">
 			<div class="row">
 				<h1 style="text-align:center;">아이디 조회 결과</h1>
-				<h3 style="text-aligh:center;">
-					찾으시는 아이디는 {{memberId}}입니다.
-				</h3>
+				<h3>조회하신 아이디는 {{memberId}}입니다.</h3>
 			</div>
 		</div>
 		
@@ -93,7 +91,7 @@
     					}
     				});
     				if(response.data=="N") {
-    					this.emailDuplidated=true;
+    					this.emailDuplicated=true;
     				}
     				else {
     					this.emailDuplicated=false;

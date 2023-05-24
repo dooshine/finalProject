@@ -40,14 +40,14 @@
             <form action="join" method="post" autocomplete="off">
             <div v-show="page==1">
             	<h1>약관 동의</h1>
-            	<input type="checkbox">
-            	<button type="button" class="btn btn-info w-100" @click="pagePlus()">동의합니다.</button>
+            	<input type="checkbox" v-model="agree">
+            	<button type="button" class="btn btn-info w-100" @click="pagePlus()" :disabled="!agree">동의합니다.</button>
             </div>
+            
 			<div v-show="page==2">
             <div class="row mb-5">
                     <h1 style="text-align:center;">회원가입</h1>
             </div>
-
             <div class="row mb-3">
                     <input type="text" v-model="memberId" class="form-control" 
                     	:class="{ 'is-valid': memberIdValid && !idDuplicated, 'is-invalid': memberId !== '' && (!memberIdValid || idDuplicated)}" placeholder="아이디" 
@@ -129,6 +129,7 @@
                     code:"",
                     key:"",
                     keyValid:false,
+                    agree:false,
                 };
             },
             methods:{
