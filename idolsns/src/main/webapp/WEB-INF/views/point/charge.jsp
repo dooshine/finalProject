@@ -217,7 +217,7 @@
 	            },
 			
 	           	 async loadMemberPoint() {
-	                     const url = "http://localhost:8080/rest/member/" + memberId;
+	                     const url = "/rest/member/" + memberId;
 	                     const data = {
 	                         memberId: this.memberId // 로그인된 멤버 아이디 사용
 	                     };

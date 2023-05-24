@@ -168,6 +168,18 @@
 	</update>
 	
 	
+		
+	<!-- 펀딩 취소 시 포인트 돌려받음 -->
+	<update id="plusPoint">
+	  UPDATE member 
+	  SET member_point =  member_point + #{fundPrice} 
+	  WHERE member_id = #{memberId}
+	</update>
+	
+	
+	
+	
+	
 	<delete id="delete">
 		delete member where member_id = #{memberId}
 	</delete>
