@@ -69,7 +69,6 @@
 					// postDto에 삽입하기 위해 post로 송신할 JSON 객체생성
 					let postDto = {
 						memberId: "testuser1",
-						memberNick: "테스트유저1",
 						postType: categori,
 						postContent: postText		
 					}

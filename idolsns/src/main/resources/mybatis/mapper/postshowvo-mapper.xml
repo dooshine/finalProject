@@ -30,6 +30,7 @@
 			Left outer join map m on p.post_no = m.post_no
 			Left OUTER JOIN member mb ON p.member_id = mb.member_id
 			Left OUTER JOIN member_profile_image mpi ON p.member_id = mpi.member_id
+			WHERE p.post_type != '펀딩'
 	</select>
 
-</mapper>
+</mapper> 

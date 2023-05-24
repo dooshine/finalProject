@@ -1,8 +1,6 @@
 // 마커를 담을 배열입니다
 var markers = [];
 
-
-
 // 지도 정보를 담을 변수
 let mapPlace = "기본";
 
@@ -164,9 +162,6 @@ function ifClick(){
 	    });
 	  });
 	});
-	
-	
-    
 }
 
 // 마커를 생성하고 지도 위에 마커를 표시하는 함수입니다
@@ -256,7 +251,7 @@ function relayout(){
 // 마커를 클릭하면 장소명을 표출할 인포윈도우 입니다
 var infowindow = new kakao.maps.InfoWindow({zIndex:1});
 function showMap(keyword){
-	ps.kewordSearch(keyword,showMapPlacesSearchCB);
+	ps.keywordSearch(keyword,showMapPlacesSearchCB);
 }
 // 키워드 검색 완료 시 호출되는 콜백함수 입니다
 function showMapPlacesSearchCB (data, status, pagination) {
