@@ -5,6 +5,7 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -117,12 +118,14 @@ public class MemberController {
 			return "redirect:exit";
 		}
 		
-		memberRepo.delete(memberId);
+			memberRepo.delete(memberId);
+			
+			session.removeAttribute("memberId");
+			session.removeAttribute("memberLevel");
+			
+			return "redirect:exitFinish";
 		
-		session.removeAttribute("memberId");
-		session.removeAttribute("memberLevel");
 		
-		return "redirect:exitFinish";
 	}
 	
 	@GetMapping("/exitFinish")
