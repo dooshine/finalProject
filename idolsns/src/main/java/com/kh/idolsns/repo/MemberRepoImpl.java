@@ -124,12 +124,6 @@ public class MemberRepoImpl implements MemberRepo{
 		return sqlSession.selectOne("member.joinEmail", memberEmail);
 	}
 
-	// 관리자 회원목록 조회
-	@Override
-	public List<MemberDto> adminSelectList(AdminMemberSearchVO adminMemberSearchVO) {
-		return sqlSession.selectList("member.selectList", adminMemberSearchVO);
-	}
-
 	//중복 검사
 	@Override
 	public int idDuplicatedCheck(String memberId) {

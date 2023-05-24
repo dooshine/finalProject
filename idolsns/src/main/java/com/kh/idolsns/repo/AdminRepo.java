@@ -2,8 +2,10 @@ package com.kh.idolsns.repo;
 
 import java.util.List;
 
+import com.kh.idolsns.dto.MemberDto;
 import com.kh.idolsns.dto.TagCntDto;
 import com.kh.idolsns.dto.TagDto;
+import com.kh.idolsns.vo.AdminMemberSearchVO;
 import com.kh.idolsns.vo.TagCntSearchVO;
 
 public interface AdminRepo {
@@ -16,4 +18,6 @@ public interface AdminRepo {
     // 태그 사용량 조회
     List<TagCntDto> adminTagCntSelectList(TagCntSearchVO tagCntSearchVO);
 
+    // 모든 회원목록 조회
+	List<MemberDto> adminSelectMemberList(AdminMemberSearchVO adminMemberSearchVO);
 }

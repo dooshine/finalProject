@@ -30,7 +30,7 @@
               and instr(member_id, #{memberId}) > 0
             </if>
             <if test="followTargetTypeExist">
-              and instr(follow_target_type, #{followTargetTypeExist}) > 0
+              and instr(follow_target_type, #{followTargetType}) > 0
             </if>
         </where>
     </select>

@@ -314,7 +314,7 @@
         },
         // 멤버 불러오기
         async loadMember(){
-            const url = "http://localhost:8080/rest/member/"
+            const url = "http://localhost:8080/rest/admin/member"
             const response = await axios.post(url, this.memberSearchVO);
             this.memberList = _.cloneDeep(response.data);
         },
@@ -340,11 +340,18 @@
             this.memberList = _.cloneDeep(resp.data);
             // console.table(this.memberSearchVO);
         },
-
-        // 회원 팔로우
+        // 회원 팔로우 생성
         async followMember(followTargetId){
             const url = "http://localhost:8080/rest/follow/member";
             const resp = await axios.post(url, { followTargetPrimaryKey: followTargetId });
+        },
+        // 팔로우 목록(회원) 불러오기
+        async loadMemberFollow(){
+            // 로그인한 상태가 아니라면 실행X
+            if(memberId==="") return;
+            const url = "http://localhost:8080/rest/follow/member";
+            const resp = await axios.get(url, { param: {memberId: memberId} });
+            console.log(resp.data);
         }
       },
       watch: {
@@ -379,6 +386,7 @@
       },
       created(){
             this.loadMember();
+            this.loadMemberFollow();
       },
       mounted(){
         // this.modal = new bootstrap.Modal(this.$refs.modal03);

@@ -1,5 +1,7 @@
 package com.kh.idolsns.restcontroller;
 
+import java.util.List;
+
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,7 +47,7 @@ public class FollowRestController {
     // # 회원
     // 팔로우(회원) 생성
     @PostMapping("/member")
-    public void selectFollowMember(@RequestBody FollowDto followDto, HttpSession session){
+    public void createFollowMember(@RequestBody FollowDto followDto, HttpSession session){
         // 회원 아이디
         String memberId = (String)session.getAttribute("memberId");
         followDto.setMemberId(memberId);
@@ -53,17 +55,35 @@ public class FollowRestController {
         followDto.setFollowTargetType("회원");
         System.out.println(followDto);
 
-        if(followService.checkFollow(followDto))
-        // followService.createFollow(followDto);
+        // 회원 팔로우 생성
+        followService.createFollow(followDto);
     }
-    // @GetMapping("/member")
-    // public List<FollowDto> selectFollowMember(@ModelAttribute FollowDto followDto, HttpSession session){
-    //     // 회원 아이디
-    //     String memberId = (String)session.getAttribute("memberId");
-    //     followDto.setMemberId(memberId);
-    //     // 팔로우 회원찾기 설정
-    //     followDto.setFollowTargetType("회원");
 
-    //     return followService.selectFollowList(followDto);
-    // }
+    // 팔로우한 회원 목록 조회
+    @GetMapping("/member")
+    public List<FollowDto> selectFollowingMemberList(@ModelAttribute FollowDto followDto, HttpSession session){
+        // 회원 아이디
+        String memberId = (String)session.getAttribute("memberId");
+        followDto.setMemberId(memberId);
+        // 팔로우 회원찾기 설정
+        followDto.setFollowTargetType("회원");
+
+        System.out.println(followDto);
+        // 본인이 팔로우 한 팔로우 리스트
+        return followService.selectFollowList(followDto);
+    }
+
+    // 팔로우한 페이지 목록 조회
+    @GetMapping("/page")
+    public List<FollowDto> selectFollowingPageList(@ModelAttribute FollowDto followDto, HttpSession session){
+        // 회원 아이디
+        String memberId = (String)session.getAttribute("memberId");
+        followDto.setMemberId(memberId);
+        // 팔로우 회원찾기 설정
+        followDto.setFollowTargetType("대표페이지");
+
+        System.out.println(followDto);
+        // 본인이 팔로우 한 팔로우 리스트
+        return followService.selectFollowList(followDto);
+    }
 }

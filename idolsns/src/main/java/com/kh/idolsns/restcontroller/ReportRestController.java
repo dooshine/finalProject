@@ -14,6 +14,7 @@ import com.kh.idolsns.dto.MemberDto;
 import com.kh.idolsns.dto.ReportDto;
 import com.kh.idolsns.repo.MemberRepo;
 import com.kh.idolsns.repo.ReportRepo;
+import com.kh.idolsns.service.AdminService;
 import com.kh.idolsns.service.ReportService;
 import com.kh.idolsns.vo.AdminMemberSearchVO;
 import com.kh.idolsns.vo.SearchVO;
@@ -32,7 +33,7 @@ public class ReportRestController {
 
     // 테스트 repo(지울예정)
     @Autowired
-    private MemberRepo memberRepo;
+    private AdminService adminService;
 
     @Autowired
     private ReportService reportService;
@@ -60,6 +61,6 @@ public class ReportRestController {
     @PostMapping("/test")
     public List<MemberDto> test(@RequestBody AdminMemberSearchVO adminMemberSearchVO){
         // System.out.println(adminMemberSearchVO);
-        return memberRepo.adminSelectList(adminMemberSearchVO);
+        return adminService.adminSelectMemberList(adminMemberSearchVO);
     }
 }
