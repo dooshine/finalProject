@@ -58,6 +58,13 @@ public class FundRepoImpl implements FundRepo{
 	}
 
 
+
+	@Override
+	public List<FundDto> selectByPostNo(Long postNo) {
+		return sqlSession.selectList("fund.selectByPostNo", postNo);
+	}
+
+
 		
 
 	

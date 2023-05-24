@@ -6,12 +6,13 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import com.kh.idolsns.dto.FundPostListDto;
+import com.kh.idolsns.dto.FundDto;
+import com.kh.idolsns.dto.FundPostImageDto;
 import com.kh.idolsns.dto.PostImageDto;
 import com.kh.idolsns.vo.FundDetailVO;
 
 @Repository
-public class FundPostListRepoImpl implements FundPostListRepo{
+public class FundPostImageRepoImpl implements FundPostImageRepo{
 
 	@Autowired
 	private SqlSession sqlSession;
@@ -22,13 +23,18 @@ public class FundPostListRepoImpl implements FundPostListRepo{
 	}
 
 	@Override
-	public FundPostListDto selectOne(Long postNo) {
-		return sqlSession.selectOne("fundpostlist.fundByPostNo", postNo);
+	public FundDetailVO selectOne(Long postNo) {
+		return sqlSession.selectOne("fundpostlist.fundPostByPostNo", postNo);
 	}
 
 	@Override
-	public List<FundPostListDto> selectList() {
+	public List<FundPostImageDto> selectList() {
 		return sqlSession.selectList("fundpostlist.list");
+	}
+
+	@Override
+	public List<FundDto> selectFundList(Long postNo) {
+		return sqlSession.selectList("fundpostlist.fundByPostNo", postNo);
 	}
 	
 

@@ -28,7 +28,7 @@ import com.kh.idolsns.dto.PostDto;
 import com.kh.idolsns.dto.PostImageDto;
 import com.kh.idolsns.repo.AttachmentRepo;
 import com.kh.idolsns.repo.FundMainImageRepo;
-import com.kh.idolsns.repo.FundPostListRepo;
+import com.kh.idolsns.repo.FundPostImageRepo;
 import com.kh.idolsns.repo.FundPostRepo;
 import com.kh.idolsns.repo.FundRepo;
 import com.kh.idolsns.repo.MemberRepo;
@@ -49,6 +49,9 @@ public class FundController {
 	private PostRepo postRepo;
 	
 	@Autowired
+	private FundPostImageRepo fundPostImageRepo;
+	
+	@Autowired
 	private FundRepo fundRepo; 
 	
 	@Autowired
@@ -58,7 +61,7 @@ public class FundController {
 	private PostImageRepo postImageRepo;
 	
 	@Autowired
-	private FundPostListRepo fundPostListRepo;
+	private FundPostImageRepo fundPostListRepo;
 	
 	@Autowired
 	private FundMainImageRepo fundMainImageRepo;
@@ -328,11 +331,6 @@ public class FundController {
 		FundPostDto fundPostDto = fundPostRepo.selectOne(postNo);
 		List<PostImageDto> list = postImageRepo.selectList(postNo);
 		FundMainImageDto fundMainImageDto = fundMainImageRepo.selectOne(postNo);
-		Integer total = fundRepo.selectTotal(postNo);
-		if(total == null) {
-			model.addAttribute("fundTotal", 0);
-		}
-		else model.addAttribute("fundTotal", total);
 		
 		model.addAttribute("fundPostDto", fundPostDto);
 		model.addAttribute("postImageList", list);
@@ -375,6 +373,7 @@ public class FundController {
     		HttpSession session, 
     		@RequestParam Long postNo, 
     		@ModelAttribute FundDto fundDto, 
+    		@ModelAttribute FundPostDto fundPostDto,
     		RedirectAttributes attr) {
     	
         String memberId = (String) session.getAttribute("memberId");
@@ -391,6 +390,17 @@ public class FundController {
         // 포인트 차감
         int fundPrice = fundDto.getFundPrice();
         memberRepo.minusPoint(memberId, fundPrice);
+        
+        // 후원자 수 1 증가
+        List<FundDto> list = fundRepo.selectByPostNo(postNo);
+        int cnt = 0;
+        for(int i=0; i<list.size(); i++) {
+        	cnt ++;
+        }
+        fundPostDto.setFundSponsorCount(cnt);
+        fundPostDto.setPostNo(postNo);
+        fundPostRepo.sponsorCount(fundPostDto);
+        
 
         attr.addAttribute("fundNo", fundDto.getFundNo());
         

@@ -60,6 +60,11 @@
            where post_no=#{postNo}
 	</select>
 	
+	<!-- 특정 postNo를 가진 게시물을 후원한 목록 -->
+	<select id="selectByPostNo" resultType="FundDto" parameterType="Long">
+		select * from fund where post_no=#{postNo}
+	</select>
+	
 	
 
 
