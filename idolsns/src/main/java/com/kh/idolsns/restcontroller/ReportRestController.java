@@ -52,8 +52,7 @@ public class ReportRestController {
     // 신고 삭제
     @DeleteMapping("/")
     public void delete(@RequestBody List<Long> reportNoList) {
-        // reportService.delete(reportNoList);
-        System.out.println(reportNoList);
+        reportService.delete(reportNoList);
     }
 
 
