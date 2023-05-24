@@ -4,13 +4,14 @@
 <!-- clndr -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/clndr/1.1.0/clndr.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.13.6/underscore-min.js"></script>
-<link rel="stylesheet" type="text/css" href="/static/css/clndr.css">
+<!-- <link rel="stylesheet" type="text/css" href="/static/css/clndr.css"> -->
             </div>
        
             
 		
 
 	<div class="col-3">
+		<!-- 캘린더 영역 -->
 	  	<div id="calendar">
 	  		<div class="clndr-grid">
 				<div class="days-of-the-week clearfix">
@@ -59,6 +60,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
     
 
+	<!-- cnldr 스크립트 -->
  	<script>
  		$(function() {
  			$("#calendar").clndr({
@@ -81,6 +83,168 @@
  		});
 	</script>
  
+ 	<script>
+		Vue.createApp({
+			data() {
+				return {
+					socket: null,
+					memberId: "${sessionScope.memberId}",
+					chatMainModal: false,
+					createRoomModal: false,
+					chatRoomModal: false,
+					
+					// main에서 가져옴
+					chatRoom: {
+						chatRoomNo: "",
+						chatRoomName: "",
+						chatRoomStart: "",
+						chatRoomType: ""
+					},
+					memberId: memberId,
+					chatRoomList: [],
+					followList: [],
+					selectedMemberList: [memberId]
+					
+					// chatRoomNo에서 가져옴
+					/*text: "",
+					roomInfo: {
+						chatRoomNo: "",
+						chatRoomName: "",
+						chatRoomStart: "",
+						chatRoomType: ""
+					},
+					roomInfoCopy: {
+						chatRoomName:"",
+					},
+					chatMemberList: [],
+					//followList: [],
+					//selectedMemberList: [],
+					messageList: [],
+					chatJoin: "",
+					
+					// 입력창 초기화
+					clear() {
+						this.text = ""
+					},*/
+				};
+			},
+			methods: {
+				connect() {
+					const url = "${pageContext.request.contextPath}/ws/server";
+					this.socket = new SockJS(url);
+					// this: 뷰 객체
+					const app = this;
+					this.socket.onopen = function() {
+						app.openHandler();
+					};
+					this.socket.onclose = function() {
+						app.closeHandler();
+					};
+					this.socket.onerror = function() {
+						app.closeHandler();
+					};
+					this.socket.onmessage = function(e) {
+						app.messageHandler(e);
+					};
+				},
+				openHandler() {
+					const data = { type: 2, chatRoomNo: -2 };
+					this.socket.send(JSON.stringify(data));
+				},
+				closeHandler() {
+				},
+				errorHandler() {
+				},
+				messageHandler(e) {
+					
+				},
+				// 채팅 메인 모달 표시
+				showChatMainModal() {
+					this.chatRoomList.splice(0);
+					this.loadRoomList();
+					this.followList.splice(0);
+					this.loadFollowList();
+					this.chatMainModal = true;
+				},
+				// 채팅 메인 모달 숨김
+				hideChatMainModal() {
+					this.chatMainModal = false;
+				},
+				// 채팅방 만들기 모달 표시
+				showCreateRoomModal() {
+					this.hideChatMainModal();
+					this.createRoomModal = true;
+				},
+				// 채팅방 만들기 모달 숨김
+				hideCreateRoomModal() {
+					this.createRoomModal = false;
+					this.showChatMainModal();
+				},
+				// 채팅방 모달 표시
+				showChatRoomModal() {
+					
+				},
+				hideChatRoomModal() {
+					
+				},
+				
+				// 로그인한 회원이 속해있는 채팅방 목록
+				async loadRoomList() {
+					const memberId = this.memberId;
+					const url = "${pageContext.request.contextPath}/chat/chatRoom/" + memberId;
+					const resp = await axios.get(url);
+					this.chatRoomList.push(...resp.data);
+				},
+				// 팔로우 목록 불러오기
+				async loadFollowList() {
+					const url = "${pageContext.request.contextPath}/chat/chatRoom/follow/";
+					const resp = await axios.get(url);
+					//console.log("data: " + resp.data);
+					this.followList.push(...resp.data);
+				},
+				// 채팅방 만들기
+				async createChatRoom() {
+					this.chatRoom.memberList = this.selectedMemberList;
+					if(this.selectedMemberList.length > 2) {
+						this.chatRoom.chatRoomType = 'G';
+					}
+					else {
+						this.chatRoom.chatRoomType = 'P';
+					}
+					const url = "${pageContext.request.contextPath}/chat/chatRoom/";
+					const data = {
+							memberId: this.memberId,
+							chatRoomDto: this.chatRoom,
+							memberList: this.selectedMemberList
+					}
+					const resp = await axios.post(url, data);
+					this.chatRoom.chatRoomName = "";
+					this.selectedMemberList.splice(0);
+					this.selectedMemberList.push(memberId);
+				},
+			},
+			computed: {
+				memberCount() {
+					return this.selectedMemberList.length;
+				},
+				nameCount() {
+					return this.chatRoom.chatRoomName.length;
+				}
+			},
+			created() {
+				this.hideCreateRoomModal();
+				this.hideChatMainModal();
+				if(this.memberId != ""){
+					this.connect();
+					this.loadRoomList();
+					this.loadFollowList();
+				}
+			},
+			mounted() {
+
+			}
+		}).mount("#header-area");
+	</script>
 
  
     

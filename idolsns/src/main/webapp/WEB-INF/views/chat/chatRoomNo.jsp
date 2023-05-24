@@ -81,18 +81,6 @@
 	
 </div>
 
-<!-- Vue cdn -->
-<script src="https://unpkg.com/vue@3.2.36"></script>
-<!-- sockjs cdn -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.6.1/sockjs.min.js"></script>
-<!-- moment cdn -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
-<!-- moment cdn 한국어 팩 -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/locale/ko.min.js"></script>
-<!-- axios cdn -->
-<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-<!-- lodash cdn -->
-<script src="https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js"></script>
 <script>
 	Vue.createApp({
 		data() {
