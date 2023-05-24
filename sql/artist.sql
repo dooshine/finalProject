@@ -37,6 +37,7 @@ order by a.artist_no asc;
 
 
 -- 아티스트 테이블 + 팔로우 수 + 프로필사진 번호
+create or replace view artist_view as 
 select c.*, d.attachment_no from (
   select a.*, b.follow_cnt from artist a
     left join (
@@ -50,6 +51,7 @@ select c.*, d.attachment_no from (
   on c.artist_no = d.artist_no
   order by c.artist_no asc;  
 
+select * from artist_view;
 
 
 -- 대표페이지 프로필 테이블 생성

@@ -1,5 +1,7 @@
 package com.kh.idolsns.repo;
 
+import java.util.List;
+
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -28,6 +30,12 @@ public class FollowRepoImpl implements FollowRepo{
     @Override
     public void deleteFollow(FollowDto followDto) {
         sqlSession.delete("follow.deleteFollow", followDto);
+    }
+
+    // 팔로우 리스트 조회
+    @Override
+    public List<FollowDto> selectFollowList(FollowDto followDto) {
+        return sqlSession.selectList("follow.selectFollowList", followDto);
     }
     
 }
