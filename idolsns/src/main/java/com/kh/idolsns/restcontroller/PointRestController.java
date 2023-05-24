@@ -28,13 +28,22 @@ public class PointRestController {
 	private FundRepo fundRepo;
 	
 	@GetMapping("/history/{memberId}")
-	    public List<PaymentDto> selectByMember(@PathVariable String memberId) {
-	        // memberId를 사용하여 해당 멤버의 충전 내역을 페이지별로 조회하는 로직을 작성해주세요.
-	        // page와 size를 활용하여 페이지네이션을 구현하고, 조회 결과인 PaymentDto 리스트를 반환합니다.
-	        // 예시로 임시로 생성한 PaymentDto 리스트를 반환합니다.
-	        
-		return paymentRepo.selectByMember(memberId);
-	    }
+    public List<PaymentDto> selectByMember(@PathVariable String memberId) {
+        // memberId를 사용하여 해당 멤버의 충전 내역을 페이지별로 조회하는 로직을 작성해주세요.
+        // page와 size를 활용하여 페이지네이션을 구현하고, 조회 결과인 PaymentDto 리스트를 반환합니다.
+        // 예시로 임시로 생성한 PaymentDto 리스트를 반환합니다.
+        
+	return paymentRepo.selectByMember(memberId);
+    }
+	
+	//디테일
+	@GetMapping("/{paymentNo}")
+    public PaymentDto find(@PathVariable int paymentNo) {
+	 	PaymentDto paymentDto = paymentRepo.find(paymentNo);
+	    return paymentDto;
+    }
+	
+	
 	
 	
 	@GetMapping("/order/{memberId}")

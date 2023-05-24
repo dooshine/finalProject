@@ -9,6 +9,8 @@ public interface PaymentRepo {
 	void save(PaymentDto dto);
 	List<PaymentDto> selectAll();
 	List<PaymentDto> selectByMember(String memberId);
+
+	
 	PaymentDto find(int paymentNo);
 	PaymentDto find2(String paymentTid);
 	

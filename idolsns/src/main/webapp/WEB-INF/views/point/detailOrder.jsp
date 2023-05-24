@@ -44,15 +44,18 @@
       </table>
 
       <div class="d-flex justify-content-end">
-        <!-- 결제 취소 버튼: 잔여 금액이 존재한다면 -->
-        <template v-if="fundDto.fundPrice > 0">
-          <a :href="'cancelOrder?fundNo=' + fundDto.fundNo" style="padding-left: 0.5em">
-            <button class="btn btn-sm btn-danger">
-              후원 취소
-            </button>
-          </a>
-        </template>
-      </div>
+		  <!-- 결제 취소 버튼: 잔여 금액이 존재한다면 -->
+		  <template v-if="fundDto.fundPrice > 0">
+		    <a :href="'cancelOrder?fundNo=' + fundDto.fundNo" style="padding-left: 0.5em">
+		      <button class="btn btn-sm btn-danger" :disabled="isCancellationDisabled">
+		        후원 취소
+		      </button>
+		    </a>
+		    <p v-if="isCancellationDisabled" style="color: red; padding-left: 0.5em">
+		      펀딩 종료일 1일 전까지만 취소 가능합니다.
+		    </p>
+		  </template>
+		</div>
     </div>
   </div>
 </div>
@@ -65,13 +68,14 @@
         fundNo: ''
       }
     },
+ 
     methods: {
       async loadOrderDetail() {
         try {
-          const url = "http://localhost:8080/rest/order/" + this.fundNo;
+          const url = "/rest/order/" + this.fundNo;
           const response = await axios.get(url);
           this.fundDto = response.data;
-        } catch (error) {
+          } catch (error) {
           console.error(error);
         }
       }
