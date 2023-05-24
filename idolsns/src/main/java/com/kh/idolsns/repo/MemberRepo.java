@@ -31,6 +31,7 @@ public interface MemberRepo {
 	MemberDto joinNick(String memberNick);
 	MemberDto joinEmail(String memberEmail);
 	MemberDto emailExist(String memberId);
+	boolean editPassword(String memberEmail, String memberPw);
 	
 	//중복 검사
 	int idDuplicatedCheck(String memberId);

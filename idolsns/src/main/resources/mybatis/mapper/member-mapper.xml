@@ -176,6 +176,10 @@
 		update member set member_pw=#{memberPw} where member_id=#{memberId}
 	</update>
 	
+	<update id="editPassword">
+		update member set member_pw=#{memberPw} where member_email=#{memberEmail}
+	</update>
+	
 	<update id="nickname">
 		update member set member_nick=#{memberNick} where member_id=#{memberId}
 	</update>
@@ -211,9 +215,6 @@
 	<select id="emailExist" resultType="MemberDto">
 		select * from member where member_id=#{memberId}
 	</select>
-	
-	
-	
 	
 	
 	<!-- (채팅) 회원 아이디 리스트로 상세조회 -->
