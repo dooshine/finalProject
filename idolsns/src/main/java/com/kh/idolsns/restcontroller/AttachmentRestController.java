@@ -28,9 +28,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.kh.idolsns.configuration.CustomFileuploadProperties;
 import com.kh.idolsns.dto.AttachmentDto;
+import com.kh.idolsns.dto.PostImageDto;
 import com.kh.idolsns.repo.AttachmentRepo;
 import com.kh.idolsns.repo.PostImageRepo;
-import com.kh.idolsns.dto.PostImageDto;
 
 import net.bramp.ffmpeg.FFmpeg;
 import net.bramp.ffmpeg.FFmpegExecutor;
@@ -251,6 +251,57 @@ public class AttachmentRestController {
 				}
 				
 			}
+		}
+		return null;
+	}
+	
+	//업로드
+		@PostMapping("/upload3")
+		public AttachmentDto upload3(
+						@RequestParam MultipartFile attach
+						) throws IllegalStateException, IOException {
+			if(!attach.isEmpty()) {//파일이 있을 경우
+				//번호 생성
+				int attachmentNo = attachmentRepo.sequence();
+				
+				//파일 저장(저장 위치는 임시로 생성)
+				File target = new File(dir, String.valueOf(attachmentNo));//파일명=시퀀스
+				attach.transferTo(target);
+				
+				//DB 저장
+				attachmentRepo.insert(AttachmentDto.builder()
+								.attachmentNo(attachmentNo)
+								.attachmentName(attach.getOriginalFilename())
+								.attachmentType(attach.getContentType())
+								.attachmentSize(attach.getSize())
+							.build());
+				
+				return attachmentRepo.selectOne(attachmentNo);//DTO를 반환
+			}
+			
+			return null;//또는 예외 발생
+		}
+		
+	// 채팅용 이미지 저장 + 이미지 번호 반환
+	@PostMapping("/chat")
+	public Integer chat(@RequestParam MultipartFile attach) throws IllegalStateException, IOException {
+		if(!attach.isEmpty()) {//파일이 있을 경우
+			//번호 생성
+			int attachmentNo = attachmentRepo.sequence();
+			
+			//파일 저장(저장 위치는 임시로 생성)
+			File target = new File(dir, String.valueOf(attachmentNo));//파일명=시퀀스
+			attach.transferTo(target);
+			
+			//DB 저장
+			attachmentRepo.insert(AttachmentDto.builder()
+							.attachmentNo(attachmentNo)
+							.attachmentName(attach.getOriginalFilename())
+							.attachmentType(attach.getContentType())
+							.attachmentSize(attach.getSize())
+						.build());
+			
+			return attachmentNo;
 		}
 		return null;
 	}

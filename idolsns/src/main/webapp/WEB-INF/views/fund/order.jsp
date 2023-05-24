@@ -42,12 +42,10 @@
     		
     		
     		
-    		  <form id="orderForm" method="post" style="padding-left: 0.7em; padding-right: 0.7em;">
-    		
-    		
+   		  <form id="orderProcess" method="post" action="/fund/order">
     		
     		<div class="container border mt-5 d-flex" style="padding:1em;">
-    			<img src="http://via.placeholder.com/200x150" class="col-5">
+    			<img src="/download?attachmentNo=${fundMainImageDto.attachmentNo }" class="col-5">
     			
     			<div class="col-7">
     			${fundPostDto.fundTitle} <br>
@@ -69,29 +67,7 @@
 					<th>펀딩 상태</th>
 					<td>${fundPostDto.fundState}</td>
 				</tr>
-				
-				<tr>
-					<th>후원 번호</th>
-					<td>${fundDto.fundNo}</td>
-				</tr>
-				
-				<tr>
-					<th>후원 날짜</th>
-					<td>${fundDto.fundDate}</td>
-				</tr>
-				
-				<tr>
-					<th>결제일</th>
-					<td>${fundDto.fundTime}</td>
-				</tr>
-				
-				<tr>
-					<th>결제 금액</th>
-					<td>${fundDto.fundPrice}</td>
-				</tr>
-				
-				
-				
+
 				<tr>
 					<th>펀딩 마감일</th>
 					<td>${fundPostDto.postEnd}</td>
@@ -100,7 +76,7 @@
 				
 			</table>
 			
-			
+			<input type="hidden" name="postNo" value="${fundPostDto.postNo}">
 		
 			
 			
@@ -131,8 +107,8 @@
 			
 						
 			
-			  <button class="btn btn-lg btn-primary mt-3 mb-5" style="width:100%" 
-			  v-bind:disabled="!isCheckboxChecked">
+			  <button type="submit" class="btn btn-lg btn-primary mt-3 mb-5" 
+			  style="width:100%" v-bind:disabled="!isCheckboxChecked">
 			  후원하기</button>
 			
 			
@@ -153,7 +129,7 @@
 	            return {
 			    isCheckboxChecked: false
 	            }
-				  },
+				  },	
 				  mounted() {
 				    const privacyCheckbox = document.getElementById('privacyCheck');
 				    const guidelinesCheckbox = document.getElementById('guidelinesCheck');

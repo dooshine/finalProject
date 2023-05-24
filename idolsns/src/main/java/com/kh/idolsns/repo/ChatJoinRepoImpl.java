@@ -25,8 +25,8 @@ public class ChatJoinRepoImpl implements ChatJoinRepo {
 		return sql.selectList("chatJoin.findChatRoomById", memberId);
 	}
 	@Override
-	public int findChatRoomNoById(String memberId) {
-		return sql.selectOne("chatJoin.findChatRoomNoById", memberId);
+	public List<Integer> findChatRoomNoById(String memberId) {
+		return sql.selectList("chatJoin.findChatRoomNoById", memberId);
 	}
 	@Override
 	public boolean doseAlreadyIn(ChatJoinDto dto) {
@@ -44,6 +44,10 @@ public class ChatJoinRepoImpl implements ChatJoinRepo {
 		Date joinTime = sql.selectOne("chatJoin.findJoinTime", param);
 		//log.debug("joinTime: {}", joinTime);
 		return joinTime.getTime();
+	}
+	@Override
+	public void leaveRoom(ChatJoinDto dto) {
+		sql.delete("chatJoin.leaveRoom", dto);
 	}
 	
 }

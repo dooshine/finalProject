@@ -5,20 +5,28 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.NoHandlerFoundException;
+
 import com.kh.idolsns.dto.ChatJoinDto;
 import com.kh.idolsns.dto.ChatMessageDto;
+import com.kh.idolsns.dto.ChatRoomDto;
 import com.kh.idolsns.dto.MemberDto;
 import com.kh.idolsns.repo.ChatJoinRepo;
 import com.kh.idolsns.repo.ChatMessageRepo;
+import com.kh.idolsns.repo.ChatRoomRepo;
 import com.kh.idolsns.repo.MemberRepo;
 import com.kh.idolsns.service.ChatRoomService;
-import com.kh.idolsns.vo.ChatCreateRoomVO;
 import com.kh.idolsns.vo.ChatMemberJoinVO;
 import com.kh.idolsns.vo.ChatMessageVO;
+import com.kh.idolsns.vo.ChatRoomVO;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @RestController
 @RequestMapping("/chat")
 public class ChatRestController {
@@ -31,12 +39,70 @@ public class ChatRestController {
 	private MemberRepo memberRepo;
 	@Autowired
 	private ChatRoomService chatRoomService;
+	@Autowired
+	private ChatRoomRepo chatRoomRepo;
 	
 	// 채팅방 목록 불러오기
 	@GetMapping("/chatRoom/{memberId}")
-	public List<ChatJoinDto> chatRoomList(@PathVariable String memberId) {
-//		int chatRoomNo = chatJoinRepo.findChatRoomNoById(memberId);
-		return chatJoinRepo.findChatRoomById(memberId);
+	public List<ChatRoomDto> chatRoomList(@PathVariable String memberId) {
+		List<Integer> chatRoomNoList = chatJoinRepo.findChatRoomNoById(memberId);
+		log.debug("chatRoomNoList: " + chatRoomNoList);
+		return chatRoomRepo.findRooms(chatRoomNoList);
+	}
+	
+	// 내 팔로워 목록 불러오기 (현재 팔로우 기능 부재로 전체 회원 목록 불러오는 것으로 대체)
+	@GetMapping("/chatRoom/follow")
+	public List<MemberDto> followList() {
+		return memberRepo.selectAll();
+	}
+	
+	// 채팅방 생성
+	@PostMapping("/chatRoom")
+	public void createRoom(@RequestBody ChatRoomVO vo) {
+		chatRoomService.createChatRoom(vo);
+	}
+	
+	// 채팅방에 참여한 시간 내보내기
+	@PostMapping("/chatRoom/join")
+	public long getJoinTime(@RequestBody ChatMemberJoinVO vo) {
+		return chatJoinRepo.findJoinTime(vo.getChatRoomNo(), vo.getMemberId());
+	}
+	
+	// 채팅방 나가기, 삭제
+	@PostMapping("/chatRoom/leave")
+	public void leaveRoom(@RequestBody ChatRoomVO vo) {
+		chatRoomService.leaveChatRoom(vo);
+	}
+	
+	// 채팅방 정보 불러오기
+	@GetMapping("/chatRoom/chatRoomNo/{chatRoomNo}")
+	public ChatRoomDto loadRoomInfo(@PathVariable int chatRoomNo) {
+		return chatRoomRepo.findRoom(chatRoomNo);
+	}
+	
+	// 채팅방 이름 변경
+	@PutMapping("/chatRoom/changeName")
+	public void changeName(@RequestBody ChatRoomDto chatRoomDto) throws NoHandlerFoundException {
+		ChatRoomDto find = chatRoomRepo.findRoom(chatRoomDto.getChatRoomNo());
+		if(find == null) throw new NoHandlerFoundException(null, null, null);
+		chatRoomRepo.changeName(chatRoomDto);
+	}
+	
+	// (이미 있는) 채팅방에 사용자 초대
+	@PostMapping("/chatRoom/invite")
+	public void inviteMember(@RequestBody ChatRoomVO vo) {
+		chatRoomService.inviteMember(vo);
+	}
+	
+	// 채팅방 참여자 목록 조회
+	@GetMapping("/chatRoom/chatMember/{chatRoomNo}")
+	public List<MemberDto> loadChatMember(@PathVariable int chatRoomNo) {
+		List<ChatJoinDto> memberList = chatJoinRepo.findMembersByRoomNo(chatRoomNo);
+		List<String> memberIdList = new ArrayList<>();
+		for(int i=0; i<memberList.size(); i++) {
+			memberIdList.add(memberList.get(i).getMemberId());
+		}
+		return memberRepo.chatMembers(memberIdList);
 	}
 	
 	// 채팅방 입장
@@ -51,34 +117,20 @@ public class ChatRestController {
 		List<ChatMessageDto> tempList = chatMessageRepo.messageList(chatRoomNo);
 		List<ChatMessageVO> list = new ArrayList<>();
 		for(ChatMessageDto chatMessageDto : tempList) {
+			//log.debug("dto attachmentNo: " + chatMessageDto.getAttachmentNo());
 			list.add(ChatMessageVO.builder()
 							.chatMessageNo(chatMessageDto.getChatMessageNo())
 							.chatRoomNo(chatRoomNo)
 							.memberId(chatMessageDto.getMemberId())
 							.chatMessageTime(chatMessageDto.getChatMessageTime().getTime())
 							.chatMessageContent(chatMessageDto.getChatMessageContent())
+							.attachmentNo(chatMessageDto.getAttachmentNo())
+							.chatMessageType(chatMessageDto.getChatMessageType())
 						.build()
 			);
 		}
+		//log.debug("rest attachmentNo: " + list);
 		return list;
-	}
-	
-	// 내 팔로워 목록 불러오기 (현재 팔로우 기능 부재로 전체 회원 목록 불러오는 것으로 대체)
-	@GetMapping("/chatRoom/follow")
-	public List<MemberDto> followList() {
-		return memberRepo.selectAll();
-	}
-	
-	// 채팅방 생성
-	@PostMapping("/chatRoom")
-	public void createRoom(@RequestBody ChatCreateRoomVO vo) {
-		chatRoomService.createChatRoom(vo);
-	}
-	
-	// 채팅방에 참여한 시간 내보내기
-	@PostMapping("/chatRoom/join")
-	public long getJoinTime(@RequestBody ChatMemberJoinVO vo) {
-		return chatJoinRepo.findJoinTime(vo.getChatRoomNo(), vo.getMemberId());
 	}
 	
 }

@@ -25,8 +25,13 @@ public class FundRepoImpl implements FundRepo{
 	
 
 	@Override
-	public void insert(FundDto dto) {
-			sqlSession.insert("fund.add", dto);
+	public void insert(FundDto fundDto) {
+//			if(dto.getFundTime()==null) {
+//				sqlSession.insert("fund.add2", dto);
+//			} else {
+//				sqlSession.insert("fund.add", dto);
+//			}
+			sqlSession.insert("fund.add2", fundDto);
 		}
 
 	
@@ -41,8 +46,15 @@ public class FundRepoImpl implements FundRepo{
 	}
 	
 	@Override
-	public FundDto find(int fundNo) {
+	public FundDto find(Long fundNo) {
 		return sqlSession.selectOne("fund.find", fundNo);
+	}
+
+
+
+	@Override
+	public int selectTotal(Long postNo) {
+		return sqlSession.selectOne("fund.fundtotal", postNo);
 	}
 
 

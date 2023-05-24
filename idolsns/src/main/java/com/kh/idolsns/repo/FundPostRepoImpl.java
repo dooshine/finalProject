@@ -1,12 +1,15 @@
 package com.kh.idolsns.repo;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.kh.idolsns.dto.FundPostDto;
+import com.kh.idolsns.dto.PostImageDto;
 
 @Repository
 public class FundPostRepoImpl implements FundPostRepo{
@@ -33,5 +36,20 @@ public class FundPostRepoImpl implements FundPostRepo{
 	public boolean update(FundPostDto dto) {
 		return sqlSession.update("fundPost.edit", dto) > 0;
 	}
+
+	@Override
+	public void connect(PostImageDto postImageDto) {
+		sqlSession.insert("fundPost.connect", postImageDto);
+	}
+	
+//	@Override
+//	public void connect(Long postNo, int attachmentNo) {
+//		Map<String, Object> parameters = new HashMap<>();
+//		parameters.put("param1", postNo);
+//		parameters.put("param2", attachmentNo);
+//		sqlSession.insert("fundPost.connect", parameters);
+//	}
+
+
 
 }

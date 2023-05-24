@@ -13,5 +13,8 @@ public class ChatMessageReceiveVO {
 	private int chatRoomNo;
 	
 	private long chatMessageNo;
+	private int attachmentNo;
+	
+	private String memberId;
 	
 }

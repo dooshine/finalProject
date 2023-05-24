@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor @Builder
 public class ChatRoomPrivDto {
 
-	private int chatRoomPrivNo;
+	private int chatRoomNo;
 	private String chatRoomPrivI;
 	private String chatRoomPrivU;
 	

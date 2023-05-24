@@ -1,10 +1,14 @@
 package com.kh.idolsns.dto;
 
-import java.sql.Date;
+import java.util.Date;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Data
+@Data @NoArgsConstructor
+@AllArgsConstructor @Builder
 public class FundDto {
 	
 	private Long fundNo;
@@ -12,4 +16,6 @@ public class FundDto {
 	private int fundPrice;
 	private Date fundTime;
 	private String memberId;
+	private int fundTotal;
+	private String fundTitle;
 }

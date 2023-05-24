@@ -11,7 +11,7 @@
 		values(#{chatRoomNo}, #{memberId}, sysdate)
 	</insert>
 	
-	<!-- 특정 회원이 참여중인 채팅방 조회 -->
+	<!-- 특정 회원이 참여중인 채팅방 번호 조회 -->
 	<select id="findChatRoomById" resultType="ChatJoinDto">
 		select * from chat_join where member_id = #{memberId}
 	</select>
@@ -37,6 +37,11 @@
 		select chat_join_time from chat_join 
 		where chat_room_no = #{chatRoomNo} and member_id = #{memberId}
 	</select>
+	
+	<!-- 채팅방 나가기 -->
+	<delete id="leaveRoom">
+		delete chat_join where member_id = #{memberId} and chat_room_no = #{chatRoomNo}
+	</delete>
 
 </mapper>
     

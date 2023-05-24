@@ -14,11 +14,27 @@
 	<insert id="sendMessage">
 		insert into chat_message(
 				chat_room_no, chat_message_no, member_id, 
-				chat_message_time, chat_message_content
+				chat_message_time, chat_message_content, 
+				attachment_no, chat_message_type
 			)
 		values(
 				#{chatRoomNo}, #{chatMessageNo}, #{memberId}, 
-				sysdate, #{chatMessageContent}
+				sysdate, #{chatMessageContent}, 
+				null, #{chatMessageType}
+			)
+	</insert>
+	
+	<!-- 보낸 이미지 저장 -->
+	<insert id="sendPic">
+		insert into chat_message(
+				chat_room_no, chat_message_no, member_id, 
+				chat_message_time, chat_message_content, 
+				attachment_no, chat_message_type
+			)
+		values(
+				#{chatRoomNo}, #{chatMessageNo}, #{memberId}, 
+				sysdate, #{chatMessageContent}, 
+				#{attachmentNo}, 4
 			)
 	</insert>
 	

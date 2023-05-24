@@ -144,7 +144,7 @@
 
 	
 	
-	<!-- 유저의 포인트 증가 -->
+	<!-- 충전: 유저의 포인트 증가 -->
 	<update id="chargePoint">
 	  UPDATE member 
 	  SET member_point = member_point + #{paymentTotal} 
@@ -152,13 +152,20 @@
 	</update>
 			
 
-	<!-- 포인트 차감 -->
+	<!-- 충전취소: 포인트 차감 -->
 	<update id="decreasePoint">
 	  UPDATE member 
 	  SET member_point =  member_point - #{paymentTotal} 
 	  WHERE member_id = #{memberId}
 	</update>
 	
+	
+	<!-- 펀딩 시 포인트 차감 -->
+	<update id="minusPoint">
+	  UPDATE member 
+	  SET member_point =  member_point - #{fundPrice} 
+	  WHERE member_id = #{memberId}
+	</update>
 	
 	
 	<delete id="delete">
@@ -210,5 +217,12 @@
 	</select>
 	
 	
+	<!-- (채팅) 회원 아이디 리스트로 상세조회 -->
+	<select id="chatMembers" resultType="MemberDto">
+		select member_id, member_nick from member where member_id in
+		<foreach collection="list" item="member" open="(" close=")" separator=",">
+			#{member}
+		</foreach>
+	</select>
 		
 </mapper>
