@@ -27,10 +27,6 @@
 
     <!-- custom 테스트 css -->
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/static/css/test.css">
-
-    <script>
-    	const contextPath = "${pageContext.request.contextPath}";
-    </script>
 </head>
 <body>
 

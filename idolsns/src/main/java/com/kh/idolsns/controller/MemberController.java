@@ -192,20 +192,20 @@ public class MemberController {
 		return "member/findId";
 	}
 	
-	@PostMapping("/findId")
-	public String findId(@RequestParam String memberEmail,
-							RedirectAttributes attr) {
-		MemberDto memberDto = memberRepo.findId(memberEmail);
-		System.out.println(memberDto.getMemberId());
-		attr.addAttribute("memberId", memberDto.getMemberId());
-		return "redirect:findIdFinish";
-	}
-	
+//	@PostMapping("/findId")
+//	public String findId(@RequestParam String memberEmail,
+//							RedirectAttributes attr) {
+//		MemberDto memberDto = memberRepo.findId(memberEmail);
+//		System.out.println(memberDto.getMemberId());
+//		attr.addAttribute("memberId", memberDto.getMemberId());
+//		return "redirect:findIdFinish";
+//	}
+//	
 	@GetMapping("/findIdFinish")
-	public String findIdFinish(@RequestParam String memberId,
-								Model model) {
-		model.addAttribute("memberId", memberId);
-		return "member/findIdFinish";
+	@ResponseBody
+	public String findIdFinish(@RequestParam String memberEmail) {
+		MemberDto memberDto = memberRepo.findId(memberEmail);
+		return memberDto.getMemberId();
 	}
 	
 	@GetMapping("/findPw")
@@ -221,10 +221,7 @@ public class MemberController {
 	}
 	
 	
-	@GetMapping("/findPwFinish")
-	public String findPwFinish() {
-		return "member/findPwFinish";
-	}
+	
 	
 	//중복 검사
 	@GetMapping("/idDuplicatedCheck")
@@ -275,5 +272,16 @@ public class MemberController {
 		emailService.sendEmail(memberEmail,key);
 		
 		return key;
+	}
+	
+	@GetMapping("/sendEmailPassword")
+	@ResponseBody
+	public String sendEmailPassword(@RequestParam String memberEmail) throws Exception {
+		
+		String newPassword = emailService.CreatePassword();
+		emailService.sendEmailPassword(memberEmail, newPassword);
+		memberRepo.editPassword(memberEmail, newPassword);
+		return newPassword;
+		
 	}
 }

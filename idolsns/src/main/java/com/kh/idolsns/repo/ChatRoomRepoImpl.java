@@ -4,7 +4,6 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import com.kh.idolsns.dto.ChatRoomDto;
-import com.kh.idolsns.vo.ChatRoomVO;
 
 @Repository
 public class ChatRoomRepoImpl implements ChatRoomRepo {
@@ -17,10 +16,6 @@ public class ChatRoomRepoImpl implements ChatRoomRepo {
 		return sql.selectOne("chatRoom.sequence");
 	}
 	@Override
-	public boolean isRoomExist(List<ChatRoomVO> memberList) {
-		return sql.selectList("chatRoom.isRoomExist").size() > 0;
-	}
-	@Override
 	public void createRoom(ChatRoomDto dto) {
 		sql.insert("chatRoom.createRoom", dto);
 	}
@@ -29,12 +24,16 @@ public class ChatRoomRepoImpl implements ChatRoomRepo {
 		return sql.selectOne("chatRoom.findRoom", roomNo);
 	}
 	@Override
-	public List<ChatRoomDto> listRoom() {
-		return sql.selectList("chatRoom.listRoom");
-	}
-	@Override
 	public void deleteRoom(ChatRoomDto dto) {
 		sql.delete("chatRoom.deleteRoom", dto);
+	}
+	@Override
+	public void changeName(ChatRoomDto dto) {
+		sql.update("chatRoom.changeName", dto);
+	}
+	@Override
+	public List<ChatRoomDto> findRooms(List<Integer> chatRoomNoList) {
+		return sql.selectList("chatRoom.findRooms", chatRoomNoList);
 	}
 	
 }

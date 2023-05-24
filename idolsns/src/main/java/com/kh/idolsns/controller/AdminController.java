@@ -32,4 +32,14 @@ public class AdminController {
     public String adminSanction(){
         return "/admin/adminSanction";
     }
+    // 관리자페이지 태그리스트
+    @GetMapping("/tag")
+    public String adminTag(){
+        return "/admin/adminTag";
+    }
+    // 관리자페이지 태그카운트
+    @GetMapping("/tagCnt")
+    public String tagCnt(){
+        return "/admin/adminTagCnt";
+    }
 }
