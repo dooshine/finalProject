@@ -1,5 +1,6 @@
 package com.kh.idolsns.restcontroller;
 
+import java.net.URISyntaxException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,12 +8,16 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.kh.idolsns.dto.FundDto;
 import com.kh.idolsns.dto.PaymentDto;
 import com.kh.idolsns.repo.FundRepo;
 import com.kh.idolsns.repo.PaymentRepo;
+import com.kh.idolsns.service.KakaoPayService;
+import com.kh.idolsns.vo.KakaoPayOrderRequestVO;
+import com.kh.idolsns.vo.KakaoPayOrderResponseVO;
 
 
 @CrossOrigin
@@ -23,6 +28,10 @@ public class PointRestController {
 	
 	@Autowired 
 	private PaymentRepo paymentRepo;
+	
+	@Autowired 
+	private KakaoPayService kakaoPayService;
+	
 	
 	@Autowired
 	private FundRepo fundRepo;
@@ -41,6 +50,16 @@ public class PointRestController {
     public PaymentDto find(@PathVariable int paymentNo) {
 	 	PaymentDto paymentDto = paymentRepo.find(paymentNo);
 	    return paymentDto;
+    }
+	
+
+	//디테일
+	@GetMapping("/order/")
+    public KakaoPayOrderResponseVO find2(@RequestParam String paymentTid) throws URISyntaxException {
+		KakaoPayOrderRequestVO vo = new KakaoPayOrderRequestVO();
+		vo.setTid(paymentTid);
+		KakaoPayOrderResponseVO response = kakaoPayService.order(vo);
+	    return response;
     }
 	
 	
