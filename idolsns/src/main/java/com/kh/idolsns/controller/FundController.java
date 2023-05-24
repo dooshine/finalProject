@@ -28,8 +28,8 @@ import com.kh.idolsns.dto.PostDto;
 import com.kh.idolsns.dto.PostImageDto;
 import com.kh.idolsns.repo.AttachmentRepo;
 import com.kh.idolsns.repo.FundMainImageRepo;
+import com.kh.idolsns.repo.FundPostImageRepo;
 import com.kh.idolsns.repo.FundPostRepo;
-import com.kh.idolsns.repo.FundPostViewRepo;
 import com.kh.idolsns.repo.FundRepo;
 import com.kh.idolsns.repo.MemberRepo;
 import com.kh.idolsns.repo.PostImageRepo;
@@ -49,6 +49,9 @@ public class FundController {
 	private PostRepo postRepo;
 	
 	@Autowired
+	private FundPostImageRepo fundPostImageRepo;
+	
+	@Autowired
 	private FundRepo fundRepo; 
 	
 	@Autowired
@@ -58,7 +61,7 @@ public class FundController {
 	private PostImageRepo postImageRepo;
 	
 	@Autowired
-	private FundPostViewRepo fundPostViewRepo;
+	private FundPostImageRepo fundPostListRepo;
 	
 	@Autowired
 	private FundMainImageRepo fundMainImageRepo;
@@ -318,7 +321,7 @@ public class FundController {
 						Model model,
 						@ModelAttribute SearchVO searchVO
 						) {
-		model.addAttribute("fundList", fundPostViewRepo.selectList());
+		model.addAttribute("fundList", fundPostListRepo.selectList());
 		return "fund/list";
 	}
 	
@@ -328,9 +331,7 @@ public class FundController {
 		FundPostDto fundPostDto = fundPostRepo.selectOne(postNo);
 		List<PostImageDto> list = postImageRepo.selectList(postNo);
 		FundMainImageDto fundMainImageDto = fundMainImageRepo.selectOne(postNo);
-		int total = fundRepo.selectTotal(postNo);
 		
-		model.addAttribute("fundTotal", total);
 		model.addAttribute("fundPostDto", fundPostDto);
 		model.addAttribute("postImageList", list);
 		model.addAttribute("fundMainImageDto", fundMainImageDto);
@@ -372,6 +373,7 @@ public class FundController {
     		HttpSession session, 
     		@RequestParam Long postNo, 
     		@ModelAttribute FundDto fundDto, 
+    		@ModelAttribute FundPostDto fundPostDto,
     		RedirectAttributes attr) {
     	
         String memberId = (String) session.getAttribute("memberId");
@@ -388,6 +390,17 @@ public class FundController {
         // 포인트 차감
         int fundPrice = fundDto.getFundPrice();
         memberRepo.minusPoint(memberId, fundPrice);
+        
+        // 후원자 수 1 증가
+        List<FundDto> list = fundRepo.selectByPostNo(postNo);
+        int cnt = 0;
+        for(int i=0; i<list.size(); i++) {
+        	cnt ++;
+        }
+        fundPostDto.setFundSponsorCount(cnt);
+        fundPostDto.setPostNo(postNo);
+        fundPostRepo.sponsorCount(fundPostDto);
+        
 
         attr.addAttribute("fundNo", fundDto.getFundNo());
         

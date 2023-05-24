@@ -168,12 +168,28 @@
 	</update>
 	
 	
+		
+	<!-- 펀딩 취소 시 포인트 돌려받음 -->
+	<update id="plusPoint">
+	  UPDATE member 
+	  SET member_point =  member_point + #{fundPrice} 
+	  WHERE member_id = #{memberId}
+	</update>
+	
+	
+	
+	
+	
 	<delete id="delete">
 		delete member where member_id = #{memberId}
 	</delete>
 	
 	<update id="password">
 		update member set member_pw=#{memberPw} where member_id=#{memberId}
+	</update>
+	
+	<update id="editPassword">
+		update member set member_pw=#{memberPw} where member_email=#{memberEmail}
 	</update>
 	
 	<update id="nickname">
@@ -211,9 +227,6 @@
 	<select id="emailExist" resultType="MemberDto">
 		select * from member where member_id=#{memberId}
 	</select>
-	
-	
-	
 	
 	
 	<!-- (채팅) 회원 아이디 리스트로 상세조회 -->

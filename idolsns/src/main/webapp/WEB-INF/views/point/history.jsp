@@ -5,8 +5,6 @@
 
 <jsp:include page="/WEB-INF/views/template/header.jsp"></jsp:include> 
 
-    <title>내 지갑</title>
-
 
     
   <style>
@@ -207,7 +205,7 @@
 	   
 			
 	           	 async loadMemberPoint() {
-	                     const url = "http://localhost:8080/rest/member/"+memberId;
+	                     const url = "/rest/member/"+memberId;
 	                     const data = {
 	                         memberId: this.memberId // 로그인된 멤버 아이디 사용
 	                     };
@@ -220,7 +218,7 @@
 	        	},
 	        	async loadPaymentHistory() {
 	        		  try {
-	        		    const url = "http://localhost:8080/rest/point/history/" +memberId;
+	        		    const url = "/rest/point/history/" +memberId;
 	        		    const response = await axios.get(url);
 	        		    this.items = response.data;
 	        		  } catch (error) {

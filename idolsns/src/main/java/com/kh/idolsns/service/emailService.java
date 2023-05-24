@@ -8,5 +8,5 @@ public interface emailService {
 	
 	//임시비밀번호 발급
 	String CreatePassword();
-	String sendEmailPassword(String recipentEmail, String randomPaaword) throws Exception;
+	String sendEmailPassword(String Email, String newPassword) throws Exception;
 }

@@ -35,6 +35,14 @@ public class FundRepoImpl implements FundRepo{
 		}
 
 	
+	//후원 취소
+	@Override
+	public void fundCancel(long fundNo) {
+		sqlSession.update("fund.fundCancel", fundNo);
+	}
+
+		
+	
 	@Override
 	public List<FundDto> selectAll() {
 		return sqlSession.selectList("fund.selectAll");
@@ -53,8 +61,15 @@ public class FundRepoImpl implements FundRepo{
 
 
 	@Override
-	public int selectTotal(Long postNo) {
+	public Integer selectTotal(Long postNo) {
 		return sqlSession.selectOne("fund.fundtotal", postNo);
+	}
+
+
+
+	@Override
+	public List<FundDto> selectByPostNo(Long postNo) {
+		return sqlSession.selectList("fund.selectByPostNo", postNo);
 	}
 
 
