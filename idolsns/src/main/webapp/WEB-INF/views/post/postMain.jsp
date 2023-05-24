@@ -4,7 +4,7 @@
 
 	<!-- 게시글 작성 코드 async-post.js -->
 	<script src="${pageContext.request.contextPath}/static/js/async-post.js"></script>
-	
+		
 	<!------- 카카오 지도 관련-------->
 	<!-- 카카오 api 키 등록 -->
 	<script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=047888df39ba653ff171c5d03dc23d6a&libraries=services"></script>
@@ -323,9 +323,41 @@
         </div>
 	    
 	    
+	    <!-- 게시글 지도 게시 모달창 (게시글에서 위치나 지도 마크 클릭 시 모달 띠우기)-->
+        <div class="modal" tabindex="-1" role="dialog" id="showMap"
+                            data-bs-backdrop="static">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                
+                	<!-- header -->
+                    <div class="modal-header">
+                        <h5 class="modal-title">위치 정보</h5>
+                    </div>
+                    
+                    <!-- body -->
+                    <div class="modal-body">
+                        <div class="col-1">
+        				</div>
+        				<div class="map_wrap col-10">
+					          <div id="mapShow" style="width:100%;height:100%;position:relative;overflow:visible;align-content:center;"></div>
+					
+					    </div>
+        				
+        				<div class="col-1">
+        				</div>
+                    </div>
+                    
+                    <!-- footer -->
+                    <div class="modal-footer">                 
+                        <button type="button" class="btn btn-secondary btn-sm"
+                                data-bs-dismiss="modal">닫기</button>
+                    </div>
+                    
+                </div>      
+            </div>
+         </div>
 	    
-	    
-	    
+<!-- 	    <button type="button" onclick="relayout();" class="btn btn-white btn-outline-dark rounded-pill col-12 " data-bs-target="#modalmap" data-bs-toggle="modal">지도 테스트 모달</button> -->
 	    <!--------------- 게시물들 반복구간 ------------->
 	    <div v-for="(post, index) in posts" :key="index">
 	    
@@ -379,8 +411,8 @@
 		                <div class="row">
 		                	<div class="col-1 col-md-1 col-lg-1 d-flex align-items-center justify-content-center">			            
 				            </div>
-				            <div class="col-10 col-md-10 col-lg-10 d-flex align-items-center justify-content-start fs-6 text-secondary">
-								 <i class="fa-solid fa-location-dot"></i>&nbsp;{{ post.mapPlace}}
+				            <div class="col-10 col-md-10 col-lg-10 d-flex align-items-center justify-content-start fs-6 text-secondary " @click="showMap(post.mapPlace)" data-bs-target="#showMap" data-bs-toggle="modal">
+								 <i class="fa-solid fa-location-dot"></i>&nbsp;{{ post.mapPlace}}								
 				            </div>
 							<div class="col-1 col-md-1 col-lg-1 d-flex align-items-center justify-content-center"> 
 				            </div>	                
@@ -448,6 +480,5 @@
     
 	 <!-- 카카오 API구현 JS -->
 	<script src="${pageContext.request.contextPath}/static/js/post-map.js"></script>
-
 
 <jsp:include page="/WEB-INF/views/template/footer.jsp"></jsp:include>
