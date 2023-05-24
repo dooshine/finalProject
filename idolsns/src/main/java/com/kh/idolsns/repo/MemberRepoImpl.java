@@ -176,5 +176,15 @@ public class MemberRepoImpl implements MemberRepo{
 	public boolean exitDate(String memberId) {
 		return sqlSession.update("member.exitDate", memberId) > 0;
 	}
+
+	@Override
+	public boolean cancelExit(String memberId) {
+		return sqlSession.update("member.cancelExit", memberId) > 0;
+	}
+
+	@Override
+	public void exit() {
+		sqlSession.delete("member.exit");
+	}
 	
 }

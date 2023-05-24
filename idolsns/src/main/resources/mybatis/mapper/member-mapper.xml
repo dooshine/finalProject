@@ -202,11 +202,15 @@
 		update member set member_exitdate=sysdate where member_id=#{memberId}
 	</update>
 	
-	<delete id="exit">
-		<![CDATA[
-		delete member where member_exitdate < sysdate - 5/24/60
-		]]>
-	</delete>
+	<update id="cancelExit">
+		update member set member_exitdate=null where member_id=#{memberId}
+	</update>
+	
+		<delete id="exit">
+			<![CDATA[
+			delete member where member_exitdate < sysdate - INTERVAL '5' MINUTE
+			]]>
+		</delete>
 	
 	<select id="findId" resultType="MemberDto">
 		select member_id from member where member_email=#{memberEmail}

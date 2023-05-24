@@ -1,15 +1,14 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>   
-<jsp:include page="/WEB-INF/views/template/header.jsp"></jsp:include> 
-
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<jsp:include page="/WEB-INF/views/template/header.jsp"></jsp:include>
+<%@ page import="javax.servlet.http.*" %>
 <!DOCTYPE html>
-<html lang="ko"></html>
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>로그인</title>
+    <title>회원가입</title>
     <!-- 폰트어썸 cdn -->
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css">
     <!-- jquery cdn -->
@@ -24,14 +23,12 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
     <!-- 부트스트랩 css(공식) -->
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css">
-
     <!-- custom 테스트 css -->
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/static/css/test.css">
-    
+    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/static/css/commons mye.css">
     <!-- toastify -->
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
-
 </head>
 <body>
 	<div class="container rounded p-3" style="background-color:white">
@@ -64,30 +61,23 @@
 			</form>
 			
 			<div class="row mb-3">
-				<button type="button" 
-					onclick="location.href='${pageContext.request.contextPath}/member/findId'">아이디 찾기</button>
+				<button type="button" onclick="location.href='${pageContext.request.contextPath}/member/findId'">아이디 찾기</button>
 			</div>
 			
 			<div class="row mb-3">
 				<button type="button" onclick="location.href='${pageContext.request.contextPath}/member/findPw'">비밀번호 찾기</button>
 			</div>
 			
-			
+			<v-alert></v-alert>			
 		</div>
 	</div>
-    </script>
-</body>    
+
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/vue@3.2.36"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js"></script>
+    <script>
+        Vue.createApp({}}).mount("#app");
+     </scr
+</body>
 <jsp:include page="/WEB-INF/views/template/footer.jsp"></jsp:include>
-
-
-
-
-
-
-
-
-
-
-
-
-

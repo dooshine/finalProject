@@ -80,6 +80,15 @@ public class MemberController {
 		session.setAttribute("memberId", findDto.getMemberId());
 		session.setAttribute("memberLevel", findDto.getMemberLevel());
 		
+		String memberId = findDto.getMemberId();
+		if(!(findDto.getMemberExitDate() == null)) {
+			memberRepo.cancelExit(memberId	);
+			String alertMessage = "회원 탈퇴가 취소되었습니다!";
+		    attr.addAttribute("mode", "success");
+		    attr.addAttribute("mmssgg", alertMessage);
+		    return "redirect:login";
+		}
+		
 		return "redirect:" + prevPage;
 	}
 	
@@ -118,7 +127,7 @@ public class MemberController {
 			return "redirect:exit";
 		}
 		
-			memberRepo.delete(memberId);
+			memberRepo.exitDate(memberId);
 			
 			session.removeAttribute("memberId");
 			session.removeAttribute("memberLevel");

@@ -56,11 +56,6 @@
 						<p style='color: red;'>잘못된 비밀번호 입니다. 다시 입력하세요.</p>
 					</div>
 				</c:if>
-				<c:if test="${param.mode == 'notYet'}">
-					<div class="row">
-						<p style = "color: red;">5분 지나야 탈퇴 가능</p>
-					</div>
-				</c:if>
 				<div class="row">
 					<button type="submit"  :disabled="!agreementChecked">탈퇴</button>
 				</div>
