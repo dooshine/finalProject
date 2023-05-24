@@ -9,7 +9,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>회원가입</title>
+    <title>비밀번호 찾기</title>
     <!-- 폰트어썸 cdn -->
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css">
     <!-- jquery cdn -->
@@ -30,10 +30,6 @@
      <!-- toastify -->
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
-
-    <script>
-    	const contextPath = "${pageContext.request.contextPath}";
-    </script>
 </head>
 <body>
 	<div class="container rounded p-3" style="background-color:white">
@@ -76,30 +72,17 @@
 					<div class="col"></div>
 				</div>
 				<div class="row mb-3">
-					<input type="text" class="form-control" placeholder="인증번호"  v-model.number="code" @blur="isKeyValid">
-					<button type="button" class="btn btn-secondary"  :disabled="!emailCheck" @click="sendEmail(memberEmail)">전송</button>
-				</div>
-				<div class="row"> 
 					<div class="col"></div>
-					<button type="button" class="btn btn-info w-50"  :disabled="!keyValid"  @click="pagePlus()">임시 비밀번호 발급</button>
+					<button type="button" class="btn btn-secondary w-50"  :disabled="!emailCheck" @click="sendEmailPassword(memberEmail), pagePlus()">임시 비밀번호 발급</button>
 					<div class="col"></div>
 				</div>
 			</div>
 			
 			<div v-show="page==3" style="text-align:center;">
 				<div class="row mb-4">
-					<h1>비밀번호 재설정</h1>
-					<h3>새로운 비밀번호로 재설정 하세요.</h3>
+					<h1>{{memberEmail}}로 임시비밀번호를 발급하였습니다.</h1>
+					<h3>이메일 주소에서 새로운 비밀번호를 확인 후 로그인해주세요.</h3>
 					<br><br>
-				</div>
-				<div class="row mb-1">
-					<input type="password" class="form-control" placeholder="새 비밀번호">
-				</div>
-				<div class="row">
-					<input type="password" class="form-control" placeholder="비밀번호 확인">
-				</div>
-				<div class="row">
-					<button type="button">비밀번호 변경</button>
 				</div>
 			</div>
 			
@@ -118,12 +101,10 @@
                 return{
                     memberId:"",
                     memberEmail:"",
-                    code:"",
                     page:1,
                     idCheck:false,
                     emailCheck:false,
-                    key :"",
-                    keyValid:false,
+                    message:"",
                 };
             },
             methods:{
@@ -142,6 +123,7 @@
  						}  
  						else{
  							this.idCheck = false; //존재하는 아이디가 없다.
+ 							message
  						}
             	  },
             	  
@@ -160,37 +142,26 @@
             		  
             	  },
             	  
-            	  async sendEmail(memberEmail) {
+            	  async sendEmailPassword(memberEmail) {
             		  Toastify({
-              			 text:"이메일 전송 완료",
-              			 duratioin:1000,
-              			 newWindow:false,
-              			 close:true,
-              			 gravity:"bottom",
-              			 position:"right",
-              			 style:{
-              				 background:"linear-gradient(to right, #84FAB0, #8FD3F4)"
-              			 },
-              		 }).showToast();
-            		 const response = await axios.get("/member/emailSend", {
-            			 params : {
-            				 memberEmail : this.memberEmail
-            			 }
-            		 }); 
-            		 console.log(this.key);
-            		 this.key = response.data;
+               			 text:"이메일 전송 완료",
+               			 duratioin:1000,
+               			 newWindow:false,
+               			 close:true,
+               			 gravity:"bottom",
+               			 position:"right",
+               			 style:{
+               				 background:"linear-gradient(to right, #84FAB0, #8FD3F4)"
+               			 },
+               		 }).showToast();
+            		  const response = await axios.get("/member/sendEmailPassword", {
+            			  params : {
+            				  memberEmail : this.memberEmail
+            			  }
+            		  });
+            		  this.key = response.data;
             	  },
             	  
-            	  isKeyValid(){
-            		  
-            		  if(this.code == this.key) {
-            			  this.keyValid = true;
-            		  }
-            		  else{
-            			  this.keyValid=false;
-            		  }
-            		  
-            	  },
             },
             computed:{
                
