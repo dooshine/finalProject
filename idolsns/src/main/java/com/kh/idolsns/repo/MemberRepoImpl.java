@@ -165,5 +165,16 @@ public class MemberRepoImpl implements MemberRepo{
 	public List<MemberDto> chatMembers(List<String> memberIdList) {
 		return sqlSession.selectList("member.chatMembers", memberIdList);
 	}
+
+	//회원탈퇴
+	@Override
+	public boolean deleteMemberProc(String memberId) {
+		return sqlSession.update("member.deleteMemberProc", memberId) > 0;
+	}
+
+	@Override
+	public boolean exitDate(String memberId) {
+		return sqlSession.update("member.exitDate", memberId) > 0;
+	}
 	
 }

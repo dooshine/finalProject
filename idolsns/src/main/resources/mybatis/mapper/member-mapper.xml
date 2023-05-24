@@ -184,6 +184,8 @@
 		delete member where member_id = #{memberId}
 	</delete>
 	
+	
+	
 	<update id="password">
 		update member set member_pw=#{memberPw} where member_id=#{memberId}
 	</update>
@@ -195,6 +197,16 @@
 	<update id="nickname">
 		update member set member_nick=#{memberNick} where member_id=#{memberId}
 	</update>
+	
+	<update id="exitDate">
+		update member set member_exitdate=sysdate where member_id=#{memberId}
+	</update>
+	
+	<delete id="exit">
+		<![CDATA[
+		delete member where member_exitdate < sysdate - 5/24/60
+		]]>
+	</delete>
 	
 	<select id="findId" resultType="MemberDto">
 		select member_id from member where member_email=#{memberEmail}
@@ -227,6 +239,10 @@
 	<select id="emailExist" resultType="MemberDto">
 		select * from member where member_id=#{memberId}
 	</select>
+	
+	<update id="deleteMemberProc" statementType="CALLABLE">
+	  { CALL delete_member_proc(p_member_id=#{memberId}) }
+	</update>
 	
 	
 	<!-- (채팅) 회원 아이디 리스트로 상세조회 -->
