@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.kh.idolsns.dto.TagCntDto;
 import com.kh.idolsns.dto.TagDto;
 import com.kh.idolsns.repo.AdminRepo;
+import com.kh.idolsns.vo.TagCntSearchVO;
 
 @Service
 public class AdminServiceImpl implements AdminService {
@@ -36,8 +37,8 @@ public class AdminServiceImpl implements AdminService {
     }
     // 태그Cnt 조회
     @Override
-    public List<TagCntDto> adminTagCntSelectList() {
-        return adminRepo.adminTagCntSelectList();
+    public List<TagCntDto> adminTagCntSelectList(TagCntSearchVO tagCntSearchVO) {
+        return adminRepo.adminTagCntSelectList(tagCntSearchVO);
     }
 
     

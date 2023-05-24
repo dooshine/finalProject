@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import com.kh.idolsns.dto.TagCntDto;
 import com.kh.idolsns.dto.TagDto;
+import com.kh.idolsns.vo.TagCntSearchVO;
 
 @Repository
 public class AdminRepoImpl implements AdminRepo {
@@ -18,26 +19,24 @@ public class AdminRepoImpl implements AdminRepo {
     // [admin] 전체 tag 불러오기
     @Override
     public List<TagDto> adminTagSelectList() {
-        return sqlSession.selectList("adminTag.selectList");
+        return sqlSession.selectList("admin.tagSelectList");
     }
 
 
     // 태그 수정
     @Override
     public boolean updateTagTypeByName(TagDto tagDto) {
-        return sqlSession.update("adminTag.updateTagType", tagDto) > 0;
+        return sqlSession.update("admin.updateTagType", tagDto) > 0;
     }
 
     @Override
     public boolean adminTagDelete(String tagName) {
-        return sqlSession.delete("adminTag.deleteByTagName", tagName) > 0;
+        return sqlSession.delete("admin.deleteByTagName", tagName) > 0;
     }
 
     @Override
-    public List<TagCntDto> adminTagCntSelectList() {
-        return sqlSession.selectList("tagCnt.selectList");
+    public List<TagCntDto> adminTagCntSelectList(TagCntSearchVO tagCntSearchVO) {
+        return sqlSession.selectList("admin.tagCntSelectList", tagCntSearchVO);
     }
-
-    
     
 }

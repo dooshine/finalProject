@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.kh.idolsns.dto.TagCntDto;
 import com.kh.idolsns.dto.TagDto;
+import com.kh.idolsns.vo.TagCntSearchVO;
 
 public interface AdminService {
     // 태그 목록 조회
@@ -13,5 +14,5 @@ public interface AdminService {
     // 태그 삭제
     void deleteTagByName(List<String> tagNameList);
     // 태그Cnt 조회
-    List<TagCntDto> adminTagCntSelectList();
+    List<TagCntDto> adminTagCntSelectList(TagCntSearchVO tagCntSearchVO);
 }
