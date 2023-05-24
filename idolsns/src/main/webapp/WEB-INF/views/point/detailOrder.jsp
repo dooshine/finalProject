@@ -41,18 +41,23 @@
           <th>사용일</th>
           <td>{{ fundDto.fundTime }}</td>
         </tr>
+        <tr>
+          <th>펀딩 상태</th>
+          <td>{{ fundDto.fundStatus }}</td>
+        </tr>
+        
       </table>
 
       <div class="d-flex justify-content-end">
 		  <!-- 결제 취소 버튼: 잔여 금액이 존재한다면 -->
-		  <template v-if="fundDto.fundPrice > 0">
+		  <template v-if="fundDto.fundRemain > 0">
 		    <a :href="'cancelOrder?fundNo=' + fundDto.fundNo" style="padding-left: 0.5em">
 		      <button class="btn btn-sm btn-danger" :disabled="isCancellationDisabled">
 		        후원 취소
 		      </button>
 		    </a>
 		    <p v-if="isCancellationDisabled" style="color: red; padding-left: 0.5em">
-		      펀딩 종료일 1일 전까지만 취소 가능합니다.
+		      펀딩 종료 1일 전까지만 취소 가능합니다.
 		    </p>
 		  </template>
 		</div>
@@ -68,7 +73,11 @@
         fundNo: ''
       }
     },
- 
+    computed: {
+        isCancellationDisabled() {
+         
+        }
+      },
     methods: {
       async loadOrderDetail() {
         try {

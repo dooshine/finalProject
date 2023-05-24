@@ -12,23 +12,15 @@
    	<select id="sequence" resultType="Long">
         select fund_seq.nextval from dual
     </select>
-    
-    <insert id="add">
-         insert into fund (
-		    fund_no, post_no, fund_price, fund_time, member_id
-		    ) 
-		    values (
-		    #{fundNo}, #{postNo}, #{fundPrice}, sysdate, #{memberId}
-		    )
-    </insert>
+  
     
     <!-- 사용 -->
-    <insert id="add2">
+    <insert id="add">
         insert into fund (
-        fund_no, post_no, fund_price, fund_time, member_id, fund_title
+        fund_no, post_no, fund_price, fund_remain, fund_time, member_id, fund_title
         ) 
         values (
-        #{fundNo}, #{postNo}, #{fundPrice}, sysdate, #{memberId}, #{fundTitle}
+        #{fundNo}, #{postNo}, #{fundPrice}, #{fundRemain}, sysdate, #{memberId}, #{fundTitle}
         )
     </insert>
 
@@ -62,12 +54,26 @@
 
 
 	
-	<!-- 후원 취소 -->
+	<!-- 후원 취소1 -->
 	<update id="fundCancel">
+	
 	  UPDATE fund
-	  SET fund_price = 0
+	  SET fund_remain = 0
 	  WHERE fund_no = #{fundNo}
+	 	  
 	</update>
+	
+
+ 
+	<!-- 후원 취소2 - 차감 -->
+	<update id="fundCancel2">
+	    UPDATE fund
+	    SET fund_total = fund_total - #{fundPrice}
+	    WHERE fund_no = #{fundNo}
+	</update>
+	
+	
+	
 
 
 

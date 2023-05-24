@@ -26,21 +26,31 @@ public class FundRepoImpl implements FundRepo{
 
 	@Override
 	public void insert(FundDto fundDto) {
-//			if(dto.getFundTime()==null) {
-//				sqlSession.insert("fund.add2", dto);
-//			} else {
-//				sqlSession.insert("fund.add", dto);
-//			}
-			sqlSession.insert("fund.add2", fundDto);
+			fundDto.setFundRemain(fundDto.getFundPrice());
+			sqlSession.insert("fund.add", fundDto);
 		}
 
 	
-	//후원 취소
+	//후원 취소1단계
 	@Override
 	public void fundCancel(long fundNo) {
-		sqlSession.update("fund.fundCancel", fundNo);
+
+	    // fund_remain을 0으로 업데이트
+	    sqlSession.update("fund.fundCancel", fundNo);
+	    
 	}
 
+	
+	//후원 취소2단계
+	@Override
+	public void fundCancel2(long fundNo) {
+
+	    sqlSession.update("fund.fundCancel2", fundNo);
+	    
+	}
+
+		
+	
 		
 	
 	@Override

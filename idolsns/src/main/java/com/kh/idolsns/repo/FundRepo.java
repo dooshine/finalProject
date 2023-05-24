@@ -9,7 +9,7 @@ public interface FundRepo {
 	void insert(FundDto dto);
 	
 	void fundCancel(long fundNo); //후원 취소
-	
+	void fundCancel2(long fundNo); // 금액 되돌리기
 	
 	List<FundDto> selectAll();
 	List<FundDto> selectByMember(String memberId);
@@ -19,5 +19,6 @@ public interface FundRepo {
 	
 	
 	FundDto find(Long fundNo);
+
 	
 }

@@ -251,6 +251,7 @@ public class PointController {
 	@GetMapping("/cancelOrder")
 	public String cancelOrder(
 			@RequestParam long fundNo, 
+			@RequestParam long postNo, 
 			HttpServletResponse resp,
 			RedirectAttributes attr,
 			HttpSession session) throws URISyntaxException, IOException, NoHandlerFoundException {
@@ -264,8 +265,12 @@ public class PointController {
 			throw new NoHandlerFoundException(null, null, null);
 		}
 		
-		//DB의 잔여 금액 fundPrice을 0으로 변경
+		//이거 해결할거~
+		fundRepo.selectTotal(postNo);
+		
+		//DB의 잔여 금액 fundRemain을 0으로 변경
 		fundRepo.fundCancel(fundNo);
+		fundRepo.fundCancel2(fundNo);
 		
 		 //멤버 포인트 환불
 		String memberId = fundDto.getMemberId();

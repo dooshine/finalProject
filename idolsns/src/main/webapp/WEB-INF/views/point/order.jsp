@@ -111,6 +111,7 @@
 			        <th>사용일</th>
 			        <th>사용포인트</th>
 			        <th>사용 내역</th>
+			        <th>펀딩 상태</th>
 			        <th>더보기</th>
 			      </tr>
 			    </thead>
@@ -120,6 +121,7 @@
 			              <td>{{ fundDto.fundTime }}</td>
 			              <td>{{ fundDto.fundPrice }}</td>
 			              <td>{{ fundDto.fundTitle }}</td>
+			              <td>{{ fundDto.fundStatus }}</td>
 			              <td>
 			                <a :href="'detailOrder?fundNo=' + fundDto.fundNo">
 			                <button class="btn btn-sm btn-primary">
