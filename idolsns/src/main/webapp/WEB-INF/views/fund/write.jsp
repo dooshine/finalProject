@@ -28,7 +28,7 @@
 					fd.append("attach", files[0]);
 					
 					$.ajax({
-						url:"http://localhost:8080/rest/attachment/upload",
+						url:"/rest/attachment/upload",
 						method:"post",
 						data:fd,
 						processData:false,

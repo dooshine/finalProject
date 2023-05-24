@@ -27,21 +27,17 @@
 	    
 	</style>
  
-   
-	  	<div id="app">
-		  <div class="container rounded p-3" style="background-color:white">
-	    	<div style="padding-left:0.5em; padding-right:0.5em;">
+		<div id="app">
+		  	<div class="container rounded p-3" style="background-color:white">
+		    	<div style="padding-left:0.5em; padding-right:0.5em;">
 	    		
 	    		<div class="mt-5 mb-5">
-	    			<h2 class="title" style="text-align: center;">${paymentDto.memberId}님의 충전이 취소되었습니다.</h2>
+	    			<h2 class="title" style="text-align: center;">${fundDto.memberId}님의 취소가 완료되었습니다.</h2>
 	    		</div>
-	   
-	   		</div>
-	      </div>
-	    </div>
-
-		
-	
+	    		
+			</div>
+			</div>	
+		</div>
 	
 	
 	

@@ -1,11 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>  
 
 <jsp:include page="/WEB-INF/views/template/header.jsp"></jsp:include> 
-
-    <title>내 지갑</title>
 
 
   <style>
@@ -118,16 +115,13 @@
 			      </tr>
 			    </thead>
 				<tbody>
-			    	<c:forEach var="fundDto" items="${list}">
-			          
-			            <tr>
-			              <td><fmt:formatDate value="${fundDto.fundTime}" 
-			              			pattern="yyyy-MM-dd HH:mm" /></td>
-			              <td>${fundDto.fundPrice}</td>
-			              <td>${fundDto.fundTitle}</td>
+			   
+			            <tr v-for="fundDto in paginatedItems">
+			              <td>{{ fundDto.fundTime }}</td>
+			              <td>{{ fundDto.fundPrice }}</td>
+			              <td>{{ fundDto.fundTitle }}</td>
 			              <td>
-			                
-			                <a href="detail?fundNo=${fundDto.fundNo}">
+			                <a :href="'detailOrder?fundNo=' + fundDto.fundNo">
 			                <button class="btn btn-sm btn-primary">
 			               	더보기
 			               	</button>
@@ -136,13 +130,13 @@
 			              </td>
 			            
 			            </tr>
-			     	</c:forEach>
+		
 			        </tbody>
 			  </table>
 		  </div>
 		  
 		  <!-- 이전/다음 페이지로 이동하는 버튼 -->
-    <div class="pagination justify-content-center mt-5" v-if="totalPages > 1">
+    <div class="pagination justify-content-center mt-5">
       <ul class="pagination">
         <li class="page-item" :class="{ disabled: currentPage === 1 }">
           <a class="page-link" href="#" @click="previousPage">&lt;</a>
@@ -178,6 +172,9 @@
 	              
 	            }
 	        },
+	        
+	  
+	        
 	        computed: {
 	     
 	            formattedAmount() {
@@ -231,19 +228,23 @@
 	                  console.error(error);
 	                }
 	              },
-	              previousPage() {
-	                if (this.currentPage > 1) {
-	                  this.currentPage--;
-	                }
-	              },
-	              nextPage() {
-	                if (this.currentPage < this.totalPages) {
-	                  this.currentPage++;
-	                }
-	              },
-	              goToPage(page) {
-	                this.currentPage = page;
-	              },
+	              
+	          
+	              
+	              <!--페이지네이션-->
+	        	 previousPage() {
+	        	      if (this.currentPage > 1) {
+	        	        this.currentPage--;
+	        	      }
+	        	    },
+	        	    nextPage() {
+	        	      if (this.currentPage < this.totalPages) {
+	        	        this.currentPage++;
+	        	      }
+	        	    },
+	        	    goToPage(page) {
+	        	      this.currentPage = page;
+	        	    },
 	            },
 	            created() {
 	              this.loadMemberPoint();

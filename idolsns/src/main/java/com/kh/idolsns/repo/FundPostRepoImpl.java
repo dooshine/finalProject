@@ -1,8 +1,6 @@
 package com.kh.idolsns.repo;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +38,11 @@ public class FundPostRepoImpl implements FundPostRepo{
 	@Override
 	public void connect(PostImageDto postImageDto) {
 		sqlSession.insert("fundPost.connect", postImageDto);
+	}
+
+	@Override
+	public boolean sponsorCount(FundPostDto fundPostDto) {
+		return sqlSession.update("fundPost.sponsorCount", fundPostDto) > 0;
 	}
 	
 //	@Override

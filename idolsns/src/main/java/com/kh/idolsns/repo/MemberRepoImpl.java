@@ -66,7 +66,18 @@ public class MemberRepoImpl implements MemberRepo{
 	
 	
 	
-	
+	//펀딩 취소 시 포인트 환불
+	@Override
+	public void plusPoint(String memberId, int fundPrice) {
+		Map<String, Object> params = new HashMap<>();
+	    params.put("memberId", memberId);
+	    params.put("fundPrice", fundPrice);
+	    
+	    sqlSession.update("member.plusPoint", params);
+		
+	}
+		
+		
 
 	
 	
