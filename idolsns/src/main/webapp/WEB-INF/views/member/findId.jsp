@@ -24,31 +24,111 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
     <!-- 부트스트랩 css(공식) -->
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css">
-
-    <!-- custom 테스트 css -->
+<!-- custom 테스트 css -->
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/static/css/test.css">
-
-    <script>
-    	const contextPath = "${pageContext.request.contextPath}";
-    </script>
+    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/static/css/commons mye.css">
+     <!-- toastify -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    
 </head>
 <body>
-
-	<form action="findId" method="post" autocomplete="off">
-	
-		<div class="container">
-			<div class="row center">
-				<h1>아이디 찾기</h1>
-			</div>
+	<div class="container rounded p-3" style="background-color:white">
+	<div id="app">
+		<div class="row page">
+		
+		<div v-show ="page==1">
 			<div class="row">
-				<input type="email" name="memberEmail" placeholder="이메일">
+				<h1 style="text-align:center;">STARLINK</h1>
+				<h3 style="text-align:center;">아이디를 찾고자하는 이메일를 입력해주세요.</h3>
 			</div>
+			<br><br>
+			<div class="row mb-3">
+				<div class="col"></div>
+					<input type="email" class="form-control" placeholder="이메일" v-model="memberEmail"  name="memberEmail"
+					   :class="{'is-invalid':emailDuplicated && memberEmail !== ''}" 
+					   @blur="emailDuplicatedCheck(memberEmail)">
+					<div class="invalid-feedback">{{memberEmailMessage}}</div>
+				<div class="col"></div>
+			</div>
+			<div class="row mb-3">
+				<div class="col"></div>
+				<button type=button class="btn btn-info"  v-bind:disabled="emailDuplicated" @click="pagePlus(), findId(memberEmail)" >아이디 조회</button>
+				<div class="col"></div>
+			</div>
+		</div>	
+		
+		<div v-show="page==2">
 			<div class="row">
-				<button type="submit">아이디 조회</button>
+				<h1 style="text-align:center;">아이디 조회 결과</h1>
+				<h3 style="text-aligh:center;">
+					찾으시는 아이디는 {{memberId}}입니다.
+				</h3>
 			</div>
 		</div>
+		
+		</div>
+	</div>
+	</div>
 	
-	</form>
-
+	 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/vue@3.2.36"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js"></script>
+    <script>
+    	Vue.createApp({
+    		data(){
+    			return{
+    				memberEmail:"",
+    				emailDuplicated:false,
+    				page:1,
+    				memberId:"",
+    			};
+    		},
+    		methods:{
+    			async emailDuplicatedCheck(memberEmail) {
+    				const response = await axios.get("/member/emailDuplicatedCheck", {
+    					params:{
+    						memberEmail : this.memberEmail
+    					}
+    				});
+    				if(response.data=="N") {
+    					this.emailDuplidated=true;
+    				}
+    				else {
+    					this.emailDuplicated=false;
+    				}
+    			},
+    			async findId(memberEmail) {
+    				const response = await axios.get("/member/findIdFinish", {
+    					params:{
+    						memberEmail : this.memberEmail
+    					}
+    				
+    				
+    				});
+    			
+    			
+    				
+    				this.memberId=response.data;
+    				
+    			},
+    			pagePlus(){
+    				this.page++;
+    			},
+    		},
+    		computed:{
+    			memberEmailMessage(){
+    				if(!this.emailDuplicated) {
+    					return "존재하지 않는 이메일입니다.";
+    				}
+    				else if(this.memberEmail.length == 0) {
+    					return " ";
+    				}
+    			},
+    		},
+    	}).mount("#app");
+    </script>
+    
 </body>    
 <jsp:include page="/WEB-INF/views/template/footer.jsp"></jsp:include>

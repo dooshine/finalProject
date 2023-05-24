@@ -152,7 +152,18 @@ public class MemberRepoImpl implements MemberRepo{
 		return sqlSession.selectOne("member.emailExist", memberId);
 	}
 
-
-
-
+	@Override
+	public boolean editPassword(String memberEmail, String memberPw) {
+		Map<String, Object> param = new HashMap<>();
+		param.put("memberEmail", memberEmail);
+		param.put("memberPw", memberPw);
+		return sqlSession.update("member.editPassword", param) > 0;
+	}
+	
+	// (채팅)
+	@Override
+	public List<MemberDto> chatMembers(List<String> memberIdList) {
+		return sqlSession.selectList("member.chatMembers", memberIdList);
+	}
+	
 }

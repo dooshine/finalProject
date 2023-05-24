@@ -1,10 +1,9 @@
 package com.kh.idolsns.service;
 
+import java.security.SecureRandom;
 import java.util.Random;
 import java.util.Scanner;
-import java.util.UUID;
 
-import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 
 import org.jsoup.Jsoup;
@@ -15,8 +14,6 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
-
-import io.swagger.v3.oas.annotations.media.Content;
 
 @Service
 public class emailServiceImpl implements emailService{
@@ -74,23 +71,47 @@ public class emailServiceImpl implements emailService{
 	//임시비밀번호 발급
 	@Override
 	public String CreatePassword() {
-		UUID uid = UUID.randomUUID();
-		String randomPassword = uid.toString().substring(0,8);
+		String upperCase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+		String lowerCase =  "abcdefghijklmnopqrstuvwxyz";
+		String numbers = "0123456789";
+		String specialChars = "!@#$";
+		String allChars = upperCase + lowerCase + numbers + specialChars;
 		
-		return randomPassword;
+		StringBuilder randomPassword = new StringBuilder();
+		
+		randomPassword.append(upperCase.charAt(getRandomIndex(upperCase)));
+		randomPassword.append(upperCase.charAt(getRandomIndex(upperCase)));
+	    randomPassword.append(numbers.charAt(getRandomIndex(numbers)));
+	    randomPassword.append(specialChars.charAt(getRandomIndex(specialChars)));
+		
+	    SecureRandom random = new SecureRandom();
+	    
+		while(randomPassword.length() < 8) {
+			int index = random.nextInt(allChars.length());
+			randomPassword.append(allChars.charAt(index));
+		}
+		
+		String newPassword = randomPassword.toString();
+		return newPassword;
+	}
+
+	private int getRandomIndex(String str) {
+		SecureRandom random = new SecureRandom();
+		int index = random.nextInt(str.length());
+		return 0;
 	}
 
 	@Override
-	public String sendEmailPassword(String recipientEmail, String randomPassword) throws Exception {
+	public String sendEmailPassword(String Email, String newPassword) throws Exception {
 		MimeMessage message = sender.createMimeMessage();
 		MimeMessageHelper helper = 
 				new MimeMessageHelper(message, false, "UTF-8");
 		
-		helper.setTo(recipientEmail);
+		helper.setTo(Email);
 		helper.setSubject("STARLINK 요청하신 임시비밀번호입니다.");
 		
 		ClassPathResource resource = 
-				new ClassPathResource("template/emailPW.html");
+				new ClassPathResource("templates/emailPW.html");
 		Scanner sc = new Scanner(resource.getFile());
 		StringBuffer buffer = new StringBuffer();
 		
@@ -98,16 +119,21 @@ public class emailServiceImpl implements emailService{
 			buffer.append(sc.nextLine());
 		}
 		String text = buffer.toString();
+		
 		Document doc = Jsoup.parse(text);
 		
 		Element target = doc.getElementById("custom-email-target");
-		target.text(randomPassword);
+		target.text(newPassword);
+		
+		Element link = doc.getElementById("custom-email-link");
+		link.text("STARLINK LOGIN");
+		link.attr("href", "http://localhost:8080/member/login");
 		
 		helper.setText(doc.toString(), true);
 		
 		sender.send(message);
 		
-		return randomPassword;
+		return newPassword;
 	}
 
 }

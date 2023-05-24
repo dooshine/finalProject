@@ -35,6 +35,7 @@ public interface MemberRepo {
 	MemberDto joinNick(String memberNick);
 	MemberDto joinEmail(String memberEmail);
 	MemberDto emailExist(String memberId);
+	boolean editPassword(String memberEmail, String memberPw);
 	
 	//중복 검사
 	int idDuplicatedCheck(String memberId);
@@ -43,5 +44,10 @@ public interface MemberRepo {
 	
 	// 관리자 회원목록 조회
 	List<MemberDto> adminSelectList(AdminMemberSearchVO adminMemberSearchVO);
+	
+	
+	
+	// (채팅) 회원 아이디 리스트로 상세조회
+	List<MemberDto> chatMembers(List<String> memberIdList);
 
 }
