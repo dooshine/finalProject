@@ -42,5 +42,7 @@ public class PostShowVO {
 	// ----------------------------------
 	// 프로필 사진 번호 
 	private Integer attachmentNo; 
-	
+	// ---------------------------------
+	// 좋아요 수
+	private Long likeCount;
 }

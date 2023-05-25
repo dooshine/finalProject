@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.kh.idolsns.repo.PostImageRepo;
+import com.kh.idolsns.repo.PostLikeRepo;
 import com.kh.idolsns.repo.PostShowRepo;
 import com.kh.idolsns.repo.TagRepo;
 import com.kh.idolsns.vo.PostShowVO;
@@ -26,6 +27,9 @@ public class PostShowService {
 	@Autowired
 	private PostImageRepo postImageRepo;
 	
+	@Autowired
+	private PostLikeRepo postLikeRepo;
+	
 	public void postShowOne(Long postNo) 
 	{
 		PostShowVO postShowVO = postShowRepo.selectOne(postNo);
@@ -41,15 +45,21 @@ public class PostShowService {
 		
 		for(PostShowVO postShowVO : postShowList)
 		{	
+			// 글번호 
 			postNo = postShowVO.getPostNo();
+			
+			// 태그 리스트
 			postShowVO.setTagList(tagRepo.selectAll(postNo));
+			
+			// 첨부파일 
 			if(postImageRepo.selectAttachNoList(postNo).size()>0) {
 				postShowVO.setAttachmentList(postImageRepo.selectAttachNoList(postNo));
 			}
 			else {
 				postShowVO.setAttachmentList(null);
 			}
-			
+			// 좋아요 
+			postShowVO.setLikeCount(postLikeRepo.count(postNo));
 			//  log.debug("postImageRepo.selectAttachNoList(postNo) is {}", postImageRepo.selectAttachNoList(postNo));
 			//	log.debug("postShowVO is {}", postShowVO); 
 		}

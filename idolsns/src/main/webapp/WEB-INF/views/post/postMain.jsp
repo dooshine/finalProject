@@ -30,9 +30,14 @@
     	}
     </style>
    
+   	<!-- model.addAttribute로 받은 memberId Vue의 Data영역에서 활용할 수 있도록 선언 -->
+   	<script>
+   		var sessionMemberId = '${memberId}';
+   		Vue.prototype.$sessionMemberId = sessionMemberId;
+   	</script>
 	
 
-	<div class="container-fluid" id="app">
+	<div class="container-fluid" id="app" test>
 		
 		<!----------- 글쓰기 버튼 ------------>
 	    <div class="bg-white mb-2 p-4 rounded-4">
@@ -428,18 +433,75 @@
 			               
 			            </div>
 			            <div class="col-10 col-md-10 col-lg-10 align-items-center">							
+		                	
+		                	
+		                	<!-- 글 -->
 		                	<div class="row">
 		                		<p>{{ post.postContent }}</p>
 		                	</div>
+		                	
+		                	<!-- 이미지 표시 -->
+		                	<div class="row">
+		                		<div v-if="post.attachmentList && post.attachmentList.length > 0"  class="d-flex">
+					                <div v-for="(attachmentNo, attachmentIndex) in post.attachmentList" :key="attachmentIndex">
+					                	<!-- 이미지인 경우 -->
+					                	<div v-if="checkImage(attachmentNo)">
+					                		<img :src="getAttachmentUrl(attachmentNo)" class="mx-1 px-1"style="max-width:100%;max-height:100%" alt="Attachment">
+					                	</div>
+					                	<div v-else>
+					                		<video :src="getAttachmentUrl(attachmentNo)" class="mx-1 px-1" style="max-width:100%;max-height:100%"  controls>
+				                		 	</video>
+					                	</div>					                    
+					                </div>
+					                <br>
+					            </div>
+					            <div v-else>
+					            </div>
+		                	</div>
+		                	
+		                	<!-- 구분선 -->
 		                	<div class="row">
 		                		<hr style="width:100%;">
 		                	</div>
-		                	<div class="row">		                		
-		                		<div class="col-4 text-start text-primary"><i class="fs-4 ti ti-heart"></i></div>
-							    <div class="col-4 text-center text-secondary"><i class="fs-4 ti ti-message"></i></div>
+		                	
+		                	<!-- 좋아요, 댓글, 공유하기 -->
+		                	<div class="row">
+		                		<!-- 좋아요 -->		                		
+		                		<div class="col-4 text-start text-primary">
+		                			<div class="row">
+		                				<div class="col-2">
+		                					<i class="fs-4 ti ti-heart" @click="checkLike(post.postNo,index)"></i>
+		                				</div>
+		                				<div class="col-4 ">
+		                					<h6 class="postlikeCount">{{post.likeCount}}</h6>
+		                				</div>		                						                				
+		                			</div>
+		                		</div>
+		                		<!-- 좋아요 -->
+		                		
+		                		<!-- 댓글 -->
+							    <div class="col-4 text-center text-secondary">
+							    	<i class="fs-4 ti ti-message"></i>
+							    </div>
+							    <!-- 댓글 -->
 							    <div class="col-4 text-end text-secondary"><i class="fs-4 ti ti-share"></i></div> 
 		                	</div>
 		                		   
+			            </div>
+						<div class="col-1 col-md-1 col-lg-1 d-flex align-items-center justify-content-center"> 
+			            </div>       
+	                </div>
+	                <!-- 글 내용 -->
+	                
+	                <!-- 이미지 -->
+	                <div class="row my-2">
+	                	<div class="col-1 col-md-1 col-lg-1 align-items-center justify-content-center">
+			               
+			            </div>
+			            <div class="col-10 col-md-10 col-lg-10 align-items-center">							
+		                	<div class="row">
+
+		                	</div>		                		   
 			            </div>
 						<div class="col-1 col-md-1 col-lg-1 d-flex align-items-center justify-content-center"> 
 			            </div>       
@@ -462,8 +524,17 @@
                 return {
                 	// 게시글 VO를 저장할 배열
                 	posts: [],
+                	
+                	// 지도에 주소 표시하는 문자열
                 	showMapModalText: '',
+                	
+                	// 세션 맴버아이디 
+                	sessionMemberId: this.$sessionMemberId;                	
+                	
                 };
+            },
+            computed:{  
+            	
             },
             methods:{
 				// 모든 게시글 불러오기 
@@ -476,6 +547,43 @@
 	                        console.error(error);                           
 	                    }) 
             	},
+            	
+            	// 사진 관련 
+                getAttachmentUrl(attachmentNo) {
+            		return "http://localhost:8080/rest/attachment/download/"+attachmentNo;
+                },
+                async checkImage(attachmentNo) {
+                    try {
+                      const response = await axios.head('http://localhost:8080/rest/attachment/download/' + attachmentNo);
+                      const contentType = response.headers['content-type'];
+                      return contentType.includes('image');
+                    } catch (error) {
+                      console.error(error);
+                      return false;
+                    }
+                },
+                
+             	// 좋아요 관련 비동기 처리--------------------------------
+                async checkLike(postNo,index){
+                	axios.get('http://localhost:8080/rest/post/like/'+postNo)
+                		.then(response => {
+                			console.log(response.data);
+                			if(response.data== 'Like'){
+                				this.posts[index].likeCount += 1;                				
+                			}
+                			else if(response.data=='disLike'){
+                				this.posts[index].likeCount -= 1; 
+                			}
+                				
+                		})
+                		.catch(error => {
+                			console.error(error);
+                		})
+                },
+             	// 좋아요 관련 비동기 처리--------------------------------
+                
+                
+            	// 모달창 클릭 시 지도 정보 불러오기-------------------------
             	showMap(keyword){
             		this.showMapModalText = keyword;
             		// 마커를 담을 배열입니다
