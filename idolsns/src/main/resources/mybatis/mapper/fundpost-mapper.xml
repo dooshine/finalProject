@@ -37,6 +37,13 @@
 		where post_no=#{postNo}
 	</update>
 	
+	<!-- 후원했을 시 fund_sponsor_count 1증가 -->
+	<update id="sponsorCount" parameterType="FundPostDto">
+		update fund_post
+		set fund_sponsor_count=#{fundSponsorCount}
+		where post_no=#{postNo}
+	</update>
+	
 	<insert id="connect" parameterType="PostImageDto">
 		insert into post_image(post_no, attachment_no)
 		value(#{postNo}, #{attachmentNo})

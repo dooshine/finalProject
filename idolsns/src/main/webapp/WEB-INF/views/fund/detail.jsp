@@ -59,30 +59,28 @@
    	<div id="app">
 		<div class="container rounded p-3" style="background-color:white">
 			  
-		<div v-for="(fundpost, index) in fundPosts" :key="fundpost.memberId">
-			
 		<div>
-			<h2 class="title text-center mt-5 mb-5">${fundPostDto.fundTitle}</h2>
+			<h2 class="title text-center mt-5 mb-5">{{ fundDetail.fundTitle }}</h2>
 		</div>
 			
 		
-		<img src="/download?attachmentNo=${fundMainImageDto.attachmentNo}" alt="예시사진">
+		<img :src="fundDetail.imageURL" alt="예시사진">
 			
 		
 			<div>
 	
 				<label>모인 금액</label>
-				<span class="fund_span">${fundTotal}</span>원
-				<span style="font-weight:bold">${fundTotal / fundPostDto.fundGoal * 100}</span>%
+				<span class="fund_span">{{ fundDetail.fundTotal }}</span>원
+				<span style="font-weight:bold">{{ (fundDetail.fundTotal / fundDetail.fundGoal * 100).toFixed(1) }}</span>%
 		
 			
 		
 				<label>남은 시간</label>
-				<span class="fund_span"></span>일
+				<span class="fund_span">{{ getTimeDiff }}</span>일
 			
 	
 				<label>후원자</label>
-				<span class="fund_span">3,421</span>명
+				<span class="fund_span">{{ fundDetail.fundSponsorCount }}</span>명
 	
 			
 			</div>
@@ -91,15 +89,15 @@
 		
 			<hr>
 		
-			<div>목표 금액		</div>
-			<div>${fundPostDto.fundGoal}원</div>
+			<div>목표 금액</div>
+			<div>{{ fundDetail.fundGoal }}원</div>
 			<br>
 			
 			<div>펀딩 기간		</div>
-			<div>${fundPostDto.postStart}~${fundPostDto.postEnd}</div>
+			<div>{{ fundDetail.postStart }} ~ {{ fundDetail.postEnd }}</div>
 			
-			<div >결제		</div>
-			<div>${fundPostDto.postEnd} 결제 진행</div>
+			<div >결제</div>
+			<div>{{ fundDetail.postEnd }} 결제 진행</div>
 			
 		
 			<div class="row mt-3" style="padding-left: 1em">
@@ -121,25 +119,17 @@
 					
 					</div>	
 					
-					<div class="row mt-3" style="padding-left: 1em">
-						<c:forEach var="image" items="${postImageList}">
-							<img src="/download?attachmentNo=${image.attachmentNo}">
-						</c:forEach>
+					<div class="row mt-3" style="padding-left: 1em" 
+								v-for="(no, index) in fundDetail.attachmentNos">
+						<img :src="'/download?attachmentNo=' + no"/>
 					</div>
 					
-				</div>
 		</div>
 	</div>             
 	</div>
 				<hr>
 			
 			
-				postImageList : ${postImageList}<br>
-				<br>
-				fundPostDto: ${fundPostDto}<br>
-				<br>
-				fundMainImageDto: ${fundMainImageDto }
-				
 				
 			
 			
@@ -152,41 +142,88 @@
 		  Vue.createApp({
 		    data() {
 		      return {
-		        fund: {
+		        fundDetail: {
 		          fundPrice: "",
 		          fundNo: "",
 		          postNo: "",
-		          memberId: "{{ memberId }}", // memberId를 Vue 데이터에 추가하고, 값을 바인딩합니다.
-		          fundName: "",
-		          fundTime: ""
+		          memberId: memberId, // memberId를 Vue 데이터에 추가하고, 값을 바인딩합니다.
+		          fundTime: "",
+		          attachmentNos: [],
+		          attachmentNo: "",
+		          fundTitle: "",
+		          postStart: "",
+		          postEnd: "",
+		          postTime: "",
+		          fundGoal: "",
+		          fundSponsorCount: "",
+		          fundState: "",
+		          postType: "",
+		          postContent: "",
+		          imageURL: "",
+		          fundTotal: "",
 		        },
-		        fundPosts: [],
 		      };
+		    },
+		    computed: {
+		    	getTimeDiff() {
+        			const startDate = new Date(this.fundDetail.postStart);
+        		      const endDate = new Date(this.fundDetail.postEnd);
+        		      const timeDiff = endDate.getTime() - startDate.getTime();
+        		      if (timeDiff >= 24 * 60 * 60 * 1000) {
+        		        // 1일 이상인 경우
+        		        return Math.ceil(timeDiff / (24 * 60 * 60 * 1000))+"일";
+        		      } else {
+        		    	// 1일 미만인 경우
+        		          const currentDate = new Date();
+        		          const endOfDay = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate(), 23, 59, 59);
+        		          const remainingTime = endOfDay.getTime() - currentDate.getTime();
+        		          const remainingHours = Math.floor(remainingTime / (60 * 60 * 1000));
+        		          const remainingMinutes = Math.floor((remainingTime % (60 * 60 * 1000)) / (60 * 1000));
+        		          const remainingSeconds = Math.floor((remainingTime % (60 * 1000)) / 1000);
+        		          return remainingHours+"시간"+ remainingMinutes+"분";
+        		        }
+        		},
 		    },
 		    methods: {
 				// postNo 설정		    	
 			    setPostNo() {
 			      const params = new URLSearchParams(location.search);
 			      const postNo = params.get("postNo");
-			      this.fund.postNo = postNo;
-			      console.log(this.fund.postNo);
+			      this.fundDetail.postNo = postNo;
 			    },
+			    // FundPostListDto 불러오기
 			    async loadFundPosts(){
-					const resp = await axios.get("http://localhost:8080/rest/fundpost/")	  
-					console.log(resp.data);
-					this.fundPosts.push(...resp.data);
-					
+			    	const postNo = this.fundDetail.postNo;
+					const resp = await axios.get("http://localhost:8080/rest/fund/"+postNo)	  
+					console.log(resp);
+					this.fundDetail = { ...this.fundDetail, ...resp.data };
         		},
-		       
+        		// postNo의 attachmentNo list 불러오기 
+        		async loadAttachNos(){
+        			const postNo = this.fundDetail.postNo;
+					const resp = await axios.get("http://localhost:8080/rest/fund/attaches/"+postNo)	  
+					this.fundDetail.attachmentNos.push(...resp.data);
+        		},
+		       // fundTotal 불러오기
+        		async loadFundTotal(){
+			    	const postNo = this.fundDetail.postNo;
+					const resp = await axios.get("http://localhost:8080/rest/fund/fundtotal/"+postNo)	  
+// 					console.log(resp);
+					this.fundDetail.fundTotal = resp.data;
+        		},
+        		
                 // 데이터 중 fund를 서버로 전송
 		      	order() {
-		      	  var postNo = this.fund.postNo; // Vue 데이터의 postNo 값을 사용
+		      	  const postNo = this.fundDetail.postNo; // Vue 데이터의 postNo 값을 사용
 		      	  window.location.href = "http://localhost:8080/fund/order?postNo=" + postNo;
 		      	},
+		      	
 		    },
 		    created() {
 		    	  this.setPostNo();
 		    	  this.loadFundPosts();
+		    	  this.loadAttachNos();
+		    	  this.loadFundTotal();
 		    	}
 		  
 		  }).mount("#app");

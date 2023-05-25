@@ -231,6 +231,56 @@ public class PointController {
 
 	}
 	
+	
+	
 
+	@GetMapping("/detailOrder") //사용 내역 디테일
+	public String detailOrder(@RequestParam long fundNo, Model model) {
+	
+		//우리 DB에서 정보를 찾아라
+		FundDto fundDto = fundRepo.find(fundNo);
 		
+		model.addAttribute("fundDto", fundDto);
+	
+		return "point/detailOrder";
+
+
+	}
+
+
+	@GetMapping("/cancelOrder")
+	public String cancelOrder(
+			@RequestParam long fundNo, 
+			HttpServletResponse resp,
+			RedirectAttributes attr,
+			HttpSession session) throws URISyntaxException, IOException, NoHandlerFoundException {
+		
+		 
+		//[1] paymentNo로 PaymentDto 정보를 조회
+		FundDto fundDto = fundRepo.find(fundNo);
+		if(fundDto == null || fundDto.getFundPrice() == 0) {
+			//resp.sendError(500);//사용자에게 500번을 내보내라
+			//return null;
+			throw new NoHandlerFoundException(null, null, null);
+		}
+		
+		//DB의 잔여 금액 fundPrice을 0으로 변경
+		fundRepo.fundCancel(fundNo);
+		
+		 //멤버 포인트 환불
+		String memberId = fundDto.getMemberId();
+	    int fundPrice = fundDto.getFundPrice();
+	    memberRepo.plusPoint(memberId, fundPrice);
+
+	    //[5] 상세 페이지로 돌려보낸다
+	    attr.addAttribute("fundNo", fundNo);
+	    
+	    return "redirect:detailOrder";
+	
+	}
+
+	
+	
+	
+	
 }

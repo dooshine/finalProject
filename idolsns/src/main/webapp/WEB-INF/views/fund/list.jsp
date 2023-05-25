@@ -131,16 +131,9 @@
 	
 					  <div class="funding-list justify-content-center mt-5">
 					  
-					  
-					  <!-- 
-					  <div v-for="(funding, index) in fundings" v-bind:key="funding.memberId">
-						</div>
-						<div>
-					   -->
-					  
 					    <div class="funding-item" v-for="(funding, index) in fundings" :key="funding.memberId"
 					    									v-on:click="link(funding)">
-					      <img :src="funding.imageUrl" alt="Funding Image">
+					      <img :src="getImageUrl(funding)" alt="Funding Image">
 					      <h3 class="title">{{ funding.fundTitle }}</h3>
 					      <p class="description">{{ funding.postContent }}</p>
 					      <div class="progress-bar">
@@ -168,12 +161,7 @@
 				
 				
 				
-					  <!-- 
-				<c:forEach var="fundPostDto" items="${fundList}">
-				${fundPostDto}<br>
-				</c:forEach>
 				
-  					-->
   					
 		<script src="https://unpkg.com/vue@3.2.36"></script>
 	    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
@@ -194,7 +182,7 @@
 	            	},
 	            	methods: {
 	            		async loadData(){
-							const resp = await axios.get("http://localhost:8080/rest/fundpostview/")	  
+							const resp = await axios.get("http://localhost:8080/rest/fund/")	  
 							console.log(resp.data);
 							this.fundings.push(...resp.data);
 							
@@ -222,74 +210,23 @@
 	            		},
 	            		link(funding){
 	            			console.log(funding.postNo)
-	            			const url = "http://localhost:8080/fund/detail?postNo="+funding.postNo;
+	            			const url = "/fund/detail?postNo="+funding.postNo;
 	            			window.location.href = url;
 	            		},
+	            		getImageUrl(funding) {
+	            		      if (funding.attachmentNo === null) {
+	            		        return "https://via.placeholder.com/150x150";
+	            		      } else {
+	            		        return "/rest/attachment/download/" + funding.attachmentNo;
+	            		      }
+	            		    },
 	            	},
 	            	created() {
 	            		this.loadData();
 	            	}
 		  		}).mount("#app");
 		
-//	          id: 1,
-//	          title: '지하철광고',
-//	          description: '6/25 제 생일입니다',
-//	          imageUrl: 'https://via.placeholder.com/400x300',
-//	          amount: 1000000,
-//	          progress: 75,
-//	          daysLeft: 10,
-//	          supporters: 20,
-//	        },
-//	        {
-//	          id: 2,
-//	          title: '성공적인 파이널프로젝트를 위해',
-//	          description: '6/12 파이널 프로젝트 종료',
-//	          imageUrl: 'https://via.placeholder.com/400x300',
-//	          amount: 2000000,
-//	          progress: 50,
-//	          daysLeft: 20,
-//	          supporters: 30,
-//	        },
-//	        {
-//	          id: 3,
-//	          title: '부자의 그릇',
-//	          description: '돈을 주세요',
-//	          imageUrl:'https://via.placeholder.com/400x300',
-//	          amount: 5000000,
-//	          progress: 30,
-//	          daysLeft: 30,
-//	          supporters: 40,
-//	        },
-//	        {
-//		          id: 4,
-//		          title: '지하철광고',
-//		          description: '6/25 제 생일입니다2222',
-//		          imageUrl: 'https://via.placeholder.com/400x300',
-//		          amount: 1000000,
-//		          progress: 75,
-//		          daysLeft: 10,
-//		          supporters: 20,
-//		        },
-//		        {
-//		          id: 5,
-//		          title: '성공적인 파이널프로젝트를 위해22',
-//		          description: '6/12 파이널 프로젝트 종료',
-//		          imageUrl: 'https://via.placeholder.com/400x300',
-//		          amount: 2000000,
-//		          progress: 50,
-//		          daysLeft: 20,
-//		          supporters: 30,
-//		        },
-//		        {
-//		          id: 6,
-//		          title: '부자의 그릇',
-//		          description: '돈을 주세요',
-//		          imageUrl:'https://via.placeholder.com/400x300',
-//		          amount: 5000000,
-//		          progress: 30,
-//		          daysLeft: 30,
-//		          supporters: 40,
-//		        },
+
 		</script>
 
 		

@@ -9,14 +9,6 @@
 	<select id="sequence" resultType="int">
 		select chat_room_seq.nextval from dual
 	</select>
-	
-	<!-- 채팅방에 초대된 회원 목록을 확인해서 이미 존재하는 채팅방인지 확인 -->
-	<select id="isRoomExist" resultType="ChatRoomDto">
-		select * from chat_room where
-		<foreach collection="memberList" item="member" separator=",">
-			${member}
-		</foreach>
-	</select>
 
 	<!-- 채팅방 생성 -->
 	<insert id="createRoom">
@@ -29,15 +21,24 @@
 		select * from chat_room where chat_room_no = #{chatRoomNo}	
 	</select>
 	
-	<!-- 채팅방 목록 -->
-	<select id="listRoom" resultType="ChatRoomDto">
-		select * from chat_room
+	<!-- 채팅방 번호 리스트로 채팅방 조회 -->
+	<select id="findRooms" resultType="ChatRoomDto">
+		select * from chat_room where chat_room_no in
+		<foreach collection="list" item="chatRoomNo" open="(" close=")" separator=",">
+			${chatRoomNo}
+		</foreach>
 	</select>
 	
 	<!-- 채팅방 삭제 -->
 	<delete id="deleteRoom">
 		delete chat_room where chat_room_no = #{chatRoomNo}
 	</delete>
-
+	
+	<!-- 채팅방 이름 변경 -->
+	<update id="changeName">
+		update chat_room set chat_room_name = #{chatRoomName}
+		where chat_room_no = #{chatRoomNo}
+	</update>
+	
 </mapper>
     

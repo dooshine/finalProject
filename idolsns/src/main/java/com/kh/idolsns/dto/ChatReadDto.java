@@ -9,7 +9,7 @@ public class ChatReadDto {
 	private long chatMessageNo;
 	
 	private String chatSender;
-	private String chatReciever;
+	private String chatReceiver;
 	
 	private Date chatReadTime;
 	

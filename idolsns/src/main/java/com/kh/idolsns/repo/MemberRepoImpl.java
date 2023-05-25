@@ -66,7 +66,18 @@ public class MemberRepoImpl implements MemberRepo{
 	
 	
 	
-	
+	//펀딩 취소 시 포인트 환불
+	@Override
+	public void plusPoint(String memberId, int fundPrice) {
+		Map<String, Object> params = new HashMap<>();
+	    params.put("memberId", memberId);
+	    params.put("fundPrice", fundPrice);
+	    
+	    sqlSession.update("member.plusPoint", params);
+		
+	}
+		
+		
 
 	
 	
@@ -141,7 +152,29 @@ public class MemberRepoImpl implements MemberRepo{
 		return sqlSession.selectOne("member.emailExist", memberId);
 	}
 
+	@Override
+	public boolean editPassword(String memberEmail, String memberPw) {
+		Map<String, Object> param = new HashMap<>();
+		param.put("memberEmail", memberEmail);
+		param.put("memberPw", memberPw);
+		return sqlSession.update("member.editPassword", param) > 0;
+	}
+	
+	// (채팅)
+	@Override
+	public List<MemberDto> chatMembers(List<String> memberIdList) {
+		return sqlSession.selectList("member.chatMembers", memberIdList);
+	}
 
+	//회원탈퇴
+	@Override
+	public boolean deleteMemberProc(String memberId) {
+		return sqlSession.update("member.deleteMemberProc", memberId) > 0;
+	}
 
-
+	@Override
+	public boolean exitDate(String memberId) {
+		return sqlSession.update("member.exitDate", memberId) > 0;
+	}
+	
 }

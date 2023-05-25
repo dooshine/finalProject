@@ -5,7 +5,7 @@ CREATE TABLE follow (
     -- 팔로우 한 사람    
 	member_id varchar2(20) references member(member_id) on delete cascade,
     -- 팔로우 대상 종류
-	follow_target_type varchar2(9)	NULL,
+	follow_target_type varchar2(15)	NULL,
     -- 팔로우 대상 PK
 	follow_target_primary_key varchar2(20)	NULL,
     -- 팔로우 시간
