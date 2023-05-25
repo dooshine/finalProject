@@ -1,5 +1,6 @@
 package com.kh.idolsns.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,5 +35,16 @@ public class FollowService {
     // 팔로우리스트 목록
     public List<FollowDto> selectFollowList(FollowDto followDto){
         return followRepo.selectFollowList(followDto);
+    }
+
+    // 팔로우한 회원 목록 좋회
+    public List<String> selectFollowingMemberList(FollowDto followDto){
+        // 회원목록만따로 빼기
+        List<String> followingMemberList = new ArrayList<>();
+        List<FollowDto> followDtoList = followRepo.selectFollowList(followDto);
+        for(FollowDto dto : followDtoList){
+            followingMemberList.add(dto.getFollowTargetPrimaryKey());
+        }
+        return followingMemberList;
     }
 }

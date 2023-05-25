@@ -55,17 +55,14 @@
                         <td>{{member.memberJoin}}</td>
                         <td>{{member.memberLogin === null ? "미접속": member.memberLogin }}</td>
                         <td>
-                            <!-- <i class="fa-solid fa-user-xmark" data-bs-toggle="modal" data-bs-target="#repotModal1" @click="setReportDto(member.memberId)"></i> -->
-                    <!-- <button class="btn btn-primary" @click="followMember(member.memberId)">팔로우하기</button> -->
-                            <button class="btn rounded-pill btn-primary text-white">팔로우하기</button>
-                            <button class="btn rounded-pill btn-secondary">팔로우취소하기</button>
+                            <button class="btn rounded-fill" :class="{'btn-primary':!isFollowMemberList[i], 'btn-secondary': isFollowMemberList[i]}" v-text="isFollowMemberList[i]?'팔로우취소':'팔로우하기'" @click="followMember(member.memberId, i)"></button>
                         </td>
                     </tr>
                 </tbody>
             </table>
         </div>
     </div>
-    <!-- <div class="row" v-for="(followingMember, i) in followingMemberList">
+    <!-- <div class="row" v-for="(followingMember, i) in followMemberList">
         {{followingMember}}
     </div> -->
     <hr>
@@ -85,8 +82,13 @@
     </c:if>
 
     <!-- 팔로우한 회원 목록  -->
-    <div class="row" v-for="(followingMember, i) in followingMemberList">
-        {{followingMember}}
+    <div class="row" v-for="(followingMember, i) in followMemberList">
+        <div class="col">
+            {{i+1}}
+        </div>
+        <div class="col">
+            {{followingMember}}
+        </div>
     </div>
     <hr>
 
@@ -103,11 +105,12 @@
         <h2>로그인을 하면 팔로우한 페이지 목록을 확인할 수 있습니다.</h2>
     </c:if>
     <!-- 팔로우한 회원 목록  -->
-    <div class="row" v-for="(followingPage, i) in followingPageList">
+    <div class="row" v-for="(followingPage, i) in followPageList">
         {{followingPage}}
     </div>
     <hr>
 </div>
+
 
 <!-- 뷰 스크립트 작성 -->
 <script>
@@ -115,20 +118,24 @@
       data() {
         return {
             // 팔로우한 회원 목록
-            followingMemberList: [],
+            followMemberList: [],
+
             // 팔로우한 페이지 목록
-            followingPageList: [],
+            followPageList: [],
 
             // 회원 리스트
-            memberList: [], 
+            memberList: [],
+            
+            // 회원 팔로우 여부 리스트
+            isFollowMemberList: [],
         };
       },
       computed: {
-  
-        },
+        
+      },
       methods: {
         // [함수] 팔로우한 회원 목록 불러오기
-        async loadFollowingMemberList(){
+        async loadFollowMemberList(){
             // 비로그인시 실행X
             if(memberId==="") return;
             // url
@@ -136,7 +143,7 @@
             // api호출
             const resp = await axios.get(url);
             // data 반영
-            this.followingMemberList = resp.data;
+            this.followMemberList = resp.data;
         },
         // [함수] 팔로우한 대표페이지 목록 불러오기
         async loadFollowingArtistList(){
@@ -147,16 +154,79 @@
             // api호출
             const resp = await axios.get(url);
             // data 반영
-            this.followingPageList = resp.data;
+            this.followPageList = resp.data;
         },
         // [함수] 모든 회원 목록 불러오기
-        async loadFollowingArtistList(){
+        async loadMemberList(){
             // url
             const url = "http://localhost:8080/rest/admin/member";
             // api호출
             const resp = await axios.post(url,{});
             // data 반영
             this.memberList = resp.data;
+
+            // 회원 팔로우 여부 조회
+            for(let i = 0; i<resp.data.length; i++){
+                this.isFollowMemberList[i] = await this.checkFollowMember(resp.data[i].memberId);
+            }
+        },
+
+
+
+
+        // [함수] 페이지 팔로우 여부 확인
+        async checkFollowPage(artistName){
+            // 팔로우 확인 url
+            const url = "http://localhost:8080/rest/follow/checkFollowPage/";
+            const resp = await axios.get(url, {
+                params: {followTargetPrimaryKey: artistName},
+            });
+            return resp.data;
+        },
+        // [함수] 회원 팔로우 여부 확인
+        async checkFollowMember(memberId){
+            // 팔로우 확인 url
+            const url = "http://localhost:8080/rest/follow/checkFollowMember";
+            const resp = await axios.get(url, {
+                params: {followTargetPrimaryKey: memberId},
+            });
+            // console.log(resp.data == true);
+            return resp.data;
+        },
+        // [함수] 회원 팔로우 반영
+        async setisFollowMemberList(){
+            for(let i = 0; i<this.memberList.length; i++){
+                this.isFollowMemberList[i] = this.checkFollowMember(this.memberList[i].memberId);
+            }
+        },
+
+
+
+        // 회원 팔로우 생성
+        async createFollowMember(followTargetId){
+            // url
+            const url = "http://localhost:8080/rest/follow/member";
+            const resp = await axios.post(url, { followTargetPrimaryKey: followTargetId });
+        },
+
+        // 회원 팔로우 취소
+        async deleteFollowMember(followTargetId){
+            // url
+            const url = "http://localhost:8080/rest/follow/member";
+            await axios.delete(url, { data: {followTargetPrimaryKey: followTargetId} });
+        },
+        async followMember(targetId, i){
+            console.log(this.isFollowMemberList[i]);
+            const isFollowing = this.isFollowMemberList[i];
+            if(isFollowing) {
+                // 팔로우 삭제
+                await this.deleteFollowMember(targetId);
+            } else {
+                // 팔로우 생성
+                await this.createFollowMember(targetId);
+            }
+            this.loadMemberList();
+            this.loadFollowMemberList();
         },
       },
       watch: {
@@ -164,12 +234,15 @@
       },
       created(){
         // 모든 회원 목록 불러오기
-
+        this.loadMemberList();
         // 팔로우한 회원 목록 불러오기
-        this.loadFollowingMemberList();
+        this.loadFollowMemberList();
         // 팔로우한 페이지 목록 불러오기
         this.loadFollowingArtistList();
+        
       },
+      updated(){
+      }
     }).mount('#app')
   </script>
 
