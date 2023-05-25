@@ -46,8 +46,7 @@ public interface MemberRepo {
 	int nickDuplicatedCheck(String memberNick);
 	int emailDuplicatedCheck(String memberEmail);
 	
-	// 관리자 회원목록 조회
-	List<MemberDto> adminSelectList(AdminMemberSearchVO adminMemberSearchVO);
+	
 	
 	
 	
