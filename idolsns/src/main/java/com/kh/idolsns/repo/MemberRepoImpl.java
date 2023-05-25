@@ -183,8 +183,8 @@ public class MemberRepoImpl implements MemberRepo{
 	}
 
 	@Override
-	public void exit() {
-		sqlSession.delete("member.exit");
+	public void clean() {
+		sqlSession.delete("member.clean");
 	}
 	
 }

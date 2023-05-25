@@ -206,9 +206,9 @@
 		update member set member_exitdate=null where member_id=#{memberId}
 	</update>
 	
-		<delete id="exit">
+		<delete id="clean">
 			<![CDATA[
-			delete member where member_exitdate < sysdate - INTERVAL '5' MINUTE
+			delete member where member_exitdate < sysdate - INTERVAL '1' MINUTE
 			]]>
 		</delete>
 	

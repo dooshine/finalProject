@@ -68,16 +68,22 @@
 				<button type="button" onclick="location.href='${pageContext.request.contextPath}/member/findPw'">비밀번호 찾기</button>
 			</div>
 			
-			<v-alert></v-alert>			
 		</div>
 	</div>
+			<script>
+		        document.addEventListener('DOMContentLoaded', function() {
+		            var mode = '${param.mode}';
+		            var message = '${param.mmssgg}';
+		
+		            function showAlert() {
+		                if (mode === 'cancel' && message) {
+		                    alert(message);
+		                }
+		            }
+		
+		            showAlert();
+		        });
+		    </script>
 
-	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://unpkg.com/vue@3.2.36"></script>
-    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js"></script>
-    <script>
-        Vue.createApp({}}).mount("#app");
-     </scr
 </body>
 <jsp:include page="/WEB-INF/views/template/footer.jsp"></jsp:include>

@@ -39,7 +39,7 @@ public interface MemberRepo {
 	boolean deleteMemberProc(String memberId);
 	boolean exitDate(String memberId);
 	boolean cancelExit(String memberId);
-	void exit();
+	void clean();
 	
 	//중복 검사
 	int idDuplicatedCheck(String memberId);
