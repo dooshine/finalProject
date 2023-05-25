@@ -16,6 +16,7 @@ import com.kh.idolsns.dto.PostImageDto;
 import com.kh.idolsns.repo.FundPostImageRepo;
 import com.kh.idolsns.repo.FundRepo;
 import com.kh.idolsns.vo.FundDetailVO;
+import com.kh.idolsns.vo.FundVO;
 
 @CrossOrigin
 @RestController
@@ -57,25 +58,37 @@ public class FundRestController {
 	}
 	
 	
-	// 후원한 total금액 
-	@GetMapping("/fundtotal/{postNo}")
-	public int fundTotal(@PathVariable Long postNo){
-		List<FundDto> list = fundPostImageRepo.selectFundList(postNo);
+	// 후원한 total금액 & 후원자 
+	@GetMapping("/fundlist/{postNo}")
+	public FundVO fundList(@PathVariable Long postNo){
 		
+		// total 금액
+		List<FundDto> fundList = fundPostImageRepo.selectFundList(postNo);
 		int fundTotal = 0;
-		for(FundDto dto : list) {
+		for(FundDto dto : fundList) {
 			fundTotal += dto.getFundPrice();
 		}
 		
-		return fundTotal;
+		// 후원자 수
+		int sponsorCount = fundRepo.count(postNo);
+		
+		FundVO vo = new FundVO();
+		vo.setFundTotal(fundTotal);
+		vo.setFundSponsorCount(sponsorCount);
+		
+	    return vo;
 	}
 	
-
-	  @GetMapping("/order/{fundNo}")
-	  public FundDto getFund(@PathVariable long fundNo) {
-	    FundDto fundDto = fundRepo.find(fundNo);
-	    return fundDto;
-	  }
+	
+	@GetMapping("/order/{fundNo}")
+	public FundDto getFund(@PathVariable long fundNo) {
+		FundDto fundDto = fundRepo.find(fundNo);
+		return fundDto;
+	}
+	
+	
+	  
+	  
 	
 	
 }

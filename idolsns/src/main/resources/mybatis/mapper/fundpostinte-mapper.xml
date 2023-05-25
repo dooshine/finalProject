@@ -17,11 +17,12 @@
 			<result column="post_end" property="postEnd"/>
 			<result column="post_time" property="postTime"/>
 			<result column="fund_goal" property="fundGoal"/>
-			<result column="fund_sponsor_count" property="fundSponsorCount"/>
 			<result column="fund_state" property="fundState"/>
 			<result column="post_type" property="postType"/>
 			<result column="post_content" property="postContent"/>
 			<result column="attachment_no" property="attachmentNo"/>
+			<result column="sponsor_count" property="sponsorCount"/>
+			<result column="price_total" property="priceTotal"/>
 		</association>
 		
 		<!-- fund -->
@@ -32,11 +33,11 @@
 		<!-- post_image -->
 		<collection property="attachmentNos" javaType="java.util.List"
 				ofType="PostImageDto" select="attachByPostNo" column="post_no"/>
+				
 	</resultMap>
 	
 	<select id="fundPostByPostNo" resultMap="fdvo" parameterType="Long">
-		select * from fundpostimage_view
-		where post_type='펀딩' and post_no=#{postNo} 
+		select * from fundpostimage_detail where post_no=#{postNo} 
 	</select>
 	
 	<select id="fundByPostNo" resultType="FundDto" parameterType="Long">
@@ -49,8 +50,12 @@
 	</select>
 	
 	<select id="list" resultType="FundPostImageDto">
-		select * from fundpostimage_view where post_type='펀딩'
+		select * from fundpostimage_view
 		order by post_time desc
 	</select>
+	
+	
+	
+	
 	
 </mapper>

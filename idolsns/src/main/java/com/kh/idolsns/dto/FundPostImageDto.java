@@ -15,11 +15,12 @@ public class FundPostImageDto {
 	private Date postEnd;
 	private Date postTime;
 	private int fundGoal;
-	private int fundSponsorCount;
 	private String fundState;
 	private String postType;
 	private String postContent;
 	private Integer attachmentNo; // 없는 경우 null이 나오도록 처리
+	private int sponsorCount;
+	private int totalPrice;
 	
 	
 	//이미지의 URL을 반환하는 메소드

@@ -13,4 +13,5 @@ public class FundDetailVO {
 	private FundPostImageDto fundPostImageDto;
 	private List<PostImageDto> attachmentNos;
 	private List<FundDto> fundDtos;
+	private List<FundVO> fundVOs;
 }
