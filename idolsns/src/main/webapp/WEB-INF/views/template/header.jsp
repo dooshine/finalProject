@@ -83,14 +83,39 @@
     		border: 0.5px solid #c8c8c8;
     		border-radius: 5px;
     		width: 300px;
-    		height: 450px;
+    		height: 500px;
     		z-index: 999;
     		display: block;
     		
     		/* 스크롤 설정 */
     		overflow-y: initial;
     	}
-    	.chatRoomModal {
+    	.customModalSmall {
+    		position: absolute;
+    		bottom: 320px;
+    		right: 60px;
+    		z-index: 9999;
+    		background: white;
+    		border: 0.5px solid #c8c8c8;
+    		border-radius: 5px;
+    		display: block;
+    		box-shadow: 0px 0px 5px 2px #e6e8e7;
+    		padding: 16px;
+    	}
+    	.customModalSmall2 {
+    		position: absolute;
+    		bottom: 395px;
+    		right: 60px;
+    		z-index: 9999;
+    		background: white;
+    		border: 0.5px solid #c8c8c8;
+    		border-radius: 5px;
+    		display: block;
+    		box-shadow: 0px 0px 5px 2px #e6e8e7;
+    		padding: 16px;
+    	}
+    	.chatRoomModal,
+    	.inviteMemberModal {
     		position: fixed;
     		bottom: 10px;
     		right: 313px;
@@ -98,7 +123,7 @@
     		border: 0.5px solid #c8c8c8;
     		border-radius: 5px;
     		width: 300px;
-    		height: 450px;
+    		height: 500px;
     		z-index: 999;
     		display: block;
     		
@@ -130,16 +155,20 @@
     	}
     	.customModalBody {
     		padding: 16px;
-    		height: 390px;
+    		height: 440px;
     		overflow-y: auto;
+    		
+    		/* 파폭 스크롤 커스텀 */
+    		scrollbar-width: thin;
+    		scrollbar-color: #c8c8c8 rgba(0,0,0,0);
     	}
     	.short {
     		padding: 16px;
-    		height: 290px;
+    		height: 330px;
     		overflow-y: auto;
     	}
     	.customModalFooter {
-    		padding-top: 5px;
+    		padding-top: 8px;
     		padding-left: 16px;
     		padding-right: 16px;
     		padding-bottom: 16px;
@@ -150,29 +179,56 @@
     	}
     	.ti-message-circle-plus,
     	.ti-message-circle-check,
-    	.ti-edit-circle {
+    	.ti-dots-vertical,
+    	.ti-dots {
     		font-size: 22px;
     		color: #7f7f7f;
     	}
+    	
+    	.ti-user-plus,
+		.ti-edit-circle-small,
+		.ti-message-circle-off,
+		.ti-edit-circle-off, 
+		.ti-edit-circle-large {
+			font-size: 18px;
+			color: #7f7f7f;
+		}
+		
     	.ti-message-circle-plus:hover,
     	.ti-message-circle-check:hover,
-    	.ti-edit-circle:hover {
+    	.ti-dots-vertical:hover,
+    	.ti-dots:hover {
     		color: #404040;
     	}
+    	
+    	.inviteBtn:hover .ti-user-plus,
+		.eidtNameBtn:hover .ti-edit-circle,
+		.exitBtn:hover .ti-message-circle-off {
+			color: #404040;
+		}
+    	
     	.newChatRoomBtn[disabled] .ti-message-circle-plus,
     	.newChatRoomBtn[disabled]:hover .ti-message-circle-plus,
     	.confirmNewChatRoomBtn[disabled] .ti-message-circle-check,
     	.confirmNewChatRoomBtn[disabled]:hover .ti-message-circle-check,
     	.roomNameChangeModeBtn[disabled] .ti-edit-circle,
-    	.roomNameChangeModeBtn[disabled]:hover .ti-edit-circle {
+    	.roomNameChangeModeBtn[disabled]:hover .ti-edit-circle,
+    	.changeRoomNameBtn[disabled] .ti-dots-vertical .ti-dots,
+    	.changeRoomNameBtn[disabled]:hover .ti-dots-vertical .ti-dots,
+    	.cancelRenameBtn[disabled] .ti-edit-circle-off,
+    	.cancelRenameBtn[disabled]:hover .ti-edit-circle-off,
+    	.confirmNameBtn[disabled] .ti-edit-circle-large,
+    	.confirmNameBtn[disabled]:hover .ti-edit-circle-large {
     		color: #dee2e6;
     	}
     	.type-box {
-    		width: 300px;
-    		height: 50px;
+    		width: 100%;
+    		height: 65px;
     		resize: none;
     		border: none;
     		outline: none;
+    		font-size: 0.8em;
+    		padding: 0;
     	}
     	.type-box::-webkit-scrollbar {
     		display: none;
@@ -181,6 +237,17 @@
     		font-size: 0.8em;
     		color: red;
     	}
+    	
+    	.changeNameInput {
+    		padding: 0;
+    		border: none;
+    		outline: none;
+    	}
+    	
+    	.message {
+			border-bottom: 1px solid gray;
+			padding: 10px;
+		}
     </style>
 </head>
 
@@ -228,8 +295,8 @@
 					</div>
 					<div class="customModalBody">
 						<div class="chatRooms mb-2" v-for="(room, index) in chatRoomList" :key="index">
-							<button class="hide-style" @click="chatRoomModal">
-								{{ room.chatRoomName }}
+							<button class="hide-style" @click="showChatRoomModal(index)">
+								{{ chatRoomList[index].chatRoomName }}
 							</button>
 						</div>
 					</div>
@@ -250,7 +317,7 @@
 					<div class="customModalBody">
 						<div>
 							<div class="form-floating mb-3" v-if="memberCount > 2">
-		  						<input type="text" class="form-control" id="chatRoomNameInput" placeholder="채팅방이름" 
+		  						<input type="text" class="form-control form-control-sm" id="chatRoomNameInput" placeholder="채팅방이름" 
 		  											v-model="chatRoom.chatRoomName" @input="chatRoom.chatRoomName = $event.target.value">
 							  	<label for="chatRoomNameInput">채팅방 이름</label>
 							</div>
@@ -263,40 +330,136 @@
 				</div>
 				<!--------------------------------------- 채팅방 생성 모달 ---------------------------------------->
 				<!--------------------------------------- 채팅방 모달 ---------------------------------------->
-				<div class="customModal chatRoomModal">
+				<div class="customModal chatRoomModal" v-if="chatRoomModal == true">
 					<!-- 헤더 -->
-					<div class="customModalHeader d-flex align-items-center justify-content-between">
-						<h5>채팅방 이름</h5>
-						<div class="d-flex justify-content-end">
-							<!-- 이름 수정 버튼(chatRoomType이 그룹일때만 보임 roomInfo.chatRoomType == 'G') -->
-							<button type="button" class="hide-style pe-3 roomNameChangeModeBtn">
-								<i class="ti ti-edit-circle"></i>
-							</button>
-							<!-- 닫기 버튼 -->
-							<button type="button" class="btn-close"></button>
+					<div class="customModalHeader d-flex align-items-center">
+						<div class="d-flex justify-content-between w-100">
+							<!-- 채팅방 이름(갠톡일 때) -->
+							<h5 v-if="roomInfo.chatRoomType == 'P'">상대방 아이디</h5>
+							<!-- 채팅방 이름(단톡일 때) -->
+							<div v-if="roomInfo.chatRoomType == 'G'">
+								<div v-if="roomInfo.edit == true" class="d-flex align-items-center justify-content-between w-100">
+									<!-- 이름 변경 입력창 -->
+									<input v-model="roomInfo.chatRoomName" @input="roomInfo.chatRoomName = $event.target.value" class="changeNameInput">
+									<!-- 이름 변경 버튼 -->
+									<div class="d-flex justify-content-end">
+										<button type="button" @click="saveRoomName" class="hide-style confirmNameBtn me-2" 
+											:disabled="roomInfo.chatRoomName.length < 1 || roomInfo.chatRoomName == roomInfoCopy.chatRoomName">
+											<i class="ti ti-edit-circle ti-edit-circle-large"></i>
+										</button>
+										<!-- 이름 변경 취소 버튼 -->
+										<button type="button" @click="cancelChange" class="hide-style cancelRenameBtn me-2">
+											<i class="ti ti-edit-circle-off"></i>
+										</button>
+									</div>
+								</div>
+								<div v-else>
+									<h5>{{ roomInfo.chatRoomName }}</h5>
+								</div>
+							</div>
+							<div class="d-flex justify-content-end">
+								<!-- 메뉴 열기 버튼 -->
+								<button type="button" @click="showChatMenuModal" v-if="chatMenuModal == false && roomInfo.edit == false"
+										class="hide-style changeRoomNameBtn d-flex align-items-center pe-2">
+									<i class="ti ti-dots-vertical"></i>
+								</button>
+								<!-- 메뉴 닫기 버튼 -->
+								<button type="button" @click="hideChatMenuModal" v-if="chatMenuModal == true && roomInfo.edit == false"
+										class="hide-style changeRoomNameBtn d-flex align-items-center pe-2">
+									<i class="ti ti-dots"></i>
+								</button>
+								<!-- 닫기 버튼 -->
+								<button type="button" class="btn-close" @click="hideChatRoomModal"></button>
+							</div>
 						</div>
 					</div>
 					<!-- 바디 -->
-					<div class="customModalBody short">
-						메세지 내용 불러오기
+					<div class="customModalBody short message-wrapper">
+						<div class="message" v-for="(message, index) in messageList" :key="index">
+							<!-- 사용자가 보내는 메세지일 때 -->
+							<div v-if="message.chatMessageType === 1 || message.chatMessageType === 4">
+								<h4>{{ message.memberId }}</h4>
+								<button v-if="message.memberId == memberId" @click="deleteMessage(index)">x</button>
+								<!-- 텍스트 메세지일 때 -->
+								<div v-if="message.attachmentNo === 0">{{ message.chatMessageContent }}</div>
+								<!-- 이미지 메세지일 때 -->
+								<img class="photo" v-if="message.attachmentNo != 0" 
+										:src="'${pageContext.request.contextPath}/download?attachmentNo=' + message.attachmentNo">
+								<div>{{ timeFormat(message.chatMessageTime) }}</div>
+							</div>
+							<!-- 시스템 메세지일 때 -->
+							<div v-if="message.chatMessageType === 5 || message.chatMessageType === 6">
+								<div>{{ timeFormat(message.chatMessageTime) }}</div>
+								<div>{{ message.chatMessageContent }}</div>
+							</div>
+						</div>
+						
+						<!-- 메뉴 모달 -->
+						<div v-if="chatRoomModal == true && chatMenuModal == true">
+							<!-- 단톡일 때 -->
+							<div v-if="roomInfo.chatRoomType == 'G'" class="customModalSmall">
+								<button type="button" @click="showInviteMemberModal" class="hide-style inviteBtn d-flex align-items-center mb-3 w-100">
+									<i class="ti ti-user-plus pe-2"></i>
+									초대
+								</button>
+								<button type="button" @click="changeRoomName" class="hide-style eidtNameBtn d-flex align-items-center mb-3 w-100">
+									<i class="ti ti-edit-circle ti-edit-circle-small pe-2"></i>
+									이름변경
+								</button>
+								<button type="button" @click="leaveRoom" class="hide-style exitBtn d-flex align-items-center w-100">
+									<i class="ti ti-message-circle-off pe-2"></i>
+									나가기
+								</button>
+							</div>
+							<!-- 갠톡일 때 -->
+							<div v-if="roomInfo.chatRoomType == 'P'" class="customModalSmall2">
+								<button type="button" @click="leaveRoom" class="hide-style exitBtn d-flex align-items-center w-100">
+									<i class="ti ti-message-circle-off pe-2"></i>
+									나가기
+								</button>
+							</div>
+						</div>
 					</div>
 					<!-- 푸터 -->
 					<div class="customModalFooter">
 						<div class="type-area d-flex">
-							<textarea class="type-box"></textarea>
+							<textarea v-model="text" ref="messageInput" @input="text = $event.target.value" class="type-box"></textarea>
 						</div>
-						<div class="footer-area d-flex align-items-center justify-content-between mt-3">
+						<div class="footer-area d-flex align-items-center justify-content-between mt-1">
 							<div class="length-alert">
 								글자수를 초과했습니다.
 							</div>
 							<div class="button-area d-flex justify-content-end">
+								<input class="form-control" type="file" accept=".png, .jpg, .gif" @change="sendPic">
 								<button type="button" class="hide-style me-2">이미지</button>
-								<button type="button" class="hide-style">전송</button>
+								<button type="button" @click="sendMessage" class="hide-style">전송</button>
 							</div>
 						</div>
 					</div>
 				</div>
 				<!--------------------------------------- 채팅방 모달 ---------------------------------------->
+				<!---------------------------------------- 초대 모달 ---------------------------------------->
+				<div class="customModal inviteMemberModal" v-if="inviteMemberModal == true">
+					<div class="customModalHeader d-flex align-items-center justify-content-between">
+						<h5>새 친구 추가</h5>
+						<div class="d-flex justify-content-end">
+							<button type="button" class="hide-style pe-3 confirmNewChatRoomBtn" @click="inviteMember"
+								:disabled="selectedMemberList.length === 0">
+								<i class="ti ti-message-circle-check"></i>
+							</button>
+							<button type="button" class="btn-close" @click="hideInviteMemberModal"></button>
+						</div>
+					</div>
+					<div class="customModalBody">
+						<div>
+							<label class="d-flex justify-content-between" v-for="(follow, index) in filteredFollowList">
+						    	{{ follow.memberId }}
+						    	<input type="checkbox" v-model="selectedMemberList" :value="follow.memberId">
+							</label>
+						</div>
+					</div>
+				</div>
+				<!---------------------------------------- 초대 모달 ---------------------------------------->
 			</div>
         	<!----------------------------------------------- 헤더 끝 ----------------------------------------------->
             
