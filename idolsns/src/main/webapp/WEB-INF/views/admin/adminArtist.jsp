@@ -6,14 +6,14 @@
 <!-- 제어영역 설정 -->
 <div class="container" id="app">
     
-    <!-- # 태그 사용량 타이틀 -->
+    <!-- # 아티스트 타이틀 -->
     <div class="row">
         <div class="col">
-            <h1>태그 사용량 목록</h1>
+            <h1>아티스트 목록</h1>
         </div>
     </div>
 
-    <!-- # 태그 사용량 목록-->
+    <!-- # 아티스트 목록-->
     <div class="row mt-5">
         <div class="col container-fluid">
             <div class="row">
@@ -58,7 +58,7 @@
                         </th>
                         <th scope="col">태그 이름</th>
                         <th scope="col">태그 타입</th>
-                        <th scope="col">태그 사용량</th>
+                        <th scope="col">아티스트</th>
                     </tr>
                 </thead>
                 <tbody>

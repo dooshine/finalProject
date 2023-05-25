@@ -51,9 +51,4 @@ public class MemberRestController {
 		return memberRepo.joinEmail(memberEmail) == null? "Y":"N";
 	}
 
-    @PostMapping("/")
-    public List<MemberDto> adminSelectList(@RequestBody AdminMemberSearchVO adminMemberSearchVO){
-        return memberRepo.adminSelectList(adminMemberSearchVO);
-
-    }
 }

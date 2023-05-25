@@ -27,4 +27,13 @@ public class DevController {
         session.setAttribute("memberLevel", memberDto.getMemberLevel());
         return "redirect:" + request.getHeader("Referer");
     }
+
+    @GetMapping("/follow")
+    public String follow(){
+        return "temp_follow";
+    }
+    @GetMapping("/followMember")
+    public String followMember(){
+        return "temp_followMember";
+    }
 }
