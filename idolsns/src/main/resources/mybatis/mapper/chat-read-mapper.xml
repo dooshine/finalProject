@@ -8,28 +8,17 @@
 	<!-- 메세지가 전송되면 일단 저장 (읽은 시간은 null) -->
 	<insert id="saveMessage">
 		insert into chat_read(
-				chat_room_no, chat_message_no, chat_sender, 
-				chat_receiver, chat_read_time
+				chat_room_no, chat_message_no, chat_sender, chat_receiver
 			)
 		values(
-				#{chatRoomNo}, #{chatMessageNo}, #{chatSender}, 
-				#{chatReceiver}, null
+				#{chatRoomNo}, #{chatMessageNo}, #{chatSender}, #{chatReceiver}
 			)
 	</insert>
 	
-	<!-- 읽음 처리를 위한 처리 -->
-	<!-- 해당 메세지 수신자 찾기(필요 없을지도) -->
-	<select id="findReceiverByMessage" resultType="ChatReadDto">
-		select * from chat_read 
-		where chat_message_no = #{chat_message_no}
-		and chat_receiver = #{chatReceiver}
-	</select>
-	<!-- 읽은 시간 업데이트 -->
-	<update id="updateReadTime">
-		update chat_read set chat_read_time = sysdate
-		where chat_message_no = #{chat_message_no} 
-		and chat_receiver = #{chatReceiver}
-	</update>
-
+	<!-- 메세지 읽으면 삭제 -->
+	<delete id="readMessage">
+		delete chat_read where chat_room_no = #{chatRoomNo} and chat_receiver = #{memberId}
+	</delete>
+	
 </mapper>
     

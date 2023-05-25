@@ -16,12 +16,5 @@ public class ChatReadRepoImpl implements ChatReadRepo {
 	public void saveMessage(ChatReadDto dto) {
 		sql.insert("chatRead.saveMessage", dto);
 	}
-	@Override
-	public void updateReadTime(int chatMessageNo, String chatReceiver) {
-		Map<String, Object> param = new HashMap<>();
-		param.put("chatMessageNo", chatMessageNo);
-		param.put("chatReceiver", chatReceiver);
-		sql.update("chatRead.updateReadTime", param);
-	}
 	
 }
