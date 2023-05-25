@@ -10,6 +10,7 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.kh.idolsns.constant.WebSocketConstant;
 import com.kh.idolsns.dto.ChatJoinDto;
 import com.kh.idolsns.dto.ChatMessageDto;
 import com.kh.idolsns.dto.ChatReadDto;
@@ -21,7 +22,7 @@ import com.kh.idolsns.vo.ChatMemberVO;
 import com.kh.idolsns.vo.ChatMessageReceiveVO;
 import com.kh.idolsns.vo.ChatMessageVO;
 import com.kh.idolsns.vo.ChatRoomVO;
-import com.kh.idolsns.websocket.WebSocketConstant;
+
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -267,6 +268,7 @@ public class ChatServiceImpl implements ChatService {
 			//log.debug("chatRooms: " + chatRooms);
 			int chatRoomNo = receiveVO.getChatRoomNo();
 			this.join(member, chatRoomNo);
+			//log.debug("chatRooms: " + chatRooms);
 		}
 		// 메세지 삭제인 경우
 		else if(receiveVO.getType() == WebSocketConstant.DELETE) {
