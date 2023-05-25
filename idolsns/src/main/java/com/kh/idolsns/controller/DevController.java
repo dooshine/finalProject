@@ -32,4 +32,8 @@ public class DevController {
     public String follow(){
         return "temp_follow";
     }
+    @GetMapping("/followMember")
+    public String followMember(){
+        return "temp_followMember";
+    }
 }

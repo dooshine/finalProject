@@ -33,5 +33,6 @@
               and instr(follow_target_type, #{followTargetType}) > 0
             </if>
         </where>
+        order by follow_target_primary_key desc
     </select>
 </mapper>

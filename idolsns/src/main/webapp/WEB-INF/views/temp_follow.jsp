@@ -15,6 +15,14 @@
 </style>
 
 <div class="container-fluid" id="app">
+    <div class="row">
+        <div class="col">
+            <a href="/dev/follow">팔로우 통합</a>
+        </div>
+        <div class="col">
+            <a href="/dev/followMember">팔로우한 회원목록</a>
+        </div>
+    </div>
     <!-- # 팔로우 예시 타이틀 -->
     <div class="row">
         <div class="col">
@@ -125,7 +133,7 @@
 
             // 회원 리스트
             memberList: [],
-            
+
             // 회원 팔로우 여부 리스트
             isFollowMemberList: [],
         };
@@ -190,7 +198,6 @@
             const resp = await axios.get(url, {
                 params: {followTargetPrimaryKey: memberId},
             });
-            // console.log(resp.data == true);
             return resp.data;
         },
         // [함수] 회원 팔로우 반영
