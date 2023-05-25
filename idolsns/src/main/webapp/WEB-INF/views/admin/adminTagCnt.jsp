@@ -5,9 +5,15 @@
 
 <!-- 제어영역 설정 -->
 <div class="container" id="app">
-    
+    <!-- # 고정태그 -->
+    <!-- 고정태그 등록 -->
+    <div class="row mt-3">
+        <div class="col">
+            <h1></h1>
+        </div>
+    </div>
     <!-- # 태그 사용량 타이틀 -->
-    <div class="row">
+    <div class="row mt-3">
         <div class="col">
             <h1>태그 사용량 목록</h1>
         </div>
@@ -42,8 +48,8 @@
     <!-- 태그삭제 버튼 -->
     <div class="row text-end mt-5">
         <div class="col">
-            <button @click="updateTagFree"><i class="fa-solid fa-pen-to-square"></i>자유 태그로</button>
-            <button @click="updateTagFix"><i class="fa-solid fa-pen-to-square"></i>고정 태그로</button>
+            <!-- <button @click="updateTagFree"><i class="fa-solid fa-pen-to-square"></i>자유 태그로</button> -->
+            <!-- <button @click="updateTagFix"><i class="fa-solid fa-pen-to-square"></i>고정 태그로</button> -->
             <button @click="deleteTagByName"><i class="fa-solid fa-xmark"></i>삭제</button>
         </div>
     </div>
@@ -59,6 +65,8 @@
                         <th scope="col">태그 이름</th>
                         <th scope="col">태그 타입</th>
                         <th scope="col">태그 사용량</th>
+                        <th scope="col">고정태그여부</th>
+                        <th scope="col">관리도구</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -70,9 +78,8 @@
                         <td>{{tagCnt.tagName}}</td>
                         <td>{{tagCnt.tagType}}</td>
                         <td>{{tagCnt.tagCnt}}</td>
-                        <td>
-                            <!-- <i class="fa-solid fa-xmark" @click="deleteTagByName(tag.tagName)"></i> -->
-                        </td>
+                        <td>{{isFixedTagList[i]}}</td>
+                        <td>{{tagCnt.tagCnt}}</td>
                     </tr>
                 </tbody>
             </table>
@@ -87,6 +94,10 @@
         return {
           // 태그이름별 사용 목록
           tagCntList: [],
+          // 고정태그 여부 목록
+          isFixedTagList: [], 
+
+
           // 선택된 태그 Object
           selectedTagNameObj: {},
           // 선택된 태그 List
@@ -126,6 +137,14 @@
             // vue.data.reportList에 resp.data 복사
             this.tagCntList = _.cloneDeep(resp.data);
             this.setSelectedTagNameEmpty();
+
+            for(let i = 0; i<this.tagCntList.length; i++){
+                const tagName = this.tagCntList[i].tagName;
+                const url = "http://localhost:8080/rest/fixedTag/check";
+
+                const resp = await axios.get(url, {params: {fixedTagName: tagName}});
+                this.isFixedTagList[i] = resp.data;
+            }
         },
         // 태그사용량 전체선택
         checkAllTag(e){

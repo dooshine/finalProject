@@ -37,14 +37,14 @@ public class FollowService {
         return followRepo.selectFollowList(followDto);
     }
 
-    // 팔로우한 회원 목록 좋회
-    public List<String> selectFollowingMemberList(FollowDto followDto){
+    // 팔로우한 회원,페이지 목록 조회
+    public List<String> selectFollowPKList(FollowDto followDto){
         // 회원목록만따로 빼기
-        List<String> followingMemberList = new ArrayList<>();
+        List<String> followMemberList = new ArrayList<>();
         List<FollowDto> followDtoList = followRepo.selectFollowList(followDto);
         for(FollowDto dto : followDtoList){
-            followingMemberList.add(dto.getFollowTargetPrimaryKey());
+            followMemberList.add(dto.getFollowTargetPrimaryKey());
         }
-        return followingMemberList;
+        return followMemberList;
     }
 }
