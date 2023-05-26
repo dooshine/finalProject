@@ -123,6 +123,11 @@
         </div>
     </div>
     <hr>
+
+
+    <!-- 팔로우 수 예시 -->
+    <h1 v-for="(memberFollowCnt, i) in targetMemberFollowCnt" :key="i">내가 팔로우 한 사람: {{memberFollowCnt.memberFollowCnt}}</h1>
+    <h1 v-for="(memberFollowCnt, i) in targetMemberFollowCnt" :key="i">나를 팔로우 한 사람: {{memberFollowCnt.memberFollowerCnt}}</h1>
 </div>
 
 

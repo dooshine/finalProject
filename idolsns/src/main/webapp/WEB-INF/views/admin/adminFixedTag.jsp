@@ -19,6 +19,8 @@
         </div>
     </div>
 
+
+    <!-- ########################### 글쓰기 추가 ######################## -->
     <!-- 고정태그 입력 시 목록 불러오기 -->
     <div class="row mt-3">
         <div class="col">
@@ -27,14 +29,20 @@
     </div>
     <div class="row mt-3">
         <div class="col">
-            <input type="text" @input="findFixedTagName = $event.target.value">
+            <input type="text" @input="findFixedTagName = $event.target.value" v-model="findFixedTagName">
         </div>
     </div>
     <div class="row">
         <div v-for="(findFixedTag, i) in findFixedTagList" :key="i">
-            {{ findFixedTag }}
+            <button class="btn btn-secondary" @click="addNewFixedTag(findFixedTag)">{{ findFixedTag }}</button>
         </div>
     </div>
+    <div class="row mt-3">
+        <div class="col">
+            <button class="btn btn-primary" v-for="(newFixedTag, i) in newFixedTagList">{{ newFixedTag }}</button>
+        </div>
+    </div>
+    <!-- ########################### 글쓰기 추가 ######################## -->
 
 
     <!-- 고정태그 목록 -->
@@ -92,9 +100,13 @@
           // 새로운 고정태그 이름
           newFixedTagName: "",
 
+
+          // ########################### 글쓰기 추가 ########################
           // 입력 시 고정태그 불러오기
           findFixedTagName: "",
           findFixedTagList: [],
+          newFixedTagList: [],
+           // ########################### 글쓰기 추가 ########################
 
           fixedTagSearchObj : {
             name: "",
@@ -104,12 +116,15 @@
       computed: {
   
       },
+       // ########################### 글쓰기 추가 ########################
       watch: {
         findFixedTagName:_.throttle(function(){
                     //this == 뷰 인스턴스
                     this.loadFindFixedTagList();
         }, 250),
       },
+       // ########################### 글쓰기 추가 ########################
+
       methods: {
         // 고정태그 생성
         async createFixedTag(fixedTagName){
@@ -199,7 +214,7 @@
 
 
 
-
+         // ########################### 글쓰기 추가 ########################
         async loadFindFixedTagList(){
             if(this.findFixedTagName.length == 0) return;
 
@@ -208,6 +223,13 @@
             console.log(this.findFixedTagList);
             // console.log("조회 실행");
         },
+        // 고정태그 추가
+        addNewFixedTag (newFixedTag){
+            this.newFixedTagList.push(newFixedTag);
+            this.findFixedTagName = "";
+            this.findFixedTagList = [];
+        },
+         // ########################### 글쓰기 추가 ########################
       },
       created(){
         this.loadFixedTagList();
