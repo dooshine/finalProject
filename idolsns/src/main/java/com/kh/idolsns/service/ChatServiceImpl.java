@@ -22,7 +22,6 @@ import com.kh.idolsns.vo.ChatMemberVO;
 import com.kh.idolsns.vo.ChatMessageReceiveVO;
 import com.kh.idolsns.vo.ChatMessageVO;
 import com.kh.idolsns.vo.ChatRoomVO;
-
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -48,9 +47,9 @@ public class ChatServiceImpl implements ChatService {
 		return chatRooms.containsKey(chatRoomNo);
 	}
 	
-	// 방 생성 - db처리 수정중
+	// 방 생성
 	public void createRoom(int chatRoomNo) {
-		if(roomExist(chatRoomNo)) return;
+		//if(roomExist(chatRoomNo)) return;
 		chatRooms.put(chatRoomNo, new ChatRoomVO());
 	}
 	
@@ -67,14 +66,18 @@ public class ChatServiceImpl implements ChatService {
 	
 	// 방 입장
 	public void join(ChatMemberVO member, int chatRoomNo) {
+		//chatRooms.put(chatRoomNo, new ChatRoomVO());
 		// 방 생성
-		createRoom(chatRoomNo);
+		/*createRoom(chatRoomNo);
 		// 방 선택
 		ChatRoomVO chatRoom = chatRooms.get(chatRoomNo);
+		//log.debug("chatRooms: " + chatRooms);
+		//log.debug("chatRoom: " + chatRoom);
 		// 해당 방에 입장
-		chatRoom.enter(member);
+		chatRoom.enter(member);*/
 		// 대기실에 있다면 대기실에서 퇴장
 		boolean isWaitingRoom = chatRoomNo == WebSocketConstant.WAITING_ROOM;
+		log.debug("isWaitingRoom: " + isWaitingRoom);
 		// 참여자 등록(db 처리)
 		ChatJoinDto joinDto = new ChatJoinDto();
 		joinDto.setChatRoomNo(chatRoomNo);
@@ -199,6 +202,13 @@ public class ChatServiceImpl implements ChatService {
 		attachmentRepo.delete(attachmentNo);
 	}
 	
+	// 이름 변경
+	public void broadcastRename(int chatRoomNo, TextMessage jsonMessage) throws IOException {
+		if(!roomExist(chatRoomNo)) return;
+		ChatRoomVO chatRoom = chatRooms.get(chatRoomNo);
+		chatRoom.broadcast(jsonMessage);
+	}
+	
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
@@ -225,7 +235,7 @@ public class ChatServiceImpl implements ChatService {
 		// 채팅 메세지인 경우
 		if(receiveVO.getType() == WebSocketConstant.CHAT) {
 			// 채팅방 찾기
-			int chatRoomNo = this.findRoomHasMember(member);
+			int chatRoomNo = receiveVO.getChatRoomNo();
 			int chatMessageType = receiveVO.getType();
 			// 채팅방이 없거나, 대기실인 경우 매세지 전송 불가
 			if(chatRoomNo == -1) return;
@@ -247,7 +257,7 @@ public class ChatServiceImpl implements ChatService {
 		}
 		// 이미지 메세지인 경우
 		else if(receiveVO.getType() == WebSocketConstant.PIC) {
-			int chatRoomNo = this.findRoomHasMember(member);
+			int chatRoomNo = receiveVO.getChatRoomNo();
 			if(chatRoomNo == -1) return;
 			if(chatRoomNo == WebSocketConstant.WAITING_ROOM) return;
 			ChatMessageVO msg = new ChatMessageVO();
@@ -301,6 +311,27 @@ public class ChatServiceImpl implements ChatService {
 			String json = mapper.writeValueAsString(msg);
 			TextMessage jsonMessage = new TextMessage(json);
 			this.broadcastMsg(member, chatRoomNo, jsonMessage, chatMessageNo, chatMessageType);
+		}
+		// 채팅방 이름 변경인 경우
+		else if(receiveVO.getType() == WebSocketConstant.RENAME) {
+			int chatRoomNo = receiveVO.getChatRoomNo();
+			String json = mapper.writeValueAsString(receiveVO);
+			TextMessage jsonMessage = new TextMessage(json);
+			this.broadcastRename(chatRoomNo, jsonMessage);
+		}
+		// 로그인한 경우 참여중인 채팅방 전부 맵에 저장
+		else if(receiveVO.getType() == WebSocketConstant.LOGIN) {
+			//ChatRoomVO chatRoom = null;
+			for(int i=0; i<receiveVO.getJoinRooms().size(); i++) {
+				int roomId = receiveVO.getJoinRooms().get(i);
+				ChatRoomVO chatRoom = chatRooms.get(roomId);
+				if (chatRoom == null) {
+					chatRoom = new ChatRoomVO();
+		            chatRooms.put(roomId, chatRoom);
+				}
+				chatRoom.enter(member);
+			}
+			log.debug("chatRooms: " + chatRooms);
 		}
 	}
 

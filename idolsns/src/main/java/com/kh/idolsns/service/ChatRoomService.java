@@ -1,10 +1,10 @@
 package com.kh.idolsns.service;
-import com.kh.idolsns.vo.ChatRoomVO;
+import com.kh.idolsns.vo.ChatRoomProcessVO;
 
 public interface ChatRoomService {
 
-	void createChatRoom(ChatRoomVO vo);
-	void leaveChatRoom(ChatRoomVO vo);
-	void inviteMember(ChatRoomVO vo);
+	void createChatRoom(ChatRoomProcessVO vo);
+	void leaveChatRoom(ChatRoomProcessVO vo);
+	void inviteMember(ChatRoomProcessVO vo);
 	
 }

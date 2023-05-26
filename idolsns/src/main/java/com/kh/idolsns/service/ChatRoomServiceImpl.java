@@ -8,6 +8,7 @@ import com.kh.idolsns.dto.ChatRoomPrivDto;
 import com.kh.idolsns.repo.ChatJoinRepo;
 import com.kh.idolsns.repo.ChatRoomPrivRepo;
 import com.kh.idolsns.repo.ChatRoomRepo;
+import com.kh.idolsns.vo.ChatRoomProcessVO;
 import com.kh.idolsns.vo.ChatRoomVO;
 
 import lombok.extern.slf4j.Slf4j;
@@ -25,7 +26,7 @@ public class ChatRoomServiceImpl implements ChatRoomService {
 	
 	// 채팅방 만들기
 	@Override
-	public void createChatRoom(ChatRoomVO vo) {
+	public void createChatRoom(ChatRoomProcessVO vo) {
 		
 		String memberId = vo.getMemberId();
 		ChatRoomDto chatRoomDto = vo.getChatRoomDto();
@@ -114,7 +115,7 @@ public class ChatRoomServiceImpl implements ChatRoomService {
 	
 	// 채팅방 나가기, 지우기
 	@Override
-	public void leaveChatRoom(ChatRoomVO vo) {
+	public void leaveChatRoom(ChatRoomProcessVO vo) {
 		
 		String memberId = vo.getMemberId();
 		int chatRoomNo = vo.getChatRoomNo();
@@ -150,7 +151,7 @@ public class ChatRoomServiceImpl implements ChatRoomService {
 	
 	// (이미 있는) 채팅방에 사용자 초대
 	@Override
-	public void inviteMember(ChatRoomVO vo) {
+	public void inviteMember(ChatRoomProcessVO vo) {
 		int chatRoomNo = vo.getChatRoomNo();
 		//log.debug("chatRoomNo: " + chatRoomNo);
 		List<String> memberList = vo.getMemberList();

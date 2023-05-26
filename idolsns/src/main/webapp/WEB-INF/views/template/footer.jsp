@@ -9,7 +9,6 @@
 <!-- <link rel="stylesheet" type="text/css" href="/static/css/clndr.css"> -->
             </div>
        
-            
 		
 
 	<div class="col-3">
@@ -123,15 +122,18 @@
 						chatRoomName:"",
 					},
 					chatMemberList: [],
-					//followList: [],
-					//selectedMemberList: [],
 					messageList: [],
 					chatJoin: "",
-					
 					// 입력창 초기화
 					clear() {
 						this.text = ""
 					},
+					
+					// 활성화 여부 저장
+					isVisible: true,
+					isFocused: true,
+					
+					joinRoomList: []
 				};
 			},
 			methods: {
@@ -154,7 +156,16 @@
 					};
 				},
 				openHandler() {
-					const data = { type: 2, chatRoomNo: -2 };
+					/*const data = { type: 2, chatRoomNo: -2 };
+					this.socket.send(JSON.stringify(data));*/
+					for(let i=0; i<this.chatRoomList.length; i++) {
+						this.joinRoomList.push(this.chatRoomList[i].chatRoomNo);
+					}
+					const data = {
+							type: 7,
+							joinRooms: this.joinRoomList,
+							memberId: this.memberId
+					}
 					this.socket.send(JSON.stringify(data));
 				},
 				closeHandler() {
@@ -168,7 +179,31 @@
 						this.messageList.splice(0);
 						this.loadMessage(); return;
 					}
+					// 이름 변경인 경우 방 정보 reload
+					if(parsedData.type == 8) {
+						this.roomInfo.chatRoomNo = "";
+						this.roomInfo.chatRoomName = "";
+						this.roomInfo.chatRoomStart = "";
+						this.roomInfo.chatRoomType = "";
+						this.roomInfoCopy.chatRoomName = "";
+						this.loadRoomInfo();
+						this.chatRoomList.splice(0);
+						this.loadRoomList(); return;
+					}
 					this.messageList.push(parsedData);
+					// 사용자가 페이지를 보고있는 경우 메세지 읽음 처리
+					if(this.isVisible && this.isFocused && parsedData.memberId != this.memberId &&
+							this.chatRoomNo == parsedData.chatRoomNo && this.chatRoomModal === true) {
+						this.readMessage();
+					}
+				},
+				async readMessage() {
+					const url = "${pageContext.request.contextPath}/chat/message";
+					const data = {
+							chatReceiver: this.memberId,
+							chatRoomNo: this.chatRoomNo
+					};
+					const resp = await axios.put(url, data);
 				},
 				// 채팅 메인 모달 열기
 				showChatMainModal() {
@@ -321,6 +356,7 @@
 					if(this.text.length < 1) return;
 					const data = {
 							type: 1,
+							chatRoomNo: this.chatRoomNo,
 							chatMessageContent: this.text
 					};
 					this.socket.send(JSON.stringify(data));
@@ -406,10 +442,16 @@
 				},
 				// 채팅방 이름 변경
 				async saveRoomName() {
+					const chatRoomNo = this.chatRoomNo;
 					const url = "${pageContext.request.contextPath}/chat/chatRoom/changeName";
 					const data = this.roomInfo;
 					const resp = await axios.put(url, data);
 					this.loadRoomInfo();
+					const data2 = {
+							type: 8,
+							chatRoomNo: chatRoomNo
+					};
+					this.socket.send(JSON.stringify(data2));
 					this.roomInfo.edit = false;
 				},
 				// 팔로우 목록 불러오기
@@ -461,7 +503,27 @@
 				}
 			},
 			mounted() {
-				
+				// 사용자가 이 탭을 보고있는지 확인
+				document.addEventListener("visibilitychange", () => {
+					if(document.hidden) {
+						//console.log("hidden");
+						this.isVisible = false;
+					}
+					else {
+						//console.log("visible");
+						this.isVisible = true;
+					}
+				});
+				// 사용자가 다른 프로그램을 보는 경우
+				window.addEventListener("blur", () => {
+					//console.log("out of focus");
+					this.isFocused = false;
+				});
+				// 사용자가 브라우저를 보고 있는 경우
+				window.addEventListener("focus", () => {
+					//console.log("in focus");
+					this.isFocused = true;
+				});
 			},
 			watch: {
 				// 채팅방 모달 켜질 때 메세지 입력창으로 커서 이동되게
@@ -471,6 +533,23 @@
 							this.$refs.messageInput.focus();
 						})
 					}
+				},
+				// 사용자가 페이지를 벗어났다가 다시 들어왔을 때 메세지 읽음 처리
+				isVisible: {
+					handler: function(newValue) {
+						if(newValue && this.isFocused) {
+							this.readMessage();
+						}
+					},
+					immediate: true
+				},
+				isFocused: {
+					handler: function(newValue) {
+						if(this.isVisible && newValue) {
+							this.readMessage();
+						}
+					},
+					immediate: true
 				}
 			}
 		}).mount("#header-area");

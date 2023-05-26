@@ -1,6 +1,4 @@
 package com.kh.idolsns.repo;
-import java.util.HashMap;
-import java.util.Map;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -15,6 +13,10 @@ public class ChatReadRepoImpl implements ChatReadRepo {
 	@Override
 	public void saveMessage(ChatReadDto dto) {
 		sql.insert("chatRead.saveMessage", dto);
+	}
+	@Override
+	public void readMessage(ChatReadDto dto) {
+		sql.delete("chatRead.readMessage", dto);
 	}
 	
 }

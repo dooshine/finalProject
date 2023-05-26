@@ -261,6 +261,7 @@
 				<nav class="navbar navbar-expand-md navbar-light bg-light">
 				  	<div class="container-fluid">
 				  		<div class="col-3">
+				  			<span>isFocused = {{isFocused}}</span>
 					    	<a class="navbar-brand" href="/">STARLINK</a>
 					    </div>
 				    	<div class="col-6 d-flex collapse navbar-collapse" id="navbarSupportedContent">

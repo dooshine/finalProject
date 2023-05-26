@@ -13,15 +13,18 @@ import org.springframework.web.servlet.NoHandlerFoundException;
 
 import com.kh.idolsns.dto.ChatJoinDto;
 import com.kh.idolsns.dto.ChatMessageDto;
+import com.kh.idolsns.dto.ChatReadDto;
 import com.kh.idolsns.dto.ChatRoomDto;
 import com.kh.idolsns.dto.MemberDto;
 import com.kh.idolsns.repo.ChatJoinRepo;
 import com.kh.idolsns.repo.ChatMessageRepo;
+import com.kh.idolsns.repo.ChatReadRepo;
 import com.kh.idolsns.repo.ChatRoomRepo;
 import com.kh.idolsns.repo.MemberRepo;
 import com.kh.idolsns.service.ChatRoomService;
 import com.kh.idolsns.vo.ChatMemberJoinVO;
 import com.kh.idolsns.vo.ChatMessageVO;
+import com.kh.idolsns.vo.ChatRoomProcessVO;
 import com.kh.idolsns.vo.ChatRoomVO;
 
 import lombok.extern.slf4j.Slf4j;
@@ -41,12 +44,14 @@ public class ChatRestController {
 	private ChatRoomService chatRoomService;
 	@Autowired
 	private ChatRoomRepo chatRoomRepo;
+	@Autowired
+	private ChatReadRepo chatReadRepo;
 	
 	// 채팅방 목록 불러오기
 	@GetMapping("/chatRoom/{memberId}")
 	public List<ChatRoomDto> chatRoomList(@PathVariable String memberId) {
 		List<Integer> chatRoomNoList = chatJoinRepo.findChatRoomNoById(memberId);
-		log.debug("chatRoomNoList: " + chatRoomNoList);
+		//log.debug("chatRoomNoList: " + chatRoomNoList);
 		return chatRoomRepo.findRooms(chatRoomNoList);
 	}
 	
@@ -58,7 +63,7 @@ public class ChatRestController {
 	
 	// 채팅방 생성
 	@PostMapping("/chatRoom")
-	public void createRoom(@RequestBody ChatRoomVO vo) {
+	public void createRoom(@RequestBody ChatRoomProcessVO vo) {
 		chatRoomService.createChatRoom(vo);
 	}
 	
@@ -70,7 +75,7 @@ public class ChatRestController {
 	
 	// 채팅방 나가기, 삭제
 	@PostMapping("/chatRoom/leave")
-	public void leaveRoom(@RequestBody ChatRoomVO vo) {
+	public void leaveRoom(@RequestBody ChatRoomProcessVO vo) {
 		chatRoomService.leaveChatRoom(vo);
 	}
 	
@@ -90,7 +95,7 @@ public class ChatRestController {
 	
 	// (이미 있는) 채팅방에 사용자 초대
 	@PostMapping("/chatRoom/invite")
-	public void inviteMember(@RequestBody ChatRoomVO vo) {
+	public void inviteMember(@RequestBody ChatRoomProcessVO vo) {
 		chatRoomService.inviteMember(vo);
 	}
 	
@@ -129,8 +134,13 @@ public class ChatRestController {
 						.build()
 			);
 		}
-		//log.debug("rest attachmentNo: " + list);
 		return list;
+	}
+	
+	// 메세지 읽음 처리
+	@PutMapping("/message")
+	public void readMessage(@RequestBody ChatReadDto dto) {
+		chatReadRepo.readMessage(dto);
 	}
 	
 }
