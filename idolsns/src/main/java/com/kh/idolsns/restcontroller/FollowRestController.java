@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpSession;
 
+import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -12,9 +13,11 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.kh.idolsns.dto.FollowDto;
+import com.kh.idolsns.dto.MemberFollowCntDto;
 import com.kh.idolsns.service.FollowService;
 
 @CrossOrigin
@@ -24,6 +27,9 @@ public class FollowRestController {
     
     @Autowired
     private FollowService followService;
+
+    @Autowired
+    private SqlSession sqlSession;
 
     // 페이지 팔로우여부 확인
     @GetMapping("/checkFollowPage")
@@ -117,4 +123,14 @@ public class FollowRestController {
     }
 
     
+
+
+
+    // 모든 회원 팔로우 통계 얻기
+    @GetMapping("/memberFollowCnt")
+    public List<MemberFollowCntDto> selectMemberFollowCnt(@RequestParam(required = false, defaultValue="") String memberId){
+        System.out.println("memberId: " + memberId);
+        return sqlSession.selectList("follow.selectMemberFollowCnt", memberId);
+    } 
+    // 특정 회원 팔로우 통계 얻기
 }

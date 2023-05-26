@@ -22,7 +22,7 @@ drop sequence fixed_tag_seq;
 -- 고정태그 사용량 View 생성
 create or replace view fixed_tag_cnt as
   select c.fixed_tag_name from (
-    select rownum rn, a.fixed_tag_name from fixed_tag a where instr(fixed_tag_name, '고정') > 0
+    select rownum rn, a.fixed_tag_name from (select * from fixed_tag where instr(fixed_tag_name, 'ㄱ') > 0) a
       left join (
         select * from tag_cnt where tag_type = '고정' 
       ) b
@@ -30,6 +30,18 @@ create or replace view fixed_tag_cnt as
     order by b.tag_cnt desc, fixed_tag_name asc
   ) c
   where c.rn between 1 and 5;
+  
+  select c.fixed_tag_name from (
+    select rownum rn, a.fixed_tag_name from (select * from fixed_tag where instr(fixed_tag_name, '정') > 0) a
+      left join (
+        select * from tag_cnt where tag_type = '고정' 
+      ) b
+      on a.fixed_tag_name = b.tag_name
+    order by b.tag_cnt desc, fixed_tag_name asc
+  ) c
+  where c.rn between 1 and 5;
+  
+  
 select * from fixed_tag_cnt;
 
 

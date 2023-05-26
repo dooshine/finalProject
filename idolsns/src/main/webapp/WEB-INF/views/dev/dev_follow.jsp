@@ -22,6 +22,9 @@
         <div class="col">
             <a href="/dev/followMember">팔로우한 회원목록</a>
         </div>
+        <div class="col">
+            <a href="/dev/memberFollowCnt">팔로우 수</a>
+        </div>
     </div>
     <!-- # 팔로우 예시 타이틀 -->
     <div class="row">

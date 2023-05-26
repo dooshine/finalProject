@@ -41,8 +41,8 @@ public class DevController {
     }
 
     // 팔로우 수 확인 예제
-    @GetMapping("/followCnt")
+    @GetMapping("/memberFollowCnt")
     public String followCnt(){
-        return "/dev/dev_followCnt";
+        return "/dev/dev_memberFollowCnt";
     }
 }
