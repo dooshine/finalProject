@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import com.kh.idolsns.repo.PostImageRepo;
 import com.kh.idolsns.repo.PostLikeRepo;
 import com.kh.idolsns.repo.PostShowRepo;
+import com.kh.idolsns.repo.ReplyRepo;
 import com.kh.idolsns.repo.TagRepo;
 import com.kh.idolsns.vo.PostShowVO;
 
@@ -29,6 +30,9 @@ public class PostShowService {
 	
 	@Autowired
 	private PostLikeRepo postLikeRepo;
+	
+	@Autowired
+	private ReplyRepo replyRepo;
 	
 	public void postShowOne(Long postNo) 
 	{
@@ -62,6 +66,10 @@ public class PostShowService {
 			postShowVO.setLikeCount(postLikeRepo.count(postNo));
 			//  log.debug("postImageRepo.selectAttachNoList(postNo) is {}", postImageRepo.selectAttachNoList(postNo));
 			//	log.debug("postShowVO is {}", postShowVO); 
+			
+			// 댓글 가져오기 
+			postShowVO.setReplyList(replyRepo.getRepliesByPostNo(postNo));
+		
 		}
 		return postShowList;
 	}

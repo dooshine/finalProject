@@ -28,6 +28,9 @@
     	.h-20{
     	height: 20px;
     	}
+    	.reply-text{
+    	font-size: 5px;
+    	}
     </style>
    
 <!--    	model.addAttribute로 받은 memberId Vue의 Data영역에서 활용할 수 있도록 선언 -->
@@ -377,7 +380,6 @@
 			            <div class="col-1 col-md-1 col-lg-1 d-flex align-items-center justify-content-center">
 			               <img class="rounded-circle img-fluid" src="static/image/profileDummy.png">
 			            </div>
-<!-- 			            	<p>{{ post.postNo }}</p> -->
 			            <div class="col-10 col-md-10 col-lg-10 align-items-center justify-content-start">
 														
 								<div class="row">
@@ -393,8 +395,6 @@
 							
 	       			</div>	
 					<!-- 프로필 사진과 아이디 -->
-					
-					
 					
 					<!-- 태그와 글 태그들 -->
 	                <div class="row mb-3 ">
@@ -424,7 +424,7 @@
 						<div class="col-1 col-md-1 col-lg-1 d-flex align-items-center justify-content-center"> 
 			            </div>            
 	                </div>
-	                <!-- 지도 -->
+	                <!-- 지도 맵이 있는 경우에만 지도 정보 표기 -->	
 	                
 	                
 	                <!-- 글 내용 -->
@@ -466,6 +466,7 @@
 		                	
 		                	<!-- 좋아요, 댓글, 공유하기 -->
 		                	<div class="row">
+		                	
 		                		<!-- 좋아요 -->		                		
 		                		<div class="col-4 text-start text-primary">
 		                			<div class="row" v-if="postLikeIndexList.includes(index)">
@@ -487,14 +488,63 @@
 		                		</div>
 		                		<!-- 좋아요 -->
 		                		
-		                		<!-- 댓글 -->
-							    <div class="col-4 text-center text-secondary">
-							    	<i class="fs-4 ti ti-message"></i>
+		                		<!-- 댓글 작성버튼 -->
+							    <div class="col-4 text-center text-secondary">				
+							    	<i class="fs-4 ti ti-message" @click="showReplyInput(index)"></i>					    
 							    </div>
-							    <!-- 댓글 -->
-							    <div class="col-4 text-end text-secondary"><i class="fs-4 ti ti-share"></i></div> 
+							    <!-- 댓글 작성버튼 -->
+							    
+							    <!-- 공유하기 버튼 -->
+							    <div class="col-4 text-end text-secondary"><i class="fs-4 ti ti-share"></i></div>
+							    <!-- 공유하기 버튼 -->
+							     
 		                	</div>
-		                		   
+		                	
+		                	<!-- 구분선 -->
+		                	<div class="row">
+		                		<hr class="mt-2" style="width:100%;">		                
+		                	</div>
+		                	
+		                	<!-- 댓글 보여주는 창 -->
+		                	<div class="row" v-if="post.replyList.length >= 1">
+								<div class="d-flex align-items-center justify-content-center mb-1" v-for="reply in post.replyList">
+										                	
+			                		<div class="col-2 text-center ">
+			                			<div class="row w-50 h-50 text-center m-auto">
+			                				<img class="img-fluid rounded-circle " src="static/image/profileDummy.png">
+			                			</div>
+			                			<div class="row w-50 h-50 text-center m-auto">
+			                				<h6 class="fs-7">{{reply.replyId}}</h6>
+			                			</div>
+			                		</div>
+			                		
+			                		<div class="col-9">
+			                			<div class="row">
+			                				<h6>{{reply.replyContent}}</h6>
+			                			</div>
+			                			<div class="row d-flex flex-nowrap">
+			                				<h6 class="col-1 text-start reply-text" style="white-space: nowrap;">좋아요 </h6>
+			                				<h6 class="col-1 text-start reply-text"  style="white-space: nowrap;">댓글 달기</h6>	
+			                			</div>			                			
+			                		</div>
+							    </div> 								             		
+		                	</div>
+		                	<!-- 댓글 보여주는 창 -->
+		                	
+		                	<!-- 댓글 작성창  -->
+		                	<div class="row" v-if="replyFlagList[index]">
+		                		<div class="col-1">
+		                			<img class="rounded-circle img-fluid" src="static/image/profileDummy.png">
+		                		</div>
+		                		<div class="col-10 mt-1">
+		                			<input type="text" placeholder=" 댓글을 입력하세요." v-model="replyContent" class="w-100 rounded-4 border border-secondary "> 
+		                		</div>
+		                		<div class="col-1">
+		                			<i class="fs-2 text-primary ti ti-arrow-badge-right-filled" @click="replySending(post.postNo,index)"></i>
+		                		</div>		                		
+		                	</div>
+		                	<!-- 댓글 작성창  -->
+		                	
 			            </div>
 						<div class="col-1 col-md-1 col-lg-1 d-flex align-items-center justify-content-center"> 
 			            </div>       
@@ -539,7 +589,11 @@
                 	// 좋아요 게시글 인덱스 배열
                 	postLikeIndexList: [], 
                 	
+                	// 댓글 작성 여부 체크용 배열
+                	replyFlagList: [],
                 	
+                	// 댓글 작성 글자 
+                	replyContent: '',
                 };
             },
             computed:{  
@@ -550,8 +604,11 @@
                 fetchPosts: function() {
 	                axios.get('http://localhost:8080/rest/post/all')
 	                    .then(response => {
-	                        this.posts = response.data; // 데이터를 할당
-	                        this.getLikePostIndex(this.posts);	                        
+	                    	// 전체 게시글 데이터 가져오기
+	                        this.posts = response.data;
+	                     	// 게시글 인덱스별 좋아요 처리
+	                        this.getLikePostIndex(this.posts);
+	                     	this.replyFlagList = new Array(this.posts.length).fill(false);
 	                    })
 	                    .catch(error => {
 	                        console.error(error);                           
@@ -573,9 +630,8 @@
                     }
                 },
                 
-             	// 좋아요 관련 비동기 처리--------------------------------
-                
-             		// 아이디 접속해 있고, 좋아요 클릭시에 실행
+             	// 좋아요 관련 비동기 처리-----------------------------------
+             	// 아이디 접속해 있고, 좋아요 클릭시에 실행
              	async checkLike(postNo,index){
                 	axios.get('http://localhost:8080/rest/post/like/'+postNo)
                 		.then(response => {
@@ -598,7 +654,7 @@
                 		})
                 },
                 
-                	// postNo를 List로 송신하고 좋아요 되있는 index 번호를 수신
+                // postNo를 List로 송신하고 좋아요 되있는 index 번호를 수신
                 getLikePostIndex(posts){
                 	
                 	postNoList = [];
@@ -614,13 +670,40 @@
                			console.error(error);
                		})
                 	              		
-                },	
+                },
+             	// 좋아요 관련 비동기 처리------------------------------------
+                
+             	
+             	
+                // 댓글 창 관련 클릭 함수 -------------------------------              
+              	// 전송 버튼 클릭 시
+                async replySending(postNo,index){
+                	try{
+                		const replyDto = {postNo: postNo, replyContent:this.replyContent};
+                    	const response = axios.post('http://localhost:8080/rest/post/reply/',replyDto);
+                    	console.log(response.data);
+                    }
+                	catch (error){
+                		console.error(error);
+                	}
                 	
+                	this.hideReplyInput(index)
+                },
+                // 댓글 쓰기 창 띄우기 (다른 창들은 모두 닫음) 
+                showReplyInput(index){
+					this.replyContent = '';                 	
+                	this.replyFlagList = this.replyFlagList.map(() => false); 
+                	this.replyFlagList[index] = true;
+                },
+                // 댓글 쓰기 창 숨기기
+                hideReplyInput(index){
+                	this.replyFlagList[index] = false;
+                },
                 
+                // 댓글 창 관련 클릭 함수 -------------------------------
+             	
                 
-             	// 좋아요 관련 비동기 처리--------------------------------
-                
-                
+             	
             	// 모달창 클릭 시 지도 정보 불러오기-------------------------
             	showMap(keyword){
             		this.showMapModalText = keyword;
