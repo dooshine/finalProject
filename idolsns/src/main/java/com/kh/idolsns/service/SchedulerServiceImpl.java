@@ -15,7 +15,7 @@ public class SchedulerServiceImpl implements SchedulerService{
 	@Autowired
 	private MemberRepo memberRepo;
 	
-	@Scheduled(cron = "0 * * * * *")
+	@Scheduled(cron = "0 0 0 * * *")
 	@Override
 	public void clearMemberData() {
 		log.debug("d");
