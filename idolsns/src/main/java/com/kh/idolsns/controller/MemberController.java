@@ -1,11 +1,13 @@
 package com.kh.idolsns.controller;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -80,6 +82,15 @@ public class MemberController {
 		session.setAttribute("memberId", findDto.getMemberId());
 		session.setAttribute("memberLevel", findDto.getMemberLevel());
 		
+		String memberId = findDto.getMemberId();
+		if(!(findDto.getMemberExitDate() == null)) {
+			memberRepo.cancelExit(memberId	);
+			String alertMessage = "회원 탈퇴가 취소되었습니다!";
+		    attr.addAttribute("mode", "cancel");
+		    attr.addAttribute("mmssgg", alertMessage);
+		    return "redirect:login";
+		}
+		
 		return "redirect:" + prevPage;
 	}
 	
@@ -100,6 +111,20 @@ public class MemberController {
 		return "member/mypage";
 	}
 	
+	@GetMapping("/profile")
+	@ResponseBody
+	public Map<String, String> profile(HttpSession session) {
+		String memberId = (String) session.getAttribute("memberId");
+		
+		MemberDto memberDto = memberRepo.emailExist(memberId);
+		
+		Map<String, String> result = new HashMap<>();
+		result.put("memberId", memberDto.getMemberId());
+		result.put("memberNick", memberDto.getMemberNick());
+		
+		return result;
+	}
+	
 	//회원탈퇴
 	@GetMapping("/exit")
 	public String exit(HttpSession session) {
@@ -118,7 +143,7 @@ public class MemberController {
 			return "redirect:exit";
 		}
 		
-			memberRepo.delete(memberId);
+			memberRepo.exitDate(memberId);
 			
 			session.removeAttribute("memberId");
 			session.removeAttribute("memberLevel");
