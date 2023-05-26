@@ -30,11 +30,11 @@
     	}
     </style>
    
-   	<!-- model.addAttribute로 받은 memberId Vue의 Data영역에서 활용할 수 있도록 선언 -->
-   	<script>
-   		var sessionMemberId = '${memberId}';
-   		Vue.prototype.$sessionMemberId = sessionMemberId;
-   	</script>
+<!--    	model.addAttribute로 받은 memberId Vue의 Data영역에서 활용할 수 있도록 선언 -->
+<!--    	<script> -->
+<%-- //    		var sessionMemberId = '${memberId}'; --%>
+<!-- //   		Vue.provide('$sessionMemberId', sessionMemberId); -->
+<!--    	</script>  -->
 	
 
 	<div class="container-fluid" id="app" test>
@@ -468,13 +468,21 @@
 		                	<div class="row">
 		                		<!-- 좋아요 -->		                		
 		                		<div class="col-4 text-start text-primary">
-		                			<div class="row">
+		                			<div class="row" v-if="postLikeIndexList.includes(index)">
+		                				<div class="col-2">
+		                					<i class="fs-4 ti ti-heart-filled" @click="checkLike(post.postNo,index)"></i>
+		                				</div>
+		                				<div class="col-4 ">
+		                					<h6 class="postlikeCount">{{post.likeCount}}</h6>
+		                				</div>		                						                				
+		                			</div>
+		                			<div class="row" v-else>
 		                				<div class="col-2">
 		                					<i class="fs-4 ti ti-heart" @click="checkLike(post.postNo,index)"></i>
 		                				</div>
 		                				<div class="col-4 ">
 		                					<h6 class="postlikeCount">{{post.likeCount}}</h6>
-		                				</div>		                						                				
+		                				</div>
 		                			</div>
 		                		</div>
 		                		<!-- 좋아요 -->
@@ -527,9 +535,10 @@
                 	
                 	// 지도에 주소 표시하는 문자열
                 	showMapModalText: '',
+                	          	
+                	// 좋아요 게시글 인덱스 배열
+                	postLikeIndexList: [], 
                 	
-                	// 세션 맴버아이디 
-                	sessionMemberId: this.$sessionMemberId;                	
                 	
                 };
             },
@@ -542,6 +551,7 @@
 	                axios.get('http://localhost:8080/rest/post/all')
 	                    .then(response => {
 	                        this.posts = response.data; // 데이터를 할당
+	                        this.getLikePostIndex(this.posts);	                        
 	                    })
 	                    .catch(error => {
 	                        console.error(error);                           
@@ -564,22 +574,50 @@
                 },
                 
              	// 좋아요 관련 비동기 처리--------------------------------
-                async checkLike(postNo,index){
+                
+             		// 아이디 접속해 있고, 좋아요 클릭시에 실행
+             	async checkLike(postNo,index){
                 	axios.get('http://localhost:8080/rest/post/like/'+postNo)
                 		.then(response => {
                 			console.log(response.data);
+                			// 응답이 좋아요면 좋아요 +1
                 			if(response.data== 'Like'){
-                				this.posts[index].likeCount += 1;                				
+                				this.posts[index].likeCount = this.posts[index].likeCount + 1; 
+                				this.postLikeIndexList.push(index);
                 			}
+                			// 응답이 좋아요 취소면 좋아요 -1
                 			else if(response.data=='disLike'){
-                				this.posts[index].likeCount -= 1; 
+                				this.posts[index].likeCount = this.posts[index].likeCount - 1;
+                				this.postLikeIndexList.splice(this.postLikeIndexList.indexOf(index),1);
                 			}
+                			
                 				
                 		})
                 		.catch(error => {
                 			console.error(error);
                 		})
                 },
+                
+                	// postNo를 List로 송신하고 좋아요 되있는 index 번호를 수신
+                getLikePostIndex(posts){
+                	
+                	postNoList = [];
+                	posts.forEach(function(post){
+                		postNoList.push(post.postNo); 
+                	})
+                	
+               		axios.get('http://localhost:8080/rest/post/like/index/'+postNoList)
+               			.then(response => {               			
+               			this.postLikeIndexList = response.data;                			
+               		})
+               		.catch(error => {
+               			console.error(error);
+               		})
+                	              		
+                },	
+                	
+                
+                
              	// 좋아요 관련 비동기 처리--------------------------------
                 
                 

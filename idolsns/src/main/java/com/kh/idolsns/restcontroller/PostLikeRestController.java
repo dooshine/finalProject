@@ -1,5 +1,8 @@
 package com.kh.idolsns.restcontroller;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,10 +49,41 @@ public class PostLikeRestController {
 		return null;
 	}
 	
+	
 	@GetMapping("/like/update/{postNo}")
 	public Long update(@PathVariable Long postNo) { // 좋아요 확인
 		return postLikeRepo.count(postNo);
 	}
 
+	
+	@GetMapping("/like/index/{postNoList}")
+	public List<Integer> index(@PathVariable List<Long> postNoList,
+							HttpSession session){
+//		List<PostLikeDto> tempLikeList = new ArrayList<PostLikeDto>(); 
+		List<Integer> response = new ArrayList<Integer>();
+		
+		PostLikeDto temp = new PostLikeDto();
+		String memberId = (String)session.getAttribute("memberId");		
+		temp.setMemberId(memberId); 
+		
+		if(memberId == "" || memberId == null) { // 세션 아이디 없을 때, 
+			return null; 
+		}
+		
+		
+		for(int i=0; i<postNoList.size();i++)
+		{
+			temp.setPostNo(postNoList.get(i));
+			if(postLikeRepo.check(temp)) // 좋아요 되어 있으면 
+			{
+				response.add(i); // 반환할 좋아요 배열에 해당 인덱스 추가 
+			}		
+			else {
+				
+			}
+		}
+		
+		return response; 
+	}
 	
 }
