@@ -135,22 +135,17 @@
 					    									v-on:click="link(funding)">
 					      <img :src="getImageUrl(funding)" alt="Funding Image">
 					      <h3 class="title">{{ funding.fundTitle }}</h3>
-					      <p class="description">{{ funding.postContent }}</p>
+					      <p class="description">{{ funding.fundShortTitle }}</p>
 					      <div class="progress-bar">
 					        <div class="progress" :style="{ width: funding.progress + '%' }"></div>
 					      </div>
 					      <div class="info">
 					        <div>
-					          <span class="value">{{ funding.fundGoal }}원</span>
-					          <span class="label">목표금액</span>
+			<span style="font-weight:bold">{{ (funding.totalPrice / funding.fundGoal * 100).toFixed(1) }}</span>%
+					          <span class="fund_span">{{ formatCurrency(funding.totalPrice) }}</span>원
 					        </div>
 					        <div>
 					          <span class="value">{{ getTimeDiff(funding) }}</span>
-					          <span class="label">남은 기간</span>
-					        </div>
-					        <div>
-					          <span class="value">{{ funding.fundSponsorCount }}명</span>
-					          <span class="label">서포터</span>
 					        </div>
 					      </div>
 					    </div>
@@ -172,15 +167,12 @@
 	            data(){
             	   return{
 				      fundings: [],
-				      postStart: "",
-				      postEnd: "",
-				      progress: "",
-				      postNo: ""
 	            	}
 	            	},
 	            	computed: {
 	            	},
 	            	methods: {
+	            		// FundPostImageDto 불러오기
 	            		async loadData(){
 							const resp = await axios.get("http://localhost:8080/rest/fund/")	  
 							console.log(resp.data);
@@ -193,16 +185,10 @@
 	            		      const timeDiff = endDate.getTime() - startDate.getTime();
 	            		      if (timeDiff >= 24 * 60 * 60 * 1000) {
 	            		        // 1일 이상인 경우
-	            		        return Math.ceil(timeDiff / (24 * 60 * 60 * 1000))+"일";
+	            		        return Math.ceil(timeDiff / (24 * 60 * 60 * 1000))+"일 남음";
 	            		      } else {
 	            		    	// 1일 미만인 경우
-	            		          const currentDate = new Date();
-	            		          const endOfDay = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate(), 23, 59, 59);
-	            		          const remainingTime = endOfDay.getTime() - currentDate.getTime();
-	            		          const remainingHours = Math.floor(remainingTime / (60 * 60 * 1000));
-	            		          const remainingMinutes = Math.floor((remainingTime % (60 * 60 * 1000)) / (60 * 1000));
-	            		          const remainingSeconds = Math.floor((remainingTime % (60 * 1000)) / 1000);
-	            		          return remainingHours+"시간"+ remainingMinutes+"분";
+	            		          return "오늘마감";
 	            		        }
 	            		},
 	            		getProgress(funding) {
@@ -219,7 +205,12 @@
 	            		      } else {
 	            		        return "/rest/attachment/download/" + funding.attachmentNo;
 	            		      }
-	            		    },
+            		    },
+            		    
+            		 	// 3자리 마다 ,
+        		      	formatCurrency(value) {
+        		            return value.toLocaleString();
+        	          	},
 	            	},
 	            	created() {
 	            		this.loadData();
