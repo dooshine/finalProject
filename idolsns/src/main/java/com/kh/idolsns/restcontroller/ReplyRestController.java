@@ -39,8 +39,9 @@ public class ReplyRestController {
 	    // 댓글 번호 설정
 	    replyDto.setReplyNo(sequence);
 	    // 댓글 그룹 설정	    
-//	    if(replyDto.setReplyGroup)
-//	    replyDto.setReplyGroup("1");
+	    if(replyDto.getReplyGroupNo() == null) {
+	    	replyDto.setReplyGroupNo(sequence);
+	    }
 	    replyRepo.addReply(replyDto);
 	}
 }
