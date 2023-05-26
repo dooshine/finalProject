@@ -31,7 +31,7 @@
    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
 	
 </head>
-<body test>
+<body>
 	<div class="container rounded p-3" style="background-color:white">
 	<div id="app">
 		
@@ -47,20 +47,43 @@
 			</div>
 			
 			<div class="row">
-				<h3>@{{memberId}}</h3>
-				<h3>{{memberNick}}</h3>
+				<div class="col-8">
+					<h3>{{memberNick}}</h3>
+					<h5>@{{memberId}}</h5>
+				</div>
+				<div class="col-4 text-right">
+					<button type = "button" class="btn btn-primary mt-4" v-on:click = "showModal">프로필 수정</button>
+				</div>				
 			</div>
+			
+			<div class="modal" tabindex = "-1" role="dialog" id="modal" data-bs-backdrop="static" ref="modal">
+				<div class="modal-dialog" role="document">
+					<div class="modal-content	">
+						<div class="modal-header">
+							<i class="fa-solid fa-xmark" style="color: #bcc0c8;" data-bs-dismiss="modal" aria-label="Close"></i>
+						</div>
+						<div class="modal-body">
+							<h3>{{memberNick}}<i class="fa-solid fa-pen-to-square" style="font-size: 14px;"></i></h3>
+							<h5>@{{memberId}}</h5>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			<hr>
+			
 		</div>
 	
 	</div>
 	</div>	
-		
+		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
 		<script>
 			Vue.createApp({
 				data(){
 					return{
 						memberId:"",
 						memberNick:"",
+						modal:null,
 					};
 				},		
 				methods:{
@@ -72,9 +95,19 @@
 						this.memberNick=memberNick;
 						
 					},
+					
+					showModal(){
+						if(this.modal == null) return;
+						this.modal.show();
+					},
+					hideModal(){
+						if(this.modal == null) return;
+						this.modal.hide();
+					},
 				},
 				mounted() {
 					this.profile();
+					this.modal = new bootstrap.Modal(this.$refs.modal);
 				},
 			}).mount("#app");
 		</script>
