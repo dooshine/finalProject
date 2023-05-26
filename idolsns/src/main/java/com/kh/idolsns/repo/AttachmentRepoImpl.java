@@ -1,5 +1,7 @@
 package com.kh.idolsns.repo;
 
+import java.util.List;
+
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -26,6 +28,7 @@ public class AttachmentRepoImpl implements AttachmentRepo{
     public AttachmentDto selectOne(int attachmentNo) {
         return sqlSession.selectOne("attachment.selectOne", attachmentNo);
     }
+
 
 	@Override
 	public void delete(int attachmentNo) {

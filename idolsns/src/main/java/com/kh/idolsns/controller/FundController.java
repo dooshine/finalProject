@@ -49,9 +49,6 @@ public class FundController {
 	private PostRepo postRepo;
 	
 	@Autowired
-	private FundPostImageRepo fundPostImageRepo;
-	
-	@Autowired
 	private FundRepo fundRepo; 
 	
 	@Autowired
@@ -391,17 +388,6 @@ public class FundController {
         int fundPrice = fundDto.getFundPrice();
         memberRepo.minusPoint(memberId, fundPrice);
         
-        // 후원자 수 1 증가
-        List<FundDto> list = fundRepo.selectByPostNo(postNo);
-        int cnt = 0;
-        for(int i=0; i<list.size(); i++) {
-        	cnt ++;
-        }
-        fundPostDto.setFundSponsorCount(cnt);
-        fundPostDto.setPostNo(postNo);
-        fundPostRepo.sponsorCount(fundPostDto);
-        
-
         attr.addAttribute("fundNo", fundDto.getFundNo());
         
         return "redirect:clear";
