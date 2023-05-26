@@ -22,6 +22,9 @@
         <div class="col">
             <a href="/dev/followMember">팔로우한 회원목록</a>
         </div>
+        <div class="col">
+            <a href="/dev/memberFollowCnt">팔로우 수</a>
+        </div>
     </div>
     <!-- # 팔로우 예시 타이틀 -->
     <div class="row">
@@ -70,9 +73,6 @@
             </table>
         </div>
     </div>
-    <!-- <div class="row" v-for="(followingMember, i) in followMemberList">
-        {{followingMember}}
-    </div> -->
     <hr>
 
     <!-- # 팔로우한 회원 목록 예시 -->
@@ -100,8 +100,44 @@
     </div>
     <hr>
 
+
+
+
     <!-- # 팔로우한 페이지 목록 예시 -->
-    
+    <!-- 모든 페이지 목록 -->
+    <div class="row mt-5">
+        <div class="col">
+            <h1>모든 페이지 목록</h1>
+        </div>
+    </div>
+    <!-- 모든 대표페이지 목록  -->
+    <div class="row">
+        <div class="col">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">대표페이지 이름</th>
+                        <th scope="col">관리도구</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="(member, i) in memberList" :key="i">
+                        <td>
+                            {{member.memberId}}
+                        </td>
+                        <td>{{member.memberNick}}</td>
+                        <td>{{member.memberPoint}}</td>
+                        <td>{{member.memberEmail}}</td>
+                        <td>{{member.memberJoin}}</td>
+                        <td>{{member.memberLogin === null ? "미접속": member.memberLogin }}</td>
+                        <td>
+                            <button class="btn rounded-fill" :class="{'btn-primary':!isFollowMemberList[i], 'btn-secondary': isFollowMemberList[i]}" v-text="isFollowMemberList[i]?'팔로우취소':'팔로우하기'" @click="followMember(member.memberId, i)"></button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
     <!-- 팔로우한 페이지 목록 타이틀 -->
     <div class="row mt-5">
         <div class="col">
@@ -112,9 +148,14 @@
     <c:if test="${sessionScope.memberId == null}">
         <h2>로그인을 하면 팔로우한 페이지 목록을 확인할 수 있습니다.</h2>
     </c:if>
-    <!-- 팔로우한 회원 목록  -->
-    <div class="row" v-for="(followingPage, i) in followPageList">
-        {{followingPage}}
+    <!-- 팔로우한 페이지 목록  -->
+    <div class="row" v-for="(followPage, i) in followPageList">
+        <div class="col">
+            {{i+1}}
+        </div>
+        <div class="col">
+            {{followPage}}
+        </div>
     </div>
     <hr>
 </div>
@@ -142,6 +183,20 @@
         
       },
       methods: {
+        // [함수] 모든 회원 목록 불러오기
+        async loadMemberList(){
+            // url
+            const url = "http://localhost:8080/rest/admin/member";
+            // api호출
+            const resp = await axios.post(url,{});
+            // data 반영
+            this.memberList = resp.data;
+
+            // 회원 팔로우 여부 조회
+            for(let i = 0; i<resp.data.length; i++){
+                this.isFollowMemberList[i] = await this.checkFollowMember(resp.data[i].memberId);
+            }
+        },
         // [함수] 팔로우한 회원 목록 불러오기
         async loadFollowMemberList(){
             // 비로그인시 실행X
@@ -164,20 +219,7 @@
             // data 반영
             this.followPageList = resp.data;
         },
-        // [함수] 모든 회원 목록 불러오기
-        async loadMemberList(){
-            // url
-            const url = "http://localhost:8080/rest/admin/member";
-            // api호출
-            const resp = await axios.post(url,{});
-            // data 반영
-            this.memberList = resp.data;
-
-            // 회원 팔로우 여부 조회
-            for(let i = 0; i<resp.data.length; i++){
-                this.isFollowMemberList[i] = await this.checkFollowMember(resp.data[i].memberId);
-            }
-        },
+        
 
 
 
@@ -201,7 +243,7 @@
             return resp.data;
         },
         // [함수] 회원 팔로우 반영
-        async setisFollowMemberList(){
+        async setIsFollowMemberList(){
             for(let i = 0; i<this.memberList.length; i++){
                 this.isFollowMemberList[i] = this.checkFollowMember(this.memberList[i].memberId);
             }
@@ -222,6 +264,8 @@
             const url = "http://localhost:8080/rest/follow/member";
             await axios.delete(url, { data: {followTargetPrimaryKey: followTargetId} });
         },
+
+        // 팔로우 버튼
         async followMember(targetId, i){
             console.log(this.isFollowMemberList[i]);
             const isFollowing = this.isFollowMemberList[i];

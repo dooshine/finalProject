@@ -35,4 +35,14 @@
         </where>
         order by follow_target_primary_key desc
     </select>
+    <!-- 팔로우 통계 조회 -->
+    <select id="selectMemberFollowCnt" resultType="MemberFollowCntDto">
+        <bind name="memberIdExist" value="memberId != null and !memberId.equals('')"/>
+        select * from member_follow_cnt
+        <where>
+            <if test="memberIdExist">
+              and instr(member_id, #{memberId}) > 0
+            </if>
+        </where>
+    </select>
 </mapper>

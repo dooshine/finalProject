@@ -28,12 +28,21 @@ public class DevController {
         return "redirect:" + request.getHeader("Referer");
     }
 
+    // 팔로우 통합
     @GetMapping("/follow")
     public String follow(){
-        return "temp_follow";
+        return "/dev/dev_follow";
     }
+
+    // 내가 팔로우한 사람들 목록
     @GetMapping("/followMember")
     public String followMember(){
-        return "temp_followMember";
+        return "/dev/dev_followMember";
+    }
+
+    // 팔로우 수 확인 예제
+    @GetMapping("/memberFollowCnt")
+    public String followCnt(){
+        return "/dev/dev_memberFollowCnt";
     }
 }

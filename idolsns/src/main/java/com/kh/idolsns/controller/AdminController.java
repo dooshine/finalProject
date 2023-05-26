@@ -42,6 +42,11 @@ public class AdminController {
     public String tagCnt(){
         return "/admin/adminTagCnt";
     }
+    // 관리자페이지 고정태그
+    @GetMapping("/fixedTag")
+    public String fixedTag(){
+        return "/admin/adminFixedTag";
+    }
     // 관리자페이지 대표페이지 관리
     @GetMapping("/artist")
     public String artist(){
