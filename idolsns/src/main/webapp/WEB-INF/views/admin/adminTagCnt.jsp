@@ -14,13 +14,33 @@
     </div>
 
     <!-- # 태그 사용량 목록-->
-    <div class="row">
-        <div class="col">
-            <h3>태그</h3>
+    <div class="row mt-5">
+        <div class="col container-fluid">
+            <div class="row">
+                <div class="col">
+                    <h3>태그 검색 옵션</h3>
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col">
+                    <b class="me-4">태그 종류</b>
+                    <label class="me-3">
+                        <input type="checkbox" value="자유" @change="setTagTypeOption($event)"> 자유
+                    </label>
+                    <label>
+                        <input type="checkbox" value="고정" @change="setTagTypeOption($event)"> 고정
+                    </label>
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="offset-11 col-1">
+                    <button class="btn btn-primary" @click="loadTagCntList">검색</button>
+                </div>
+            </div>
         </div>
     </div>
     <!-- 태그삭제 버튼 -->
-    <div class="row text-end">
+    <div class="row text-end mt-5">
         <div class="col">
             <button @click="updateTagFree"><i class="fa-solid fa-pen-to-square"></i>자유 태그로</button>
             <button @click="updateTagFix"><i class="fa-solid fa-pen-to-square"></i>고정 태그로</button>
@@ -32,8 +52,9 @@
             <table class="table">
                 <thead>
                     <tr>
+                        <th scope="col">번호</th>
                         <th scope="col">
-                            <input type="checkbox">
+                            <input type="checkbox" @change="checkAllTag($event)"> 전체
                         </th>
                         <th scope="col">태그 이름</th>
                         <th scope="col">태그 타입</th>
@@ -42,8 +63,9 @@
                 </thead>
                 <tbody>
                     <tr v-for="(tagCnt, i) in tagCntList" :key="i">
+                        <td scope="col">{{i+1}}</td>
                         <td>
-                            <input type="checkbox" @change="checkTag($event, tagCnt.tagName)">
+                            <input type="checkbox" @change="checkTag($event, tagCnt.tagName)" :checked="selectedTagNameObj[tagCnt.tagName]">
                         </td>
                         <td>{{tagCnt.tagName}}</td>
                         <td>{{tagCnt.tagType}}</td>
@@ -63,25 +85,60 @@
     Vue.createApp({
       data() {
         return {
+          // 태그이름별 사용 목록
           tagCntList: [],
+          // 선택된 태그 Object
           selectedTagNameObj: {},
+          // 선택된 태그 List
           selectedTagNameList: [],
+          tagCntSearchObj : {
+            tagTypeList: [],
+          }
         };
       },
       computed: {
   
       },
       methods: {
-        // Load 신고 리스트
+        // 검색옵션설정-태그타입
+        setTagTypeOption (e) {
+            if(e.target.checked){
+                this.tagCntSearchObj.tagTypeList.push(e.target.value);
+            } else {
+                this.tagCntSearchObj.tagTypeList = this.tagCntSearchObj.tagTypeList.filter(item=>item!==e.target.value);
+            }
+        },
+
+
+
+        
+        // Load 태그사용량 목록
         async loadTagCntList () {
             // 신고리스트 조회 URL
             const url = "http://localhost:8080/rest/admin/tagName";
             // 비동기 신고리스트 조회 실행
-            const resp = await axios.get(url);
+            const resp = await axios.get(url, { 
+                params: this.tagCntSearchObj, 
+                paramsSerializer: params => {
+		            return new URLSearchParams(params).toString();
+	            }
+            });
             // vue.data.reportList에 resp.data 복사
             this.tagCntList = _.cloneDeep(resp.data);
+            this.setSelectedTagNameEmpty();
         },
-        // 제재 리스트 개별선택
+        // 태그사용량 전체선택
+        checkAllTag(e){
+            if(e.target.checked){
+                for(let i = 0; i<this.tagCntList.length; i++){
+                    this.selectedTagNameObj[this.tagCntList[i].tagName] = true;
+                    this.setSelectedTagNameList();
+                }
+            } else {
+                this.setSelectedTagNameEmpty();
+            }
+        },
+        // 태그사용량 개별선택
         checkTag(e, tagName){
             if(e.target.checked){
                 this.selectedTagNameObj[tagName] = true;
@@ -139,9 +196,11 @@
             // 태그수정(자유) api url
             const url = "http://localhost:8080/rest/admin/tagName"
             // 태그수정(자유) 호출
-            const resp = await axios.put(url, { 
-                data: this.selectedTagNameList,
+            const resp = await axios.put(url, {
+                tagType: "자유",
+                tagNameList: this.selectedTagNameList,
             });
+            this.loadTagCntList();
         },
 
         // # 고정 태그로 변경
@@ -156,6 +215,7 @@
                 tagType: "고정",
                 tagNameList: this.selectedTagNameList,
             });
+            this.loadTagCntList();
         },
 
         // # 태그 이름으로 삭제

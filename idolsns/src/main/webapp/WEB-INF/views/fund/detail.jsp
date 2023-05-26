@@ -67,30 +67,30 @@
 		<img :src="fundDetail.imageURL" alt="예시사진">
 			
 		
-			<div>
+		<div>
+
+			<label>모인 금액</label>
+			<span class="fund_span">{{ formatCurrency(fundDetail.fundTotal) }}</span>원
+			<span style="font-weight:bold">{{ (fundDetail.fundTotal / fundDetail.fundGoal * 100).toFixed(1) }}</span>%
 	
-				<label>모인 금액</label>
-				<span class="fund_span">{{ fundDetail.fundTotal }}</span>원
-				<span style="font-weight:bold">{{ (fundDetail.fundTotal / fundDetail.fundGoal * 100).toFixed(1) }}</span>%
 		
-			
+	
+			<label>남은 시간</label>
+			<span class="fund_span">{{ getTimeDiff }}</span>일
 		
-				<label>남은 시간</label>
-				<span class="fund_span">{{ getTimeDiff }}</span>일
-			
-	
-				<label>후원자</label>
-				<span class="fund_span">{{ fundDetail.fundSponsorCount }}</span>명
-	
-			
-			</div>
+
+			<label>후원자</label>
+			<span class="fund_span">{{ fundDetail.fundSponsorCount }}</span>명
+
+		
+		</div>
 		
 		<div class="d-flex row mt-3" style="padding-left: 1em">
 		
 			<hr>
 		
 			<div>목표 금액</div>
-			<div>{{ fundDetail.fundGoal }}원</div>
+			<div>{{ formatCurrency(fundDetail.fundGoal) }}원</div>
 			<br>
 			
 			<div>펀딩 기간		</div>
@@ -101,33 +101,55 @@
 			
 		
 			<div class="row mt-3" style="padding-left: 1em">
-			
-				    <button class="btn btn-primary like-btn">
-				      <i class="fa fa-heart"></i> 
-				      <!-- {{ likeCount }}  -->
-				    </button>
+			    <button class="btn btn-primary like-btn">
+			      <i class="fa fa-heart"></i> 
+			      <!-- {{ likeCount }}  -->
+			    </button>
+	
+		
+				 <button class="btn btn-primary share-btn">
+			      <i class="fa fa-share"></i>
+			      <!-- {{ likeCount }}  -->
+			    </button>
 		
 			
-					 <button class="btn btn-primary share-btn">
-				      <i class="fa fa-share"></i>
-				      <!-- {{ likeCount }}  -->
-				    </button>
-			
-				
-					<button type="submit" class="btn btn-primary" @click="order">
-					후원하기</button>
+				<button type="submit" class="btn btn-primary" @click="order">
+				후원하기</button>
+			</div>	
 					
-					</div>	
-					
-					<div class="row mt-3" style="padding-left: 1em" 
-								v-for="(no, index) in fundDetail.attachmentNos">
-						<img :src="'/download?attachmentNo=' + no"/>
-					</div>
+			<div class="row mt-3" style="padding-left: 1em">
+				<div v-html="fundDetail.postContent"></div>
+			</div>
 					
 		</div>
 	</div>             
+	<hr>
+	
+	  <h3>댓글</h3>
+	  <div v-if="replies.length === 0">댓글이 없습니다.</div>
+	  <div v-else>
+	    <ul>
+	      <li v-for="reply in replies" :key="reply.replyNo">
+	        <div>{{ reply.replyId }}: {{ reply.replyContent }}</div>
+	      </li>
+	    </ul>
+	  </div>
+	  	<form @submit.prevent="addReply">
+	    <div>
+	      <input type="hidden" v-model="replyObj.replyId" required>
+	      <input type="hidden" v-model="replyObj.postNo" required>
+	    </div>
+	    <div>
+	      <textarea type="text" v-model="replyObj.replyContent" placeholder="댓글 내용" required></textarea>
+	    </div>
+	    <div>
+	      <button type="submit">댓글 작성</button>
+	    </div>
+    	</form>
 	</div>
-				<hr>
+	
+				
+				
 			
 			
 				
@@ -162,6 +184,12 @@
 		          imageURL: "",
 		          fundTotal: "",
 		        },
+		        replies: [],
+		        replyObj: {
+		          replyId: memberId,
+		          replyContent: "",
+		          postNo:"",
+		        }
 		      };
 		    },
 		    computed: {
@@ -180,7 +208,7 @@
         		          const remainingHours = Math.floor(remainingTime / (60 * 60 * 1000));
         		          const remainingMinutes = Math.floor((remainingTime % (60 * 60 * 1000)) / (60 * 1000));
         		          const remainingSeconds = Math.floor((remainingTime % (60 * 1000)) / 1000);
-        		          return remainingHours+"시간"+ remainingMinutes+"분";
+        		          return remainingHours+"시간";
         		        }
         		},
 		    },
@@ -204,12 +232,13 @@
 					const resp = await axios.get("http://localhost:8080/rest/fund/attaches/"+postNo)	  
 					this.fundDetail.attachmentNos.push(...resp.data);
         		},
-		       // fundTotal 불러오기
-        		async loadFundTotal(){
+		       // fundTotal & fundSponsorCount 불러오기
+        		async loadFundVO(){
 			    	const postNo = this.fundDetail.postNo;
-					const resp = await axios.get("http://localhost:8080/rest/fund/fundtotal/"+postNo)	  
-// 					console.log(resp);
-					this.fundDetail.fundTotal = resp.data;
+					const resp = await axios.get("http://localhost:8080/rest/fund/fundlist/"+postNo)	  
+					console.log(resp);
+					this.fundDetail.fundTotal = resp.data.fundTotal;
+					this.fundDetail.fundSponsorCount = resp.data.fundSponsorCount;
         		},
         		
                 // 데이터 중 fund를 서버로 전송
@@ -218,14 +247,36 @@
 		      	  window.location.href = "http://localhost:8080/fund/order?postNo=" + postNo;
 		      	},
 		      	
+		      	// 3자리 마다 ,
+		      	formatCurrency(value) {
+		            return value.toLocaleString();
+	          	},
+	          	// replies 불러오기
+	          	async loadReplies() {
+	                const postNo = this.fundDetail.postNo; // 게시물 번호
+	                const resp = await axios.get("http://localhost:8080/rest/reply/fund/"+postNo);
+	                this.replies.push(...resp.data); // Vue data에 저장
+	              },
+	            // 작성한 comment 서버로 전송
+                async addReply() {
+	            	if(this.replyObj.replyId == "") return;
+				  const resp = await axios.post("http://localhost:8080/rest/reply/fund", 
+						  										this.replyObj);
+				  this.replyObj.replyContent = ""; // 내용 초기화
+				  this.loadReplies(); // 댓글목록 다시 불러옴
+				}
+		      	
 		    },
 		    created() {
 		    	  this.setPostNo();
 		    	  this.loadFundPosts();
 		    	  this.loadAttachNos();
-		    	  this.loadFundTotal();
+		    	  this.loadFundVO();
+		    	  this.loadReplies();
+		    	  this.replyObj.postNo = this.fundDetail.postNo;
+		    	},
+		    mounted() {
 		    	}
-		  
 		  }).mount("#app");
 		</script>
 

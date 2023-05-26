@@ -34,9 +34,12 @@
 	<div class="container">
 		<div class="row center">
 			<h1>회원탈퇴 완료</h1>
+			<h3>2주 후 회원정보가 삭제됩니다.</h3>
+			<h3>그 전에 로그인하시면 회원탈퇴가 취소됩니다.</h3>
 		</div>
 		<div class="row">
 			<a href="${pageContext.request.contextPath}/member/join">회원가입</a>
+			<a href="${pageContext.request.contextPath}/member/login">로그인</a>
 		</div>
 	</div>
 

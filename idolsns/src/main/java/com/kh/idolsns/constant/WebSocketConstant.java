@@ -1,4 +1,4 @@
-package com.kh.idolsns.websocket;
+package com.kh.idolsns.constant;
 
 public interface WebSocketConstant {
 
@@ -8,6 +8,7 @@ public interface WebSocketConstant {
 	int PIC = 4;
 	int LEAVE = 5;
 	int INVITE = 6;
+	int LOGIN = 7;
 //	int NEW_ROOM = 4;
 	
 	Integer WAITING_ROOM = -2;

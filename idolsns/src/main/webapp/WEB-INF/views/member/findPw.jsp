@@ -91,10 +91,6 @@
 		</div>	
 	</div>
 	
-	 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://unpkg.com/vue@3.2.36"></script>
-    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js"></script>
     <script>
         Vue.createApp({
             data(){

@@ -22,7 +22,6 @@ public class HomeController {
 	
     @GetMapping("")
     public String home(HttpServletRequest request){
-        System.out.println(request.getHeader("Referer"));
         return "home";
     }
 
