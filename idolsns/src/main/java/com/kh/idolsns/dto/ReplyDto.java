@@ -13,5 +13,5 @@ public class ReplyDto {
 	private String replyId;
 	private String replyContent;
 	private Date replyTime;
-	private String replyGroup;
+	private Long replyGroupNo;
 }

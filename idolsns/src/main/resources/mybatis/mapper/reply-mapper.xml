@@ -11,11 +11,15 @@
 		select reply_seq.nextval from dual
 	</select>
 	
-	<insert id="addReply" parameterType="ReplyDto">
+	<insert id="add" parameterType="ReplyDto">
 		insert into reply(reply_no, post_no, reply_id, reply_content, 
-							reply_time, reply_group)
+							reply_time, reply_group_no)
 		values(#{replyNo}, #{postNo}, #{replyId}, #{replyContent},
-					sysdate, #{replyGroup})	
+					sysdate, #{replyGroupNo})	
 	</insert>
+	
+	<select id="list" resultType="ReplyDto">
+		select * from reply where post_no=#{postNo}
+	</select>
 
 </mapper>
