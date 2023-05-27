@@ -161,6 +161,7 @@
 				openHandler() {
 					/*const data = { type: 2, chatRoomNo: -2 };
 					this.socket.send(JSON.stringify(data));*/
+					this.joinRoomList = [];
 					for(let i=0; i<this.chatRoomList.length; i++) {
 						this.joinRoomList.push(this.chatRoomList[i].chatRoomNo);
 					}
@@ -377,6 +378,7 @@
 				sendMessage() {
 					if(this.text.length < 1) return;
 					if(this.text.length > 300) return;
+					this.firstMsg();
 					const data = {
 							type: 1,
 							chatRoomNo: this.chatRoomNo,
@@ -385,6 +387,21 @@
 					this.socket.send(JSON.stringify(data));
 					this.clear();
 					this.scrollBottom();
+				},
+				// 보내는 메세지가 오늘의 첫 메세지인지 확인
+				firstMsg() {
+					if(this.messageList.length < 1) return;
+					const today = new Date().toISOString().split('T')[0];
+					const lastMessage = this.messageList[this.messageList.length - 1];
+					const lastDate = new Date(lastMessage.chatMessageTime).toISOString().split('T')[0];
+					console.log("lastDate: " + lastDate)
+					if(today == lastDate) return;
+					const data = {
+							type: 10,
+							chatRoomNo: this.chatRoomNo,
+							chatMessageContent: today
+					};
+					this.socket.send(JSON.stringify(data));
 				},
 				// 사진 보내기
 				async sendPic() {

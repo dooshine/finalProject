@@ -295,7 +295,7 @@ public class ChatServiceImpl implements ChatService {
 			this.broadcastDelete(chatRoomNo, jsonMessage);
 		}
 		// 채팅방 나가기, 초대인 경우
-		else if(receiveVO.getType() == WebSocketConstant.LEAVE || receiveVO.getType() == WebSocketConstant.INVITE) {
+		else if(receiveVO.getType() == WebSocketConstant.LEAVE || receiveVO.getType() == WebSocketConstant.INVITE || receiveVO.getType() == WebSocketConstant.DATE) {
 			int chatRoomNo = receiveVO.getChatRoomNo();
 			int chatMessageType = receiveVO.getType();
 			if(chatMessageType == WebSocketConstant.LEAVE) {

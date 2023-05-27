@@ -498,6 +498,10 @@
 								<div class="sysMsgTime text-center">{{ timeFormatDetailed(message.chatMessageTime) }}</div>
 								<div class="sysMsgContent text-center">{{ message.chatMessageContent }}</div>
 							</div>
+							<!-- 날짜 구분 메세지일 때 -->
+							<div v-if="message.chatMessageType === 10" class="sysMessage">
+								<div class="sysMsgContent text-center">{{ timeFormatDetailed(message.chatMessageTime) }}</div>
+							</div>
 						</div>
 						
 						<!-- 메뉴 모달 -->
