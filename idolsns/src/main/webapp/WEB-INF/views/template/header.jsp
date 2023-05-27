@@ -331,6 +331,34 @@
 			font-size: 0.8em;
 			color: #7f7f7f;
 		}
+		
+		.sysMessageDate {
+			display: flex;
+			flex-basis: 100%;
+			align-items: center;
+			color: #7f7f7f;
+			font-size: 0.7em;
+			margin-bottom: 18px;
+			margin-top: 20px;
+		}
+		.sysMessageDate::before {
+			content: "";
+			flex-grow: 1;
+			background: #dee2e6;
+			height: 0.3px;
+			font-size: 0;
+			line-height: 0px;
+			margin-right: 8px;
+		}
+		.sysMessageDate::after {
+			content: "";
+			flex-grow: 1;
+			background: #dee2e6;
+			height: 0.3px;
+			font-size: 0;
+			line-height: 0px;
+			margin-left: 8px;
+		}
     </style>
 </head>
 
@@ -499,9 +527,7 @@
 								<div class="sysMsgContent text-center">{{ message.chatMessageContent }}</div>
 							</div>
 							<!-- 날짜 구분 메세지일 때 -->
-							<div v-if="message.chatMessageType === 10" class="sysMessage">
-								<div class="sysMsgContent text-center">{{ timeFormatDetailed(message.chatMessageTime) }}</div>
-							</div>
+							<div v-if="message.chatMessageType === 10" class="sysMessageDate text-center">{{ timeFormatDetailed(message.chatMessageTime) }}</div>
 						</div>
 						
 						<!-- 메뉴 모달 -->

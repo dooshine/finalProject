@@ -159,9 +159,17 @@
 					};
 				},
 				openHandler() {
-					/*const data = { type: 2, chatRoomNo: -2 };
-					this.socket.send(JSON.stringify(data));*/
+					if(this.socket.readyState === 1) {
+						this.loadJoinRooms();
+					}
+				},
+				closeHandler() {
+				},
+				errorHandler() {
+				},
+				loadJoinRooms() {
 					this.joinRoomList = [];
+					this.loadRoomList();
 					for(let i=0; i<this.chatRoomList.length; i++) {
 						this.joinRoomList.push(this.chatRoomList[i].chatRoomNo);
 					}
@@ -171,10 +179,6 @@
 							memberId: this.memberId
 					}
 					this.socket.send(JSON.stringify(data));
-				},
-				closeHandler() {
-				},
-				errorHandler() {
 				},
 				messageHandler(e) {
 					const parsedData = JSON.parse(e.data);
@@ -296,7 +300,7 @@
 				},
 				
 				// 로그아웃
-				logout() {
+				/*logout() {
 					for(let i=0; i<this.chatRoomList.length; i++) {
 						this.joinRoomList.push(this.chatRoomList[i].chatRoomNo);
 					}
@@ -307,7 +311,7 @@
 					}
 					this.socket.send(JSON.stringify(data));
 					window.location.href = '${pageContext.request.contextPath}/member/logout';
-				},
+				},*/
 				// 로그인한 회원이 속해있는 채팅방 목록
 				async loadRoomList() {
 					const memberId = this.memberId;
@@ -390,18 +394,32 @@
 				},
 				// 보내는 메세지가 오늘의 첫 메세지인지 확인
 				firstMsg() {
-					if(this.messageList.length < 1) return;
-					const today = new Date().toISOString().split('T')[0];
-					const lastMessage = this.messageList[this.messageList.length - 1];
-					const lastDate = new Date(lastMessage.chatMessageTime).toISOString().split('T')[0];
-					console.log("lastDate: " + lastDate)
-					if(today == lastDate) return;
-					const data = {
-							type: 10,
-							chatRoomNo: this.chatRoomNo,
-							chatMessageContent: today
-					};
-					this.socket.send(JSON.stringify(data));
+					const today = new Date().toLocaleDateString();
+					if(this.messageList.length < 1) {
+						const data = {
+								type: 10,
+								chatRoomNo: this.chatRoomNo,
+								chatMessageContent: today
+						};
+						this.socket.send(JSON.stringify(data));
+					}
+					else {
+						const lastMessage = this.messageList[this.messageList.length - 1];
+						const lastDate = new Date(lastMessage.chatMessageTime).toLocaleDateString();
+						//console.log("lastDate: " + lastDate)
+						console.log("lastDate: " + typeof lastDate);
+						console.log("lastDate: " + lastDate);
+						console.log("today: " + typeof today);
+						console.log("today: " + today);
+						console.log(lastDate === today);
+						if(lastDate === today) return;
+						const data = {
+								type: 10,
+								chatRoomNo: this.chatRoomNo,
+								chatMessageContent: today
+						};
+						this.socket.send(JSON.stringify(data));
+					}
 				},
 				// 사진 보내기
 				async sendPic() {
@@ -429,7 +447,7 @@
 					return moment(chatMessageTime).format("HH:mm");
 				},
 				timeFormatDetailed(chatMessageTime) {
-					return moment(chatMessageTime).format("YYYY년 M월 D일 A h시 m분");
+					return moment(chatMessageTime).format("YYYY년 M월 D일 dddd");
 				},
 				// 메세지 삭제버튼 보이기
 				showDeleteButton(index) {
