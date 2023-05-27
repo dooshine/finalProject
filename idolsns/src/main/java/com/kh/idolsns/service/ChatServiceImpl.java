@@ -278,6 +278,7 @@ public class ChatServiceImpl implements ChatService {
 			//log.debug("chatRooms: " + chatRooms);
 			int chatRoomNo = receiveVO.getChatRoomNo();
 			this.join(member, chatRoomNo);
+			//chatReadRepo.readMessage();
 			//log.debug("chatRooms: " + chatRooms);
 		}
 		// 메세지 삭제인 경우
@@ -324,12 +325,30 @@ public class ChatServiceImpl implements ChatService {
 			//ChatRoomVO chatRoom = null;
 			for(int i=0; i<receiveVO.getJoinRooms().size(); i++) {
 				int roomId = receiveVO.getJoinRooms().get(i);
+				/*if(!chatRooms.containsKey(roomId)) {
+					chatRooms.putIfAbsent(roomId, new ChatRoomVO());
+					ChatRoomVO chatRoom = chatRooms.get(roomId);
+					chatRoom.enter(member);
+				}*/
 				ChatRoomVO chatRoom = chatRooms.get(roomId);
-				if (chatRoom == null) {
+				if(chatRoom == null) {
 					chatRoom = new ChatRoomVO();
 		            chatRooms.put(roomId, chatRoom);
 				}
 				chatRoom.enter(member);
+				/*int roomId = receiveVO.getJoinRooms().get(i);
+			    if(!chatRooms.containsKey(roomId)) {
+			    	chatRooms.put(roomId, new ChatRoomVO());
+			    }
+			    ChatRoomVO chatRoom = chatRooms.get(roomId);
+			    chatRoom.enter(member);*/
+			}
+			log.debug("chatRooms: " + chatRooms);
+		}
+		// 로그아웃한 경우(연결 끊긴 경우)
+		else if(receiveVO.getType() == WebSocketConstant.LOGOUT) {
+			for(int i=0; i<receiveVO.getJoinRooms().size(); i++) {
+				exit(member, receiveVO.getJoinRooms().get(i));
 			}
 			log.debug("chatRooms: " + chatRooms);
 		}
