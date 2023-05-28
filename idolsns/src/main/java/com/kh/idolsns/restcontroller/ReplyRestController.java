@@ -1,8 +1,11 @@
 package com.kh.idolsns.restcontroller;
 
-import org.springdoc.api.annotations.ParameterObject;
+import java.util.List;
+
+//github.com/dooshine/finalProject.git
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,19 +24,25 @@ public class ReplyRestController {
 	private ReplyRepo replyRepo;
 	
 	// 펀딩페이지 reply 조회 
-//	@GetMapping("/fund/{postNo}")
+	@GetMapping("/fund/{postNo}")
+	public List<ReplyDto> getReplies(@PathVariable Long postNo) {
+//		System.out.println(postNo);
+		return replyRepo.getRepliesByPostNo(postNo);
+	}
 	
 	// 펀딩페이지 reply 작성 
-	@PostMapping("/fund/")
-	public void write(
-			@ParameterObject
-			@RequestBody 
-			ReplyDto replyDto) {
-	    // reply sequence 발행
+	@PostMapping("/fund")
+	public void write(@RequestBody ReplyDto replyDto) {
+//		System.out.println(replyDto);
+//	     reply sequence 발행
 	    Long sequence = replyRepo.sequence();
 	    
+	    // 댓글 번호 설정
 	    replyDto.setReplyNo(sequence);
-	    replyDto.setReplyGroup(null);
+	    // 댓글 그룹 설정	    
+	    if(replyDto.getReplyGroupNo() == null) {
+	    	replyDto.setReplyGroupNo(sequence);
+	    }
 	    replyRepo.addReply(replyDto);
 	}
 }

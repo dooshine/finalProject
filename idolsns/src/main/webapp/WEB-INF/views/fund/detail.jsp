@@ -123,30 +123,38 @@
 					
 		</div>
 	</div>             
-	</div>
 	<hr>
 	
 	  <h3>댓글</h3>
 	  <div v-if="replies.length === 0">댓글이 없습니다.</div>
 	  <div v-else>
 	    <ul>
-	      <li v-for="reply in replies" :key="reply.commentId">
-	        <div>{{ reply.writer }}: {{ reply.content }}</div>
+	      <li v-for="(reply, i) in replies" :key="reply.replyNo">
+	        <div>{{ reply.replyId }}: {{ reply.replyContent }}</div>
+	        {{reply.replyNo}}<br>
+	        {{reply.replyGroupNo}}
+	        <button v-if="reply.replyNo == reply.replyGroupNo" @click="reReplies[i] = true">대댓글달기</button>
+	        <div v-if="reReplies[i] == true">
+	        	<textarea @blur="setReReplyObj($event, i)">대댓글</textarea>
+	        	<button @click="addReReply(i)">작성</button>
+	        	<button @click="reReplies[i] = false">취소</button>
+	        </div>
 	      </li>
 	    </ul>
 	  </div>
-	  <form @submit.prevent="addReply">
+	  	<form @submit.prevent="addReply">
 	    <div>
-	      <input type="hidden" v-model="newReply.postNo" required>
-	      <input type="hidden" v-model="newReply.replyId" placeholder="작성자" required>
+	      <input type="hidden" v-model="replyObj.replyId" required>
+	      <input type="hidden" v-model="replyObj.postNo" required>
 	    </div>
 	    <div>
-	      <textarea type="text" v-model="newReply.replyContent" placeholder="댓글 내용" required></textarea>
+	      <textarea type="text" v-model="replyObj.replyContent" placeholder="댓글 내용" required></textarea>
 	    </div>
 	    <div>
 	      <button type="submit">댓글 작성</button>
 	    </div>
-	  </form>
+    	</form>
+	</div>
 	
 				
 				
@@ -185,11 +193,20 @@
 		          fundTotal: "",
 		        },
 		        replies: [],
-		        newReply: {
+		        // 댓글창 보여주기
+		        reReplies: [],
+		        reRepliesObjList: [],
+		        replyObj: {
 		          replyId: memberId,
 		          replyContent: "",
-		          postNo: "",
-		        }
+		          postNo:"",
+		        },
+		        reReplyObj: {
+			          replyId: memberId,
+			          replyContent: "",
+			          postNo:"",
+			          replyGroupNo: "",
+			        }
 		      };
 		    },
 		    computed: {
@@ -254,19 +271,46 @@
 	          	// replies 불러오기
 	          	async loadReplies() {
 	                const postNo = this.fundDetail.postNo; // 게시물 번호
-	                const response = await axios.get("http://localhost:8080/rest/reply/fund/"+postNo);
-	                this.replies = response.data; // Vue data에 저장
+	                const resp = await axios.get("http://localhost:8080/rest/reply/fund/"+postNo);
+	                this.replies = resp.data; // Vue data에 저장
 	              },
 	            // 작성한 comment 서버로 전송
                 async addReply() {
-                  const postNo = this.fundDetail.postNo;
-                  
-                  const response = await axios.post("http://localhost:8080/rest/reply/fund/", 
-                		  					this.newReply);
-                  this.newReply.writer = ""; // 작성자 초기화
-                  this.newReply.content = ""; // 내용 초기화
-                  this.loadReplies(); // 댓글목록 다시 불러옴
-                }
+	            	if(this.replyObj.replyId == "") return;
+				  const resp = await axios.post("http://localhost:8080/rest/reply/fund", 
+						  										this.replyObj);
+				  this.replyObj.replyContent = ""; // 내용 초기화
+				  this.loadReplies(); // 댓글목록 다시 불러옴
+				},
+				// 대댓글 작성
+                async addReReply(i) {
+	            	if(this.reRepliesObjList[i].replyId == "") return;
+				   const resp = await axios.post("http://localhost:8080/rest/reply/fund", 
+						  										this.reRepliesObjList[i]);
+				   // 댓글창 지우기
+				   this.reReplies[i] = false
+				   this.loadReplies(); // 댓글목록 다시 불러옴
+				},
+				
+				// 대댓글Obj 데이터 반영
+				setReReplyObj(event, index){
+					const reReplyObj = {
+							 replyId: memberId,
+					         replyContent: "",
+					         postNo:"",
+					         replyGroupNo: "",
+					}
+					// 대댓글 펀딩게시물 번호 설정					
+					reReplyObj.postNo = this.fundDetail.postNo;
+					// 대댓글 내용 설정
+// 					this.reReplyObj.replyContent = event.target.value;
+					reReplyObj.replyContent = event.target.value;
+					// 대댓글 그룹 설정
+// 					this.reReplyObj.replyGroupNo = parentReplyNo;
+					reReplyObj.replyGroupNo = this.replies[index].replyGroupNo;
+					console.table(reReplyObj);
+					this.reRepliesObjList[index] =  reReplyObj;
+				}
 		      	
 		    },
 		    created() {
@@ -274,11 +318,11 @@
 		    	  this.loadFundPosts();
 		    	  this.loadAttachNos();
 		    	  this.loadFundVO();
-		    	  this.newReply.postNo = this.fundDetail.postNo;
-		    	  console.log("id=" +this.newReply.replyId);
-// 		    	  this.loadReplies();
+		    	  this.loadReplies();
+		    	  this.replyObj.postNo = this.fundDetail.postNo;
+		    	},
+		    mounted() {
 		    	}
-		  
 		  }).mount("#app");
 		</script>
 

@@ -30,6 +30,8 @@
         	<i class="fa-sharp fa-solid fa-coins">태그 목록조회</i></a>
         <a href="${pageContext.request.contextPath}/admin/tagCnt">
         	<i class="fa-sharp fa-solid fa-coins">태그별 사용량 조회</i></a>
+        <a href="${pageContext.request.contextPath}/admin/fixedTag">
+        	<i class="fa-sharp fa-solid fa-coins">고정태그</i></a>
 		<a href="${pageContext.request.contextPath}/admin/artist">
 			<i class="fa-sharp fa-solid fa-coins">아티스트 조회</i></a>
   	</div>

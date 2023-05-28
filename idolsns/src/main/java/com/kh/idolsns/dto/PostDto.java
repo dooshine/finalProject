@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 public class PostDto {
     // 통합게시물 번호
     private Long postNo;
-    // 통합게시물 작성자
+    // 통합게시물 작성자 아이디
     private String memberId;
     // 통합게시물 글종류
     private String postType;

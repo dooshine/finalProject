@@ -5,9 +5,12 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.kh.idolsns.dto.MemberDto;
 import com.kh.idolsns.dto.TagCntDto;
 import com.kh.idolsns.dto.TagDto;
 import com.kh.idolsns.repo.AdminRepo;
+import com.kh.idolsns.vo.AdminMemberSearchVO;
+import com.kh.idolsns.vo.TagCntSearchVO;
 
 @Service
 public class AdminServiceImpl implements AdminService {
@@ -36,9 +39,13 @@ public class AdminServiceImpl implements AdminService {
     }
     // 태그Cnt 조회
     @Override
-    public List<TagCntDto> adminTagCntSelectList() {
-        return adminRepo.adminTagCntSelectList();
+    public List<TagCntDto> adminTagCntSelectList(TagCntSearchVO tagCntSearchVO) {
+        return adminRepo.adminTagCntSelectList(tagCntSearchVO);
     }
 
-    
+    // 회원(member) 목록 조회
+    @Override
+    public List<MemberDto> adminSelectMemberList(AdminMemberSearchVO adminMemberSearchVO) {
+        return adminRepo.adminSelectMemberList(adminMemberSearchVO);
+    }
 }

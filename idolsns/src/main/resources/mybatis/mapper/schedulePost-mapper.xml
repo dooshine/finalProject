@@ -12,9 +12,8 @@
 		insert into schedule_post
 		(post_no, member_id, schedule_start, schedule_end)
 		values
-		(#{postNo},#{memberId}, #{scheduleStart}, #{scheduleEnd})
+		(#{postNo},#{memberId}, #{scheduleStart, jdbcType=DATE}, #{scheduleEnd, jdbcType=DATE})
 	</insert>
-	
 	<!-- 행사일정 게시물 조회 -->
 	<select id="selectOne" resultType="SchedulePostDto">
 		select * from schedule_post where post_no = #{postNo}

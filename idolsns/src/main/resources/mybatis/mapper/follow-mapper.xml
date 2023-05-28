@@ -20,4 +20,29 @@
     <delete id="deleteFollow">
         delete from follow where member_id = #{memberId} and follow_target_type = #{followTargetType} and follow_target_primary_key = #{followTargetPrimaryKey}
     </delete>
+    <!-- 팔로우 목록 조회 -->
+    <select id="selectFollowList" resultType="FollowDto">
+        <bind name="memberIdExist" value="memberId != null and !memberId.equals('')"/>
+        <bind name="followTargetTypeExist" value="followTargetType != null and !followTargetType.equals('')"/>
+        select * from follow
+        <where>
+            <if test="memberIdExist">
+              and instr(member_id, #{memberId}) > 0
+            </if>
+            <if test="followTargetTypeExist">
+              and instr(follow_target_type, #{followTargetType}) > 0
+            </if>
+        </where>
+        order by follow_target_primary_key desc
+    </select>
+    <!-- 팔로우 통계 조회 -->
+    <select id="selectMemberFollowCnt" resultType="MemberFollowCntDto">
+        <bind name="memberIdExist" value="memberId != null and !memberId.equals('')"/>
+        select * from member_follow_cnt
+        <where>
+            <if test="memberIdExist">
+              and instr(member_id, #{memberId}) > 0
+            </if>
+        </where>
+    </select>
 </mapper>

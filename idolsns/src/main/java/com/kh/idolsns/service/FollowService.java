@@ -1,8 +1,10 @@
 package com.kh.idolsns.service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PostMapping;
 
 import com.kh.idolsns.dto.FollowDto;
 import com.kh.idolsns.repo.FollowRepo;
@@ -28,5 +30,21 @@ public class FollowService {
     // 팔로우 삭제(팔로우한 사람, 팔로우 대상 타입, 팔로우 대상 PK)
     public void deleteFollow(FollowDto followDto) {
         followRepo.deleteFollow(followDto);
+    }
+    
+    // 팔로우리스트 목록
+    public List<FollowDto> selectFollowList(FollowDto followDto){
+        return followRepo.selectFollowList(followDto);
+    }
+
+    // 팔로우한 회원,페이지 목록 조회
+    public List<String> selectFollowPKList(FollowDto followDto){
+        // 회원목록만따로 빼기
+        List<String> followMemberList = new ArrayList<>();
+        List<FollowDto> followDtoList = followRepo.selectFollowList(followDto);
+        for(FollowDto dto : followDtoList){
+            followMemberList.add(dto.getFollowTargetPrimaryKey());
+        }
+        return followMemberList;
     }
 }

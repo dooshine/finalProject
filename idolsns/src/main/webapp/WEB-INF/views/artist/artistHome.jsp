@@ -134,6 +134,7 @@
     </div>
 </div>
 
+
 <!-- 뷰 스크립트 작성 -->
 <script>
     Vue.createApp({
