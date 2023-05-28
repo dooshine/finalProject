@@ -13,4 +13,5 @@ import lombok.NoArgsConstructor;
 public class ArtistDto {
     private int artistNo;
     private String artistName;
+    private String artistEngName;
 }
