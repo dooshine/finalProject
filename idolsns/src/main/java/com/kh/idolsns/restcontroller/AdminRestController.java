@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.kh.idolsns.dto.ArtistDto;
+import com.kh.idolsns.dto.ArtistViewDto;
 import com.kh.idolsns.dto.MemberDto;
 import com.kh.idolsns.dto.TagCntDto;
 import com.kh.idolsns.dto.TagDto;
@@ -28,6 +31,9 @@ public class AdminRestController {
 
     @Autowired
     private AdminService adminService;
+
+    @Autowired
+    private SqlSession sqlSession;
 
     // SELECT 태그 리스트 목록
     @GetMapping("/tag")
@@ -59,6 +65,20 @@ public class AdminRestController {
     @PostMapping("/member")
     public List<MemberDto> selectMemberList(@RequestBody AdminMemberSearchVO adminMemberSearchVO){
         return adminService.adminSelectMemberList(adminMemberSearchVO);
+    }
+
+
+
+
+    // CREATE 대표페이지 생성
+    @PostMapping("/artist")
+    public void createArtist(@RequestBody ArtistDto artistDto){
+        sqlSession.insert("admin.insertArtist", artistDto);
+    }
+    // READ 대표페이지 목록 조회
+    @GetMapping("/artistView")
+    public List<ArtistViewDto> selectArtistList(){
+        return sqlSession.selectList("admin.selectArtistView");
     }
 }
 
