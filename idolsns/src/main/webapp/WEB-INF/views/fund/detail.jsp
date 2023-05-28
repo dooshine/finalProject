@@ -122,26 +122,54 @@
 			</div>
 					
 		</div>
-	</div>             
-	<hr>
+		</div>             
+		<hr>
 	
 	  <h3>댓글</h3>
-	  <div v-if="replies.length === 0">댓글이 없습니다.</div>
+	  <div v-if="replies.length == 0">댓글이 없습니다.</div>
 	  <div v-else>
 	    <ul>
 	      <li v-for="(reply, i) in replies" :key="reply.replyNo">
-	        <div>{{ reply.replyId }}: {{ reply.replyContent }}</div>
-	        {{reply.replyNo}}<br>
-	        {{reply.replyGroupNo}}
-	        <button v-if="reply.replyNo == reply.replyGroupNo" @click="reReplies[i] = true">대댓글달기</button>
+	         
+	        
+	        <div>
+	        	<div>{{ reply.replyId }}:</div>
+	        	<div>{{ reply.replyContent }}</div>
+	        	 
+	        	<!-- 대댓글 버튼 -->
+	        	<button v-if="reply.replyNo == reply.replyGroupNo" 
+	        			@click="reReplies[i] = true">
+	        		<i class="fa-solid fa-reply"></i>
+				</button>
+				<!-- 수정 버튼 -->
+	        	<button v-if="reply.replyId == replyObj.replyId"
+						@click="updateReplyObj.index = i">
+	        		<i class="fa-solid fa-edit"></i>
+	        	</button>
+	        	<!-- 삭제 버튼 -->
+	        	<button v-if="reply.replyId == replyObj.replyId"
+						@click="deleteReply(i)">
+					<i class="fa-solid fa-trash-alt"></i>
+				</button>
+        	</div>
+        	<!-- 수정 폼 -->
+        	<div v-if="updateReplyObj.index == i">
+		    	<textarea @blur="setUpdateReplyObj($event, i)" placeholder="수정 내용"></textarea>
+			    <button @click="saveUpdate(i)">저장</button>
+			    <button @click="cancelUpdate()">취소</button>
+			</div>
+	        
+	        <!-- 대댓글 폼 -->
 	        <div v-if="reReplies[i] == true">
-	        	<textarea @blur="setReReplyObj($event, i)">대댓글</textarea>
+	        	<textarea @blur="setReReplyObj($event, i)" placeholder="대댓글 내용"></textarea>
 	        	<button @click="addReReply(i)">작성</button>
 	        	<button @click="reReplies[i] = false">취소</button>
 	        </div>
 	      </li>
 	    </ul>
-	  </div>
+ 	 </div>
+ 	 
+	  	<!-- 새댓글 폼 -->
 	  	<form @submit.prevent="addReply">
 	    <div>
 	      <input type="hidden" v-model="replyObj.replyId" required>
@@ -154,6 +182,7 @@
 	      <button type="submit">댓글 작성</button>
 	    </div>
     	</form>
+    	
 	</div>
 	
 				
@@ -202,11 +231,16 @@
 		          postNo:"",
 		        },
 		        reReplyObj: {
-			          replyId: memberId,
-			          replyContent: "",
-			          postNo:"",
-			          replyGroupNo: "",
-			        }
+		          replyId: memberId,
+		          replyContent: "",
+		          postNo:"",
+		          replyGroupNo: "",
+			        },
+			   	updateReplyObj: {
+				  index: -1,
+				  replyNo: "",
+				  replyContent: "",
+			   	}
 		      };
 		    },
 		    computed: {
@@ -240,7 +274,6 @@
 			    async loadFundPosts(){
 			    	const postNo = this.fundDetail.postNo;
 					const resp = await axios.get("http://localhost:8080/rest/fund/"+postNo)	  
-					console.log(resp);
 					this.fundDetail = { ...this.fundDetail, ...resp.data };
         		},
         		// postNo의 attachmentNo list 불러오기 
@@ -253,7 +286,6 @@
         		async loadFundVO(){
 			    	const postNo = this.fundDetail.postNo;
 					const resp = await axios.get("http://localhost:8080/rest/fund/fundlist/"+postNo)	  
-					console.log(resp);
 					this.fundDetail.fundTotal = resp.data.fundTotal;
 					this.fundDetail.fundSponsorCount = resp.data.fundSponsorCount;
         		},
@@ -277,6 +309,7 @@
 	            // 작성한 comment 서버로 전송
                 async addReply() {
 	            	if(this.replyObj.replyId == "") return;
+	              this.replyObj.postNo = this.fundDetail.postNo;
 				  const resp = await axios.post("http://localhost:8080/rest/reply/fund", 
 						  										this.replyObj);
 				  this.replyObj.replyContent = ""; // 내용 초기화
@@ -287,7 +320,7 @@
 	            	if(this.reRepliesObjList[i].replyId == "") return;
 				   const resp = await axios.post("http://localhost:8080/rest/reply/fund", 
 						  										this.reRepliesObjList[i]);
-				   // 댓글창 지우기
+				   // 댓글창 지우기 
 				   this.reReplies[i] = false
 				   this.loadReplies(); // 댓글목록 다시 불러옴
 				},
@@ -309,7 +342,37 @@
 // 					this.reReplyObj.replyGroupNo = parentReplyNo;
 					reReplyObj.replyGroupNo = this.replies[index].replyGroupNo;
 					console.table(reReplyObj);
-					this.reRepliesObjList[index] =  reReplyObj;
+					this.reRepliesObjList[index] = reReplyObj;
+				},
+				// 댓글 삭제
+				async deleteReply(i){
+					const replyNo = this.replies[i].replyNo;
+					const resp = await axios.delete("http://localhost:8080/rest/reply/fund/"+replyNo);
+					this.loadReplies();
+				},
+				
+				// 수정하려는 댓글의 인덱스와 내용을 updateReply객체에 저장 
+				setUpdateReplyObj($event, i) {
+					this.reReplies[i] = false // 켜져있는 대댓글 작성폼 닫기
+					this.updateReplyObj.index = i;
+					this.updateReplyObj.replyNo = this.replies[i].replyNo;
+					this.updateReplyObj.replyContent = event.target.value;
+				},
+				// 댓글 수정
+				async saveUpdate(i) {
+					// 수정된 댓글 서버로 전송 
+					const resp = await axios.put("http://localhost:8080/rest/reply/fund/", 
+													this.updateReplyObj);
+					// 수정된 데이터 저장 
+					this.replies[i].replyContent = this.updateReplyObj.replyContent;
+					// 수정폼 닫기
+					this.cancelUpdate();
+				},
+				cancelUpdate() {
+					// 수정 폼 닫고 updatedReply 객체 초기화 
+					this.updateReplyObj.index = -1;
+					this.updateReplyObj.replyNo = "";
+					this.updateReplyObj.replyContent = "";
 				}
 		      	
 		    },
@@ -319,7 +382,6 @@
 		    	  this.loadAttachNos();
 		    	  this.loadFundVO();
 		    	  this.loadReplies();
-		    	  this.replyObj.postNo = this.fundDetail.postNo;
 		    	},
 		    mounted() {
 		    	}
