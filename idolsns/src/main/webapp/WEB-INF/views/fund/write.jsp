@@ -56,6 +56,7 @@
 	<h2>펀딩 게시글 작성</h2>
 	<form action="write3" method="post" enctype="multipart/form-data"> <!--  -->
 		제목 : <input type="text" name="fundTitle"><br><br>
+		짧은 제목 : <input type="text" name="fundShortTitle"><br><br>
 		시작일 : <input type="date" name="postStart"><br><br>
 		종료일 : <input type="date" name="postEnd"><br><br>
 		목표 금액 : <input type="text" name="fundGoal"><br><br>

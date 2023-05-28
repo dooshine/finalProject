@@ -16,5 +16,6 @@ public interface FundRepo {
 	List<FundDto> selectByPostNo(Long postNo);
 	Integer selectTotal(Long postNo);
 	FundDto find(Long fundNo);
+	int count(Long postNo);
 	
 }

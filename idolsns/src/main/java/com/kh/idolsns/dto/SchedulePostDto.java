@@ -2,7 +2,7 @@ package com.kh.idolsns.dto;
 
 
 
-import java.util.Date;
+import java.sql.Date;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

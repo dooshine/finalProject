@@ -19,22 +19,22 @@ public class FundPostImageRepoImpl implements FundPostImageRepo{
 	
 	@Override
 	public List<PostImageDto> selectAttachList(Long postNo) {
-		return sqlSession.selectList("fundpostlist.attachByPostNo", postNo);
+		return sqlSession.selectList("fundpostinte.attachByPostNo", postNo);
 	}
 
 	@Override
 	public FundDetailVO selectOne(Long postNo) {
-		return sqlSession.selectOne("fundpostlist.fundPostByPostNo", postNo);
+		return sqlSession.selectOne("fundpostinte.fundPostByPostNo", postNo);
 	}
 
 	@Override
 	public List<FundPostImageDto> selectList() {
-		return sqlSession.selectList("fundpostlist.list");
+		return sqlSession.selectList("fundpostinte.list");
 	}
 
 	@Override
 	public List<FundDto> selectFundList(Long postNo) {
-		return sqlSession.selectList("fundpostlist.fundByPostNo", postNo);
+		return sqlSession.selectList("fundpostinte.fundByPostNo", postNo);
 	}
 	
 

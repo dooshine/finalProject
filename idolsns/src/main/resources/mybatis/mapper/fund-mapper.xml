@@ -73,6 +73,11 @@
 	  SET fund_price = 0
 	  WHERE fund_no = #{fundNo}
 	</update>
+	
+	<!-- 특정 postNo의 count -->
+	<select id="fundCount" resultType="int" parameterType="Long">
+		select count(distinct member_id) from fund where post_no=#{postNo} 
+	</select>
 
 
 
