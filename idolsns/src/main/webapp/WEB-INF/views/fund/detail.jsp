@@ -137,6 +137,7 @@
 	  </div>
 	  <form @submit.prevent="addReply">
 	    <div>
+	      <input type="hidden" v-model="newReply.postNo" required>
 	      <input type="hidden" v-model="newReply.replyId" placeholder="작성자" required>
 	    </div>
 	    <div>
@@ -186,7 +187,8 @@
 		        replies: [],
 		        newReply: {
 		          replyId: memberId,
-		          replyContent: ""
+		          replyContent: "",
+		          postNo: "",
 		        }
 		      };
 		    },
@@ -257,8 +259,9 @@
 	              },
 	            // 작성한 comment 서버로 전송
                 async addReply() {
-                  const postNo = this.fundDetail.postNo; 
-                  const response = await axios.post("http://localhost:8080/rest/reply/fund/"+ postNo, 
+                  const postNo = this.fundDetail.postNo;
+                  
+                  const response = await axios.post("http://localhost:8080/rest/reply/fund/", 
                 		  					this.newReply);
                   this.newReply.writer = ""; // 작성자 초기화
                   this.newReply.content = ""; // 내용 초기화
@@ -271,7 +274,9 @@
 		    	  this.loadFundPosts();
 		    	  this.loadAttachNos();
 		    	  this.loadFundVO();
-		    	  this.loadReplies();
+		    	  this.newReply.postNo = this.fundDetail.postNo;
+		    	  console.log("id=" +this.newReply.replyId);
+// 		    	  this.loadReplies();
 		    	}
 		  
 		  }).mount("#app");

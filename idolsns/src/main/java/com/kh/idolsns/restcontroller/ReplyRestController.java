@@ -1,5 +1,6 @@
 package com.kh.idolsns.restcontroller;
 
+import org.springdoc.api.annotations.ParameterObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,12 +24,14 @@ public class ReplyRestController {
 //	@GetMapping("/fund/{postNo}")
 	
 	// 펀딩페이지 reply 작성 
-	@PostMapping("/fund/{postNo}")
-	public void write(@RequestBody ReplyDto replyDto, @PathVariable("postNo") Long postNo) {
+	@PostMapping("/fund/")
+	public void write(
+			@ParameterObject
+			@RequestBody 
+			ReplyDto replyDto) {
 	    // reply sequence 발행
 	    Long sequence = replyRepo.sequence();
 	    
-	    replyDto.setPostNo(postNo);
 	    replyDto.setReplyNo(sequence);
 	    replyDto.setReplyGroup(null);
 	    replyRepo.addReply(replyDto);
