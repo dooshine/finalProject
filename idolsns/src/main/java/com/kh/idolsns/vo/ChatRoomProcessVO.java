@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 @JsonIgnoreProperties
 public class ChatRoomProcessVO {
 	
+	private int type;
 	private String memberId;
 	private ChatRoomDto chatRoomDto;
 	private List<String> memberList;

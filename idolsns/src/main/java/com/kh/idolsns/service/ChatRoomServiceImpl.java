@@ -8,6 +8,7 @@ import com.kh.idolsns.dto.ChatRoomPrivDto;
 import com.kh.idolsns.repo.ChatJoinRepo;
 import com.kh.idolsns.repo.ChatRoomPrivRepo;
 import com.kh.idolsns.repo.ChatRoomRepo;
+import com.kh.idolsns.vo.ChatMessageReceiveVO;
 import com.kh.idolsns.vo.ChatRoomProcessVO;
 import com.kh.idolsns.vo.ChatRoomVO;
 
@@ -23,10 +24,12 @@ public class ChatRoomServiceImpl implements ChatRoomService {
 	private ChatJoinRepo chatJoinRepo;
 	@Autowired
 	private ChatRoomPrivRepo chatRoomPrivRepo;
+	/*@Autowired
+	private ChatService chatService;*/
 	
-	// 채팅방 만들기
+	// 채팅방 만들기 - 채팅방 번호 반환하도록 수정했는데 확인 필요
 	@Override
-	public void createChatRoom(ChatRoomProcessVO vo) {
+	public int createChatRoom(ChatRoomProcessVO vo) {
 		
 		String memberId = vo.getMemberId();
 		ChatRoomDto chatRoomDto = vo.getChatRoomDto();
@@ -49,7 +52,7 @@ public class ChatRoomServiceImpl implements ChatRoomService {
 			ChatRoomPrivDto existRoom2 = chatRoomPrivRepo.findRoom(chatRoomPrivDto2);
 			boolean isChatRoomExist2 = existRoom2 != null;
 			// 1, 2 둘 다 있으면 -> 둘 다 참여 중인 갠톡방이 있으므로 방 생성 중지
-			if(isChatRoomExist1 && isChatRoomExist2) return;
+			if(isChatRoomExist1 && isChatRoomExist2) return 0;
 			
 			// 2만 있으면 -> 나는 나갔지만 1대1 채팅 이력이 있으면(상대방에게는 나와의 채팅방이 남아있으면)
 			if(isChatRoomExist2) {
@@ -64,7 +67,7 @@ public class ChatRoomServiceImpl implements ChatRoomService {
 				privDto.setChatRoomPrivI(memberId);
 				privDto.setChatRoomPrivU(existRoom2.getChatRoomPrivI());
 				chatRoomPrivRepo.createRoom(privDto);
-				return;
+				return existRoom2.getChatRoomNo();
 			}
 			
 			// 중복방이 없으면 채팅방 생성
@@ -93,6 +96,7 @@ public class ChatRoomServiceImpl implements ChatRoomService {
 			privDto2.setChatRoomPrivI(memberList.get(1));
 			privDto2.setChatRoomPrivU(memberList.get(0));
 			chatRoomPrivRepo.createRoom(privDto2);
+			return chatRoomNo;
 		}
 		else {
 			// 생성 요청 받은 채팅방이 단체 채팅방이면
@@ -109,8 +113,8 @@ public class ChatRoomServiceImpl implements ChatRoomService {
 				joinDto.setChatRoomNo(chatRoomNo);
 				chatJoinRepo.joinChatRoom(joinDto);
 			}
+			return chatRoomNo;
 		}
-
 	}
 	
 	// 채팅방 나가기, 지우기

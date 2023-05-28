@@ -159,9 +159,7 @@
 					};
 				},
 				openHandler() {
-					if(this.socket.readyState === 1) {
-						this.loadJoinRooms();
-					}
+					this.loadJoinRooms();
 				},
 				closeHandler() {
 				},
@@ -217,8 +215,8 @@
 				// 채팅 메인 모달 열기
 				showChatMainModal() {
 					this.chatRoomList.splice(0);
-					this.loadRoomList();
 					this.followList.splice(0);
+					this.loadRoomList();
 					this.loadFollowList();
 					this.chatMainModal = true;
 				},
@@ -234,6 +232,9 @@
 				},
 				// 채팅방 만들기 모달 닫기
 				hideCreateRoomModal() {
+					this.chatRoom.chatRoomName = "";
+					this.selectedMemberList.splice(0);
+					this.selectedMemberList.push(this.memberId);
 					this.createRoomModal = false;
 					this.showChatMainModal();
 				},
@@ -300,10 +301,10 @@
 				},
 				
 				// 로그아웃
-				/*logout() {
-					for(let i=0; i<this.chatRoomList.length; i++) {
+				logout() {
+					/*for(let i=0; i<this.chatRoomList.length; i++) {
 						this.joinRoomList.push(this.chatRoomList[i].chatRoomNo);
-					}
+					}*/
 					const data = {
 							type: 9,
 							joinRooms: this.joinRoomList,
@@ -311,7 +312,7 @@
 					}
 					this.socket.send(JSON.stringify(data));
 					window.location.href = '${pageContext.request.contextPath}/member/logout';
-				},*/
+				},
 				// 로그인한 회원이 속해있는 채팅방 목록
 				async loadRoomList() {
 					const memberId = this.memberId;
@@ -326,26 +327,35 @@
 					//console.log("data: " + resp.data);
 					this.followList.push(...resp.data);
 				},
-				// 채팅방 만들기
-				async createChatRoom() {
-					this.chatRoom.memberList = this.selectedMemberList;
+				// 채팅방 만들기 - 모달 안 닫힘 이유를 모르겠음
+				createChatRoom() {
 					if(this.selectedMemberList.length > 2) {
 						this.chatRoom.chatRoomType = 'G';
 					}
 					else {
 						this.chatRoom.chatRoomType = 'P';
 					}
-					const url = "${pageContext.request.contextPath}/chat/chatRoom/";
 					const data = {
+							type: 11,
 							memberId: this.memberId,
 							chatRoomDto: this.chatRoom,
 							memberList: this.selectedMemberList
 					}
-					const resp = await axios.post(url, data);
-					this.chatRoom.chatRoomName = "";
-					this.selectedMemberList.splice(0);
-					this.selectedMemberList.push(memberId);
-					this.hideCreateRoomModal();
+					this.socket.onmessage = (e) => {
+						this.messageHandler(e);
+						this.chatRoomList.splice(0);
+						this.loadRoomList();
+						this.chatRoom.chatRoomName = "";
+						this.selectedMemberList.splice(0);
+						this.selectedMemberList.push(this.memberId);
+						//this.hideCreateRoomModal();
+						this.createRoomModal = false;
+						this.chatMainModal = true;
+					}
+					this.socket.send(JSON.stringify(data));
+					//this.hideCreateRoomModal();
+					//this.createRoomModal = false;
+					//this.chatMainModal = true;
 				},
 				
 				// 채팅방 정보 불러오기
@@ -596,7 +606,9 @@
 			created() {
 				if(this.memberId != "" && memberId != ""){
 					this.connect();
+					this.chatRoomList.splice(0);
 					this.loadRoomList();
+					this.followList = [];
 					this.loadFollowList();
 				}
 			},

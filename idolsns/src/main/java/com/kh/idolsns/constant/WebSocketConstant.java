@@ -12,7 +12,7 @@ public interface WebSocketConstant {
 	int RENAME = 8;
 	int LOGOUT = 9;
 	int DATE = 10;
-//	int NEW_ROOM = 4;
+	int NEW_ROOM = 11;
 	
 	Integer WAITING_ROOM = -2;
 	
