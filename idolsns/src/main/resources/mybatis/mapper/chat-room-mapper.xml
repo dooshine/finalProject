@@ -23,10 +23,12 @@
 	
 	<!-- 채팅방 번호 리스트로 채팅방 조회 -->
 	<select id="findRooms" resultType="ChatRoomDto">
-		select * from chat_room where chat_room_no in
-		<foreach collection="list" item="chatRoomNo" open="(" close=")" separator=",">
-			${chatRoomNo}
-		</foreach>
+		<if test="list != null and list.size() > 0">
+			select * from chat_room where chat_room_no in
+			<foreach collection="list" item="chatRoomNo" open="(" close=")" separator=",">
+				${chatRoomNo}
+			</foreach>
+		</if>
 	</select>
 	
 	<!-- 채팅방 삭제 -->

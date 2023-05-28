@@ -1,5 +1,7 @@
 package com.kh.idolsns.restcontroller;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -52,7 +54,8 @@ public class ChatRestController {
 	public List<ChatRoomDto> chatRoomList(@PathVariable String memberId) {
 		List<Integer> chatRoomNoList = chatJoinRepo.findChatRoomNoById(memberId);
 		//log.debug("chatRoomNoList: " + chatRoomNoList);
-		return chatRoomRepo.findRooms(chatRoomNoList);
+		if(!chatRoomNoList.isEmpty()) return chatRoomRepo.findRooms(chatRoomNoList);
+		else return Collections.emptyList();
 	}
 	
 	// 내 팔로워 목록 불러오기 (현재 팔로우 기능 부재로 전체 회원 목록 불러오는 것으로 대체)

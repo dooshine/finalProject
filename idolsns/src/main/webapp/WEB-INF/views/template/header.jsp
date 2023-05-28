@@ -407,9 +407,16 @@
 					</div>
 					<div class="customModalBody">
 						<div class="chatRooms mb-2" v-for="(room, index) in chatRoomList" :key="index">
-							<button class="hide-style" @click="showChatRoomModal(index)">
-								{{ chatRoomList[index].chatRoomName }}
-							</button>
+							<div v-if="chatRoomList[index].chatRoomType == 'G'">
+								<button @click="showChatRoomModal(index)" class="hide-style">
+									{{ chatRoomList[index].chatRoomName }}
+								</button>
+							</div>
+							<div v-if="chatRoomList[index].chatRoomType == 'P'">
+								<button @click="showChatRoomModal(index)" class="hide-style">
+									{{ chatRoomList[index].chatRoomName }}
+								</button>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -428,14 +435,15 @@
 					</div>
 					<div class="customModalBody">
 						<div>
-							<div class="form-floating mb-3" v-if="memberCount > 2">
+							<div class="form-floating mb-3" v-if="memberCount > 1">
 		  						<input type="text" class="form-control form-control-sm" id="chatRoomNameInput" placeholder="채팅방이름" 
 		  											v-model="chatRoom.chatRoomName" @input="chatRoom.chatRoomName = $event.target.value">
 							  	<label for="chatRoomNameInput">채팅방 이름</label>
 							</div>
+							<!-- 팔로우 목록 -->
 							<label class="d-flex justify-content-between" v-for="(follow, index) in followList">
-						    	{{ follow.memberId }}
-						    	<input type="checkbox" v-model="selectedMemberList" :value="follow.memberId">
+						    	{{ follow }}
+						    	<input type="checkbox" v-model="selectedMemberList" :value="follow">
 							</label>
 						</div>
 					</div>
@@ -447,7 +455,10 @@
 					<div class="customModalHeader d-flex align-items-center">
 						<div class="d-flex justify-content-between w-100">
 							<!-- 채팅방 이름(갠톡일 때) -->
-							<h5 v-if="roomInfo.chatRoomType == 'P'">상대방 아이디</h5>
+							<div v-if="roomInfo.chatRoomType == 'P'">
+								<h5 v-if="chatMemberList[0].memberId != memberId">{{ chatMemberList[0].memberId }}</h5>
+								<h5 v-if="chatMemberList[1].memberId != memberId">{{ chatMemberList[1].memberId }}</h5>
+							</div>
 							<!-- 채팅방 이름(단톡일 때) -->
 							<div v-if="roomInfo.chatRoomType == 'G'">
 								<div v-if="roomInfo.edit == true" class="d-flex align-items-center justify-content-between w-100">
@@ -596,38 +607,37 @@
 					<div class="customModalBody">
 						<div>
 							<label class="d-flex justify-content-between" v-for="(follow, index) in filteredFollowList">
-						    	{{ follow.memberId }}
-						    	<input type="checkbox" v-model="selectedMemberList" :value="follow.memberId">
+						    	{{ follow }}
+						    	<input type="checkbox" v-model="selectedMemberList" :value="follow">
 							</label>
 						</div>
 					</div>
 				</div>
 				<!---------------------------------------- 초대 모달 ---------------------------------------->
-			
+			</div>
         	<!----------------------------------------------- 헤더 끝 ----------------------------------------------->
             
-				<div class="row">
-					<!-- (개발)로그인 버튼 -->
-					<div class="col-4">
-						<button><a href="/dev/login?memberId=testuser1">testuser1</a></button>
-						<button><a href="/dev/login?memberId=testuser2">testuser2</a></button>
-						<button><a href="/dev/login?memberId=testuser3">testuser3</a></button>
-						<button><a href="/dev/login?memberId=adminuser1">adminuser3</a></button>
-					</div>
-					<div class="offset-5 col-3">
-						<c:if test="${memberId == null}">
-							<a href="${pageContext.request.contextPath}/member/login">로그인</a>
-							<a href="${pageContext.request.contextPath}/member/join">회원가입</a>
-						</c:if>
-						<c:if test="${memberId != null}">
-							<a href="#" @click="logout">로그아웃</a>
-							<a href="${pageContext.request.contextPath}/member/mypage">마이페이지</a>
-						</c:if>
-						<c:if test="${memberLevel == '관리자'}">
-							<a href="${pageContext.request.contextPath}/admin/">관리자 페이지</a>
-						</c:if>
-					</div>
-	            </div>
+			<div class="row">
+				<!-- (개발)로그인 버튼 -->
+				<div class="col-4">
+					<button><a href="/dev/login?memberId=testuser1">testuser1</a></button>
+					<button><a href="/dev/login?memberId=testuser2">testuser2</a></button>
+					<button><a href="/dev/login?memberId=testuser3">testuser3</a></button>
+					<button><a href="/dev/login?memberId=adminuser1">adminuser3</a></button>
+				</div>
+				<div class="offset-5 col-3">
+					<c:if test="${memberId == null}">
+						<a href="${pageContext.request.contextPath}/member/login">로그인</a>
+						<a href="${pageContext.request.contextPath}/member/join">회원가입</a>
+					</c:if>
+					<c:if test="${memberId != null}">
+						<a href="${pageContext.request.contextPath}/member/logout">로그아웃</a>
+						<a href="${pageContext.request.contextPath}/member/mypage">마이페이지</a>
+					</c:if>
+					<c:if test="${memberLevel == '관리자'}">
+						<a href="${pageContext.request.contextPath}/admin/">관리자 페이지</a>
+					</c:if>
+				</div>
             </div>
         </header>
           <hr>

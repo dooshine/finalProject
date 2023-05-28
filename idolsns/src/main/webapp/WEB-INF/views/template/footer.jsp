@@ -103,7 +103,6 @@
 						chatRoomStart: "",
 						chatRoomType: ""
 					},
-					memberId: memberId,
 					chatRoomList: [],
 					followList: [],
 					selectedMemberList: [],
@@ -234,7 +233,7 @@
 				hideCreateRoomModal() {
 					this.chatRoom.chatRoomName = "";
 					this.selectedMemberList.splice(0);
-					this.selectedMemberList.push(this.memberId);
+					//this.selectedMemberList.push(this.memberId);
 					this.createRoomModal = false;
 					this.showChatMainModal();
 				},
@@ -301,10 +300,10 @@
 				},
 				
 				// 로그아웃
-				logout() {
-					/*for(let i=0; i<this.chatRoomList.length; i++) {
+				/*logout() {
+					for(let i=0; i<this.chatRoomList.length; i++) {
 						this.joinRoomList.push(this.chatRoomList[i].chatRoomNo);
-					}*/
+					}
 					const data = {
 							type: 9,
 							joinRooms: this.joinRoomList,
@@ -312,7 +311,7 @@
 					}
 					this.socket.send(JSON.stringify(data));
 					window.location.href = '${pageContext.request.contextPath}/member/logout';
-				},
+				},*/
 				// 로그인한 회원이 속해있는 채팅방 목록
 				async loadRoomList() {
 					const memberId = this.memberId;
@@ -322,14 +321,15 @@
 				},
 				// 팔로우 목록 불러오기
 				async loadFollowList() {
-					const url = "${pageContext.request.contextPath}/chat/chatRoom/follow/";
+					const url = "${pageContext.request.contextPath}/rest/follow/member";
 					const resp = await axios.get(url);
 					//console.log("data: " + resp.data);
 					this.followList.push(...resp.data);
+					console.log("followList: " + this.followList);
 				},
 				// 채팅방 만들기 - 모달 안 닫힘 이유를 모르겠음
 				createChatRoom() {
-					if(this.selectedMemberList.length > 2) {
+					if(this.selectedMemberList.length > 1) {
 						this.chatRoom.chatRoomType = 'G';
 					}
 					else {
@@ -341,18 +341,19 @@
 							chatRoomDto: this.chatRoom,
 							memberList: this.selectedMemberList
 					}
+					const app = this;
 					this.socket.onmessage = (e) => {
-						this.messageHandler(e);
-						this.chatRoomList.splice(0);
-						this.loadRoomList();
-						this.chatRoom.chatRoomName = "";
-						this.selectedMemberList.splice(0);
-						this.selectedMemberList.push(this.memberId);
-						//this.hideCreateRoomModal();
-						this.createRoomModal = false;
-						this.chatMainModal = true;
+						app.messageHandler(e);
+						app.chatRoomList.splice(0);
+						app.loadRoomList();
+						app.chatRoom.chatRoomName = "";
+						//app.selectedMemberList.push(this.memberId);
+						//app.hideCreateRoomModal();
+						app.createRoomModal = false;
+						app.chatMainModal = true;
 					}
 					this.socket.send(JSON.stringify(data));
+					this.selectedMemberList.splice(0);
 					//this.hideCreateRoomModal();
 					//this.createRoomModal = false;
 					//this.chatMainModal = true;
@@ -524,6 +525,7 @@
 				},
 				// 채팅방 이름 변경
 				async saveRoomName() {
+					if(this.roomInfo.chatRoomName.length > 10) return;
 					const chatRoomNo = this.chatRoomNo;
 					const url = "${pageContext.request.contextPath}/chat/chatRoom/changeName";
 					const data = this.roomInfo;
@@ -536,12 +538,12 @@
 					this.socket.send(JSON.stringify(data2));
 					this.roomInfo.edit = false;
 				},
-				// 팔로우 목록 불러오기
-				async loadFollowList() {
+				// 팔로우 목록 불러오기 - 위에 중복코드 있음
+				/*async loadFollowList() {
 					const url = "${pageContext.request.contextPath}/chat/chatRoom/follow/";
 					const resp = await axios.get(url);
 					this.followList.push(...resp.data);
-				},
+				},*/
 				// 사용자 초대
 				async inviteMember() {
 					const chatRoomNo = this.chatRoomNo;
@@ -600,16 +602,16 @@
 				filteredFollowList() {
 					return this.followList.filter(follow => 
 								!this.chatMemberList.some(member => 
-									member.memberId === follow.memberId));
+									member.memberId === follow));
 				}
 			},
 			created() {
 				if(this.memberId != "" && memberId != ""){
 					this.connect();
-					this.chatRoomList.splice(0);
+					/*this.chatRoomList.splice(0);
 					this.loadRoomList();
-					this.followList = [];
-					this.loadFollowList();
+					this.followList.splice(0);
+					this.loadFollowList();*/
 				}
 			},
 			mounted() {
