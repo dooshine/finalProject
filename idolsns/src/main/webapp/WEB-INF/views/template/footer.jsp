@@ -164,8 +164,8 @@
 						app.messageHandler(e);
 					};
 				},
-				openHandler() {
-					this.loadJoinRooms();
+				async openHandler() {
+					this.loadRoomList();
 					this.loadChatNoti();
 				},
 				closeHandler() {
@@ -203,16 +203,16 @@
 				// 참여중인 방 정보 가져오기
 				loadJoinRooms() {
 					this.joinRoomList = [];
-					this.loadRoomList();
+					//this.loadRoomList();
 					for(let i=0; i<this.chatRoomList.length; i++) {
-						this.joinRoomList.push(this.chatRoomList[i].chatRoomNo);
+						this.joinRoomList[i] = this.chatRoomList[i];
 					}
-					const data = {
+					/*const data = {
 							type: 7,
 							joinRooms: this.joinRoomList,
 							memberId: this.memberId
 					}
-					this.socket.send(JSON.stringify(data));
+					this.socket.send(JSON.stringify(data));*/
 				},
 				// 새 채팅 알림 있는지 확인
 				async loadChatNoti() {
@@ -224,22 +224,30 @@
 					else this.newChatNoti = false;
 				},
 				// 방별로 새 알림 있는지 확인
-				/*async loadChatRoomNoti() {
+				async loadChatRoomNoti() {
+					this.chatRoomNoList = [];
+					//console.log("chatRoomNo: " + this.chatRoomList[0].chatRoomNo);
 					for(let i=0; i<this.chatRoomList.length; i++) {
-						this.chatRoomNoList.push(this.chatRoomList[i].chatRoomNo);
+						this.chatRoomNoList[i] = this.chatRoomList[i].chatRoomNo;
 					}
+					//console.log("chatRoomNoList: " + this.chatRoomNoList);
 					const memberId = this.memberId;
 					const url = "${pageContext.request.contextPath}/chat/message/noti";
 					const data = {
 							chatRoomNoList: this.chatRoomNoList,
 							memberId: memberId
 					};
-					console.log("chatRoomNoList: " + this.chatRoomNoList);
 					const resp = await axios.post(url, data);
 					console.log(resp.data);
-					//if(!resp.data.isEmpty) this.newChatRoomNoti = true;
-					//else this.newChatRoomNoti = false;
-				},*/
+					for(let i=0; i<resp.data.length; i++) {
+						for(let j=0; j<this.joinRoomList.length; j++) {
+							if(resp.data[i].chatRoomNo === this.joinRoomList[j].chatRoomNo) {
+								this.joinRoomList[j].newChat = true;
+							}
+						}
+					}
+				},
+				// 메세지 읽음
 				async readMessage() {
 					const url = "${pageContext.request.contextPath}/chat/message";
 					const data = {
@@ -250,11 +258,12 @@
 				},
 				// 채팅 메인 모달 열기
 				showChatMainModal() {
-					this.chatRoomList.splice(0);
+					//this.chatRoomList.splice(0);
 					this.followList.splice(0);
-					this.loadRoomList();
+					//this.loadRoomList();
 					this.loadFollowList();
-					//this.loadChatRoomNoti();
+					this.loadJoinRooms();
+					this.loadChatRoomNoti();
 					this.chatMainModal = true;
 				},
 				// 채팅 메인 모달 닫기

@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.NoHandlerFoundException;
 import com.kh.idolsns.dto.ChatJoinDto;
 import com.kh.idolsns.dto.ChatMessageDto;
+import com.kh.idolsns.dto.ChatNotiDto;
 import com.kh.idolsns.dto.ChatReadDto;
 import com.kh.idolsns.dto.ChatRoomDto;
 import com.kh.idolsns.dto.MemberDto;
@@ -151,8 +152,8 @@ public class ChatRestController {
 	
 	// 채팅방 각각 새 메세지 알림 있는지 확인
 	@PostMapping("/message/noti")
-	public List<Integer> chatNotiByRoom(@RequestBody ChatMemberJoinVO vo) {
-		return chatNotiRepo.notiNoList(vo.getChatRoomNoList(), vo.getMemberId());
+	public List<ChatNotiDto> chatNotiByRoom(@RequestBody ChatMemberJoinVO vo) {
+		return chatNotiRepo.roomNotiList(vo.getChatRoomNoList(), vo.getMemberId());
 	}
 	
 }

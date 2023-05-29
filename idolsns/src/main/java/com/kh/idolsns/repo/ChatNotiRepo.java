@@ -6,6 +6,6 @@ public interface ChatNotiRepo {
 
 	void insert(ChatNotiDto dto);
 	int myNotiList(String memberId);
-	List<Integer> notiNoList(List<Integer> chatRoomNoList, String memberId);
+	List<ChatNotiDto> roomNotiList(List<Integer> chatRoomNoList, String memberId);
 	
 }

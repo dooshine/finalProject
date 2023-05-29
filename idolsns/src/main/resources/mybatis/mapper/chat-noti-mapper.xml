@@ -17,8 +17,8 @@
 	</select>
 	
 	<!-- 방이름, 아이디에 해당하는 알림 번호 찾기 -->
-	<select id="notiList" resultType="int">
-		select noti_no from chat_noti 
+	<select id="notiList" resultType="ChatNotiDto">
+		select * from chat_noti 
 		where member_id = #{memberId} and chat_room_no in 
 		<foreach collection="chatRoomNoList" item="chatRoomNo" open="(" close=")" separator=",">
 			#{chatRoomNo}
