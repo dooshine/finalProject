@@ -17,4 +17,10 @@ public class MemberProfileImageRepoImpl implements MemberProfileImageRepo{
 		sqlSession.insert("memberProfileImage.add", memberProfileImageDto);
 	}
 
+	@Override
+	public MemberProfileImageDto MemberImageExist(String memberId) {
+		return sqlSession.selectOne("memberProfileImage.memberImageExist", memberId);
+	}
+
+
 }
