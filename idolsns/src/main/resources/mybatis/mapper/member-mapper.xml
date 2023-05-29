@@ -208,7 +208,7 @@
 	
 		<delete id="clean">
 			<![CDATA[
-			delete member where member_exitdate < sysdate - INTERVAL '1' MINUTE
+			delete member where member_exitdate < sysdate - sysdate - INTERVAL '14' DAY
 			]]>
 		</delete>
 	
@@ -247,6 +247,7 @@
 	<update id="deleteMemberProc" statementType="CALLABLE">
 	  { CALL delete_member_proc(p_member_id=#{memberId}) }
 	</update>
+	
 	
 	
 	<!-- (채팅) 회원 아이디 리스트로 상세조회 -->
