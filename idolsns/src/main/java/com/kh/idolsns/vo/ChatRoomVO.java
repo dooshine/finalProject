@@ -16,7 +16,7 @@ public class ChatRoomVO {
 	/** 입장 **/
 	public void enter(ChatMemberVO member) {
 		members.add(member);
-		log.debug("members: " + members);
+		//log.debug("members: " + members);
 	}
 	
 	/** 퇴장 **/

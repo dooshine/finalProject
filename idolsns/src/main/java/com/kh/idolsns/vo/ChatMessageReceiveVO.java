@@ -2,6 +2,8 @@ package com.kh.idolsns.vo;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.kh.idolsns.dto.ChatRoomDto;
+
 import lombok.Data;
 
 // 메세지 수신 양식
@@ -18,5 +20,8 @@ public class ChatMessageReceiveVO {
 	private String memberId;
 	
 	private List<Integer> joinRooms;
+	
+	private ChatRoomDto chatRoomDto;
+	private List<String> memberList;
 	
 }
