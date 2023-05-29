@@ -15,6 +15,7 @@ public class FundPostDto {
 	private Date postEnd;
 	private int fundGoal;
 	private String fundState;
+	private int fundSponsorCount;
 	private int sponsorCount;
 	private int priceTotal;
 

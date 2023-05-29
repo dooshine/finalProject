@@ -236,7 +236,8 @@ public class FundController {
 
         // 3. 통합게시물 게시물종류 설정(Fix!!)
         postDto.setPostType("펀딩");
-
+        
+        System.out.println("-----------------이게 postDto-----------------" + postDto);
         // 4. 통합게시물 등록
         postRepo.insert(postDto);
 
@@ -247,6 +248,7 @@ public class FundController {
         // 2. 펀딩게시물 작성자
         fundPostDto.setMemberId(memberId);
         
+        System.out.println("-----------------이게 fundPostDto-----------------" + fundPostDto);
         // 3. 펀딩게시물 등록
 		fundPostRepo.insert(fundPostDto);
 		

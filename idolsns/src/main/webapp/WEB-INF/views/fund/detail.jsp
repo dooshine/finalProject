@@ -128,36 +128,74 @@
 	  <h3>댓글</h3>
 	  <div v-if="replies.length == 0">댓글이 없습니다.</div>
 	  <div v-else>
-	    <ul>
-	      <li v-for="(reply, i) in replies" :key="reply.replyNo">
+	      <div v-for="(reply, i) in replies" :key="reply.replyNo">
 	         
-	        
-	        <div>
+	        <!-- 최상위 댓글이면 -->
+	        <div v-if="reply.replyNo == reply.replyGroupNo">
 	        	<div>{{ reply.replyId }}:</div>
-	        	<div>{{ reply.replyContent }}</div>
-	        	 
-	        	<!-- 대댓글 버튼 -->
-	        	<button v-if="reply.replyNo == reply.replyGroupNo" 
-	        			@click="reReplies[i] = true">
-	        		<i class="fa-solid fa-reply"></i>
-				</button>
-				<!-- 수정 버튼 -->
-	        	<button v-if="reply.replyId == replyObj.replyId"
-						@click="updateReplyObj.index = i">
-	        		<i class="fa-solid fa-edit"></i>
-	        	</button>
-	        	<!-- 삭제 버튼 -->
-	        	<button v-if="reply.replyId == replyObj.replyId"
-						@click="deleteReply(i)">
-					<i class="fa-solid fa-trash-alt"></i>
-				</button>
-        	</div>
-        	<!-- 수정 폼 -->
-        	<div v-if="updateReplyObj.index == i">
-		    	<textarea @blur="setUpdateReplyObj($event, i)" placeholder="수정 내용"></textarea>
-			    <button @click="saveUpdate(i)">저장</button>
-			    <button @click="cancelUpdate()">취소</button>
-			</div>
+		        	
+	        	<!-- 수정 폼 -->
+	        	<div v-if="updateReplyObj.index == i">
+			    	<textarea @blur="setUpdateReplyObj($event, i)" 
+			    	placeholder="수정 내용">{{ reply.replyContent }}</textarea>
+				    <button @click="saveUpdate(i)">저장</button>
+				    <button @click="cancelUpdate()">취소</button>
+				</div>
+	        	<div v-else>
+	        		{{ reply.replyContent }}
+	        		replyNo : {{ reply.replyNo }}
+	        		groupNo: {{ reply.replyGroupNo }}	
+	        		<!-- 대댓글 버튼 -->
+		        	<button v-if="reply.replyNo == reply.replyGroupNo" 
+		        			@click="showRereplyForm(i)">
+		        		<i class="fa-solid fa-reply"></i>
+					</button>
+					<!-- 수정 버튼 -->
+		        	<button v-if="reply.replyId == replyObj.replyId"
+							@click="showUpdateForm(i)">
+		        		<i class="fa-solid fa-edit"></i>
+		        	</button>
+		        	<!-- 삭제 버튼 -->
+		        	<button v-if="reply.replyId == replyObj.replyId"
+							@click="deleteReply(i)">
+						<i class="fa-solid fa-trash-alt"></i>
+					</button>	
+	        	</div>
+	        	
+	        </div>
+	        
+	        <!-- 대댓글이면 -->
+	        <div v-else>
+	        
+	        	<!-- 수정 폼 -->
+	        	<div v-if="updateReplyObj.index == i">
+	        		→ {{reply.replyId}} :<br>
+			    	<textarea @blur="setUpdateReplyObj($event, i)" 
+			    	placeholder="수정 내용">{{ reply.replyContent }}</textarea>
+				    <button @click="saveUpdate(i)">저장</button>
+				    <button @click="cancelUpdate()">취소</button>
+				</div>
+				<div v-else>
+					→ {{reply.replyId}} : {{ reply.replyContent }}
+					replyNo : {{ reply.replyNo }}
+					groupNo: {{ reply.replyGroupNo }}
+	        		<!-- 대댓글 버튼 -->
+		        	<button v-if="reply.replyNo == reply.replyGroupNo" 
+		        			@click="showRereplyForm(i)">
+		        		<i class="fa-solid fa-reply"></i>
+					</button>
+					<!-- 수정 버튼 -->
+		        	<button v-if="reply.replyId == replyObj.replyId"
+							@click="showUpdateForm(i)">
+		        		<i class="fa-solid fa-edit"></i>
+		        	</button>
+		        	<!-- 삭제 버튼 -->
+		        	<button v-if="reply.replyId == replyObj.replyId"
+							@click="deleteReply(i)">
+						<i class="fa-solid fa-trash-alt"></i>
+					</button>	
+				</div>
+	        </div>
 	        
 	        <!-- 대댓글 폼 -->
 	        <div v-if="reReplies[i] == true">
@@ -165,9 +203,11 @@
 	        	<button @click="addReReply(i)">작성</button>
 	        	<button @click="reReplies[i] = false">취소</button>
 	        </div>
-	      </li>
-	    </ul>
+	        
+	      </div>
  	 </div>
+ 	 
+ 	 <hr>
  	 
 	  	<!-- 새댓글 폼 -->
 	  	<form @submit.prevent="addReply">
@@ -230,12 +270,14 @@
 		          replyContent: "",
 		          postNo:"",
 		        },
+		        // 대댓글 객체
 		        reReplyObj: {
 		          replyId: memberId,
 		          replyContent: "",
 		          postNo:"",
 		          replyGroupNo: "",
 			        },
+			    // 수정댓글 객체
 			   	updateReplyObj: {
 				  index: -1,
 				  replyNo: "",
@@ -318,7 +360,7 @@
 				// 대댓글 작성
                 async addReReply(i) {
 	            	if(this.reRepliesObjList[i].replyId == "") return;
-				   const resp = await axios.post("http://localhost:8080/rest/reply/fund", 
+				   	const resp = await axios.post("http://localhost:8080/rest/reply/fund", 
 						  										this.reRepliesObjList[i]);
 				   // 댓글창 지우기 
 				   this.reReplies[i] = false
@@ -373,6 +415,16 @@
 					this.updateReplyObj.index = -1;
 					this.updateReplyObj.replyNo = "";
 					this.updateReplyObj.replyContent = "";
+				},
+				// 대댓글 폼 보여주기 & 수정 폼 숨기기
+				showRereplyForm(i) {
+					this.reReplies[i] = true
+					this.cancelUpdate();
+				},
+				// 수정 폼 보여주기 & 대댓글 폼 숨기기
+				showUpdateForm(i) {
+					this.updateReplyObj.index = i
+					this.reReplies[i] = false;
 				}
 		      	
 		    },

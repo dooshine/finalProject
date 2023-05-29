@@ -50,10 +50,10 @@ public class ReplyRestController {
 	@DeleteMapping("/fund/{replyNo}")
 	public void deleteReply(@PathVariable Long replyNo) {
 		ReplyDto dto = replyRepo.selectOne(replyNo); // 삭제하려는 댓글
-		Long groupNo = dto.getReplyGroupNo();
-		if(groupNo == replyNo) { // 최상위 댓글이면
+		Long replyGroupNo = dto.getReplyGroupNo();
+		if(replyNo.equals(replyGroupNo)) { // 최상위 댓글이면
 			// 그 밑에있는(groupNo가 같은) 대댓들 다 같이 삭제
-			replyRepo.deleteReplies(groupNo);
+			replyRepo.deleteReplies(dto.getReplyGroupNo());
 		}
 		else { // 대댓글이면 
 			replyRepo.deleteRereply(replyNo); // 대댓글만 삭제
@@ -63,8 +63,6 @@ public class ReplyRestController {
 	// 펀딩페이지 댓글 수정
 	@PutMapping("/fund/")
 	public void updateReply(@RequestBody ReplyDto replyDto) {
-		System.out.println("--------이거---------"+replyDto);
-		
 		replyRepo.updateReply(replyDto.getReplyNo(), replyDto.getReplyContent());
 	}
 	
