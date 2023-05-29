@@ -10,5 +10,6 @@ public interface ChatRoomRepo {
 	void deleteRoom(ChatRoomDto dto);
 	void changeName(ChatRoomDto dto);
 	List<ChatRoomDto> findRooms(List<Integer> chatRoomNoList);
+	void updateLast(int roomNo);
 	
 }

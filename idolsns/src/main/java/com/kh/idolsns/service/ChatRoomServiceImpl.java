@@ -8,9 +8,7 @@ import com.kh.idolsns.dto.ChatRoomPrivDto;
 import com.kh.idolsns.repo.ChatJoinRepo;
 import com.kh.idolsns.repo.ChatRoomPrivRepo;
 import com.kh.idolsns.repo.ChatRoomRepo;
-import com.kh.idolsns.vo.ChatMessageReceiveVO;
 import com.kh.idolsns.vo.ChatRoomProcessVO;
-import com.kh.idolsns.vo.ChatRoomVO;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -74,7 +72,8 @@ public class ChatRoomServiceImpl implements ChatRoomService {
 			// 채팅방 테이블에 저장
 			int chatRoomNo = chatRoomRepo.sequence();
 			chatRoomDto.setChatRoomNo(chatRoomNo);
-			chatRoomDto.setChatRoomName(memberId + " 외 " + (memberList.size()) + "명");
+			chatRoomDto.setChatRoomName1(memberId);
+			chatRoomDto.setChatRoomName2(memberList.get(0));
 			chatRoomRepo.createRoom(chatRoomDto);
 			ChatRoomDto roomDto = chatRoomRepo.findRoom(chatRoomNo);
 			// 참여자 테이블에 저장

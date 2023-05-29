@@ -113,12 +113,6 @@ public class ChatRestController {
 		return memberRepo.chatMembers(memberIdList);
 	}
 	
-	// 채팅방 입장
-	/*@GetMapping("/chatRoom/{chatRoomNo}")
-	public ChatRoomDto enterRoom(@PathVariable int chatRoomNo) {
-		return chatRoomRepo.findRoom(chatRoomNo);
-	}*/
-	
 	// 메세지 불러오기
 	@GetMapping("/message/{chatRoomNo}")
 	public List<ChatMessageVO> roomMessage(@PathVariable int chatRoomNo) {

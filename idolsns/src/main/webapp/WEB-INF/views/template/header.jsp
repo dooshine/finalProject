@@ -407,14 +407,21 @@
 					</div>
 					<div class="customModalBody">
 						<div class="chatRooms mb-2" v-for="(room, index) in chatRoomList" :key="index">
+							<!-- 채팅방 이름(단톡일 때: 지정한 이름 표시) -->
 							<div v-if="chatRoomList[index].chatRoomType == 'G'">
 								<button @click="showChatRoomModal(index)" class="hide-style">
-									{{ chatRoomList[index].chatRoomName }}
+									{{ chatRoomList[index].chatRoomName1 }}
 								</button>
 							</div>
+							<!-- 채팅방 이름(갠톡일 때: 상대방 이름 표시) -->
 							<div v-if="chatRoomList[index].chatRoomType == 'P'">
-								<button @click="showChatRoomModal(index)" class="hide-style">
-									{{ chatRoomList[index].chatRoomName }}
+								<button v-if="chatRoomList[index].chatRoomName1 != memberId" 
+											@click="showChatRoomModal(index)" class="hide-style">
+									{{ chatRoomList[index].chatRoomName1 }}
+								</button>
+								<button v-if="chatRoomList[index].chatRoomName2 != memberId" 
+											@click="showChatRoomModal(index)" class="hide-style">
+									{{ chatRoomList[index].chatRoomName2 }}
 								</button>
 							</div>
 						</div>
@@ -437,7 +444,7 @@
 						<div>
 							<div class="form-floating mb-3" v-if="memberCount > 1">
 		  						<input type="text" class="form-control form-control-sm" id="chatRoomNameInput" placeholder="채팅방이름" 
-		  											v-model="chatRoom.chatRoomName" @input="chatRoom.chatRoomName = $event.target.value">
+		  											v-model="chatRoom.chatRoomName1" @input="chatRoom.chatRoomName1 = $event.target.value">
 							  	<label for="chatRoomNameInput">채팅방 이름</label>
 							</div>
 							<!-- 팔로우 목록 -->
@@ -454,21 +461,21 @@
 					<!-- 헤더 -->
 					<div class="customModalHeader d-flex align-items-center">
 						<div class="d-flex justify-content-between w-100">
-							<!-- 채팅방 이름(갠톡일 때) -->
+							<!-- 채팅방 이름(갠톡일 때: 상대방 이름 표시) -->
 							<div v-if="roomInfo.chatRoomType == 'P'">
-								<h5 v-if="chatMemberList[0].memberId != memberId">{{ chatMemberList[0].memberId }}</h5>
-								<h5 v-if="chatMemberList[1].memberId != memberId">{{ chatMemberList[1].memberId }}</h5>
+								<h5 v-if="roomInfo.chatRoomName1 != memberId">{{ roomInfo.chatRoomName1 }}</h5>
+								<h5 v-if="roomInfo.chatRoomName2 != memberId">{{ roomInfo.chatRoomName2 }}</h5>
 							</div>
-							<!-- 채팅방 이름(단톡일 때) -->
+							<!-- 채팅방 이름(단톡일 때: 지정한 채팅방 이름 표시) -->
 							<div v-if="roomInfo.chatRoomType == 'G'">
 								<div v-if="roomInfo.edit == true" class="d-flex align-items-center justify-content-between w-100">
 									<!-- 이름 변경 입력창 -->
-									<input v-model="roomInfo.chatRoomName" @input="roomInfo.chatRoomName = $event.target.value" @keyup.enter="saveRoomName" class="changeNameInput">
+									<input v-model="roomInfo.chatRoomName1" @input="roomInfo.chatRoomName1 = $event.target.value" @keyup.enter="saveRoomName" class="changeNameInput">
 									<!-- 이름 변경 버튼 -->
 									<div class="d-flex justify-content-end">
 										<!-- 이름변경 저장 버튼 -->
 										<button type="button" @click="saveRoomName" class="hide-style confirmNameBtn me-2" 
-											:disabled="(roomInfo.chatRoomName.length < 1 || roomInfo.chatRoomName.length > 10) || roomInfo.chatRoomName == roomInfoCopy.chatRoomName">
+											:disabled="(roomInfo.chatRoomName1.length < 1 || roomInfo.chatRoomName1.length > 10) || roomInfo.chatRoomName1 == roomInfoCopy.chatRoomName1">
 											<i class="ti ti-edit-circle ti-edit-circle-large"></i>
 										</button>
 										<!-- 이름 변경 취소 버튼 -->
@@ -478,7 +485,7 @@
 									</div>
 								</div>
 								<div v-else>
-									<h5>{{ roomInfo.chatRoomName }}</h5>
+									<h5>{{ roomInfo.chatRoomName1 }}</h5>
 								</div>
 							</div>
 							<div class="d-flex justify-content-end">

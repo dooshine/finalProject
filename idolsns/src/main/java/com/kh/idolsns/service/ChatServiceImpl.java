@@ -19,6 +19,7 @@ import com.kh.idolsns.repo.AttachmentRepo;
 import com.kh.idolsns.repo.ChatJoinRepo;
 import com.kh.idolsns.repo.ChatMessageRepo;
 import com.kh.idolsns.repo.ChatReadRepo;
+import com.kh.idolsns.repo.ChatRoomRepo;
 import com.kh.idolsns.vo.ChatMemberVO;
 import com.kh.idolsns.vo.ChatMessageReceiveVO;
 import com.kh.idolsns.vo.ChatMessageVO;
@@ -40,6 +41,8 @@ public class ChatServiceImpl implements ChatService {
 	private AttachmentRepo attachmentRepo;
 	@Autowired
 	private ChatRoomService chatRoomService;
+	@Autowired
+	private ChatRoomRepo chatRoomRepo;
 	
 	// 저장소
 	private Map<Integer, ChatRoomVO> chatRooms = Collections.synchronizedMap(new HashMap<>());
@@ -69,39 +72,15 @@ public class ChatServiceImpl implements ChatService {
 		join(member, chatRoomNo);
 	}
 	
-	// 방 입장 - 수정
+	// 방 입장 - 로그인과 동시에 이루어짐
 	public void join(ChatMemberVO member, int chatRoomNo) {
-		//chatRooms.put(chatRoomNo, new ChatRoomVO());
 		// 방 생성
 		createRoom(chatRoomNo);
 		// 방 선택
-		/*ChatRoomVO chatRoom = chatRooms.get(chatRoomNo);
-		//log.debug("chatRooms: " + chatRooms);
-		//log.debug("chatRoom: " + chatRoom);
-		// 해당 방에 입장
-		chatRoom.enter(member);*/
-		// 대기실에 있다면 대기실에서 퇴장
-		//boolean isWaitingRoom = chatRoomNo == WebSocketConstant.WAITING_ROOM;
-		//log.debug("isWaitingRoom: " + isWaitingRoom);
-		// 이미 참여중인 방인지 확인 - 필요 없을지도 (chatRoomService에서 처리중)
-		/*ChatJoinDto joinDto = new ChatJoinDto();
-		joinDto.setChatRoomNo(chatRoomNo);
-		joinDto.setMemberId(member.getMemberId());
-		boolean isJoin = chatJoinRepo.doseAlreadyIn(joinDto);*/
-		// 이미 참여중이 아니면(처음 들어온 방이라면) db에 참여 등록 - 필요 없을지도 (chatRoomService에서 처리중)
-		/*if(!isJoin) {
-			ChatJoinDto dto = new ChatJoinDto();
-			dto.setChatRoomNo(chatRoomNo);
-			dto.setMemberId(member.getMemberId());
-			chatJoinRepo.joinChatRoom(dto);
-		}*/
-		// 대기실 퇴장 후 실제 채팅방 입장
-		//if(isWaitingRoom) {
-			//exit(member, WebSocketConstant.WAITING_ROOM);
-			ChatRoomVO chatRoom = chatRooms.get(chatRoomNo);
-			chatRoom.enter(member);
-			log.debug("chatRooms: " + chatRooms);
-		//}
+		ChatRoomVO chatRoom = chatRooms.get(chatRoomNo);
+		// 입장
+		chatRoom.enter(member);
+		log.debug("chatRooms: " + chatRooms);
 	}
 	
 	// 참여중인 방 퇴장
@@ -126,7 +105,6 @@ public class ChatServiceImpl implements ChatService {
 			// 해당 방 객체 추출
 			ChatRoomVO chatRoom = chatRooms.get(chatRoomNo);
 			// 해당 방에 사용자가 있다면 방 번호 반환
-			//if(chatRoom.memberExist(member)) return chatRoomNo;
 			if(chatRoom.memberExist(member)) {
 				roomNos.add(chatRoomNo);
 			}
@@ -159,7 +137,9 @@ public class ChatServiceImpl implements ChatService {
 		String chatMessageContent = jsonNode.get("chatMessageContent").asText();
 		messageDto.setChatMessageContent(chatMessageContent);
 		chatMessageRepo.sendMessage(messageDto);
-		// [2] 전송 테이블에 저장
+		// [2] 채팅방 테이블 최종 메세지 시간 변경
+		chatRoomRepo.updateLast(chatRoomNo);
+		// [3] 전송 테이블에 저장
 		// 채팅방 사용자 저장
 		if(chatMessageType == WebSocketConstant.CHAT) {
 			List<ChatJoinDto> receiverList = chatJoinRepo.findMembersByRoomNo(chatRoomNo);
@@ -195,7 +175,9 @@ public class ChatServiceImpl implements ChatService {
 		String chatMessageContent = jsonNode.get("chatMessageContent").asText();
 		messageDto.setChatMessageContent(chatMessageContent);
 		chatMessageRepo.sendPic(messageDto);
-		// [2] 전송 테이블에 저장
+		// [2] 채팅방 테이블 최종 메세지 시간 변경
+		chatRoomRepo.updateLast(chatRoomNo);
+		// [3] 전송 테이블에 저장
 		// 채팅방 사용자 저장
 		List<ChatJoinDto> receiverList = chatJoinRepo.findMembersByRoomNo(chatRoomNo);
 		String memberId = member.getMemberId();
@@ -309,14 +291,6 @@ public class ChatServiceImpl implements ChatService {
 			TextMessage jsonMessage = new TextMessage(json);
 			this.broadcastPic(member, chatRoomNo, jsonMessage, chatMessageNo, receiveVO.getAttachmentNo());
 		}
-		// 채팅방 입장 메세지인 경우
-		/*else if(receiveVO.getType() == WebSocketConstant.JOIN) {
-			//log.debug("chatRooms: " + chatRooms);
-			int chatRoomNo = receiveVO.getChatRoomNo();
-			this.join(member, chatRoomNo);
-			//chatReadRepo.readMessage();
-			//log.debug("chatRooms: " + chatRooms);
-		}*/
 		// 메세지 삭제인 경우
 		else if(receiveVO.getType() == WebSocketConstant.DELETE) {
 			int chatRoomNo = receiveVO.getChatRoomNo();
@@ -335,11 +309,6 @@ public class ChatServiceImpl implements ChatService {
 			int chatRoomNo = receiveVO.getChatRoomNo();
 			int chatMessageType = receiveVO.getType();
 			if(chatMessageType == WebSocketConstant.LEAVE) this.exit(member, chatRoomNo);
-			// 초대인 경우 초대한 사람이 아니라 초대 받은 사람을 chatRoom에 enter 시켜야 해서 이 코드 확인 필요함
-			/*else if(chatMessageType == WebSocketConstant.INVITE) {
-				ChatRoomVO chatRoom = chatRooms.get(chatRoomNo);
-				chatRoom.enter(member);
-			}*/
 			ChatMessageVO msg = new ChatMessageVO();
 			msg.setChatRoomNo(chatRoomNo);
 			msg.setMemberId(member.getMemberId());
@@ -359,45 +328,15 @@ public class ChatServiceImpl implements ChatService {
 			TextMessage jsonMessage = new TextMessage(json);
 			this.broadcastRename(chatRoomNo, jsonMessage);
 		}
-		// 로그인한 경우 참여중인 채팅방 전부 맵에 저장 - 수정(여기가 제일 문제)
-		/*else if(receiveVO.getType() == WebSocketConstant.LOGIN) {
-			for(int i=0; i<receiveVO.getJoinRooms().size(); i++) {
-				int chatRoomNo = receiveVO.getJoinRooms().get(i);
-			    if(!chatRooms.containsKey(chatRoomNo)) {
-			    	chatRooms.put(chatRoomNo, new ChatRoomVO());
-			    }
-			    ChatRoomVO chatRoom = chatRooms.get(chatRoomNo);
-			    chatRoom.enter(member);
-			    //if(findRoomHasMember(member).contains(chatRoomNo)) {
-			    //	exit(member, chatRoomNo);
-			    //}
-			}
-			// 만약 없어지거나 나간 방이 map에 남아있으면 map에서 해당 방의 내 참여여부 삭제
-			for(int i=0; i<findRoomHasMember(member).size(); i++) {
-				if(!receiveVO.getJoinRooms().contains(findRoomHasMember(member).get(i))) {
-					exit(member, findRoomHasMember(member).get(i));
-				}
-			}
-			log.debug("chatRooms: " + chatRooms);
-		}*/
-		// 로그아웃한 경우(연결 끊긴 경우)
-		/*else if(receiveVO.getType() == WebSocketConstant.LOGOUT) {
-			for(int i=0; i<receiveVO.getJoinRooms().size(); i++) {
-				exit(member, receiveVO.getJoinRooms().get(i));
-			}
-			log.debug("chatRooms: " + chatRooms);
-		}*/
 		// 새 방 생성인 경우
 		else if(receiveVO.getType() == WebSocketConstant.NEW_ROOM) {
 			ChatRoomProcessVO processVO = mapper.readValue(message.getPayload(), ChatRoomProcessVO.class);
 			int chatRoomNo = chatRoomService.createChatRoom(processVO);
 			log.debug("new roomNo: " + chatRoomNo);
 			chatRooms.put(chatRoomNo, new ChatRoomVO());
-			//this.createRoom(chatRoomNo);
 			ChatRoomVO chatRoom = chatRooms.get(chatRoomNo);
 			chatRoom.enter(member);
 			log.debug("chatRooms after create: " + chatRooms);
-			//join(member, chatRoomNo);
 		}
 	}
 

@@ -13,8 +13,10 @@ import lombok.NoArgsConstructor;
 public class ChatRoomDto {
 
 	private int chatRoomNo;
-	private String chatRoomName;
+	private String chatRoomName1;
+	private String chatRoomName2;
 	private Date chatRoomStart;
 	private char chatRoomType;
+	private Date chatRoomLast;
 	
 }

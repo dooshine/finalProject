@@ -99,7 +99,8 @@
 					// main에서 가져옴
 					chatRoom: {
 						chatRoomNo: "",
-						chatRoomName: "",
+						chatRoomName1: "",
+						chatRoomName2: "",
 						chatRoomStart: "",
 						chatRoomType: ""
 					},
@@ -112,13 +113,14 @@
 					chatRoomNo: "",
 					roomInfo: {
 						chatRoomNo: "",
-						chatRoomName: "",
+						chatRoomName1: "",
+						chatRoomName2: "",
 						chatRoomStart: "",
 						chatRoomType: "",
 						edit: false
 					},
 					roomInfoCopy: {
-						chatRoomName:"",
+						chatRoomName1:"",
 					},
 					chatMemberList: [],
 					messageList: [],
@@ -187,10 +189,11 @@
 					// 이름 변경인 경우 방 정보 reload
 					if(parsedData.type == 8) {
 						this.roomInfo.chatRoomNo = "";
-						this.roomInfo.chatRoomName = "";
+						this.roomInfo.chatRoomName1 = "";
+						this.roomInfo.chatRoomName2 = "";
 						this.roomInfo.chatRoomStart = "";
 						this.roomInfo.chatRoomType = "";
-						this.roomInfoCopy.chatRoomName = "";
+						this.roomInfoCopy.chatRoomName1 = "";
 						this.loadRoomInfo();
 						this.chatRoomList.splice(0);
 						this.loadRoomList(); return;
@@ -201,6 +204,7 @@
 							this.chatRoomNo == parsedData.chatRoomNo && this.chatRoomModal === true) {
 						this.readMessage();
 					}
+					this.loadRoomList();
 					this.scrollBottom();
 				},
 				async readMessage() {
@@ -231,7 +235,7 @@
 				},
 				// 채팅방 만들기 모달 닫기
 				hideCreateRoomModal() {
-					this.chatRoom.chatRoomName = "";
+					this.chatRoom.chatRoomName1 = "";
 					this.selectedMemberList.splice(0);
 					//this.selectedMemberList.push(this.memberId);
 					this.createRoomModal = false;
@@ -247,10 +251,11 @@
 					};
 					this.socket.send(JSON.stringify(data));
 					this.roomInfo.chatRoomNo = "";
-					this.roomInfo.chatRoomName = "";
+					this.roomInfo.chatRoomName1 = "";
+					this.roomInfo.chatRoomName2 = "";
 					this.roomInfo.chatRoomStart = "";
 					this.roomInfo.chatRoomType = "";
-					this.roomInfoCopy.chatRoomName = "";
+					this.roomInfoCopy.chatRoomName1 = "";
 					this.chatMemberList.splice(0);
 					this.messageList.splice(0);
 					this.chatJoin = "";
@@ -268,10 +273,11 @@
 				hideChatRoomModal() {
 					this.chatRoomNo = "";
 					this.roomInfo.chatRoomNo = "";
-					this.roomInfo.chatRoomName = "";
+					this.roomInfo.chatRoomName1 = "";
+					this.roomInfo.chatRoomName2 = "";
 					this.roomInfo.chatRoomStart = "";
 					this.roomInfo.chatRoomType = "";
-					this.roomInfoCopy.chatRoomName = "";
+					this.roomInfoCopy.chatRoomName1 = "";
 					this.chatMemberList.splice(0);
 					this.messageList.splice(0);
 					this.chatJoin = "";
@@ -298,25 +304,12 @@
 					this.selectedMemberList = [];
 					this.inviteMemberModal = false;
 				},
-				
-				// 로그아웃
-				/*logout() {
-					for(let i=0; i<this.chatRoomList.length; i++) {
-						this.joinRoomList.push(this.chatRoomList[i].chatRoomNo);
-					}
-					const data = {
-							type: 9,
-							joinRooms: this.joinRoomList,
-							memberId: this.memberId
-					}
-					this.socket.send(JSON.stringify(data));
-					window.location.href = '${pageContext.request.contextPath}/member/logout';
-				},*/
 				// 로그인한 회원이 속해있는 채팅방 목록
 				async loadRoomList() {
 					const memberId = this.memberId;
 					const url = "${pageContext.request.contextPath}/chat/chatRoom/" + memberId;
 					const resp = await axios.get(url);
+					this.chatRoomList.splice(0);
 					this.chatRoomList.push(...resp.data);
 				},
 				// 팔로우 목록 불러오기
@@ -346,7 +339,7 @@
 						app.messageHandler(e);
 						app.chatRoomList.splice(0);
 						app.loadRoomList();
-						app.chatRoom.chatRoomName = "";
+						app.chatRoom.chatRoomName1 = "";
 						//app.selectedMemberList.push(this.memberId);
 						//app.hideCreateRoomModal();
 						app.createRoomModal = false;
@@ -365,10 +358,11 @@
 					const url = "${pageContext.request.contextPath}/chat/chatRoom/chatRoomNo/" + chatRoomNo;
 					const resp = await axios.get(url);
 					this.roomInfo.chatRoomNo = resp.data.chatRoomNo;
-					this.roomInfo.chatRoomName = resp.data.chatRoomName;
+					this.roomInfo.chatRoomName1 = resp.data.chatRoomName1;
+					this.roomInfo.chatRoomName2 = resp.data.chatRoomName2;
 					this.roomInfo.chatRoomStart = resp.data.chatRoomStart;
 					this.roomInfo.chatRoomType = resp.data.chatRoomType;
-					this.roomInfoCopy.chatRoomName = _.cloneDeep(resp.data.chatRoomName);
+					this.roomInfoCopy.chatRoomName1 = _.cloneDeep(resp.data.chatRoomName1);
 				},
 				// 참여자 정보 불러오기
 				async loadChatMember() {
@@ -381,6 +375,7 @@
 				// 메세지 불러오기
 				async loadMessage() {
 					const chatRoomNo = this.chatRoomNo;
+					this.messageList.splice(0);
 					const url = "${pageContext.request.contextPath}/chat/message/" + chatRoomNo;
 					const resp = await axios.get(url);
 					for(let i=0; i<resp.data.length; i++) {
@@ -402,6 +397,7 @@
 					this.socket.send(JSON.stringify(data));
 					this.clear();
 					this.scrollBottom();
+					//this.loadRoomList();
 				},
 				// 보내는 메세지가 오늘의 첫 메세지인지 확인
 				firstMsg() {
@@ -520,12 +516,12 @@
 				},
 				// 이름 변경 취소
 				cancelChange() {
-					this.roomInfo.chatRoomName = this.roomInfoCopy.chatRoomName;
+					this.roomInfo.chatRoomName1 = this.roomInfoCopy.chatRoomName1;
 					this.roomInfo.edit = false;
 				},
 				// 채팅방 이름 변경
 				async saveRoomName() {
-					if(this.roomInfo.chatRoomName.length > 10) return;
+					if(this.roomInfo.chatRoomName1.length > 10) return;
 					const chatRoomNo = this.chatRoomNo;
 					const url = "${pageContext.request.contextPath}/chat/chatRoom/changeName";
 					const data = this.roomInfo;
@@ -538,12 +534,6 @@
 					this.socket.send(JSON.stringify(data2));
 					this.roomInfo.edit = false;
 				},
-				// 팔로우 목록 불러오기 - 위에 중복코드 있음
-				/*async loadFollowList() {
-					const url = "${pageContext.request.contextPath}/chat/chatRoom/follow/";
-					const resp = await axios.get(url);
-					this.followList.push(...resp.data);
-				},*/
 				// 사용자 초대
 				async inviteMember() {
 					const chatRoomNo = this.chatRoomNo;
@@ -579,6 +569,7 @@
 					if(index == 0) return false;
 					const prevMsg = this.messageList[index-1];
 					const thisMsg = this.messageList[index];
+					if(prevMsg.chatMessageType != 1 && prevMsg.chatMessageType != 4) return false;
 					if(prevMsg.memberId != thisMsg.memberId) return false;
 					if(this.timeFormat(prevMsg.chatMessageTime) != this.timeFormat(thisMsg.chatMessageTime)) return false;
 					return true;
@@ -597,7 +588,7 @@
 					return this.selectedMemberList.length;
 				},
 				nameCount() {
-					return this.chatRoom.chatRoomName.length;
+					return this.chatRoom.chatRoomName1.length;
 				},
 				filteredFollowList() {
 					return this.followList.filter(follow => 
