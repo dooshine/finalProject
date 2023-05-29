@@ -33,4 +33,33 @@
 			WHERE p.post_type != '펀딩'
 	</select>
 
+    <!-- 통합 게시물 무한 스크롤 구현 -->
+    	<!-- SQL 구문 조각 생성 -->
+	<sql id="topNheader">
+		select * from (
+			select rownum rn, TMP.* from (
+	</sql>
+	
+	<sql id="topNfooter">
+			)TMP
+		) where rn between #{begin} and #{end}
+	</sql>
+	
+	<!-- 무한스크롤 페이징 목록 -->
+	<select id="infinite" resultType="PostDto">
+		<include refid="topNheader"></include>
+		select p.*, sp.schedule_start, sp.schedule_end,
+            tp.together_start, tp.together_end,
+            m.map_place, mb.member_nick , mpi.attachment_no
+			from post p 
+			full outer join schedule_post sp on p.post_no = sp.post_no
+			Left outer join together_post tp on p.post_no = tp.post_no
+			Left outer join map m on p.post_no = m.post_no
+			Left OUTER JOIN member mb ON p.member_id = mb.member_id
+			Left OUTER JOIN member_profile_image mpi ON p.member_id = mpi.member_id
+			WHERE p.post_type != '펀딩'
+		<include refid="topNfooter"></include>
+	</select>
+    <!-- 통합 게시물 무한 스크롤 구현 -->
+
 </mapper> 

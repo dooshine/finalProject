@@ -40,7 +40,7 @@
 <!--    	</script>  -->
 	
 
-	<div class="container-fluid" id="app" test>
+	<div class="container-fluid" id="app">
 		
 		<!----------- 글쓰기 버튼 ------------>
 	    <div class="bg-white mb-2 p-4 rounded-4">
@@ -505,34 +505,89 @@
 		                		<hr class="mt-2" style="width:100%;">		                
 		                	</div>
 		                	
-		                	<!-- 댓글 보여주는 창 -->
+		                	<!-- 댓글, 대댓글 보여주는 창 -->
 		                	<div class="row" v-if="post.replyList.length >= 1">
-								<div class="d-flex align-items-center justify-content-center mb-1" v-for="reply in post.replyList">
-										                	
-			                		<div class="col-2 text-center ">
-			                			<div class="row w-50 h-50 text-center m-auto">
-			                				<img class="img-fluid rounded-circle " src="static/image/profileDummy.png">
-			                			</div>
-			                			<div class="row w-50 h-50 text-center m-auto">
-			                				<h6 class="fs-7">{{reply.replyId}}</h6>
-			                			</div>
+								<div v-for="(reply,replyIdx) in post.replyList" :key="replyIdx">
+									<!-- 댓글 표시 -->
+									<div class="d-flex align-items-center justify-content-center mb-1" v-if="reply.replyNo == reply.replyGroupNo">
+										
+				                		<div class="col-2 text-center ">
+				                			<div class="row w-50 h-50 text-center m-auto">
+				                				<img class="img-fluid rounded-circle " src="static/image/profileDummy.png">
+				                			</div>
+				                			<div class="row w-50 h-50 text-center m-auto">
+				                				<h6 class="fs-7">{{reply.replyId}}</h6>
+				                			</div>
+				                		</div>
+				                		
+				                		<div class="col-9">
+				                			<div class="row">
+				                				<h6>{{reply.replyContent}}</h6>
+				                			</div>
+				                			<div class="row d-flex flex-nowrap">
+<!-- 				                				<h6 class="col-1 text-start reply-text" style="white-space: nowrap;">좋아요 </h6> -->
+				                				<h6 class="col-1 text-start reply-text" @click="showRereplyInput(post.postNo,reply.replyNo),hideReplyInput()" style="white-space: nowrap;">댓글 달기</h6>	
+				                			</div>			                			
+				                		</div>
 			                		</div>
+			                		<!-- 댓글 표시 -->
 			                		
-			                		<div class="col-9">
-			                			<div class="row">
-			                				<h6>{{reply.replyContent}}</h6>
-			                			</div>
-			                			<div class="row d-flex flex-nowrap">
-			                				<h6 class="col-1 text-start reply-text" style="white-space: nowrap;">좋아요 </h6>
-			                				<h6 class="col-1 text-start reply-text"  style="white-space: nowrap;">댓글 달기</h6>	
-			                			</div>			                			
-			                		</div>
+			                		<!-- 대댓글 표시 -->
+			                		<div v-for="(rereply,rereplyIdx) in post.replyList.slice(replyIdx+1)" :key='rereplyIdx'>			                							                				             				
+			                				<!-- 대댓글이 들어갈 조건 -->
+				                			<div v-if="reply.replyNo === rereply.replyGroupNo"><!-- 특정 댓글의 그룹번호가 특정 댓글번호와 일치할 때, -->				                				
+				                				<!-- 대댓글 들 -->
+				                				<div class="row ">
+				                					<div class="col-2">
+				                					</div>
+				                					<div class="col-2 text-center">
+				                						<div class="row w-50 h-50 text-center m-auto">
+					                						<img class="img-fluid rounded-circle " src="static/image/profileDummy.png">
+					                					</div>
+							                			<div class="row w-50 h-50 text-center m-auto">
+							                				<h6 class="fs-7">{{rereply.replyId}}</h6>
+							                			</div>
+				                					</div>
+				                					<div class="col-7">
+				                						<h6>{{rereply.replyContent}}</h6>
+				                					</div>
+				                				</div>
+				                				<!-- 대댓글 들 -->
+				                			</div>
+				                			<!-- 대댓글이 들어갈 조건 -->
+				                	</div>
+				                	
+				                	<!-- 대댓글 작성 창 -->
+		                			<div v-if=" post.postNo === tempPostNo && reply.replyNo === tempReplyNo">
+		                				<div class="row">
+		                					<div class="col-2">
+		                					</div>
+		                					<div class="col-2 text-center">
+		                						<div class="row w-50 h-50 text-center m-auto">
+			                						<img class="img-fluid rounded-circle " src="static/image/profileDummy.png">
+			                					</div>
+					                			<div class="row w-50 h-50 text-center m-auto">
+					                				<h6 class="fs-7">${memberId }</h6>
+					                			</div>
+		                					</div>
+		                					<div class="col-7">
+		                						<input type="text" v-model="rereplyContent" class="w-100 rounded-4 border border-secondary ">
+		                					</div>
+		                					<div class="col-1">
+		                						<i class="fs-2 text-primary ti ti-arrow-badge-right-filled" @click="rereplySending(post.postNo,reply.replyNo,index)"></i>
+		                					</div>
+		                				</div>
+		                			</div>
+				                	<!-- 대댓글 작성 창 -->
+				                	
+				                	<!-- 대댓글 표시 -->
 							    </div> 								             		
 		                	</div>
-		                	<!-- 댓글 보여주는 창 -->
+		                	<!-- 댓글, 대댓글 보여주는 창 -->
 		                	
 		                	<!-- 댓글 작성창  -->
-		                	<div class="row" v-if="replyFlagList[index]">
+							<!-- 댓글 작성버튼 눌렸을 때만 나오게됨 -->
+		                	<div class="row" v-if="replyFlagList[index]"> 
 		                		<div class="col-1">
 		                			<img class="rounded-circle img-fluid" src="static/image/profileDummy.png">
 		                		</div>
@@ -571,8 +626,7 @@
                 
        	 </div>
        	 <!--------------- 게시물들 반복구간 ------------->
-       	 
-      
+
 	</div>
 
     <!-- Vue.createApp구간 -->
@@ -594,6 +648,15 @@
                 	
                 	// 댓글 작성 글자 
                 	replyContent: '',
+                	
+                	// 대댓글 작성 여부 체크용 배열
+                	tempPostNo:null ,
+                	tempReplyNo:null ,
+                	
+                	// 대댓글 작성 글자
+                	rereplyContent: '', 
+                	
+                	sessionId : null,
                 };
             },
             computed:{  
@@ -601,8 +664,8 @@
             },
             methods:{
 				// 모든 게시글 불러오기 
-                fetchPosts: function() {
-	                axios.get('http://localhost:8080/rest/post/all')
+                async fetchPosts() {
+	                await axios.get('http://localhost:8080/rest/post/all')
 	                    .then(response => {
 	                    	// 전체 게시글 데이터 가져오기
 	                        this.posts = response.data;
@@ -680,8 +743,8 @@
                 async replySending(postNo,index){
                 	try{
                 		const replyDto = {postNo: postNo, replyContent:this.replyContent};
-                    	const response = axios.post('http://localhost:8080/rest/post/reply/',replyDto);
-                    	console.log(response.data);
+                    	const response = await axios.post('http://localhost:8080/rest/post/reply/',replyDto);
+                    	this.fetchPosts();
                     }
                 	catch (error){
                 		console.error(error);
@@ -700,6 +763,36 @@
                 	this.replyFlagList[index] = false;
                 },
                 
+                // 대댓글 전송 버튼 클릭 시 
+                async rereplySending(postNo,replyNo,index){
+                	try{
+                		const replyDto = {postNo: postNo, replyContent:this.rereplyContent, replyGroupNo: replyNo};
+                    	const response = await axios.post('http://localhost:8080/rest/post/rereply/',replyDto);
+                    	this.fetchPosts();
+                    }
+                	catch (error){
+                		console.error(error);
+                	}
+                	
+                	this.hideRereplyInput();
+                },
+                
+//             	// 대댓글 쓰기 창 띄우기 (다른 창들은 모두 닫음)
+                showRereplyInput(postNo,replyNo){
+					this.rereplyContent = ''; 
+					this.tempPostNo = postNo;
+					this.tempReplyNo = replyNo;
+					console.log(postNo);
+                	console.log(replyNo);
+                },
+                
+                hideRereplyInput(){
+                	this.rereplyContent = '';
+                	this.tempPostNo = null;
+                	this.tempReplyNo = null;
+                },
+                
+              
                 // 댓글 창 관련 클릭 함수 -------------------------------
              	
                 
@@ -766,6 +859,7 @@
             mounted() {
                 // 게시글 불러오기
                 this.fetchPosts();
+                
             },
         }).mount("#app");
     </script>
