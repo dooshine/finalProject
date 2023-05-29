@@ -123,11 +123,7 @@
 
 
 		  <div id="app">
-
-	    
         		 <div class="container rounded p-3" style="background-color:white;">
-        		 
-        		 
 	
 					  <div class="funding-list justify-content-center mt-5">
 					  
@@ -141,7 +137,9 @@
 					      </div>
 					      <div class="info">
 					        <div>
-			<span style="font-weight:bold">{{ (funding.totalPrice / funding.fundGoal * 100).toFixed(1) }}</span>%
+							<span style="font-weight:bold">
+							{{ (funding.totalPrice / funding.fundGoal * 100).toFixed(1) }}
+							</span>%
 					          <span class="fund_span">{{ formatCurrency(funding.totalPrice) }}</span>원
 					        </div>
 					        <div>
@@ -153,10 +151,6 @@
 					</div>
 					
 				</div>	
-				
-				
-				
-				
   					
 		<script src="https://unpkg.com/vue@3.2.36"></script>
 	    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>

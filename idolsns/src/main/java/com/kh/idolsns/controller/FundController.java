@@ -26,6 +26,7 @@ import com.kh.idolsns.dto.FundMainImageDto;
 import com.kh.idolsns.dto.FundPostDto;
 import com.kh.idolsns.dto.PostDto;
 import com.kh.idolsns.dto.PostImageDto;
+import com.kh.idolsns.dto.TagDto;
 import com.kh.idolsns.repo.AttachmentRepo;
 import com.kh.idolsns.repo.FundMainImageRepo;
 import com.kh.idolsns.repo.FundPostImageRepo;
@@ -34,6 +35,7 @@ import com.kh.idolsns.repo.FundRepo;
 import com.kh.idolsns.repo.MemberRepo;
 import com.kh.idolsns.repo.PostImageRepo;
 import com.kh.idolsns.repo.PostRepo;
+import com.kh.idolsns.repo.TagRepo;
 import com.kh.idolsns.vo.SearchVO;
 
 @Controller
@@ -44,6 +46,8 @@ public class FundController {
 	@Autowired
 	private MemberRepo memberRepo;
 	
+	@Autowired
+	private TagRepo tagRepo;
 	
 	@Autowired
 	private PostRepo postRepo;
@@ -220,6 +224,7 @@ public class FundController {
 							HttpSession session,
 							@ModelAttribute FundPostDto fundPostDto,
 							@ModelAttribute PostDto postDto,
+							@ModelAttribute TagDto tagDto,
 							@RequestParam MultipartFile attach,
 							@RequestParam(required=false) List<Integer> attachmentNo,
 							RedirectAttributes attr
@@ -237,7 +242,6 @@ public class FundController {
         // 3. 통합게시물 게시물종류 설정(Fix!!)
         postDto.setPostType("펀딩");
         
-        System.out.println("-----------------이게 postDto-----------------" + postDto);
         // 4. 통합게시물 등록
         postRepo.insert(postDto);
 
@@ -248,9 +252,19 @@ public class FundController {
         // 2. 펀딩게시물 작성자
         fundPostDto.setMemberId(memberId);
         
-        System.out.println("-----------------이게 fundPostDto-----------------" + fundPostDto);
         // 3. 펀딩게시물 등록
 		fundPostRepo.insert(fundPostDto);
+		
+		// # 태그 등록
+		// 1. 통합게시물 번호 시퀀스 설정
+		tagDto.setPostNo(postNo);
+		
+		// 2. 태그 시퀀스 설정
+		Long tagNo = tagRepo.sequence();
+		tagDto.setTagNo(tagNo);
+		
+		// 3. 태그 타입 설정
+		
 		
 		// # DB 저장
 		if(!attach.isEmpty()) {

@@ -143,8 +143,6 @@
 				</div>
 	        	<div v-else>
 	        		{{ reply.replyContent }}
-	        		replyNo : {{ reply.replyNo }}
-	        		groupNo: {{ reply.replyGroupNo }}	
 	        		<!-- 대댓글 버튼 -->
 		        	<button v-if="reply.replyNo == reply.replyGroupNo" 
 		        			@click="showRereplyForm(i)">
@@ -177,8 +175,6 @@
 				</div>
 				<div v-else>
 					→ {{reply.replyId}} : {{ reply.replyContent }}
-					replyNo : {{ reply.replyNo }}
-					groupNo: {{ reply.replyGroupNo }}
 	        		<!-- 대댓글 버튼 -->
 		        	<button v-if="reply.replyNo == reply.replyGroupNo" 
 		        			@click="showRereplyForm(i)">
