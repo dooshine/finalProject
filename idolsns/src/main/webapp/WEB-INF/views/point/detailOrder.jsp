@@ -72,7 +72,7 @@
     methods: {
       async loadOrderDetail() {
         try {
-          const url = "/rest/order/" + this.fundNo;
+          const url = "/rest/fund/order/" + this.fundNo;
           const response = await axios.get(url);
           this.fundDto = response.data;
           } catch (error) {
