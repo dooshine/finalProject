@@ -122,18 +122,94 @@
 			</div>
 					
 		</div>
-	</div>             
-	<hr>
+		</div>             
+		<hr>
 	
 	  <h3>댓글</h3>
-	  <div v-if="replies.length === 0">댓글이 없습니다.</div>
+	  <div v-if="replies.length == 0">댓글이 없습니다.</div>
 	  <div v-else>
-	    <ul>
-	      <li v-for="reply in replies" :key="reply.replyNo">
-	        <div>{{ reply.replyId }}: {{ reply.replyContent }}</div>
-	      </li>
-	    </ul>
-	  </div>
+	      <div v-for="(reply, i) in replies" :key="reply.replyNo">
+	         
+	        <!-- 최상위 댓글이면 -->
+	        <div v-if="reply.replyNo == reply.replyGroupNo">
+	        	<div>{{ reply.replyId }}:</div>
+		        	
+	        	<!-- 수정 폼 -->
+	        	<div v-if="updateReplyObj.index == i">
+			    	<textarea @blur="setUpdateReplyObj($event, i)" 
+			    	placeholder="수정 내용">{{ reply.replyContent }}</textarea>
+				    <button @click="saveUpdate(i)">저장</button>
+				    <button @click="cancelUpdate()">취소</button>
+				</div>
+	        	<div v-else>
+	        		{{ reply.replyContent }}
+	        		replyNo : {{ reply.replyNo }}
+	        		groupNo: {{ reply.replyGroupNo }}	
+	        		<!-- 대댓글 버튼 -->
+		        	<button v-if="reply.replyNo == reply.replyGroupNo" 
+		        			@click="showRereplyForm(i)">
+		        		<i class="fa-solid fa-reply"></i>
+					</button>
+					<!-- 수정 버튼 -->
+		        	<button v-if="reply.replyId == replyObj.replyId"
+							@click="showUpdateForm(i)">
+		        		<i class="fa-solid fa-edit"></i>
+		        	</button>
+		        	<!-- 삭제 버튼 -->
+		        	<button v-if="reply.replyId == replyObj.replyId"
+							@click="deleteReply(i)">
+						<i class="fa-solid fa-trash-alt"></i>
+					</button>	
+	        	</div>
+	        	
+	        </div>
+	        
+	        <!-- 대댓글이면 -->
+	        <div v-else>
+	        
+	        	<!-- 수정 폼 -->
+	        	<div v-if="updateReplyObj.index == i">
+	        		→ {{reply.replyId}} :<br>
+			    	<textarea @blur="setUpdateReplyObj($event, i)" 
+			    	placeholder="수정 내용">{{ reply.replyContent }}</textarea>
+				    <button @click="saveUpdate(i)">저장</button>
+				    <button @click="cancelUpdate()">취소</button>
+				</div>
+				<div v-else>
+					→ {{reply.replyId}} : {{ reply.replyContent }}
+					replyNo : {{ reply.replyNo }}
+					groupNo: {{ reply.replyGroupNo }}
+	        		<!-- 대댓글 버튼 -->
+		        	<button v-if="reply.replyNo == reply.replyGroupNo" 
+		        			@click="showRereplyForm(i)">
+		        		<i class="fa-solid fa-reply"></i>
+					</button>
+					<!-- 수정 버튼 -->
+		        	<button v-if="reply.replyId == replyObj.replyId"
+							@click="showUpdateForm(i)">
+		        		<i class="fa-solid fa-edit"></i>
+		        	</button>
+		        	<!-- 삭제 버튼 -->
+		        	<button v-if="reply.replyId == replyObj.replyId"
+							@click="deleteReply(i)">
+						<i class="fa-solid fa-trash-alt"></i>
+					</button>	
+				</div>
+	        </div>
+	        
+	        <!-- 대댓글 폼 -->
+	        <div v-if="reReplies[i] == true">
+	        	<textarea @blur="setReReplyObj($event, i)" placeholder="대댓글 내용"></textarea>
+	        	<button @click="addReReply(i)">작성</button>
+	        	<button @click="reReplies[i] = false">취소</button>
+	        </div>
+	        
+	      </div>
+ 	 </div>
+ 	 
+ 	 <hr>
+ 	 
+	  	<!-- 새댓글 폼 -->
 	  	<form @submit.prevent="addReply">
 	    <div>
 	      <input type="hidden" v-model="replyObj.replyId" required>
@@ -146,6 +222,7 @@
 	      <button type="submit">댓글 작성</button>
 	    </div>
     	</form>
+    	
 	</div>
 	
 				
@@ -185,11 +262,27 @@
 		          fundTotal: "",
 		        },
 		        replies: [],
+		        // 댓글창 보여주기
+		        reReplies: [],
+		        reRepliesObjList: [],
 		        replyObj: {
 		          replyId: memberId,
 		          replyContent: "",
 		          postNo:"",
-		        }
+		        },
+		        // 대댓글 객체
+		        reReplyObj: {
+		          replyId: memberId,
+		          replyContent: "",
+		          postNo:"",
+		          replyGroupNo: "",
+			        },
+			    // 수정댓글 객체
+			   	updateReplyObj: {
+				  index: -1,
+				  replyNo: "",
+				  replyContent: "",
+			   	}
 		      };
 		    },
 		    computed: {
@@ -223,7 +316,6 @@
 			    async loadFundPosts(){
 			    	const postNo = this.fundDetail.postNo;
 					const resp = await axios.get("http://localhost:8080/rest/fund/"+postNo)	  
-					console.log(resp);
 					this.fundDetail = { ...this.fundDetail, ...resp.data };
         		},
         		// postNo의 attachmentNo list 불러오기 
@@ -236,7 +328,6 @@
         		async loadFundVO(){
 			    	const postNo = this.fundDetail.postNo;
 					const resp = await axios.get("http://localhost:8080/rest/fund/fundlist/"+postNo)	  
-					console.log(resp);
 					this.fundDetail.fundTotal = resp.data.fundTotal;
 					this.fundDetail.fundSponsorCount = resp.data.fundSponsorCount;
         		},
@@ -255,15 +346,85 @@
 	          	async loadReplies() {
 	                const postNo = this.fundDetail.postNo; // 게시물 번호
 	                const resp = await axios.get("http://localhost:8080/rest/reply/fund/"+postNo);
-	                this.replies.push(...resp.data); // Vue data에 저장
+	                this.replies = resp.data; // Vue data에 저장
 	              },
 	            // 작성한 comment 서버로 전송
                 async addReply() {
 	            	if(this.replyObj.replyId == "") return;
+	              this.replyObj.postNo = this.fundDetail.postNo;
 				  const resp = await axios.post("http://localhost:8080/rest/reply/fund", 
 						  										this.replyObj);
 				  this.replyObj.replyContent = ""; // 내용 초기화
 				  this.loadReplies(); // 댓글목록 다시 불러옴
+				},
+				// 대댓글 작성
+                async addReReply(i) {
+	            	if(this.reRepliesObjList[i].replyId == "") return;
+				   	const resp = await axios.post("http://localhost:8080/rest/reply/fund", 
+						  										this.reRepliesObjList[i]);
+				   // 댓글창 지우기 
+				   this.reReplies[i] = false
+				   this.loadReplies(); // 댓글목록 다시 불러옴
+				},
+				
+				// 대댓글Obj 데이터 반영
+				setReReplyObj(event, index){
+					const reReplyObj = {
+							 replyId: memberId,
+					         replyContent: "",
+					         postNo:"",
+					         replyGroupNo: "",
+					}
+					// 대댓글 펀딩게시물 번호 설정					
+					reReplyObj.postNo = this.fundDetail.postNo;
+					// 대댓글 내용 설정
+// 					this.reReplyObj.replyContent = event.target.value;
+					reReplyObj.replyContent = event.target.value;
+					// 대댓글 그룹 설정
+// 					this.reReplyObj.replyGroupNo = parentReplyNo;
+					reReplyObj.replyGroupNo = this.replies[index].replyGroupNo;
+					console.table(reReplyObj);
+					this.reRepliesObjList[index] = reReplyObj;
+				},
+				// 댓글 삭제
+				async deleteReply(i){
+					const replyNo = this.replies[i].replyNo;
+					const resp = await axios.delete("http://localhost:8080/rest/reply/fund/"+replyNo);
+					this.loadReplies();
+				},
+				
+				// 수정하려는 댓글의 인덱스와 내용을 updateReply객체에 저장 
+				setUpdateReplyObj($event, i) {
+					this.reReplies[i] = false // 켜져있는 대댓글 작성폼 닫기
+					this.updateReplyObj.index = i;
+					this.updateReplyObj.replyNo = this.replies[i].replyNo;
+					this.updateReplyObj.replyContent = event.target.value;
+				},
+				// 댓글 수정
+				async saveUpdate(i) {
+					// 수정된 댓글 서버로 전송 
+					const resp = await axios.put("http://localhost:8080/rest/reply/fund/", 
+													this.updateReplyObj);
+					// 수정된 데이터 저장 
+					this.replies[i].replyContent = this.updateReplyObj.replyContent;
+					// 수정폼 닫기
+					this.cancelUpdate();
+				},
+				cancelUpdate() {
+					// 수정 폼 닫고 updatedReply 객체 초기화 
+					this.updateReplyObj.index = -1;
+					this.updateReplyObj.replyNo = "";
+					this.updateReplyObj.replyContent = "";
+				},
+				// 대댓글 폼 보여주기 & 수정 폼 숨기기
+				showRereplyForm(i) {
+					this.reReplies[i] = true
+					this.cancelUpdate();
+				},
+				// 수정 폼 보여주기 & 대댓글 폼 숨기기
+				showUpdateForm(i) {
+					this.updateReplyObj.index = i
+					this.reReplies[i] = false;
 				}
 		      	
 		    },
@@ -273,7 +434,6 @@
 		    	  this.loadAttachNos();
 		    	  this.loadFundVO();
 		    	  this.loadReplies();
-		    	  this.replyObj.postNo = this.fundDetail.postNo;
 		    	},
 		    mounted() {
 		    	}
