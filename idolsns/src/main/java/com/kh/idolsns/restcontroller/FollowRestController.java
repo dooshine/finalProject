@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.kh.idolsns.dto.FollowDto;
 import com.kh.idolsns.dto.MemberFollowCntDto;
+import com.kh.idolsns.dto.MemberFollowInfoDto;
 import com.kh.idolsns.service.FollowService;
 
 @CrossOrigin
@@ -129,8 +130,19 @@ public class FollowRestController {
     // 모든 회원 팔로우 통계 얻기
     @GetMapping("/memberFollowCnt")
     public List<MemberFollowCntDto> selectMemberFollowCnt(@RequestParam(required = false, defaultValue="") String memberId){
-        System.out.println("memberId: " + memberId);
         return sqlSession.selectList("follow.selectMemberFollowCnt", memberId);
     } 
     // 특정 회원 팔로우 통계 얻기
+
+
+
+
+
+    // 특정회원 팔로우 정보 불러오기
+    @GetMapping("/memberFollowInfo")
+    public MemberFollowInfoDto selectMemberFollowInfo(@RequestParam String memberId){
+        MemberFollowInfoDto dto = sqlSession.selectOne("follow.selectMemberFollowInfo", memberId);
+        System.out.println(dto.toString());
+        return dto;
+    }
 }

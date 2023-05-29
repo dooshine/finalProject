@@ -1,7 +1,8 @@
 -- 채팅방
 CREATE TABLE chat_room(
 	chat_room_no NUMBER PRIMARY KEY,
-	chat_room_name varchar2(60),
+	chat_room_name1 varchar2(60),
+	chat_room_name2 varchar2(60),
 	chat_room_start DATE DEFAULT sysdate NOT NULL,
 	chat_room_type char(1) NOT NULL
 );

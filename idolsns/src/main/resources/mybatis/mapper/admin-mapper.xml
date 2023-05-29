@@ -41,10 +41,17 @@
         delete from tag where tag_name = #{tagName}
     </delete>
 
-    <!-- # 대표 페이지 -->
-    <select id="artistViewSelectOne" resultType="ArtistViewDto">
+
+
+    <!-- # 대표페이지  -->
+    <!-- 대표페이지 생성 -->
+    <insert id="insertArtist">
+        insert into artist (artist_no, artist_name) values (artist_seq.nextval, #{artistName})
+    </insert>
+    <!-- 대표페이지 목록 조회 -->
+    <select id="selectArtistView" resultType="ArtistViewDto">
         select * from artist_view 
-          where artist_name = #{artistName}
+          <!-- where artist_name = #{artistName} -->
     </select>
 
 </mapper>
