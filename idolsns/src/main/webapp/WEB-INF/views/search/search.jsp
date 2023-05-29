@@ -61,11 +61,13 @@
         </thead>
         <tbody>
           <tr v-for="(memberSearch, i) in memberSearchList" :key="i">
-            <td>{{memberSearch.attachmentNo ?? "없슈"}}</td>
+            <!-- <td>{{memberSearch.attachmentNo ?? "없슈"}}</td> -->
+            <td>
+              <img :src="memberSearch.attachmentNo === 0 ? '/static/image/profileDummy.png' : '/download/?attachmentNo=' + memberSearch.attachmentNo ">
+            </td>
             <td><a :href="'/artist/'+memberSearch.memberId">{{fullName(memberSearch.memberId, memberSearch.memberNick)}}</a></td>
             <td>
-              <!-- <button class="btn rounded-pill" :class="{'btn-primary':!memberSearch.isFollowPage, 'btn-secondary': memberSearch.isFollowPage}"  v-text="memberSearch.isFollowPage?'팔로우취소':'팔로우하기'" @click="followPage(memberSearch)">팔로우하기</button> -->
-              <button>팔로우하기</button>
+              <button class="btn rounded-pill" :class="{'btn-primary':!memberSearch.isFollowMember, 'btn-secondary': memberSearch.isFollowMember}"  v-text="memberSearch.isFollowMember?'팔로우취소':'팔로우하기'" @click="followMember(memberSearch)">팔로우하기</button>
             </td>
           </tr>
         </tbody>
@@ -80,7 +82,11 @@
       data() {
         return {
           // 로그인 회원 팔로우 목록 조회
-          memberFollowObj: {},
+          memberFollowObj: {
+            memberId: "",
+            followMemberList: [],
+            followPageList: [],
+          },
           // 대표페이지 검색목록
           artistSearchList: [],
           // 회원 검색목록
@@ -89,7 +95,7 @@
 
 
 
-          followPageObj: {
+          followObj: {
             memberId: memberId,
             followTargetType: "",
             followTargetPrimaryKey: "",
@@ -174,38 +180,76 @@
                 await this.deleteFollow();
             } else {
                 this.setFollowPageObj(artistSearch.artistEngNameLower);
-                await this.createFollowPage();
+                await this.createFollow();
             }
 
             await this.loadMemberFollowInfo();
             this.loadArtistSearchList();
         },
+        // 회원 팔로우 버튼
+        async followMember(memberSearch){
+            // 1. 회원 로그인 확인
+            if(memberId === ""){
+                if(confirm("로그인 한 회원만 사용할 수 있는 기능입니다. 로그인 하시겠습니까?")) {
+                    window.location.href = contextPath + "/member/login";
+                }
+            }
+
+            // artistEngNameLower
+            // 2. toggle 팔로우 삭제, 팔로우 생성
+            const isFollowingMember = memberSearch.isFollowMember;
+            if(isFollowingMember){
+                if(!confirm(this.fullName(memberSearch.memberId, memberSearch.memberNick) + "님 팔로우를 취소하시겠습니까?")) return;
+                this.setFollowMemberObj(memberSearch.memberId);
+                await this.deleteFollow();
+            } else {
+                this.setFollowMemberObj(memberSearch.memberId);
+                await this.createFollow();
+            }
+
+            await this.loadMemberFollowInfo();
+            this.loadMemberSearchList();
+        },
 
         // 대표페이지 팔로우 대상 설정
         setFollowPageObj (artistName){
             // 팔로우 대상 유형
-            this.followPageObj.followTargetType = "대표페이지";
+            this.followObj.followTargetType = "대표페이지";
             // 팔로우 대상 PK
-            this.followPageObj.followTargetPrimaryKey = artistName;
+            this.followObj.followTargetPrimaryKey = artistName;
+        },
+        // 회원 팔로우 대상 설정
+        setFollowMemberObj (followMemberId){
+            // 팔로우 대상 유형
+            this.followObj.followTargetType = "회원";
+            // 팔로우 대상 PK
+            this.followObj.followTargetPrimaryKey = followMemberId;
+        },
+        // 회원 팔로우 대상 설정
+        setFollowMemberObj (followMemberId){
+            // 팔로우 대상 유형
+            this.followObj.followTargetType = "회원";
+            // 팔로우 대상 PK
+            this.followObj.followTargetPrimaryKey = followMemberId;
         },
 
         // 대표페이지 팔로우 생성
-        async createFollowPage(){
+        async createFollow(){
             // 팔로우 생성 url
             const url = "http://localhost:8080/rest/follow/";
-            await axios.post(url, this.followPageObj);
+            await axios.post(url, this.followObj);
             // [develope] 
-            console.log(this.followPageObj.memberId + "님의 " + this.followPageObj.followTargetPrimaryKey + "님 팔로우 생성");
+            console.log(this.followObj.memberId + "님의 " + this.followObj.followTargetPrimaryKey + "님 팔로우 생성");
         },
         // 대표페이지 팔로우 취소
         async deleteFollow(){
             // 팔로우 생성 url
             const url = "http://localhost:8080/rest/follow/";
             await axios.delete(url, {
-                data: this.followPageObj,
+                data: this.followObj,
             });
             // [develope]
-            console.log(this.followPageObj.memberId + "님의 " + this.followPageObj.followTargetPrimaryKey + "님 팔로우 제거");
+            console.log(this.followObj.memberId + "님의 " + this.followObj.followTargetPrimaryKey + "님 팔로우 제거");
         },
 
 
@@ -219,8 +263,18 @@
           const url = "http://localhost:8080/rest/search/member";
           // 조회
           const resp = await axios.get(url, { params: {memberId: q}});
+        
+          // 데이터 반영
+          this.memberSearchList = resp.data;
 
-          console.log(resp.data);
+
+          // 회원팔로우 여부 저장
+          for(let i = 0; i<this.memberSearchList.length; i++){
+            const followMemberId = this.memberSearchList[i].memberId;
+            console.log(this.memberFollowObj.followMemberList.includes(followMemberId));
+            this.memberSearchList[i].isFollowMember = this.memberFollowObj.followMemberList.includes(followMemberId);
+          }
+          // console.log(resp.data);
         },
 
 

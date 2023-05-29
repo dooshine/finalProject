@@ -16,10 +16,10 @@
 
     <!-- # 회원 프로필사진 resultMap -->
     <resultMap type="SearchMemberDto" id="smbdto">
-        <result property="memberId" column="member_id" />
+        <result property="memberId" column="member_id"/>
         <result property="memberNick" column="member_nick"/>
 
-        <association property="attachmentNo" column="member_id" javaType="java.lang.String" select="selectMemberProfileImage"/>
+        <association property="attachmentNo" column="member_id" javaType="java.lang.Integer" select="selectMemberProfileImage"/>
     </resultMap>
     <!-- 로그인회원 팔로우 정보 불러오기 -->
     <select id="selectSearchMember" resultMap="smbdto">
@@ -33,7 +33,7 @@
         </where>
     </select>
     <!-- (서브구문) 회원 프로필 이미지 -->
-    <select id="selectMemberProfileImage" resultType="String">
+    <select id="selectMemberProfileImage" resultType="Integer">
         select attachment_no from member_profile_image 
         where member_id = #{memberId}
     </select>
