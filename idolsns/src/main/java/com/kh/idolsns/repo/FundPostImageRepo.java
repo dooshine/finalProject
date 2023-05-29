@@ -12,4 +12,6 @@ public interface FundPostImageRepo {
 	FundDetailVO selectOne(Long postNo);
 	List<FundPostImageDto> selectList();
 	List<FundDto> selectFundList(Long postNo);
+	
+	List<FundPostImageDto> selectListByPaging(int page);
 }
