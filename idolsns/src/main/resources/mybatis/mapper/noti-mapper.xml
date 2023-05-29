@@ -15,6 +15,14 @@
 		insert into noti(noti_no, member_id, noti_type, noti_time)
 		values(#{notiNo}, #{memberId}, #{notiType}, sysdate)
 	</insert>
+	
+	<!-- 알림 삭제 -->
+	<delete id="delete">
+		delete noti where noti_no in
+		<foreach collection="list" item="notiNo" open="(" close=")" separator=",">
+			#{notiNo}
+		</foreach>
+	</delete>
 
 </mapper>
     

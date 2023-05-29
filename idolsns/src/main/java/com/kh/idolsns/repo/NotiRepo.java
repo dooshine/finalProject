@@ -5,5 +5,6 @@ public interface NotiRepo {
 
 	void insert(NotiDto dto);
 	int sequence();
+	void delete(int notiNo);
 	
 }

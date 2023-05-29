@@ -137,7 +137,12 @@
 					joinRoomList: [],
 					
 					// 메세지 삭제 버튼 관련
-					showDeleteButtonIndex: -1
+					showDeleteButtonIndex: -1,
+					
+					// 새 메세지 알림 여부
+					newChatNoti: false,
+					//newChatRoomNoti: false,
+					chatRoomNoList: []
 				};
 			},
 			methods: {
@@ -161,23 +166,11 @@
 				},
 				openHandler() {
 					this.loadJoinRooms();
+					this.loadChatNoti();
 				},
 				closeHandler() {
 				},
 				errorHandler() {
-				},
-				loadJoinRooms() {
-					this.joinRoomList = [];
-					this.loadRoomList();
-					for(let i=0; i<this.chatRoomList.length; i++) {
-						this.joinRoomList.push(this.chatRoomList[i].chatRoomNo);
-					}
-					const data = {
-							type: 7,
-							joinRooms: this.joinRoomList,
-							memberId: this.memberId
-					}
-					this.socket.send(JSON.stringify(data));
 				},
 				messageHandler(e) {
 					const parsedData = JSON.parse(e.data);
@@ -207,6 +200,46 @@
 					this.loadRoomList();
 					this.scrollBottom();
 				},
+				// 참여중인 방 정보 가져오기
+				loadJoinRooms() {
+					this.joinRoomList = [];
+					this.loadRoomList();
+					for(let i=0; i<this.chatRoomList.length; i++) {
+						this.joinRoomList.push(this.chatRoomList[i].chatRoomNo);
+					}
+					const data = {
+							type: 7,
+							joinRooms: this.joinRoomList,
+							memberId: this.memberId
+					}
+					this.socket.send(JSON.stringify(data));
+				},
+				// 새 채팅 알림 있는지 확인
+				async loadChatNoti() {
+					const memberId = this.memberId;
+					const url = "${pageContext.request.contextPath}/chat/message/noti/" + memberId;
+					const resp = await axios.get(url);
+					console.log(resp.data);
+					if(resp.data === true) this.newChatNoti = true;
+					else this.newChatNoti = false;
+				},
+				// 방별로 새 알림 있는지 확인
+				/*async loadChatRoomNoti() {
+					for(let i=0; i<this.chatRoomList.length; i++) {
+						this.chatRoomNoList.push(this.chatRoomList[i].chatRoomNo);
+					}
+					const memberId = this.memberId;
+					const url = "${pageContext.request.contextPath}/chat/message/noti";
+					const data = {
+							chatRoomNoList: this.chatRoomNoList,
+							memberId: memberId
+					};
+					console.log("chatRoomNoList: " + this.chatRoomNoList);
+					const resp = await axios.post(url, data);
+					console.log(resp.data);
+					//if(!resp.data.isEmpty) this.newChatRoomNoti = true;
+					//else this.newChatRoomNoti = false;
+				},*/
 				async readMessage() {
 					const url = "${pageContext.request.contextPath}/chat/message";
 					const data = {
@@ -221,6 +254,7 @@
 					this.followList.splice(0);
 					this.loadRoomList();
 					this.loadFollowList();
+					//this.loadChatRoomNoti();
 					this.chatMainModal = true;
 				},
 				// 채팅 메인 모달 닫기
@@ -342,14 +376,18 @@
 						app.chatRoom.chatRoomName1 = "";
 						//app.selectedMemberList.push(this.memberId);
 						//app.hideCreateRoomModal();
-						app.createRoomModal = false;
-						app.chatMainModal = true;
+						//app.createRoomModal = false;
+						//app.chatMainModal = true;
 					}
 					this.socket.send(JSON.stringify(data));
 					this.selectedMemberList.splice(0);
 					//this.hideCreateRoomModal();
-					//this.createRoomModal = false;
-					//this.chatMainModal = true;
+					this.createRoomModal = false;
+					this.chatMainModal = true;
+					setTimeout(() => {
+						this.chatRoomList.splice(0);
+						this.loadRoomList();
+					}, 30);
 				},
 				
 				// 채팅방 정보 불러오기
@@ -411,6 +449,7 @@
 					this.socket.send(JSON.stringify(data));
 					const noti = {
 							type: 12,
+							memberId: this.memberId,
 							chatRoomNo: this.chatRoomNo,
 							receiverList: this.chatMemberList
 					};
@@ -464,6 +503,13 @@
 								chatMessageContent: "사진 " + resp.data.attachmentNo
 						}
 						this.socket.send(JSON.stringify(data));
+						const noti = {
+								type: 12,
+								memberId: this.memberId,
+								chatRoomNo: this.chatRoomNo,
+								receiverList: this.chatMemberList
+						};
+						this.socket.send(JSON.stringify(noti));
 						/*this.clear();*/
 						/*fileInput = [];*/
 						this.scrollBottom();
@@ -580,12 +626,10 @@
 				},
 				// 스크롤 맨 아래로
 				scrollBottom() {
-					this.$nextTick(() => {
-					    const messageWrapper = this.$refs.messageWrapper;
-					    if(messageWrapper) {
-					    	messageWrapper.scrollTop = messageWrapper.scrollHeight;
-					    }
-					});
+				    const messageWrapper = this.$refs.messageWrapper;
+				    if(messageWrapper) {
+				    	messageWrapper.scrollTop = messageWrapper.scrollHeight;
+				    }
 				},
 				// 보낸 시간 확인
 				sameTime(index) {

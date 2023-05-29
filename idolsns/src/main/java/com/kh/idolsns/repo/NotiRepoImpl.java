@@ -18,5 +18,9 @@ public class NotiRepoImpl implements NotiRepo {
 	public int sequence() {
 		return sql.selectOne("noti.sequence");
 	}
+	@Override
+	public void delete(int notiNo) {
+		sql.delete("noti.delete", notiNo);
+	}
 
 }

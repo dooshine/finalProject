@@ -359,6 +359,16 @@
 			line-height: 0px;
 			margin-left: 8px;
 		}
+		
+		.notiMark {
+			position: fixed;
+			top: 15px;
+			right: 20px;
+			border-radius: 10px;
+			width: 12px;
+			height: 12px;
+			background: #6a53fb;
+		}
     </style>
 </head>
 
@@ -372,7 +382,6 @@
 				<nav class="navbar navbar-expand-md navbar-light bg-light">
 				  	<div class="container-fluid">
 				  		<div class="col-3">
-				  			<span>isFocused = {{isFocused}}</span>
 					    	<a class="navbar-brand" href="/">STARLINK</a>
 					    </div>
 				    	<div class="col-6 d-flex collapse navbar-collapse" id="navbarSupportedContent">
@@ -390,6 +399,8 @@
 							<!-- 위즈버튼 -->
 							<button class="weez-btn" @click="showChatMainModal">
 								<img class="weez nav-item hide-part" alt="위즈" src="/static/image/dmIcon.png">
+								<!-- 새 채팅이 있는 경우 새 채팅 알림 마크 -->
+								<div v-if="newChatNoti === true" class="notiMark collapse navbar-collapse"></div>
 							</button>
 				    	</div>
 				  	</div>
@@ -538,7 +549,7 @@
 										<!-- 텍스트 메세지일 때 -->
 										<div v-if="message.attachmentNo === 0" class="messageBox">{{ message.chatMessageContent }}</div>
 										<!-- 이미지 메세지일 때 -->
-										<img class="photoMessage" v-if="message.attachmentNo != 0" 
+										<img class="photoMessage" v-if="message.attachmentNo != 0" @load="scrollBottom"
 												:src="'${pageContext.request.contextPath}/download?attachmentNo=' + message.attachmentNo">
 										<div class="messageTime" v-if="displayTime(index)">{{ timeFormat(message.chatMessageTime) }}</div>
 									</div>
@@ -556,7 +567,7 @@
 										<!-- 텍스트 메세지일 때 -->
 										<div v-if="message.attachmentNo === 0" class="messageBox">{{ message.chatMessageContent }}</div>
 										<!-- 이미지 메세지일 때 -->
-										<img class="photoMessage myMessage" v-if="message.attachmentNo != 0" 
+										<img class="photoMessage myMessage" v-if="message.attachmentNo != 0" @load="scrollBottom"
 												:src="'${pageContext.request.contextPath}/download?attachmentNo=' + message.attachmentNo">
 									</div>
 								</div>

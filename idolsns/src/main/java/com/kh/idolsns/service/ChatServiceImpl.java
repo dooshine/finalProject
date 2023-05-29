@@ -234,13 +234,10 @@ public class ChatServiceImpl implements ChatService {
 	@Override
 	public void connectHandler(WebSocketSession session) {
 		ChatMemberVO member = new ChatMemberVO(session);
-		log.debug("member: " + member);
-		/*int chatRoomNo = WebSocketConstant.WAITING_ROOM;*/
-		//this.login(session);
-		//this.join(member, 0);
+		//log.debug("member: " + member);
 		List<Integer> joinRooms = this.findJoinRooms(member);
 		for(int i=0; i<joinRooms.size(); i++) {
-			log.debug("joinRoom: " + joinRooms.get(i));
+			//log.debug("joinRoom: " + joinRooms.get(i));
 			this.join(member, joinRooms.get(i));
 		}
 	}
@@ -352,15 +349,20 @@ public class ChatServiceImpl implements ChatService {
 		else if(receiveVO.getType() == WebSocketConstant.NEW_MSG) {
 			// 채팅방 번호
 			int chatRoomNo  = receiveVO.getChatRoomNo();
+			// 보낸 회원 아이디
+			String memberId = receiveVO.getMemberId();
 			// 채팅방 참여자 목록 (아이디, 닉넴, 프사)
 			List<MemberSimpleProfileTempDto> receiverList = receiveVO.getReceiverList();
-			// 아이디만 뽑은 목록
+			// 아이디만 뽑은 목록 (발신자 아이디 제외하고 수신자 아이디만 추출)
 			List<String> receiverIdList = new ArrayList<>();
 			for(int i = 0; i<receiverList.size(); i++) {
-				receiverIdList.add(receiverList.get(0).getMemberId());
+				if(!receiverList.get(i).getMemberId().equals(memberId)) {
+					receiverIdList.add(receiverList.get(i).getMemberId());
+				}
 			}
 			// 알림 테이블, 채팅 알림 테이블에 저장
 			for(int i=0; i<receiverIdList.size(); i++) {
+				log.debug("receiverId: " + receiverIdList.get(i));
 				int notiNo = notiRepo.sequence();
 				NotiDto notiDto = NotiDto.builder()
 						.notiNo(notiNo)

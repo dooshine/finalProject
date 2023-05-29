@@ -1,6 +1,5 @@
 package com.kh.idolsns.restcontroller;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.NoHandlerFoundException;
-
 import com.kh.idolsns.dto.ChatJoinDto;
 import com.kh.idolsns.dto.ChatMessageDto;
 import com.kh.idolsns.dto.ChatReadDto;
@@ -21,6 +19,7 @@ import com.kh.idolsns.dto.MemberDto;
 import com.kh.idolsns.dto.MemberSimpleProfileTempDto;
 import com.kh.idolsns.repo.ChatJoinRepo;
 import com.kh.idolsns.repo.ChatMessageRepo;
+import com.kh.idolsns.repo.ChatNotiRepo;
 import com.kh.idolsns.repo.ChatReadRepo;
 import com.kh.idolsns.repo.ChatRoomRepo;
 import com.kh.idolsns.repo.MemberRepo;
@@ -29,8 +28,6 @@ import com.kh.idolsns.service.ChatRoomService;
 import com.kh.idolsns.vo.ChatMemberJoinVO;
 import com.kh.idolsns.vo.ChatMessageVO;
 import com.kh.idolsns.vo.ChatRoomProcessVO;
-import com.kh.idolsns.vo.ChatRoomVO;
-
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -52,6 +49,8 @@ public class ChatRestController {
 	private ChatReadRepo chatReadRepo;
 	@Autowired
 	private MemberSimpleProfileTempRepo profileRepo;
+	@Autowired
+	private ChatNotiRepo chatNotiRepo;
 	
 	// 채팅방 목록 불러오기
 	@GetMapping("/chatRoom/{memberId}")
@@ -142,6 +141,18 @@ public class ChatRestController {
 	@PutMapping("/message")
 	public void readMessage(@RequestBody ChatReadDto dto) {
 		chatReadRepo.readMessage(dto);
+	}
+	
+	// 접속시 새 메세지 알림이 있는지 확인 (있으면 true 반환)
+	@GetMapping("/message/noti/{memberId}")
+	public boolean loadChatNoti(@PathVariable String memberId) {
+		return chatNotiRepo.myNotiList(memberId) > 0;
+	}
+	
+	// 채팅방 각각 새 메세지 알림 있는지 확인
+	@PostMapping("/message/noti")
+	public List<Integer> chatNotiByRoom(@RequestBody ChatMemberJoinVO vo) {
+		return chatNotiRepo.notiNoList(vo.getChatRoomNoList(), vo.getMemberId());
 	}
 	
 }
