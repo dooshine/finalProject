@@ -687,30 +687,14 @@
 // 	                    }) 
 //             	},
             	
-            	// 무한 게시글 불러오기
-//             	async fetchPosts() {
-//                     if(this.loading == true) return;//로딩중이면
-//                     if(this.finish == true) return;//다 불러왔으면
-                    
-//                     this.loading = true;
-                    
-//                     const resp = await axios.get("http://localhost:8080/rest/post/page/"+this.page);
-// 	                this.posts.push(...resp.data);
-// 	                this.page++;
-	                
-// 	                this.loading=false;
-	                
-// 	                if(resp.data.length < 10){
-// 	                	this.finish = true;
-// 	                }
-//             	},
-            	
+            	// 무한 페이징 게시글 불러오기 1페이지당 10개씩 매 페이지 별로 불러옴,
             	async fetchPosts(){
                     if(this.loading == true) return;//로딩중이면
                     if(this.finish == true) return;//다 불러왔으면
                     
                     this.loading = true;
                     
+                    // 1페이지 부터 현재 페이지 까지 전부 가져옴 
                     const resp = await axios.get("http://localhost:8080/rest/post/pageReload/"+this.page);
 	                this.posts = resp.data;
 	                this.page++;
