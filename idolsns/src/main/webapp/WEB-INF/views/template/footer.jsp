@@ -409,6 +409,12 @@
 							chatMessageContent: this.text
 					};
 					this.socket.send(JSON.stringify(data));
+					const noti = {
+							type: 12,
+							chatRoomNo: this.chatRoomNo,
+							receiverList: this.chatMemberList
+					};
+					this.socket.send(JSON.stringify(noti));
 					this.clear();
 					this.scrollBottom();
 					//this.loadRoomList();

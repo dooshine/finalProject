@@ -5,10 +5,15 @@
     
 <mapper namespace="noti">
 
+	<!-- 알림 번호 뽑기 -->
+	<select id="sequence" resultType="int">
+		select noti_seq.nextval from dual
+	</select>
+	
 	<!-- 알림 저장 -->
 	<insert id="save">
 		insert into noti(noti_no, member_id, noti_type, noti_time)
-		values(noti_seq.nextval, #{memberId}, #{notiType}, sysdate)
+		values(#{notiNo}, #{memberId}, #{notiType}, sysdate)
 	</insert>
 
 </mapper>

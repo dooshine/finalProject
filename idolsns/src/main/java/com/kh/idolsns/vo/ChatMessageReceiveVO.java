@@ -3,6 +3,7 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.kh.idolsns.dto.ChatRoomDto;
+import com.kh.idolsns.dto.MemberSimpleProfileTempDto;
 
 import lombok.Data;
 
@@ -23,5 +24,7 @@ public class ChatMessageReceiveVO {
 	
 	private ChatRoomDto chatRoomDto;
 	private List<String> memberList;
+	
+	private List<MemberSimpleProfileTempDto> receiverList;
 	
 }

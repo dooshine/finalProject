@@ -4,5 +4,6 @@ import com.kh.idolsns.dto.NotiDto;
 public interface NotiRepo {
 
 	void insert(NotiDto dto);
+	int sequence();
 	
 }

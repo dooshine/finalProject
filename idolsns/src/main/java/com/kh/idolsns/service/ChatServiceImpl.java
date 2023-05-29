@@ -11,15 +11,21 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.kh.idolsns.constant.NotiConstant;
 import com.kh.idolsns.constant.WebSocketConstant;
 import com.kh.idolsns.dto.ChatJoinDto;
 import com.kh.idolsns.dto.ChatMessageDto;
+import com.kh.idolsns.dto.ChatNotiDto;
 import com.kh.idolsns.dto.ChatReadDto;
+import com.kh.idolsns.dto.MemberSimpleProfileTempDto;
+import com.kh.idolsns.dto.NotiDto;
 import com.kh.idolsns.repo.AttachmentRepo;
 import com.kh.idolsns.repo.ChatJoinRepo;
 import com.kh.idolsns.repo.ChatMessageRepo;
+import com.kh.idolsns.repo.ChatNotiRepo;
 import com.kh.idolsns.repo.ChatReadRepo;
 import com.kh.idolsns.repo.ChatRoomRepo;
+import com.kh.idolsns.repo.NotiRepo;
 import com.kh.idolsns.vo.ChatMemberVO;
 import com.kh.idolsns.vo.ChatMessageReceiveVO;
 import com.kh.idolsns.vo.ChatMessageVO;
@@ -43,6 +49,10 @@ public class ChatServiceImpl implements ChatService {
 	private ChatRoomService chatRoomService;
 	@Autowired
 	private ChatRoomRepo chatRoomRepo;
+	@Autowired
+	private NotiRepo notiRepo;
+	@Autowired
+	private ChatNotiRepo chatNotiRepo;
 	
 	// 저장소
 	private Map<Integer, ChatRoomVO> chatRooms = Collections.synchronizedMap(new HashMap<>());
@@ -337,6 +347,34 @@ public class ChatServiceImpl implements ChatService {
 			ChatRoomVO chatRoom = chatRooms.get(chatRoomNo);
 			chatRoom.enter(member);
 			log.debug("chatRooms after create: " + chatRooms);
+		}
+		// 새 메세지 알림인 경우
+		else if(receiveVO.getType() == WebSocketConstant.NEW_MSG) {
+			// 채팅방 번호
+			int chatRoomNo  = receiveVO.getChatRoomNo();
+			// 채팅방 참여자 목록 (아이디, 닉넴, 프사)
+			List<MemberSimpleProfileTempDto> receiverList = receiveVO.getReceiverList();
+			// 아이디만 뽑은 목록
+			List<String> receiverIdList = new ArrayList<>();
+			for(int i = 0; i<receiverList.size(); i++) {
+				receiverIdList.add(receiverList.get(0).getMemberId());
+			}
+			// 알림 테이블, 채팅 알림 테이블에 저장
+			for(int i=0; i<receiverIdList.size(); i++) {
+				int notiNo = notiRepo.sequence();
+				NotiDto notiDto = NotiDto.builder()
+						.notiNo(notiNo)
+						.memberId(receiverIdList.get(i))
+						.notiType(NotiConstant.WEEZ)
+					.build();
+				notiRepo.insert(notiDto);
+				ChatNotiDto chatNotiDto = ChatNotiDto.builder()
+							.chatRoomNo(chatRoomNo)
+							.notiNo(notiNo)
+							.memberId(receiverIdList.get(i))
+						.build();
+				chatNotiRepo.insert(chatNotiDto);
+			}
 		}
 	}
 
