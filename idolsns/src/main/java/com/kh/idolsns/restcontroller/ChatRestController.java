@@ -18,11 +18,13 @@ import com.kh.idolsns.dto.ChatMessageDto;
 import com.kh.idolsns.dto.ChatReadDto;
 import com.kh.idolsns.dto.ChatRoomDto;
 import com.kh.idolsns.dto.MemberDto;
+import com.kh.idolsns.dto.MemberSimpleProfileTempDto;
 import com.kh.idolsns.repo.ChatJoinRepo;
 import com.kh.idolsns.repo.ChatMessageRepo;
 import com.kh.idolsns.repo.ChatReadRepo;
 import com.kh.idolsns.repo.ChatRoomRepo;
 import com.kh.idolsns.repo.MemberRepo;
+import com.kh.idolsns.repo.MemberSimpleProfileTempRepo;
 import com.kh.idolsns.service.ChatRoomService;
 import com.kh.idolsns.vo.ChatMemberJoinVO;
 import com.kh.idolsns.vo.ChatMessageVO;
@@ -48,6 +50,8 @@ public class ChatRestController {
 	private ChatRoomRepo chatRoomRepo;
 	@Autowired
 	private ChatReadRepo chatReadRepo;
+	@Autowired
+	private MemberSimpleProfileTempRepo profileRepo;
 	
 	// 채팅방 목록 불러오기
 	@GetMapping("/chatRoom/{memberId}")
@@ -56,6 +60,27 @@ public class ChatRestController {
 		//log.debug("chatRoomNoList: " + chatRoomNoList);
 		if(!chatRoomNoList.isEmpty()) return chatRoomRepo.findRooms(chatRoomNoList);
 		else return Collections.emptyList();
+	}
+	
+	// 메세지 불러오기
+	@GetMapping("/message/{chatRoomNo}")
+	public List<ChatMessageVO> roomMessage(@PathVariable int chatRoomNo) {
+		List<ChatMessageDto> tempList = chatMessageRepo.messageList(chatRoomNo);
+		List<ChatMessageVO> list = new ArrayList<>();
+		for(ChatMessageDto chatMessageDto : tempList) {
+			//log.debug("dto attachmentNo: " + chatMessageDto.getAttachmentNo());
+			list.add(ChatMessageVO.builder()
+							.chatMessageNo(chatMessageDto.getChatMessageNo())
+							.chatRoomNo(chatRoomNo)
+							.memberId(chatMessageDto.getMemberId())
+							.chatMessageTime(chatMessageDto.getChatMessageTime().getTime())
+							.chatMessageContent(chatMessageDto.getChatMessageContent())
+							.attachmentNo(chatMessageDto.getAttachmentNo())
+							.chatMessageType(chatMessageDto.getChatMessageType())
+						.build()
+			);
+		}
+		return list;
 	}
 	
 	// 내 팔로워 목록 불러오기 (현재 팔로우 기능 부재로 전체 회원 목록 불러오는 것으로 대체)
@@ -102,36 +127,15 @@ public class ChatRestController {
 		chatRoomService.inviteMember(vo);
 	}
 	
-	// 채팅방 참여자 목록 조회
+	// 채팅방 참여자 목록 조회 - 수정
 	@GetMapping("/chatRoom/chatMember/{chatRoomNo}")
-	public List<MemberDto> loadChatMember(@PathVariable int chatRoomNo) {
+	public List<MemberSimpleProfileTempDto> loadChatMember(@PathVariable int chatRoomNo) {
 		List<ChatJoinDto> memberList = chatJoinRepo.findMembersByRoomNo(chatRoomNo);
 		List<String> memberIdList = new ArrayList<>();
 		for(int i=0; i<memberList.size(); i++) {
 			memberIdList.add(memberList.get(i).getMemberId());
 		}
-		return memberRepo.chatMembers(memberIdList);
-	}
-	
-	// 메세지 불러오기
-	@GetMapping("/message/{chatRoomNo}")
-	public List<ChatMessageVO> roomMessage(@PathVariable int chatRoomNo) {
-		List<ChatMessageDto> tempList = chatMessageRepo.messageList(chatRoomNo);
-		List<ChatMessageVO> list = new ArrayList<>();
-		for(ChatMessageDto chatMessageDto : tempList) {
-			//log.debug("dto attachmentNo: " + chatMessageDto.getAttachmentNo());
-			list.add(ChatMessageVO.builder()
-							.chatMessageNo(chatMessageDto.getChatMessageNo())
-							.chatRoomNo(chatRoomNo)
-							.memberId(chatMessageDto.getMemberId())
-							.chatMessageTime(chatMessageDto.getChatMessageTime().getTime())
-							.chatMessageContent(chatMessageDto.getChatMessageContent())
-							.attachmentNo(chatMessageDto.getAttachmentNo())
-							.chatMessageType(chatMessageDto.getChatMessageType())
-						.build()
-			);
-		}
-		return list;
+		return profileRepo.profile(memberIdList);
 	}
 	
 	// 메세지 읽음 처리

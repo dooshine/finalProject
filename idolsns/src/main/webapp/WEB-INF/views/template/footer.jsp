@@ -367,10 +367,24 @@
 				// 참여자 정보 불러오기
 				async loadChatMember() {
 					const chatRoomNo = this.chatRoomNo;
-					console.log("chatRoomNo: " + chatRoomNo);
+					//console.log("chatRoomNo: " + chatRoomNo);
 					const url = "${pageContext.request.contextPath}/chat/chatRoom/chatMember/" + chatRoomNo;
 					const resp = await axios.get(url);
 					this.chatMemberList.push(...resp.data);
+				},
+				// 참여자 정보로 닉네임 가져오기
+				findMemberById(index) {
+					const memberId = this.messageList[index].memberId;
+					const member = this.chatMemberList.find(function(member) {
+						return member.memberId === memberId;
+					})
+					if(member) {						
+						return {
+							memberNick: member.memberNick,
+							memberId: member.memberId
+						}
+					}
+					else return null;
 				},
 				// 메세지 불러오기
 				async loadMessage() {
@@ -455,6 +469,9 @@
 				},
 				timeFormatDetailed(chatMessageTime) {
 					return moment(chatMessageTime).format("YYYY년 M월 D일 dddd");
+				},
+				timeFormatDetailed2(chatRoomLast) {
+					return moment(chatRoomLast).format("YYYY년 M월 D일 dddd");
 				},
 				// 메세지 삭제버튼 보이기
 				showDeleteButton(index) {

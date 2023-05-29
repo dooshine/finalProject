@@ -409,19 +409,40 @@
 						<div class="chatRooms mb-2" v-for="(room, index) in chatRoomList" :key="index">
 							<!-- 채팅방 이름(단톡일 때: 지정한 이름 표시) -->
 							<div v-if="chatRoomList[index].chatRoomType == 'G'">
-								<button @click="showChatRoomModal(index)" class="hide-style">
-									{{ chatRoomList[index].chatRoomName1 }}
+								<button @click="showChatRoomModal(index)" class="hide-style w-100 mb-3">
+									<div class="text-start mb-2">
+										<h6>{{ chatRoomList[index].chatRoomName1 }}</h6>
+									</div>
+									<div class="sysMsgContent d-flex justify-content-between">
+										<div>마지막 메세지</div>
+										<div>···</div>
+										<div>{{ timeFormatDetailed2(chatRoomList[index].chatRoomLast) }}</div>
+									</div>
 								</button>
 							</div>
 							<!-- 채팅방 이름(갠톡일 때: 상대방 이름 표시) -->
 							<div v-if="chatRoomList[index].chatRoomType == 'P'">
 								<button v-if="chatRoomList[index].chatRoomName1 != memberId" 
-											@click="showChatRoomModal(index)" class="hide-style">
-									{{ chatRoomList[index].chatRoomName1 }}
+											@click="showChatRoomModal(index)" class="hide-style w-100 mb-3">
+									<div class="text-start mb-2">
+										<h6>{{ chatRoomList[index].chatRoomName1 }}</h6>
+									</div>
+									<div class="sysMsgContent d-flex justify-content-between">
+										<div>마지막 메세지</div>
+										<div>···</div>
+										<div>{{ timeFormatDetailed2(chatRoomList[index].chatRoomLast) }}</div>
+									</div>
 								</button>
 								<button v-if="chatRoomList[index].chatRoomName2 != memberId" 
-											@click="showChatRoomModal(index)" class="hide-style">
-									{{ chatRoomList[index].chatRoomName2 }}
+											@click="showChatRoomModal(index)" class="hide-style w-100 mb-3">
+									<div class="text-start mb-2">
+										<h6>{{ chatRoomList[index].chatRoomName2 }}</h6>
+									</div>
+									<div class="sysMsgContent d-flex justify-content-between">
+										<div>마지막 메세지</div>
+										<div>···</div>
+										<div>{{ timeFormatDetailed2(chatRoomList[index].chatRoomLast) }}</div>
+									</div>
 								</button>
 							</div>
 						</div>
@@ -512,6 +533,7 @@
 								<!-- 상대방이 보낸 메세지일 때 -->
 								<div v-if="message.memberId != memberId">
 									<span style="font-size: 0.9em;" v-if="!sameTime(index)">{{ message.memberId }}</span>
+<!-- 								<span style="font-size: 0.9em;" v-if="!sameTime(index)">{{ findMemberById(index).memberNick }}</span> -->
 									<div class="d-flex align-items-end">
 										<!-- 텍스트 메세지일 때 -->
 										<div v-if="message.attachmentNo === 0" class="messageBox">{{ message.chatMessageContent }}</div>
