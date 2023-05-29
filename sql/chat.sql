@@ -5,7 +5,7 @@ CREATE TABLE chat_room(
 	chat_room_name2 varchar2(60),
 	chat_room_start DATE DEFAULT sysdate NOT NULL,
 	chat_room_type char(1) NOT NULL,
-	chat_room_last DATE NOT NULL DEFAULT sysdate
+	chat_room_last DATE DEFAULT sysdate NOT NULL
 );
 CREATE SEQUENCE chat_room_seq;
 
