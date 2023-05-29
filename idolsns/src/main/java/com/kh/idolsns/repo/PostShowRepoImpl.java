@@ -32,5 +32,14 @@ public class PostShowRepoImpl implements PostShowRepo{
 		Map<String, Object> param = Map.of("begin", begin, "end", end);
 		return sqlSession.selectList("postShow.infinite",param);
 	}
-
+	
+	@Override
+	public List<PostShowVO> selectListByPagingReload(int page){
+		int end = page * 10; 
+		int begin = 1;
+		
+		Map<String, Object> param = Map.of("begin", begin, "end", end);
+		return sqlSession.selectList("postShow.infinite",param);
+		
+	}
 }

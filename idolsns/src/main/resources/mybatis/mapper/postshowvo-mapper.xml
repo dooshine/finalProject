@@ -46,7 +46,7 @@
 	</sql>
 	
 	<!-- 무한스크롤 페이징 목록 -->
-	<select id="infinite" resultType="PostDto">
+	<select id="infinite" resultType="PostShowVO">
 		<include refid="topNheader"></include>
 		select p.*, sp.schedule_start, sp.schedule_end,
             tp.together_start, tp.together_end,

@@ -217,6 +217,20 @@ public class PostRestController {
     	return posts;
     }
     
+    // 게시물 페이징 목록 조회
+    @GetMapping("/page/{page}")
+    public List<PostShowVO> infiniteList(@PathVariable int page){    	
+    	List<PostShowVO> posts = postShowService.postShowByPaging(page);    	
+    	return posts;
+    }
+    
+    // 게시물 페이징 목록 처음 부터 현재 페이지까지 조회
+    @GetMapping("/pageReload/{page}")
+    public List<PostShowVO> infiniteListReload(@PathVariable int page){
+    	List<PostShowVO> posts = postShowService.postShowByPagingReload(page);
+    	return posts;
+    }
+    
     // 통합게시물 수정
     @PutMapping("/")
     public boolean update(@ModelAttribute PostDto postDto){

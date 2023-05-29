@@ -104,4 +104,35 @@ public class PostShowService {
 		
 		return postShowList;
 	}
+	
+	public List<PostShowVO> postShowByPagingReload(int page){
+		List<PostShowVO> postShowList = postShowRepo.selectListByPagingReload(page);
+		Long postNo = 0l;
+		
+		for(PostShowVO postShowVO : postShowList)
+		{
+			// 글번호 
+			postNo = postShowVO.getPostNo();
+			
+			// 태그 리스트
+			postShowVO.setTagList(tagRepo.selectAll(postNo));
+			
+			// 첨부파일 
+			if(postImageRepo.selectAttachNoList(postNo).size()>0) {
+				postShowVO.setAttachmentList(postImageRepo.selectAttachNoList(postNo));
+			}
+			else {
+				postShowVO.setAttachmentList(null);
+			}
+			// 좋아요 
+			postShowVO.setLikeCount(postLikeRepo.count(postNo));
+			//  log.debug("postImageRepo.selectAttachNoList(postNo) is {}", postImageRepo.selectAttachNoList(postNo));
+			//	log.debug("postShowVO is {}", postShowVO); 
+			
+			// 댓글 가져오기 
+			postShowVO.setReplyList(replyRepo.getRepliesByPostNo(postNo));
+		}
+		
+		return postShowList;
+	}
 }

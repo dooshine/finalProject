@@ -649,14 +649,23 @@
                 	// 댓글 작성 글자 
                 	replyContent: '',
                 	
-                	// 대댓글 작성 여부 체크용 배열
+                	// 대댓글 위치 특정용 임시 postNo, replyNo
                 	tempPostNo:null ,
                 	tempReplyNo:null ,
                 	
                 	// 대댓글 작성 글자
                 	rereplyContent: '', 
                 	
-                	sessionId : null,
+                	// 무한 페이징 영역
+                	percent:0,
+                	
+                	// 목록을 위한 데이터
+                	page:1, 
+                	finish:false,
+                	
+                	// 안전장치
+                	loading:false,
+                	
                 };
             },
             computed:{  
@@ -664,18 +673,53 @@
             },
             methods:{
 				// 모든 게시글 불러오기 
-                async fetchPosts() {
-	                await axios.get('http://localhost:8080/rest/post/all')
-	                    .then(response => {
-	                    	// 전체 게시글 데이터 가져오기
-	                        this.posts = response.data;
-	                     	// 게시글 인덱스별 좋아요 처리
-	                        this.getLikePostIndex(this.posts);
-	                     	this.replyFlagList = new Array(this.posts.length).fill(false);
-	                    })
-	                    .catch(error => {
-	                        console.error(error);                           
-	                    }) 
+//                 async fetchPosts() {
+// 	                await axios.get('http://localhost:8080/rest/post/all')
+// 	                    .then(response => {
+// 	                    	// 전체 게시글 데이터 가져오기
+// 	                        this.posts = response.data;
+// 	                     	// 게시글 인덱스별 좋아요 처리
+// 	                        this.getLikePostIndex(this.posts);
+// 	                     	this.replyFlagList = new Array(this.posts.length).fill(false);
+// 	                    })
+// 	                    .catch(error => {
+// 	                        console.error(error);                           
+// 	                    }) 
+//             	},
+            	
+            	// 무한 게시글 불러오기
+//             	async fetchPosts() {
+//                     if(this.loading == true) return;//로딩중이면
+//                     if(this.finish == true) return;//다 불러왔으면
+                    
+//                     this.loading = true;
+                    
+//                     const resp = await axios.get("http://localhost:8080/rest/post/page/"+this.page);
+// 	                this.posts.push(...resp.data);
+// 	                this.page++;
+	                
+// 	                this.loading=false;
+	                
+// 	                if(resp.data.length < 10){
+// 	                	this.finish = true;
+// 	                }
+//             	},
+            	
+            	async fetchPosts(){
+                    if(this.loading == true) return;//로딩중이면
+                    if(this.finish == true) return;//다 불러왔으면
+                    
+                    this.loading = true;
+                    
+                    const resp = await axios.get("http://localhost:8080/rest/post/pageReload/"+this.page);
+	                this.posts = resp.data;
+	                this.page++;
+	                
+	                this.loading=false;
+	                
+	                if(resp.data.length < 10){
+	                	this.finish = true;
+	                }
             	},
             	
             	// 사진 관련 
@@ -856,10 +900,40 @@
             		}
             	}
             },
+            watch:{
+            	percent(){
+            		if(this.percent >= 80){
+            			this.fetchPosts();
+            		}
+            	}
+            },
             mounted() {
-                // 게시글 불러오기
-                this.fetchPosts();
-                
+                //윈도우 전체에 스크롤 이벤트를 설정(Vue가 아닌 JS 사용)
+                //- 주의할 점은 스크롤 이벤트는 발생빈도가 엄청나다는 것
+                //- 쓰로틀링, 디바운스 등으로 억제시킬 필요가 있음
+                //- this를 통일시키기 위해 화살표 함수(arrow function)를 사용
+            	 window.addEventListener("scroll", _.throttle(()=>{
+                     //console.log("스크롤 이벤트");
+                     //console.log(this);
+
+                     //스크롤은 몇 % 위치에 있는가? 를 알고 싶다면
+                     //- 전체 문서의 높이(document.body.clientHeight)
+                     //- 현재 스크롤의 위치(window.scrollY)
+                     //- 브라우저의 높이(window.innerHeight)
+                     //- ScreenFull.js나 Rallax.js 등 라이브러리 사용 가능
+                     const height = document.body.clientHeight - window.innerHeight;
+                     const current = window.scrollY;
+                     const percent = (current / height) * 100;
+                     //console.log("percent = " + Math.round(percent));
+                     
+                     //data의 percent를 계산된 값으로 갱신
+                     this.percent = Math.round(percent);
+                 }, 250));
+            	
+            },
+            created(){
+            	// 게시글 불러오기
+            	this.fetchPosts();
             },
         }).mount("#app");
     </script>
