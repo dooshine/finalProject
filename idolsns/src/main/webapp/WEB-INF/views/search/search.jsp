@@ -155,7 +155,10 @@
           },
           // 대표페이지 검색목록
           artistSearchList: [],
-          artistPage: 1,
+          artistSearchVO: {
+            artistPage: 1,
+            size: 15,
+          },
           // 회원 검색목록
           memberSearchList: [],
           memberPage: 1,
@@ -198,7 +201,7 @@
           const url = "http://localhost:8080/rest/artist/search";
 
           // 조회
-          const resp = await axios.get(url, { params: {q: q}});
+          const resp = await axios.get(url, { params: {q: q, page: this.artistPage++}});
 
           this.artistSearchList = resp.data;
 

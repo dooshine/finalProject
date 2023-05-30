@@ -1,6 +1,7 @@
 package com.kh.idolsns.restcontroller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +27,8 @@ public class ArtistRestController {
 
     // (search) 대표페이지 검색조회
     @GetMapping("/search")
-    public List<ArtistViewDto> selectArtistViewSearchList(@RequestParam String q){
-        return sqlSession.selectList("artist.selectArtistViewSearchList", q);
+    public List<ArtistViewDto> selectArtistViewSearchList(@RequestParam Map<String, Object> artistSearchVO){
+        // System.out.println(page);
+        return sqlSession.selectList("artist.selectArtistViewSearchList", artistSearchVO);
     }
 }
