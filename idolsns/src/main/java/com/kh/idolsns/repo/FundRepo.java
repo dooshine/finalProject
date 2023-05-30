@@ -13,11 +13,8 @@ public interface FundRepo {
 	
 	List<FundDto> selectAll();
 	List<FundDto> selectByMember(String memberId);
-	int selectTotal(Long postNo);
-	
-	
-	
-	
+	List<FundDto> selectByPostNo(Long postNo);
+	Integer selectTotal(Long postNo);
 	FundDto find(Long fundNo);
 
 	

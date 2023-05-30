@@ -7,8 +7,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Data @NoArgsConstructor
-@AllArgsConstructor @Builder
+@Data
 public class FundDto {
 	
 	private Long fundNo;
@@ -17,7 +16,6 @@ public class FundDto {
 	private int fundRemain;
 	private Date fundTime;
 	private String memberId;
-	private int fundTotal;
 	private String fundTitle;
 	
 	

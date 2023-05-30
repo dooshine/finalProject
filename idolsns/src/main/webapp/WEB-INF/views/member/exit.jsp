@@ -24,9 +24,12 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
     <!-- 부트스트랩 css(공식) -->
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css">
-
-    <!-- custom 테스트 css -->
+	 <!-- custom 테스트 css -->
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/static/css/test.css">
+    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/static/css/commons mye.css">
+     <!-- toastify -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 
 </head>
 <body>
@@ -41,21 +44,45 @@
 				
 				<div class="row">
 				    <label for="agreement">
-				        <input type="checkbox" id="agreement"  >
+				        <input type="checkbox" id="agreement"  v-model="agreementChecked" >
 				        회원탈퇴동의
 				    </label>
 				</div>
 				<div class="row">
 					<input type="password" name="memberPw"  placeholder="비밀번호" >
 				</div>
+				<c:if test="${param.mode == 'error' }">
+					<div class="row">
+						<p style='color: red;'>잘못된 비밀번호 입니다. 다시 입력하세요.</p>
+					</div>
+				</c:if>
+				<c:if test="${param.mode == 'notYet'}">
+					<div class="row">
+						<p style = "color: red;">5분 지나야 탈퇴 가능</p>
+					</div>
+				</c:if>
 				<div class="row">
-					<button type="submit"  :disabled="!agree">탈퇴</button>
+					<button type="submit"  :disabled="!agreementChecked">탈퇴</button>
 				</div>
 			</div>
 		
 		</form>
 	</div>
 	</div>	
+
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/vue@3.2.36"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js"></script>
+	<script>
+		Vue.createApp({
+			data(){
+				return{
+					agreementChecked:false,
+				};
+			},
+		}).mount("#app");
+	</script>
 
 </body>    
 

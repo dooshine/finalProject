@@ -131,16 +131,9 @@
 	
 					  <div class="funding-list justify-content-center mt-5">
 					  
-					  
-					  <!-- 
-					  <div v-for="(funding, index) in fundings" v-bind:key="funding.memberId">
-						</div>
-						<div>
-					   -->
-					  
 					    <div class="funding-item" v-for="(funding, index) in fundings" :key="funding.memberId"
 					    									v-on:click="link(funding)">
-					      <img :src="funding.imageUrl" alt="Funding Image">
+					      <img :src="getImageUrl(funding)" alt="Funding Image">
 					      <h3 class="title">{{ funding.fundTitle }}</h3>
 					      <p class="description">{{ funding.postContent }}</p>
 					      <div class="progress-bar">
@@ -168,12 +161,7 @@
 				
 				
 				
-					  <!-- 
-				<c:forEach var="fundPostDto" items="${fundList}">
-				${fundPostDto}<br>
-				</c:forEach>
 				
-  					-->
   					
 		<script src="https://unpkg.com/vue@3.2.36"></script>
 	    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
@@ -194,7 +182,7 @@
 	            	},
 	            	methods: {
 	            		async loadData(){
-							const resp = await axios.get("/rest/fundpostview/")	  
+							const resp = await axios.get("http://localhost:8080/rest/fund/")	  
 							console.log(resp.data);
 							this.fundings.push(...resp.data);
 							
@@ -225,6 +213,13 @@
 	            			const url = "/fund/detail?postNo="+funding.postNo;
 	            			window.location.href = url;
 	            		},
+	            		getImageUrl(funding) {
+	            		      if (funding.attachmentNo === null) {
+	            		        return "https://via.placeholder.com/150x150";
+	            		      } else {
+	            		        return "/rest/attachment/download/" + funding.attachmentNo;
+	            		      }
+	            		    },
 	            	},
 	            	created() {
 	            		this.loadData();

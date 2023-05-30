@@ -9,71 +9,75 @@
 <mapper namespace="fund">
 
 
-   	<select id="sequence" resultType="Long">
+      <select id="sequence" resultType="Long">
         select fund_seq.nextval from dual
     </select>
-  
+    
+    <insert id="add">
+         insert into fund (
+          fund_no, post_no, fund_price, fund_time, member_id
+          ) 
+          values (
+          #{fundNo}, #{postNo}, #{fundPrice}, sysdate, #{memberId}
+          )
+    </insert>
     
     <!-- 사용 -->
-    <insert id="add">
+    <insert id="add2">
         insert into fund (
-        fund_no, post_no, fund_price, fund_remain, fund_time, member_id, fund_title
+        fund_no, post_no, fund_price, fund_time, member_id, fund_title
         ) 
         values (
-        #{fundNo}, #{postNo}, #{fundPrice}, #{fundRemain}, sysdate, #{memberId}, #{fundTitle}
+        #{fundNo}, #{postNo}, #{fundPrice}, sysdate, #{memberId}, #{fundTitle}
         )
     </insert>
 
 
 
-	<!-- 결제내역 조회 기능(전체/회원별/...) -->
-	<select id="selectAll" resultType="FundDto">
-		select * from fund order by fund_no desc
-	</select>
-	
-	<select id="selectByMember" resultType="FundDto">
-		select * from fund 
-		where member_id = #{memberId}
-		order by fund_no desc
-	</select>
-	
-	<select id="find" resultType="FundDto">
-		select * from fund where fund_no = #{fundNo}
-	</select>
-	
-	<select id="selectOne" resultType="FundDto" parameterType="Long">
-		select * from fund where post_no = #{postNo}
-	</select>
-	
-	<!-- 후원된 금액 total -->
-	<select id="fundtotal" resultType="int" parameterType="Long">
-		select sum(fund_price) as fund_total
+   <!-- 결제내역 조회 기능(전체/회원별/...) -->
+   <select id="selectAll" resultType="FundDto">
+      select * from fund order by fund_no desc
+   </select>
+   
+   <select id="selectByMember" resultType="FundDto">
+      select * from fund 
+      where member_id = #{memberId}
+      order by fund_no desc
+   </select>
+   
+   <select id="find" resultType="FundDto">
+      select * from fund where fund_no = #{fundNo}
+   </select>
+   
+   <select id="selectOne" resultType="FundDto" parameterType="Long">
+      select * from fund where post_no = #{postNo}
+   </select>
+   
+   <!-- 후원된 금액 total -->
+   <select id="fundtotal" resultType="int" parameterType="Long">
+      select sum(fund_price) as fund_total
            from fund 
            where post_no=#{postNo}
-	</select>
+   </select>
 
 
-	
-	<!-- 후원 취소1 -->
-	<update id="fundCancel">
-	
-	  UPDATE fund
-	  SET fund_remain = 0
-	  WHERE fund_no = #{fundNo}
-	 	  
-	</update>
-	
-
- 
-	<!-- 후원 취소2 - 차감 -->
-	<update id="fundCancel2">
-	    UPDATE fund
-	    SET fund_total = fund_total - #{fundPrice}
-	    WHERE fund_no = #{fundNo}
-	</update>
-	
-	
-	
+   
+   <!-- 특정 postNo를 가진 게시물을 후원한 목록 -->
+   <select id="selectByPostNo" resultType="FundDto" parameterType="Long">
+      select * from fund where post_no=#{postNo}
+   </select>
+   
+   <!-- 후원 취소 -->
+   <update id="fundCancel">
+     UPDATE fund
+     SET fund_price = 0
+     WHERE fund_no = #{fundNo}
+   </update>
+   
+   <!-- 특정 postNo의 count -->
+   <select id="fundCount" resultType="int" parameterType="Long">
+      select count(distinct member_id) from fund where post_no=#{postNo} 
+   </select>
 
 
 
