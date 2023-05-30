@@ -13,14 +13,12 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.NoHandlerFoundException;
 import com.kh.idolsns.dto.ChatJoinDto;
 import com.kh.idolsns.dto.ChatMessageDto;
-import com.kh.idolsns.dto.ChatNotiDto;
 import com.kh.idolsns.dto.ChatReadDto;
 import com.kh.idolsns.dto.ChatRoomDto;
 import com.kh.idolsns.dto.MemberDto;
 import com.kh.idolsns.dto.MemberSimpleProfileTempDto;
 import com.kh.idolsns.repo.ChatJoinRepo;
 import com.kh.idolsns.repo.ChatMessageRepo;
-import com.kh.idolsns.repo.ChatNotiRepo;
 import com.kh.idolsns.repo.ChatReadRepo;
 import com.kh.idolsns.repo.ChatRoomRepo;
 import com.kh.idolsns.repo.MemberRepo;
@@ -29,8 +27,6 @@ import com.kh.idolsns.service.ChatRoomService;
 import com.kh.idolsns.vo.ChatMemberJoinVO;
 import com.kh.idolsns.vo.ChatMessageVO;
 import com.kh.idolsns.vo.ChatRoomProcessVO;
-
-import io.swagger.v3.oas.models.security.SecurityScheme.In;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -52,8 +48,6 @@ public class ChatRestController {
 	private ChatReadRepo chatReadRepo;
 	@Autowired
 	private MemberSimpleProfileTempRepo profileRepo;
-	@Autowired
-	private ChatNotiRepo chatNotiRepo;
 	
 	// 채팅방 목록 불러오기
 	@GetMapping("/chatRoom/{memberId}")
