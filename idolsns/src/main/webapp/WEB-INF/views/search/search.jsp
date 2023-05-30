@@ -100,24 +100,23 @@
             </thead>
             <tbody>
               <tr v-for="(memberSearch, i) in memberSearchList" :key="i">
-                <!-- <td>{{memberSearch.attachmentNo ?? "없슈"}}</td> -->
                 <td class="cursor-pointer">
                   <div class="search-table-col">
-                    <img :src="memberSearch.attachmentNo === 0 ? '/static/image/profileDummy.png' : '/download/?attachmentNo=' + memberSearch.attachmentNo" style="height: 50px; width: 50px;">
+                    항목1
                   </div>
                 </td>
                 <td class="cursor-pointer">
                   <div class="search-table-col">
-                    {{fullName(memberSearch.memberId, memberSearch.memberNick)}}
+                    항목2
                   </div>
                 </td>
                 <td>
                   <div class="search-table-col">
-                    <button class="btn rounded-pill" :class="{'btn-primary':!memberSearch.isFollowMember, 'btn-secondary': memberSearch.isFollowMember}"  v-text="memberSearch.isFollowMember?'팔로우취소':'팔로우하기'" @click="followMember(memberSearch)">팔로우하기</button>
+                    <button>팔로우하기</button>
                   </div>
                 </td>
               </tr>
-              <tr v-if="memberSearchList.length === 0">
+              <tr v-if="tagSearchList.length === 0">
                 <td colspan="3">
                   <h3 class="m-3">검색 결과가 없습니다</h3>
                 </td>
@@ -130,10 +129,86 @@
   
   
     <!-- # 태그 검색결과 -->
-  
+    <div v-if="mode==='tag'">
+      <div class="row mt-5">
+        <div class="col">
+          <table class="table">
+            <thead>
+              <tr class="text-center">
+                <th scope="col">항목1</th>
+                <th scope="col">항목2</th>
+                <th scope="col">항목3</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(tag, i) in tagSearchList" :key="i">
+                <td class="cursor-pointer">
+                  <div class="search-table-col">
+                    사진
+                  </div>
+                </td>
+                <td class="cursor-pointer">
+                  <div class="search-table-col">
+                    이름
+                  </div>
+                </td>
+                <td>
+                  <div class="search-table-col">
+                    <button>팔로우하기</button>
+                  </div>
+                </td>
+              </tr>
+              <tr v-if="tagSearchList.length === 0">
+                <td colspan="3">
+                  <h3 class="m-3">검색 결과가 없습니다</h3>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
   
     <!-- # 게시물 검색결과 -->
-  
+    <div v-if="mode==='postContent'">
+      <div class="row mt-5">
+        <div class="col">
+          <table class="table">
+            <thead>
+              <tr class="text-center">
+                <th scope="col">항목1</th>
+                <th scope="col">항목2</th>
+                <th scope="col">항목3</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(tag, i) in tagSearchList" :key="i">
+                <td class="cursor-pointer">
+                  <div class="search-table-col">
+                    사진
+                  </div>
+                </td>
+                <td class="cursor-pointer">
+                  <div class="search-table-col">
+                    이름
+                  </div>
+                </td>
+                <td>
+                  <div class="search-table-col">
+                    <button>팔로우하기</button>
+                  </div>
+                </td>
+              </tr>
+              <tr v-if="postSearchList.length === 0">
+                <td colspan="3">
+                  <h3 class="m-3">검색 결과가 없습니다</h3>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
   </div>
 
 </div>
