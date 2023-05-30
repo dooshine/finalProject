@@ -1,8 +1,12 @@
 package com.kh.idolsns.restcontroller;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import javax.annotation.PostConstruct;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,13 +17,19 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.kh.idolsns.configuration.CustomFileuploadProperties;
 import com.kh.idolsns.dto.ArtistDto;
+import com.kh.idolsns.dto.ArtistProfileDto;
 import com.kh.idolsns.dto.ArtistViewDto;
+import com.kh.idolsns.dto.AttachmentDto;
 import com.kh.idolsns.dto.MemberDto;
 import com.kh.idolsns.dto.TagCntDto;
 import com.kh.idolsns.dto.TagDto;
+import com.kh.idolsns.repo.AttachmentRepo;
 import com.kh.idolsns.service.AdminService;
 import com.kh.idolsns.vo.AdminMemberSearchVO;
 import com.kh.idolsns.vo.TagCntSearchVO;
@@ -33,7 +43,23 @@ public class AdminRestController {
     private AdminService adminService;
 
     @Autowired
+    private AttachmentRepo attachmentRepo;
+    
+
+    @Autowired
+	private CustomFileuploadProperties fileUploadProperties;
+
+    @Autowired
     private SqlSession sqlSession;
+
+    private File dir;
+
+    @PostConstruct
+	public void init() {
+		dir = new File(fileUploadProperties.getPath());
+		dir.mkdirs();
+	}
+
 
     // SELECT 태그 리스트 목록
     @GetMapping("/tag")
@@ -79,6 +105,42 @@ public class AdminRestController {
     @GetMapping("/artistView")
     public List<ArtistViewDto> selectArtistList(){
         return sqlSession.selectList("admin.selectArtistView");
+    }
+
+    // CREATE & UPDATE 대표페이지 프로필사진 설정
+    @PostMapping("/artistProfile")
+    public void setArtistProfile(@RequestParam("attachment") MultipartFile attachment, @RequestParam("artistNo") Integer artistNo) throws IllegalStateException, IOException{
+
+        if(!attachment.isEmpty()) {//파일이 있을 경우
+
+            // # 1. attachment 저장
+            //번호 생성
+            int attachmentNo = attachmentRepo.sequence();
+            
+            //파일 저장(저장 위치는 임시로 생성)
+            File target = new File(dir, String.valueOf(attachmentNo));//파일명=시퀀스
+            attachment.transferTo(target);
+            
+            //DB 저장
+            attachmentRepo.insert(AttachmentDto.builder()
+                            .attachmentNo(attachmentNo)
+                            .attachmentName(attachment.getOriginalFilename())
+                            .attachmentType(attachment.getContentType())
+                            .attachmentSize(attachment.getSize())
+                        .build());
+
+
+            // # 2. pageProfile 저장
+
+            // 조회 후 insert | update
+            if(sqlSession.selectOne("artist.selectOneArtistProfile", artistNo)==null){
+                sqlSession.insert("artist.insertArtistProfile", ArtistProfileDto.builder().artistNo(artistNo).attachmentNo(attachmentNo).build());
+            } else {
+                sqlSession.update("artist.updateArtistProfile", ArtistProfileDto.builder().artistNo(artistNo).attachmentNo(attachmentNo).build());
+            }
+            
+        }
+
     }
 }
 

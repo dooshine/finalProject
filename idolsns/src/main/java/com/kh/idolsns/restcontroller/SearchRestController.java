@@ -27,7 +27,6 @@ public class SearchRestController {
     // 회원검색결과 조회
     @GetMapping("/memberProfile")
     public SearchMemberDto selectMemberProfile(@RequestParam String memberId){
-        // SearchMemberDto dto = sqlSession.selectOne("search.selectMemberProfile", memberId);
         return sqlSession.selectOne("search.selectMemberProfile", memberId);
     }
 }
