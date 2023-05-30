@@ -378,6 +378,13 @@
 			background: #6a53fb;
 			z-index: 9999;
 		}
+		.chatRoomNameDiv {
+			display: block;
+			white-space: nowrap;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			word-break: break-all;
+		}
     </style>
 </head>
 
@@ -487,7 +494,7 @@
 						<h5>새 위즈 만들기</h5>
 						<div class="d-flex justify-content-end">
 							<button type="button" class="hide-style pe-3 confirmNewChatRoomBtn" @click="createChatRoom"
-								:disabled="(selectedMemberList.length === 0 && nameCount < 1) || (selectedMemberList.length >= 3 && (nameCount === 0 || nameCount > 10))">
+								:disabled="(selectedMemberList.length === 0 && nameCount < 1) || (selectedMemberList.length >= 2 && (nameCount < 1 || nameCount > 20))">
 								<i class="ti ti-message-circle-check"></i>
 							</button>
 							<button type="button" class="btn-close" @click="hideCreateRoomModal"></button>
@@ -521,14 +528,16 @@
 							</div>
 							<!-- 채팅방 이름(단톡일 때: 지정한 채팅방 이름 표시) -->
 							<div v-if="roomInfo.chatRoomType == 'G'">
+								<!-- 채팅방 이름 변경 모드 -->
 								<div v-if="roomInfo.edit == true" class="d-flex align-items-center justify-content-between w-100">
 									<!-- 이름 변경 입력창 -->
-									<input v-model="roomInfo.chatRoomName1" @input="roomInfo.chatRoomName1 = $event.target.value" @keyup.enter="saveRoomName" class="changeNameInput">
+									<input v-model="roomInfo.chatRoomName1" @keyup.enter="saveRoomName" 
+										class="changeNameInput" @input="roomInfo.chatRoomName1 = $event.target.value" >
 									<!-- 이름 변경 버튼 -->
 									<div class="d-flex justify-content-end">
 										<!-- 이름변경 저장 버튼 -->
 										<button type="button" @click="saveRoomName" class="hide-style confirmNameBtn me-2" 
-											:disabled="(roomInfo.chatRoomName1.length < 1 || roomInfo.chatRoomName1.length > 10) || roomInfo.chatRoomName1 == roomInfoCopy.chatRoomName1">
+											:disabled="(roomInfo.chatRoomName1.length < 1 || roomInfo.chatRoomName1.length > 20) || roomInfo.chatRoomName1 == roomInfoCopy.chatRoomName1">
 											<i class="ti ti-edit-circle ti-edit-circle-large"></i>
 										</button>
 										<!-- 이름 변경 취소 버튼 -->
@@ -537,8 +546,9 @@
 										</button>
 									</div>
 								</div>
-								<div v-else>
-									<h5>{{ roomInfo.chatRoomName1 }}</h5>
+								<!-- 채팅방 이름 -->
+								<div v-else style="max-width: 266px;">
+									<h5 class="chatRoomNameDiv">{{ roomInfo.chatRoomName1 }}</h5>
 								</div>
 							</div>
 							<div class="d-flex justify-content-end">

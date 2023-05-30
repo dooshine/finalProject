@@ -173,6 +173,7 @@
 				},
 				messageHandler(e) {
 					const parsedData = JSON.parse(e.data);
+					//console.log(parsedData);
 					// 타입이 3인(삭제인) 메세지는 리스트에 추가하지 않음
 					if(parsedData.type == 3) {
 						this.messageList.splice(0);
@@ -190,7 +191,10 @@
 						this.chatRoomList.splice(0);
 						this.loadRoomList(); return;
 					}
-					this.messageList.push(parsedData);
+					// 현재 방에 해당하는 메세지만 불러오기
+					if(parsedData.chatRoomNo === this.chatRoomNo) {						
+						this.messageList.push(parsedData);
+					}
 					// 사용자가 페이지를 보고있는 경우 메세지 읽음 처리
 					if(this.isVisible && this.isFocused && parsedData.memberId != this.memberId &&
 							this.chatRoomNo == parsedData.chatRoomNo && this.chatRoomModal === true) {
@@ -430,30 +434,10 @@
 					const resp = await axios.get(url);
 					for(let i=0; i<resp.data.length; i++) {
 						if(resp.data[i].chatMessageTime >= this.chatJoin)
+							console.log(resp.data[i].chatRoomNo)
 							this.messageList.push(resp.data[i]);
 					}
 					this.scrollBottom();
-				},
-				// 메세지 보내기
-				sendMessage() {
-					if(this.textCount < 1) return;
-					if(this.textCount > 300) return;
-					this.firstMsg();
-					const data = {
-							type: 1,
-							chatRoomNo: this.chatRoomNo,
-							chatMessageContent: this.text
-					};
-					this.socket.send(JSON.stringify(data));
-					this.clear();
-					/*const noti = {
-						type: 12,
-						memberId: this.memberId,
-						chatRoomNo: this.chatRoomNo,
-						receiverList: this.chatMemberList
-					};
-					this.socket.send(JSON.stringify(noti));*/
-					this.loadRoomList();
 				},
 				// 보내는 메세지가 오늘의 첫 메세지인지 확인
 				firstMsg() {
@@ -478,7 +462,21 @@
 						this.socket.send(JSON.stringify(data));
 					}
 				},
-				// 사진 보내기
+				// 메세지 보내기(실시간 알림 전송 포함)
+				sendMessage() {
+					if(this.textCount < 1) return;
+					if(this.textCount > 300) return;
+					this.firstMsg();
+					const data = {
+							type: 1,
+							chatRoomNo: this.chatRoomNo,
+							chatMessageContent: this.text
+					};
+					this.socket.send(JSON.stringify(data));
+					this.clear();
+					this.loadRoomList();
+				},
+				// 사진 보내기(실시간 알림 전송 포함)
 				async sendPic() {
 					const fileInput = document.querySelector('.picInput');
 					const file = fileInput.files[0];
@@ -494,16 +492,7 @@
 								chatMessageContent: "사진 " + resp.data.attachmentNo
 						}
 						this.socket.send(JSON.stringify(data));
-						const noti = {
-								type: 12,
-								memberId: this.memberId,
-								chatRoomNo: this.chatRoomNo,
-								receiverList: this.chatMemberList
-						};
-						this.socket.send(JSON.stringify(noti));
-						/*this.clear();*/
-						/*fileInput = [];*/
-						this.scrollBottom();
+						this.loadRoomList();
 					}
 				},
 				// 시간 포멧 설정
@@ -581,7 +570,8 @@
 				},
 				// 채팅방 이름 변경
 				async saveRoomName() {
-					if(this.roomInfo.chatRoomName1.length > 10) return;
+					if(this.roomInfo.chatRoomName1.length < 1) return;
+					if(this.roomInfo.chatRoomName1.length > 20) return;
 					const chatRoomNo = this.chatRoomNo;
 					const url = "${pageContext.request.contextPath}/chat/chatRoom/changeName";
 					const data = this.roomInfo;
