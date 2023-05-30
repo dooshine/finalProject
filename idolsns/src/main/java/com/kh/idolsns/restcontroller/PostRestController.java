@@ -114,15 +114,14 @@ public class PostRestController {
 			tempDto.setPostNo(postNo);
 			tempDto.setTagType("자유"); // 자유, 고정 둘 중 하나
 			tempDto.setTagName(tag);
-			tagRepo.insert(tempDto);    		
+			tagRepo.insert(tempDto);
     	}
-    }	
+    }
     //--------------------- 태그정보 불러오기
     @GetMapping("/tag/{postNo}")
     public List<String> getTag(@PathVariable("postNo") Long postNo){
     	System.out.println("postNo는 : "+postNo);
     	return tagRepo.selectAll(postNo);
-    	
     }
     
     // ---------------------- 지도정보 등록

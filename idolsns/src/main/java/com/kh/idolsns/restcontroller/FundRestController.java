@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.kh.idolsns.dto.FundDto;
@@ -38,8 +39,15 @@ public class FundRestController {
 	// 무한스크롤을 위한 백엔드 페이징 목록 구현
 	// - 페이지번호를 알려준다면 10개를 기준으로 해당 페이지 번호의 데이터를 반환
 	@GetMapping("/page/{page}")
-	public List<FundPostImageDto> paging(@PathVariable int page) {
-		return fundPostImageRepo.selectListByPaging(page);
+	public List<FundPostImageDto> paging(@PathVariable int page,
+		@RequestParam(required=false) String searchKeyword) {
+		if (searchKeyword == null || searchKeyword.equals("")) {
+			return fundPostImageRepo.selectListByPaging(page);
+		}
+		else {
+			System.out.println("------------------Keyword------------"+searchKeyword);
+			return fundPostImageRepo.selectListByPaging(page, searchKeyword);
+		}
 	}
 		
 	
@@ -93,6 +101,10 @@ public class FundRestController {
 		FundDto fundDto = fundRepo.find(fundNo);
 		return fundDto;
 	}
+	
+	// 펀딩게시물 등록 시 태그 등록
+//	@PostMapping("/tag")
+//	public void taging()
 	
 	
 	  

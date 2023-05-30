@@ -59,13 +59,24 @@
 	 	) where rn between #{begin} and #{end}
 	 </sql>
 	 
+	<!-- 검색어 있는 무한스크롤 페이징 목록 -->
+	 <select id="infiniteWithKeyword" resultType="FundPostImageDto">
+		<include refid="topNheader"/>	 		
+			select * from fundpostimage_view
+		  	where fund_title like '%' || #{searchKeyword} || '%'
+		  	order by post_time desc	 	 	
+		<include refid="topNfooter"/>
+	 </select>
+	 
 	<!-- 무한스크롤 페이징 목록 -->
 	 <select id="infinite" resultType="FundPostImageDto">
 		<include refid="topNheader"/>	 		
-		select * from fundpostimage_view
-		order by post_time desc	 	
+			select * from fundpostimage_view
+		  	order by post_time desc	 	 	
 		<include refid="topNfooter"/>
 	 </select>
+	 
+	 
 	 
 	<select id="list" resultType="FundPostImageDto">
 		select * from fundpostimage_view

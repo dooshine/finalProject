@@ -120,11 +120,15 @@
 <%-- 		<c:forEach var="fundPostDto" items="${fundList}"> --%>
 <%-- 			${fundPostDto}<br> --%>
 <%-- 		</c:forEach> --%>
-
+		
+		  		
 
 		  <div id="app">
         		 <div class="container rounded p-3" style="background-color:white;">
-	
+					<div>
+			            <input type="text" v-model="searchQuery" placeholder="검색창">
+			            <button @click="searchFunding">검색</button>
+			        </div>
 					  <div class="funding-list justify-content-center mt-5">
 					  
 					    <div class="funding-item" v-for="(funding, index) in fundings" :key="funding.memberId"
@@ -163,10 +167,13 @@
             		// 목록을 위한 데이터
        		    	percent: 0,
        		    	page: 1,
+       		    	searchPage: 1,
        		    	finish: false,
 			        fundings: [],
 			        // 무한스크롤 안전장치
 			        loading: false,
+			        // 검색 키워드
+			        searchQuery: "",
 	            	};
 	            	},
             	computed: {
@@ -179,7 +186,7 @@
 	                       
 	                       this.loading = true;
 	                       
-						const resp = await axios.get("http://localhost:8080/rest/fund/page/"+this.page)	  
+						const resp = await axios.get("http://localhost:8080/rest/fund/page/"+this.page);	  
 						console.log(resp.data);
 						this.fundings.push(...resp.data);
 						this.page ++;
@@ -213,20 +220,42 @@
 	           			window.location.href = url;
 	           		},
 	           		getImageUrl(funding) {
-	           		      if (funding.attachmentNo === null) {
-	           		        return "https://via.placeholder.com/150x150";
-	           		      } else {
-	           		        return "/rest/attachment/download/" + funding.attachmentNo;
-	           		      }
+       				  const imageUrl = "/rest/attachment/download/" + funding.attachmentNo;
+	           	      return imageUrl;
 	          		    },
 	          		    
-	          		 	// 3자리 마다 ,
-	      		      	formatCurrency(value) {
-	      		            return value.toLocaleString();
-	      	          	},
+          		 	// 3자리 마다 ,
+      		      	formatCurrency(value) {
+      		            return value.toLocaleString();
+      	          	},
+      	          	// 펀딩 검색
+      	          	async searchFunding() {
+      	          		if(!this.searchQuery) return;
+// 	      	         	console.log(this.searchQuery);
+						// funding 리스트 초기화
+						this.fundings = [];
+	      	          	if(this.loading == true) return; // 로딩중이면
+	                    if(this.finish == true) return; // 다 불러왔으면
+	                    
+	                    this.loading = true;
+	                    
+	                    const page = this.searchPage;
+						const resp = await axios.get("http://localhost:8080/rest/fund/page/"
+								+page+"?searchKeyword="+this.searchQuery);	  
+						console.log(resp.data);
+						this.fundings.push(...resp.data);
+						this.searchPage ++;
+						
+						this.loading = false;
+						
+						// 데이터가 10개 미만이면 더 읽을게 없다
+	                 if(resp.data.length < 10){ 
+	                     this.finish = true;
+                 		}	
+      	          	}
 	           	},
 	           	watch: {
-	                // percent가 변하면 eprcent의 값을 읽어와서 80% 이상인지 판정
+	                // percent가 변하면 percent의 값을 읽어와서 80% 이상인지 판정
 	                percent(){
 	                    if(this.percent >= 80) {
 	                        // console.log("데이터를 불러올 때가 된거 같아");

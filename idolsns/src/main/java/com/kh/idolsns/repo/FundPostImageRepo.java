@@ -14,4 +14,5 @@ public interface FundPostImageRepo {
 	List<FundDto> selectFundList(Long postNo);
 	
 	List<FundPostImageDto> selectListByPaging(int page);
+	List<FundPostImageDto> selectListByPaging(int page, String searchKeyword);
 }
