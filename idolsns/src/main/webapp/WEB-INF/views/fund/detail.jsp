@@ -6,7 +6,6 @@
 <jsp:include page="/WEB-INF/views/template/header.jsp"></jsp:include>
 
 
-
     <style>
     
           /*조건부 스타일 - 태블릿*/
@@ -30,30 +29,25 @@
     		
     		}
     
-        .fund_label {
+        label {
         	color: gray;
 			width:100%;
 			font-size: 80%;
-			padding-left:1em;
+		
 		}
 		
 		.fund_span {
 			font-size: 30px;
-			padding-left:0.5em;
+		
 			
 		}
-	
+		
+		td {
+		color: gray;	
+		font-size: 90%;
+		}
+		
 
-		.like-btn {
-		  
-		}
-		
-		.like-count {
-		  font-size: 14px;
-		  color: #777;
-		  
-		}
-		
     </style>
     
    	<div id="app">
@@ -63,75 +57,180 @@
 			<h2 class="title text-center mt-5 mb-5">{{ fundDetail.fundTitle }}</h2>
 		</div>
 			
-		
-		<img :src="fundDetail.imageURL" alt="예시사진">
+			<div class="d-flex mt-5">
 			
+				<div class="mt-5">
+				<img :src="fundDetail.imageURL" alt="예시사진" style="width:450px; height: 400px;">
+				</div>
+			
+			
+				<div class="col  mt-5"  style="padding-left:3em; padding-right:3em;">
 		
-			<div>
-	
-				<label>모인 금액</label>
-				<span class="fund_span">{{ fundDetail.fundTotal }}</span>원
-				<span style="font-weight:bold">{{ (fundDetail.fundTotal / fundDetail.fundGoal * 100).toFixed(1) }}</span>%
+					<label>모인 금액</label>
+					<span class="fund_span">{{ formatCurrency(fundDetail.fundTotal) }}</span>원
+					<span style="font-weight:bold">{{ (fundDetail.fundTotal / fundDetail.fundGoal * 100).toFixed(1) }}</span>%
+			
+					<label class="mt-3">남은 시간</label>
+					<span class="fund_span">{{ getTimeDiff }}</span>일
+		
+					<label class="mt-3">후원자</label>
+					<span class="fund_span">{{ fundDetail.fundSponsorCount }}</span>명
 		
 			
-		
-				<label>남은 시간</label>
-				<span class="fund_span">{{ getTimeDiff }}</span>일
+				<hr class="row mt-3 mb-3">
 			
-	
-				<label>후원자</label>
-				<span class="fund_span">{{ fundDetail.fundSponsorCount }}</span>명
-	
+			
+			
+			<table>
+				<tr>
+					<th style="padding-right:3em;">목표금액</th> 
+					<td >{{ formatCurrency(fundDetail.fundGoal) }}원</td>
+				</tr>
+				
+				<tr>
+					<th>펀딩 기간</th> 
+					<td>{{ fundDetail.postStart }} ~ {{ fundDetail.postEnd }}</td>
+				</tr>
+				
+				<tr>
+					<th>결제</th> 
+					<td>{{ fundDetail.postEnd }} 결제 진행</td>
+			
+			</table>
+			
+			<div class="row mt-3">
+				<button type="submit" class="btn btn-primary btn-lg " @click="order">
+				후원하기</button>
+			</div>	
+					
+			
+			
+			</div>
 			
 			</div>
 		
-		<div class="d-flex row mt-3" style="padding-left: 1em">
-		
-			<hr>
-		
-			<div>목표 금액</div>
-			<div>{{ fundDetail.fundGoal }}원</div>
-			<br>
 			
-			<div>펀딩 기간		</div>
-			<div>{{ fundDetail.postStart }} ~ {{ fundDetail.postEnd }}</div>
 			
-			<div >결제</div>
-			<div>{{ fundDetail.postEnd }} 결제 진행</div>
-			
-		
+					
+					
+		<!-- 펀딩 하단 (내용) -->			
+	<div>			
 			<div class="row mt-3" style="padding-left: 1em">
-			
-				    <button class="btn btn-primary like-btn">
-				      <i class="fa fa-heart"></i> 
-				      <!-- {{ likeCount }}  -->
-				    </button>
-		
-			
-					 <button class="btn btn-primary share-btn">
-				      <i class="fa fa-share"></i>
-				      <!-- {{ likeCount }}  -->
-				    </button>
-			
-				
-					<button type="submit" class="btn btn-primary" @click="order">
-					후원하기</button>
+				<div v-html="fundDetail.postContent"></div>
+			</div>
 					
-					</div>	
-					
-					<div class="row mt-3" style="padding-left: 1em" 
-								v-for="(no, index) in fundDetail.attachmentNos">
-						<img :src="'/download?attachmentNo=' + no"/>
-					</div>
-					
-		</div>
-	</div>             
 	</div>
-				<hr>
+		
+		
+		
+	
+           
+		<hr>
+	
+	<!-- 댓글창 -->
+	
+	
+	  <div v-if="replies.length == 0">댓글이 없습니다.</div>
+	  <div v-else>
+	      <div v-for="(reply, i) in replies" :key="reply.replyNo">
+	         
+	        <!-- 최상위 댓글이면 -->
+	        <div v-if="reply.replyNo == reply.replyGroupNo">
+	        	<div>{{ reply.replyId }}:</div>
+		        	
+	        	<!-- 수정 폼 -->
+	        	<div v-if="updateReplyObj.index == i">
+			    	<textarea @blur="setUpdateReplyObj($event, i)" 
+			    	placeholder="수정 내용">{{ reply.replyContent }}</textarea>
+				    <button @click="saveUpdate(i)">저장</button>
+				    <button @click="cancelUpdate()">취소</button>
+				</div>
+	        	<div v-else>
+	        		{{ reply.replyContent }}
+	        		replyNo : {{ reply.replyNo }}
+	        		groupNo: {{ reply.replyGroupNo }}	
+	        		<!-- 대댓글 버튼 -->
+		        	<button v-if="reply.replyNo == reply.replyGroupNo" 
+		        			@click="showRereplyForm(i)">
+		        		<i class="fa-solid fa-reply"></i>
+					</button>
+					<!-- 수정 버튼 -->
+		        	<button v-if="reply.replyId == replyObj.replyId"
+							@click="showUpdateForm(i)">
+		        		<i class="fa-solid fa-edit"></i>
+		        	</button>
+		        	<!-- 삭제 버튼 -->
+		        	<button v-if="reply.replyId == replyObj.replyId"
+							@click="deleteReply(i)">
+						<i class="fa-solid fa-trash-alt"></i>
+					</button>	
+	        	</div>
+	        	
+	        </div>
+	        
+	        <!-- 대댓글이면 -->
+	        <div v-else>
+	        
+	        	<!-- 수정 폼 -->
+	        	<div class="card-body" v-if="updateReplyObj.index == i">
+	        		→ {{reply.replyId}} :<br>
+			    	<textarea class="form-control" @blur="setUpdateReplyObj($event, i)" 
+			    	placeholder="수정 내용">{{ reply.replyContent }}</textarea>
+				    <button @click="saveUpdate(i)">저장</button>
+				    <button @click="cancelUpdate()">취소</button>
+				</div>
+				<div class="card-body" v-else>
+					→ {{reply.replyId}} : {{ reply.replyContent }}
+					replyNo : {{ reply.replyNo }}
+					groupNo: {{ reply.replyGroupNo }}
+	        		<!-- 대댓글 버튼 -->
+		    
+		        		<i v-if="reply.replyNo == reply.replyGroupNo" 
+		        			@click="showRereplyForm(i)" class="fa-solid fa-reply"></i>
 			
-			
+					<!-- 수정 버튼 -->
+		        	<button v-if="reply.replyId == replyObj.replyId"
+							@click="showUpdateForm(i)">
+		        		<i class="fa-solid fa-edit"></i>
+		        	</button>
+		        	<!-- 삭제 버튼 -->
+		        	<button v-if="reply.replyId == replyObj.replyId"
+							@click="deleteReply(i)">
+						<i class="fa-solid fa-trash-alt"></i>
+					</button>	
+				</div>
+	        </div>
+	        
+	        <!-- 대댓글 폼 -->
+	        <div v-if="reReplies[i] == true">
+	        	<textarea class="form-control" @blur="setReReplyObj($event, i)" placeholder="대댓글 내용"></textarea>
+	        	<button @click="addReReply(i)">작성</button>
+	        	<button @click="reReplies[i] = false">취소</button>
+	        </div>
+	        
+	      </div>
+ 	 </div>
+ 	 
+ 	 <hr>
+ 	 
+	  	<!-- 새댓글 폼 -->
+	  	<form @submit.prevent="addReply">
+	    <div>
+	      <input type="hidden" v-model="replyObj.replyId" required>
+	      <input type="hidden" v-model="replyObj.postNo" required>
+	    </div>
+	    <div class="card">
+	      <textarea class="form-control" type="text" v-model="replyObj.replyContent" placeholder="댓글 내용" required></textarea>
+	    </div>
+	    <div>
+	      <button class="btn btn-primary" type="submit">등록</button>
+	    </div>
+    	</form>
+    	
+
+	</div>
 				
-			
+</div>
 			
     <script src="https://unpkg.com/vue@3.2.36"></script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
@@ -162,6 +261,28 @@
 		          imageURL: "",
 		          fundTotal: "",
 		        },
+		        replies: [],
+		        // 댓글창 보여주기
+		        reReplies: [],
+		        reRepliesObjList: [],
+		        replyObj: {
+		          replyId: memberId,
+		          replyContent: "",
+		          postNo:"",
+		        },
+		        // 대댓글 객체
+		        reReplyObj: {
+		          replyId: memberId,
+		          replyContent: "",
+		          postNo:"",
+		          replyGroupNo: "",
+			        },
+			    // 수정댓글 객체
+			   	updateReplyObj: {
+				  index: -1,
+				  replyNo: "",
+				  replyContent: "",
+			   	}
 		      };
 		    },
 		    computed: {
@@ -180,7 +301,7 @@
         		          const remainingHours = Math.floor(remainingTime / (60 * 60 * 1000));
         		          const remainingMinutes = Math.floor((remainingTime % (60 * 60 * 1000)) / (60 * 1000));
         		          const remainingSeconds = Math.floor((remainingTime % (60 * 1000)) / 1000);
-        		          return remainingHours+"시간"+ remainingMinutes+"분";
+        		          return remainingHours+"시간";
         		        }
         		},
 		    },
@@ -195,7 +316,6 @@
 			    async loadFundPosts(){
 			    	const postNo = this.fundDetail.postNo;
 					const resp = await axios.get("http://localhost:8080/rest/fund/"+postNo)	  
-					console.log(resp);
 					this.fundDetail = { ...this.fundDetail, ...resp.data };
         		},
         		// postNo의 attachmentNo list 불러오기 
@@ -204,12 +324,12 @@
 					const resp = await axios.get("http://localhost:8080/rest/fund/attaches/"+postNo)	  
 					this.fundDetail.attachmentNos.push(...resp.data);
         		},
-		       // fundTotal 불러오기
-        		async loadFundTotal(){
+		       // fundTotal & fundSponsorCount 불러오기
+        		async loadFundVO(){
 			    	const postNo = this.fundDetail.postNo;
-					const resp = await axios.get("http://localhost:8080/rest/fund/fundtotal/"+postNo)	  
-// 					console.log(resp);
-					this.fundDetail.fundTotal = resp.data;
+					const resp = await axios.get("http://localhost:8080/rest/fund/fundlist/"+postNo)	  
+					this.fundDetail.fundTotal = resp.data.fundTotal;
+					this.fundDetail.fundSponsorCount = resp.data.fundSponsorCount;
         		},
         		
                 // 데이터 중 fund를 서버로 전송
@@ -218,14 +338,105 @@
 		      	  window.location.href = "http://localhost:8080/fund/order?postNo=" + postNo;
 		      	},
 		      	
+		      	// 3자리 마다 ,
+		      	formatCurrency(value) {
+		            return value.toLocaleString();
+	          	},
+	          	// replies 불러오기
+	          	async loadReplies() {
+	                const postNo = this.fundDetail.postNo; // 게시물 번호
+	                const resp = await axios.get("http://localhost:8080/rest/reply/fund/"+postNo);
+	                this.replies = resp.data; // Vue data에 저장
+	              },
+	            // 작성한 comment 서버로 전송
+                async addReply() {
+	            	if(this.replyObj.replyId == "") return;
+	              this.replyObj.postNo = this.fundDetail.postNo;
+				  const resp = await axios.post("http://localhost:8080/rest/reply/fund", 
+						  										this.replyObj);
+				  this.replyObj.replyContent = ""; // 내용 초기화
+				  this.loadReplies(); // 댓글목록 다시 불러옴
+				},
+				// 대댓글 작성
+                async addReReply(i) {
+	            	if(this.reRepliesObjList[i].replyId == "") return;
+				   	const resp = await axios.post("http://localhost:8080/rest/reply/fund", 
+						  										this.reRepliesObjList[i]);
+				   // 댓글창 지우기 
+				   this.reReplies[i] = false
+				   this.loadReplies(); // 댓글목록 다시 불러옴
+				},
+				
+				// 대댓글Obj 데이터 반영
+				setReReplyObj(event, index){
+					const reReplyObj = {
+							 replyId: memberId,
+					         replyContent: "",
+					         postNo:"",
+					         replyGroupNo: "",
+					}
+					// 대댓글 펀딩게시물 번호 설정					
+					reReplyObj.postNo = this.fundDetail.postNo;
+					// 대댓글 내용 설정
+// 					this.reReplyObj.replyContent = event.target.value;
+					reReplyObj.replyContent = event.target.value;
+					// 대댓글 그룹 설정
+// 					this.reReplyObj.replyGroupNo = parentReplyNo;
+					reReplyObj.replyGroupNo = this.replies[index].replyGroupNo;
+					console.table(reReplyObj);
+					this.reRepliesObjList[index] = reReplyObj;
+				},
+				// 댓글 삭제
+				async deleteReply(i){
+					const replyNo = this.replies[i].replyNo;
+					const resp = await axios.delete("http://localhost:8080/rest/reply/fund/"+replyNo);
+					this.loadReplies();
+				},
+				
+				// 수정하려는 댓글의 인덱스와 내용을 updateReply객체에 저장 
+				setUpdateReplyObj($event, i) {
+					this.reReplies[i] = false // 켜져있는 대댓글 작성폼 닫기
+					this.updateReplyObj.index = i;
+					this.updateReplyObj.replyNo = this.replies[i].replyNo;
+					this.updateReplyObj.replyContent = event.target.value;
+				},
+				// 댓글 수정
+				async saveUpdate(i) {
+					// 수정된 댓글 서버로 전송 
+					const resp = await axios.put("http://localhost:8080/rest/reply/fund/", 
+													this.updateReplyObj);
+					// 수정된 데이터 저장 
+					this.replies[i].replyContent = this.updateReplyObj.replyContent;
+					// 수정폼 닫기
+					this.cancelUpdate();
+				},
+				cancelUpdate() {
+					// 수정 폼 닫고 updatedReply 객체 초기화 
+					this.updateReplyObj.index = -1;
+					this.updateReplyObj.replyNo = "";
+					this.updateReplyObj.replyContent = "";
+				},
+				// 대댓글 폼 보여주기 & 수정 폼 숨기기
+				showRereplyForm(i) {
+					this.reReplies[i] = true
+					this.cancelUpdate();
+				},
+				// 수정 폼 보여주기 & 대댓글 폼 숨기기
+				showUpdateForm(i) {
+					this.updateReplyObj.index = i
+					this.reReplies[i] = false;
+				}
+		      	
 		    },
 		    created() {
 		    	  this.setPostNo();
 		    	  this.loadFundPosts();
 		    	  this.loadAttachNos();
-		    	  this.loadFundTotal();
+		    	  this.loadFundVO();
+		    	  this.loadReplies();
+		    	},
+		    mounted() {
 		    	}
-		  
 		  }).mount("#app");
 		</script>
 

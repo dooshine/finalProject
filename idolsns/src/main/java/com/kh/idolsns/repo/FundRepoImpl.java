@@ -31,7 +31,7 @@ public class FundRepoImpl implements FundRepo{
 //         } else {
 //            sqlSession.insert("fund.add", dto);
 //         }
-         sqlSession.insert("fund.add2", fundDto);
+         sqlSession.insert("fund.add", fundDto);
       }
 
    
@@ -71,6 +71,7 @@ public class FundRepoImpl implements FundRepo{
    public List<FundDto> selectByPostNo(Long postNo) {
       return sqlSession.selectList("fund.selectByPostNo", postNo);
    }
+
 
 
 

@@ -1,11 +1,16 @@
 package com.kh.idolsns.controller;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,9 +19,16 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.kh.idolsns.configuration.CustomEmailProperties;
+import com.kh.idolsns.configuration.CustomFileuploadProperties;
+import com.kh.idolsns.dto.AttachmentDto;
 import com.kh.idolsns.dto.MemberDto;
+import com.kh.idolsns.dto.MemberProfileImageDto;
+import com.kh.idolsns.repo.AttachmentRepo;
+import com.kh.idolsns.repo.MemberProfileImageRepo;
 import com.kh.idolsns.repo.MemberRepo;
 import com.kh.idolsns.service.emailService;
 
@@ -33,6 +45,24 @@ public class MemberController {
 	@Autowired
 	private JavaMailSender sender;
 	
+	@Autowired
+	private AttachmentRepo attachmentRepo;
+	
+	@Autowired
+	private CustomEmailProperties customEmailProperties;
+	
+	@Autowired
+	private MemberProfileImageRepo memberProfileImageRepo;
+	
+	@Autowired
+	private CustomFileuploadProperties customFileuploadProperties;
+	
+	private File dir;
+	@PostConstruct
+	public void init() {
+		dir = new File(customFileuploadProperties.getPath());
+	}
+	
 	//회원가입
 	@GetMapping("/join")
 	public String join() {
@@ -44,6 +74,8 @@ public class MemberController {
 		
 		// 멤버 생성
 		memberRepo.insert(memberDto);
+
+		
 		return "member/joinFinish";
 	}
 	
@@ -80,6 +112,15 @@ public class MemberController {
 		session.setAttribute("memberId", findDto.getMemberId());
 		session.setAttribute("memberLevel", findDto.getMemberLevel());
 		
+		String memberId = findDto.getMemberId();
+		if(!(findDto.getMemberExitDate() == null)) {
+			memberRepo.cancelExit(memberId	);
+			String alertMessage = "회원 탈퇴가 취소되었습니다!";
+		    attr.addAttribute("mode", "cancel");
+		    attr.addAttribute("mmssgg", alertMessage);
+		    return "redirect:login";
+		}
+		
 		return "redirect:" + prevPage;
 	}
 	
@@ -100,6 +141,64 @@ public class MemberController {
 		return "member/mypage";
 	}
 	
+	@GetMapping("/profile")
+	@ResponseBody
+	public Map<String, String> profile(HttpSession session) {
+		String memberId = (String) session.getAttribute("memberId");
+		
+		MemberDto memberDto = memberRepo.emailExist(memberId);
+		
+		Map<String, String> result = new HashMap<>();
+		result.put("memberId", memberDto.getMemberId());
+		result.put("memberNick", memberDto.getMemberNick());
+		
+		return result;
+	}
+	
+	@GetMapping("/profileImage")
+	@ResponseBody
+	public MemberProfileImageDto memberProfileExist(HttpSession session) {
+		String memberId = (String) session.getAttribute("memberId");
+		MemberProfileImageDto memberProfileImageDto = memberProfileImageRepo.MemberImageExist(memberId);
+		return memberProfileImageDto;
+	}
+	
+	@GetMapping("/nickname")
+	@ResponseBody
+	public String nickname(HttpSession session,
+			@RequestParam String memberNick,
+			RedirectAttributes attr) {
+		String memberId = (String) session.getAttribute("memberId");
+		
+		memberRepo.updateNick(memberId, memberNick);
+		
+		return "success";
+	}
+	
+	@GetMapping("/editImage")
+	@ResponseBody
+	public String editImage(HttpSession session,
+													@RequestParam MultipartFile attach) throws IllegalStateException, IOException {
+		String memberId = (String) session.getAttribute("memberId");
+		if(!attach.isEmpty()) {
+			int attachmentNo1=attachmentRepo.sequence();
+			File target = new File(dir, String.valueOf(attachmentNo1));
+			attach.transferTo(target);
+			
+			attachmentRepo.insert(AttachmentDto.builder()
+					.attachmentNo(attachmentNo1)
+					.attachmentName(attach.getOriginalFilename())
+					.attachmentType(attach.getContentType())
+					.attachmentSize(attach.getSize())
+					.build()
+					);
+//			memberProfileImageRepo.insert(MemberProfileImageDto.bulider()
+//						.
+//					);
+		}
+		return memberId;
+	}
+	
 	//회원탈퇴
 	@GetMapping("/exit")
 	public String exit(HttpSession session) {
@@ -118,7 +217,7 @@ public class MemberController {
 			return "redirect:exit";
 		}
 		
-			memberRepo.delete(memberId);
+			memberRepo.exitDate(memberId);
 			
 			session.removeAttribute("memberId");
 			session.removeAttribute("memberLevel");
@@ -162,32 +261,6 @@ public class MemberController {
 		return "member/passwordFinish";
 	}
 	
-	//닉네임 변경
-	@GetMapping("/nickname")
-	public String nickname() {
-		return "member/nickname";
-	}
-	
-	@PostMapping("/nickname")
-	public String nickname(HttpSession session,
-							@RequestParam String changeNick,
-							RedirectAttributes attr) {
-		String memberId = (String) session.getAttribute("memberId");
-		MemberDto memberDto = memberRepo.selectOne(memberId);
-		
-		if(memberDto.getMemberNick().equals(changeNick)) {
-			attr.addAttribute("mode", "error");
-		}
-		
-		memberRepo.updateNick(memberId, changeNick);
-		
-		return "redirect:nicknameFinish";
-	}
-	
-	@GetMapping("/nicknameFinish")
-	public String nicknameFinish() {
-		return "member/nicknameFinish";
-	}
 	
 	//아이디 찾기
 	@GetMapping("/findId")

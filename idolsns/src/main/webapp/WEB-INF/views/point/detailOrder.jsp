@@ -41,6 +41,15 @@
           <th>사용일</th>
           <td>{{ fundDto.fundTime }}</td>
         </tr>
+        
+        
+
+        <tr>
+          <th>펀딩 마감일</th>
+          <td>{{ fundPostDto.postEnd }}</td>
+        </tr>
+
+        
         <tr>
           <th>펀딩 상태</th>
           <td>{{ fundDto.fundStatus }}</td>
@@ -70,7 +79,9 @@
     data() {
       return {
         fundDto: {},
-        fundNo: ''
+        fundNo: '',
+        fundPostDto: {},
+        PostNo: '',
       }
     },
     computed: {
@@ -81,17 +92,27 @@
     methods: {
       async loadOrderDetail() {
         try {
-          const url = "/rest/order/" + this.fundNo;
+          const url = "/rest/fund/order/" + this.fundNo;
           const response = await axios.get(url);
           this.fundDto = response.data;
           } catch (error) {
           console.error(error);
         }
-      }
+      },
+      async loadOrderDetail2() {
+          try {
+            const url = "/rest/fundpost/order/" + this.postNo;
+            const response = await axios.get(url);
+            this.fundDto = response.data;
+            } catch (error) {
+            console.error(error);
+          }
+        }
     },
     created() {
       this.fundNo = window.location.search.split("=")[1]; // URL에서 fundNo 값을 추출합니다.
       this.loadOrderDetail();
+      this.loadOrderDetail2();
     }
   }).mount("#app");
 </script>

@@ -38,14 +38,15 @@ public interface MemberRepo {
 	boolean editPassword(String memberEmail, String memberPw);
 	boolean deleteMemberProc(String memberId);
 	boolean exitDate(String memberId);
+	boolean cancelExit(String memberId);
+	void clean();
 	
 	//중복 검사
 	int idDuplicatedCheck(String memberId);
 	int nickDuplicatedCheck(String memberNick);
 	int emailDuplicatedCheck(String memberEmail);
 	
-	// 관리자 회원목록 조회
-	List<MemberDto> adminSelectList(AdminMemberSearchVO adminMemberSearchVO);
+	
 	
 	
 	

@@ -52,6 +52,13 @@ public class FundRestController {
       return fundPostImageDto;
    }
    
+   
+   
+   
+   
+   
+   
+   
    // 상세이미지 attachmentNos 
    @GetMapping("/attaches/{postNo}")
    public List<Integer> list(@PathVariable Long postNo) {
@@ -93,6 +100,8 @@ public class FundRestController {
       FundDto fundDto = fundRepo.find(fundNo);
       return fundDto;
    }
+   
+   
    
    // 펀딩게시물 등록 시 태그 등록
 //   @PostMapping("/tag")

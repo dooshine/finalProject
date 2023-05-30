@@ -1,6 +1,10 @@
 			// 페이지 로드
 			$(function(){				
 				
+				$(".bttest").click(function(){
+					console.log(mapPlace);
+				})
+
 				// 1. 카테고리를 저장할 변수 선언 및 카테고리 전역 변수 categori에 저장
 				let categori = ""; 
 				$(".modal2").click(function(){
@@ -53,6 +57,7 @@
 					
 					console.log("태그에 저장된 내용은 다음과 같습니다  : "+tag);
 					});
+				
 				
 				// 파일들을 저장할 객체 
 				var formData = new FormData();		
@@ -126,7 +131,26 @@
 									}
 							});														
 							
-		
+							// 게시물 지도 등록
+							if(mapPlace!="기본"){
+								let postDto = {
+									postNo : postNo,
+									mapPlace : mapPlace
+								};
+								console.log(mapPlace);
+								$.ajax({
+									url: "http://localhost:8080/rest/post/map",
+									method: "post",									
+									data: postDto,
+									success: function(result){
+										console.log(result);
+									},
+									error: function(xhr,status,error){
+										console.log(error);
+									}									
+									
+								});
+							}
 							
 							// 게시물 등록 성공 시에, 파일 입력을 비동기로 서버에 전송 
 							var files = $("#fileInput").get(0).files;

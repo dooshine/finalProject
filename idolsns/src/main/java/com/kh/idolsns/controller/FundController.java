@@ -92,6 +92,7 @@ public class FundController {
    }
    
 
+   
    // 펀딩게시물 등록
    @PostMapping("/write3")
    public String write3(

@@ -52,19 +52,84 @@
     });
 </script>
 
-<div style="width:600px">
-	<h2>펀딩 게시글 작성</h2>
+
+   <style>
+   	     @media screen and (max-width:992px) {
+		  	.col-6 {
+		    width: 100%; 
+		  }
+    	}
+
+		   	section {
+			  font-family: "Noto Sans KR", sans-serif;
+			}
+			 
+			.title {
+	   			font-weight:bold;
+		   	}
+	
+	</style>
+
+
+	<div id="d-flex justify-content-center">
+	  <div class="container rounded p-3" style="background-color:white">
+	    <h3 class="title mt-5 mb-5" style="padding-left: 0.5em">펀딩 게시글 작성</h3>
+	    <div style="padding-left:1em; padding-right:1em;">
+
+
 	<form action="write3" method="post" enctype="multipart/form-data"> <!--  -->
-		제목 : <input type="text" name="fundTitle"><br><br>
-		시작일 : <input type="date" name="postStart"><br><br>
-		종료일 : <input type="date" name="postEnd"><br><br>
-		목표 금액 : <input type="text" name="fundGoal"><br><br>
-<!-- 		후원자 수 : <input type="text" name="fundSponsorCount"><br><br> -->
-		내용 : <textarea name="postContent"></textarea><br><br>
+
+	<div class="input-group mb-3">
+	    <span class="input-group-text" id="inputGroup-sizing-default">제목</span>
+	  <input type="text" name="fundTitle" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default">
+	</div>
+	
+	<div class="input-group mb-3">
+	    <span class="input-group-text" id="inputGroup-sizing-default">한줄 소개</span>
+	  <input type="text" name="fundShortTitle" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default">
+	</div>
+	
+	<div class="input-group mb-3">
+	    <span class="input-group-text" id="inputGroup-sizing-default">시작일</span>
+	  <input type="date" name="postStart" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default">
+	</div>
+	
+	<div class="input-group mb-3">
+	    <span class="input-group-text" id="inputGroup-sizing-default">종료일</span>
+	  <input type="date" name="postEnd" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default">
+	</div>
+	
+	<div class="input-group mb-3">
+	    <span class="input-group-text" id="inputGroup-sizing-default">목표 금액</span>
+	  <input type="text" name="fundGoal" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default">
+	</div>
+	
+	
+	<div class="input-group mb-3">
+	  <textarea name="postContent" class="form-control" aria-label="With textarea"></textarea>
+	</div>
+	
+
 <!-- 		이미지(여러 개) : <input type="file" name="attaches" multiple> -->
-		대표 이미지(1개) : <input type="file" name="attach">
-		<button type="submit">글쓰기</button>
+
+	<div class="input-group mb-3">
+	  <div class="input-group-prepend">
+	    <span class="input-group-text">대표 이미지(1개)</span>
+	  </div>
+	  <div class="custom-file">
+	    <input type="file" name="attach" class="custom-file-input" id="inputGroupFile01">
+
+	  </div>
+	</div>
+
+
+
+
+		<button class="btn btn-primary mb-5" type="submit">글쓰기</button>
 	</form>
 </div>
+	</div>
+	  </div>
+
 	
 <jsp:include page="/WEB-INF/views/template/footer.jsp"></jsp:include>

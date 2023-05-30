@@ -17,4 +17,8 @@
 		where post_no=#{postNo}
 	</select>
 	
+	<select id="selectAttachNoList" resultType="String">
+		select attachment_no from post_image
+		where post_no = #{postNo}
+	</select>
 </mapper>

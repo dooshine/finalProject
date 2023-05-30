@@ -6,6 +6,7 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.kh.idolsns.dto.FundDto;
 import com.kh.idolsns.dto.FundPostDto;
 import com.kh.idolsns.dto.PostImageDto;
 
@@ -44,6 +45,11 @@ public class FundPostRepoImpl implements FundPostRepo{
 	public boolean sponsorCount(FundPostDto fundPostDto) {
 		return sqlSession.update("fundPost.sponsorCount", fundPostDto) > 0;
 	}
+
+	@Override
+	public FundPostDto find(Long postNo) {
+		 return sqlSession.selectOne("fundPost.find", postNo);
+	}
 	
 //	@Override
 //	public void connect(Long postNo, int attachmentNo) {
@@ -52,6 +58,7 @@ public class FundPostRepoImpl implements FundPostRepo{
 //		parameters.put("param2", attachmentNo);
 //		sqlSession.insert("fundPost.connect", parameters);
 //	}
+
 
 
 

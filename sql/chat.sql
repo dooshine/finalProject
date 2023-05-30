@@ -1,9 +1,11 @@
 -- 채팅방
 CREATE TABLE chat_room(
 	chat_room_no NUMBER PRIMARY KEY,
-	chat_room_name varchar2(60),
+	chat_room_name1 varchar2(60),
+	chat_room_name2 varchar2(60),
 	chat_room_start DATE DEFAULT sysdate NOT NULL,
-	chat_room_type char(1) NOT NULL
+	chat_room_type char(1) NOT NULL,
+	chat_room_last DATE DEFAULT sysdate NOT NULL
 );
 CREATE SEQUENCE chat_room_seq;
 
@@ -11,8 +13,7 @@ CREATE SEQUENCE chat_room_seq;
 CREATE TABLE chat_join(
 	member_id REFERENCES member(member_id) ON DELETE SET NULL,
 	chat_room_no NUMBER REFERENCES chat_room(chat_room_no) ON DELETE CASCADE,
-	chat_join_time DATE DEFAULT sysdate NOT NULL,
-	PRIMARY KEY(chat_room_no, member_id)
+	chat_join_time DATE DEFAULT sysdate NOT NULL
 );
 
 -- 채팅 메세지
@@ -32,8 +33,7 @@ CREATE TABLE chat_read(
 	chat_room_no REFERENCES chat_room(chat_room_no) ON DELETE CASCADE,
 	chat_message_no REFERENCES chat_message(chat_message_no) ON DELETE CASCADE,
 	chat_sender REFERENCES member(member_id) ON DELETE SET NULL,
-	chat_reciever varchar2(20) NOT NULL,
-	chat_read_time DATE DEFAULT sysdate
+	chat_reciever varchar2(20) NOT NULL
 );
 
 -- 채팅 좋아요

@@ -5,6 +5,7 @@ import java.util.List;
 import com.kh.idolsns.dto.FundDto;
 
 public interface FundRepo {
+
    Long sequence();
    void insert(FundDto dto);
    
@@ -19,3 +20,4 @@ public interface FundRepo {
    int count(Long postNo);
    
 }
+

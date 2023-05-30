@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ↑ XML 헤더(반드시 첫 번째 줄에 위치) -->
+
+<!-- dtd선언 -->
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- mapper -->
+<mapper namespace="artist">
+    <!-- 대표페이지 정보 조회(대표페이지 영어이름) -->
+    <select id="selectArtistViewByEngName" resultType="ArtistViewDto">
+        select * from artist_view where artist_eng_name_lower = #{artistEngNameLower}
+    </select>
+
+    <!-- (search)대표페이지 정보 조회 -->
+    <select id="selectArtistViewSearchList" resultType="ArtistViewDto">
+        select * from artist_view where 
+            instr(artist_eng_name_lower, #{q}) > 0
+            or
+            instr(artist_name , #{q}) > 0
+    </select>
+</mapper>

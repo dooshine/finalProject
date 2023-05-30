@@ -8,16 +8,79 @@
 
 <!-- mapper -->
 <mapper namespace="follow">
+    
     <!-- 팔로우 생성 -->
     <insert id="createFollow">
         insert into follow (FOLLOW_NO, MEMBER_ID, FOLLOW_TARGET_TYPE, FOLLOW_TARGET_PRIMARY_KEY, FOLLOW_TIME) values (follow_seq.nextval, #{memberId}, #{followTargetType}, #{followTargetPrimaryKey}, sysdate)
     </insert>
+
     <!-- 팔로우 개별조회(팔로우한 사람, 팔로우 대상 타입, 팔로우 대상 PK) -->
     <select id="selectFollowOne" resultType="FollowDto">
         select * from follow where member_id = #{memberId} and follow_target_type = #{followTargetType} and follow_target_primary_key = #{followTargetPrimaryKey}
     </select>
+
     <!-- 팔로우 삭제(팔로우한 사람, 팔로우 대상 타입, 팔로우 대상 PK) -->
     <delete id="deleteFollow">
         delete from follow where member_id = #{memberId} and follow_target_type = #{followTargetType} and follow_target_primary_key = #{followTargetPrimaryKey}
     </delete>
+    <!-- 팔로우 목록 조회 -->
+    <select id="selectFollowList" resultType="FollowDto">
+        <bind name="memberIdExist" value="memberId != null and !memberId.equals('')"/>
+        <bind name="followTargetTypeExist" value="followTargetType != null and !followTargetType.equals('')"/>
+        select * from follow
+        <where>
+            <if test="memberIdExist">
+              and instr(member_id, #{memberId}) > 0
+            </if>
+            <if test="followTargetTypeExist">
+              and instr(follow_target_type, #{followTargetType}) > 0
+            </if>
+        </where>
+        order by follow_target_primary_key desc
+    </select>
+    <!-- 팔로우 통계 조회 -->
+    <select id="selectMemberFollowCnt" resultType="MemberFollowCntDto">
+        <bind name="memberIdExist" value="memberId != null and !memberId.equals('')"/>
+        select * from member_follow_cnt
+        <where>
+            <if test="memberIdExist">
+              and instr(member_id, #{memberId}) > 0
+            </if>
+        </where>
+    </select>
+
+
+
+
+    <!-- # 로그인회원 팔로우정보 resultMap -->
+    <resultMap type="MemberFollowInfoDto" id="mbfidto">
+        <result column="member_id" property="memberId"/>
+        <collection property="followMemberList" select="selectFollowMemberList" javaType="java.util.List" ofType="String" column="member_id">
+        </collection>
+        <collection property="followerMemberList" select="selectFollowerMemberList" javaType="java.util.List" ofType="String" column="member_id"/>
+        <collection property="followPageList" select="selectFollowPageList" javaType="java.util.List" ofType="String" column="member_id"/>
+    </resultMap>
+    <!-- 로그인회원 팔로우 정보 불러오기 -->
+    <select id="selectMemberFollowInfo" resultMap="mbfidto">
+        <bind name="memberIdExist" value="memberId != null and !memberId.equals('')"/>
+        select member_id from member
+        <where>
+        <if test="memberIdExist">
+          and member_id = #{memberId}
+        </if>
+        </where>
+    </select>
+
+    <!-- 서브구문 회원이 팔로우한 회원 목록 조회 -->
+    <select id="selectFollowMemberList" resultType="String">
+        select follow_target_primary_key from follow where member_id = #{memberId} and follow_target_type = '회원'
+    </select>
+    <!-- 서브구문 팔로워 목록 조회 -->
+    <select id="selectFollowerMemberList" resultType="String">
+        select member_id from follow where follow_target_type = '회원' and follow_target_primary_key = #{memberId}
+    </select>
+    <!-- 서브구문 회원이 팔로우한 대표페이지 목록 조회 -->
+    <select id="selectFollowPageList" resultType="String">
+        select follow_target_primary_key from follow where member_id = #{memberId} and follow_target_type = '대표페이지'
+    </select>
 </mapper>

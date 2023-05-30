@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
+<%-- <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <jsp:include page="/WEB-INF/views/template/header.jsp"></jsp:include>
 
@@ -15,7 +15,7 @@
 	</div>
 	
 <!----------------------------------------------------- 채팅방 생성 모달 ----------------------------------------------------->
-	<div class="modal"  tabindex="-1" role="dialog" data-bs-backdrop="static" ref="createRoomModal" id="createRoomModal">
+	<div class="modal"  tabindex="-1" role="dialog" data-bs-backdrop="static" id="createRoomModal">
 		<div class="modal-dialog" role="document">
 			<div class="modal-content">
 				<div class="modal-header">
@@ -76,7 +76,6 @@
 				chatRoomList: [],
 				followList: [],
 				selectedMemberList: [memberId],
-				createRoomModal: null
 			};
 		},
 		methods: {
@@ -97,16 +96,6 @@
 			// 채팅방 모달 (구현 예정)
 			chatRoomModal() {
 				
-			},
-			// 채팅방 생성 모달 열기
-			openCreateRoomModal() {
-				if(this.createRoomModal == null) return;
-				this.createRoomModal.show();
-			},
-			// 채팅방 생성 모달 닫기
-			hideCreateRoomModal() {
-				if(this.createRoomModal == null) return;
-				this.createRoomModal.hide();
 			},
 			// 채팅방 만들기
 			async createChatRoom() {
@@ -146,3 +135,4 @@
 </script>
 
 <jsp:include page="/WEB-INF/views/template/footer.jsp"></jsp:include>
+ --%>
