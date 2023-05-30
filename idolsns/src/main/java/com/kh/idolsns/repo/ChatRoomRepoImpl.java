@@ -35,5 +35,9 @@ public class ChatRoomRepoImpl implements ChatRoomRepo {
 	public List<ChatRoomDto> findRooms(List<Integer> chatRoomNoList) {
 		return sql.selectList("chatRoom.findRooms", chatRoomNoList);
 	}
+	@Override
+	public void updateLast(int roomNo) {
+		sql.update("chatRoom.updateLast", roomNo);
+	}
 	
 }

@@ -223,30 +223,160 @@
     	}
     	.type-box {
     		width: 100%;
-    		height: 65px;
+    		height: 55px;
     		resize: none;
     		border: none;
     		outline: none;
-    		font-size: 0.8em;
+    		font-size: 0.9em;
     		padding: 0;
     	}
     	.type-box::-webkit-scrollbar {
     		display: none;
     	}
     	.length-alert {
-    		font-size: 0.8em;
-    		color: red;
+    		font-size: 0.7em;
+    		color: #6A53FB;
     	}
     	
     	.changeNameInput {
     		padding: 0;
     		border: none;
     		outline: none;
+    		width: 100%;
+    		margin-right: 5px;
     	}
-    	
-    	.message {
-			border-bottom: 1px solid gray;
-			padding: 10px;
+		
+		.fakeBtn {
+			width: 30px;
+			height: 30px;
+			background: #a698fd;
+			border-radius: 100px;
+			cursor: pointer;
+		}
+		
+		.fakeBtn:hover {
+			background: #6A53FB;
+		}
+		
+		.fakeBtn[disabled] ,
+    	.fakeBtn[disabled]:hover {
+    		background: #a698fd;
+    		cursor: default;
+    	}
+		
+		.ti-photo-up,
+		.ti-send {
+			color: white;
+			font-size: 18px;
+		}
+		
+		.messageBox {
+			border: 1.3px solid #6A53FB;
+			border-radius: 10px;
+			padding-top: 3px;
+			padding-bottom: 3px;
+			padding-right: 10px;
+			padding-left: 10px;
+			margin-right:5px;
+			font-size: 0.9em;
+			max-width: 200px;
+		}
+		
+		.myMessage > .messageBox  {
+			border: 1.3px solid #f0eeff;
+			background: #f0eeff;
+			margin-right: 0;
+			margin-left: 5px;
+		}
+		
+		.messageTime {
+			font-size: 0.7em;
+			color: #7f7f7f;
+		}
+		
+		.ti-x {
+			color: #a698fd;
+		}
+		.deleteMessageBtn:hover .ti-x {
+			color: #6A53FB;
+		}
+		
+		.photoMessage {
+			width: 200px;
+			border-radius: 10px;
+			margin-right:5px;
+		}
+		
+		.myMessage > .photoMessage  {
+			margin-right: 0;
+			margin-left: 5px;
+		}
+		
+		.sysMessage {
+			background: #f8f7fc;
+			padding-top: 3px;
+			padding-bottom: 3px;
+			padding-right: 10px;
+			padding-left: 10px;
+			width: 100%;
+			border-radius: 10px;
+		}
+		
+		.sysMsgTime {
+			font-size: 0.7em;
+			color: #7f7f7f;
+		}
+		
+		.sysMsgContent {
+			font-size: 0.8em;
+			color: #7f7f7f;
+		}
+		
+		.sysMessageDate {
+			display: flex;
+			flex-basis: 100%;
+			align-items: center;
+			color: #7f7f7f;
+			font-size: 0.7em;
+			margin-bottom: 18px;
+			margin-top: 20px;
+		}
+		.sysMessageDate::before {
+			content: "";
+			flex-grow: 1;
+			background: #dee2e6;
+			height: 0.3px;
+			font-size: 0;
+			line-height: 0px;
+			margin-right: 8px;
+		}
+		.sysMessageDate::after {
+			content: "";
+			flex-grow: 1;
+			background: #dee2e6;
+			height: 0.3px;
+			font-size: 0;
+			line-height: 0px;
+			margin-left: 8px;
+		}
+		
+		.notiMark {
+			position: fixed;
+			top: 15px;
+			right: 20px;
+			border-radius: 10px;
+			width: 12px;
+			height: 12px;
+			background: #6a53fb;
+		}
+		
+		.notiMarkChat {
+			/*position: fixed;*/
+			border-radius: 10px;
+			width: 8px;
+			height: 8px;
+			background: #6a53fb;
+			z-index: 9999;
 		}
     </style>
 </head>
@@ -278,6 +408,8 @@
 							<!-- 위즈버튼 -->
 							<button class="weez-btn" @click="showChatMainModal">
 								<img class="weez nav-item hide-part" alt="위즈" src="/static/image/dmIcon.png">
+								<!-- 새 채팅이 있는 경우 새 채팅 알림 마크 -->
+								<div v-if="newChatNoti === true" class="notiMark collapse navbar-collapse"></div>
 							</button>
 				    	</div>
 				  	</div>
@@ -295,9 +427,56 @@
 					</div>
 					<div class="customModalBody">
 						<div class="chatRooms mb-2" v-for="(room, index) in chatRoomList" :key="index">
-							<button class="hide-style" @click="showChatRoomModal(index)">
-								{{ chatRoomList[index].chatRoomName }}
-							</button>
+							<!-- 채팅방 이름(단톡일 때: 지정한 이름 표시) -->
+							<div v-if="chatRoomList[index].chatRoomType == 'G'">
+								<button @click="showChatRoomModal(index)" class="hide-style w-100 mb-3">
+									<div class="d-flex align-items-center mb-2">
+										<div class="text-start">
+											<h6>{{ chatRoomList[index].chatRoomName1 }}</h6>
+										</div>
+										<!-- 새 메세지 알림 표시 -->
+										<div v-if="chatRoomList[index].newChat === true" class="notiMarkChat ms-2" style="margin-top: 2px;"></div>
+									</div>
+									<div class="sysMsgContent d-flex justify-content-between">
+										<div>마지막 메세지</div>
+										<div>···</div>
+										<div>{{ timeFormatDetailed2(chatRoomList[index].chatRoomLast) }}</div>
+									</div>
+								</button>
+							</div>
+							<!-- 채팅방 이름(갠톡일 때: 상대방 이름 표시) -->
+							<div v-if="chatRoomList[index].chatRoomType == 'P'">
+								<button v-if="chatRoomList[index].chatRoomName1 != memberId" 
+											@click="showChatRoomModal(index)" class="hide-style w-100 mb-3">
+									<div class="d-flex align-items-center mb-2">
+										<div class="text-start">
+											<h6>{{ chatRoomList[index].chatRoomName1 }}</h6>
+										</div>
+										<!-- 새 메세지 알림 표시 -->
+										<div v-if="chatRoomList[index].newChat === true" class="notiMarkChat ms-2" style="margin-top: 2px;"></div>
+									</div>
+									<div class="sysMsgContent d-flex justify-content-between">
+										<div>마지막 메세지</div>
+										<div>···</div>
+										<div>{{ timeFormatDetailed2(chatRoomList[index].chatRoomLast) }}</div>
+									</div>
+								</button>
+								<button v-if="chatRoomList[index].chatRoomName2 != memberId" 
+											@click="showChatRoomModal(index)" class="hide-style w-100 mb-3">
+									<div class="d-flex align-items-center mb-2">
+										<div class="text-start">
+											<h6>{{ chatRoomList[index].chatRoomName2 }}</h6>
+										</div>
+										<!-- 새 메세지 알림 표시 -->
+										<div v-if="chatRoomList[index].newChat === true" class="notiMarkChat ms-2" style="margin-top: 2px;"></div>
+									</div>
+									<div class="sysMsgContent d-flex justify-content-between">
+										<div>마지막 메세지</div>
+										<div>···</div>
+										<div>{{ timeFormatDetailed2(chatRoomList[index].chatRoomLast) }}</div>
+									</div>
+								</button>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -308,7 +487,7 @@
 						<h5>새 위즈 만들기</h5>
 						<div class="d-flex justify-content-end">
 							<button type="button" class="hide-style pe-3 confirmNewChatRoomBtn" @click="createChatRoom"
-								:disabled="(selectedMemberList.length === 0 && nameCount < 1) || (selectedMemberList.length >= 3 && nameCount === 0)">
+								:disabled="(selectedMemberList.length === 0 && nameCount < 1) || (selectedMemberList.length >= 3 && (nameCount === 0 || nameCount > 10))">
 								<i class="ti ti-message-circle-check"></i>
 							</button>
 							<button type="button" class="btn-close" @click="hideCreateRoomModal"></button>
@@ -316,14 +495,15 @@
 					</div>
 					<div class="customModalBody">
 						<div>
-							<div class="form-floating mb-3" v-if="memberCount > 2">
+							<div class="form-floating mb-3" v-if="memberCount > 1">
 		  						<input type="text" class="form-control form-control-sm" id="chatRoomNameInput" placeholder="채팅방이름" 
-		  											v-model="chatRoom.chatRoomName" @input="chatRoom.chatRoomName = $event.target.value">
+		  											v-model="chatRoom.chatRoomName1" @input="chatRoom.chatRoomName1 = $event.target.value">
 							  	<label for="chatRoomNameInput">채팅방 이름</label>
 							</div>
+							<!-- 팔로우 목록 -->
 							<label class="d-flex justify-content-between" v-for="(follow, index) in followList">
-						    	{{ follow.memberId }}
-						    	<input type="checkbox" v-model="selectedMemberList" :value="follow.memberId">
+						    	{{ follow }}
+						    	<input type="checkbox" v-model="selectedMemberList" :value="follow">
 							</label>
 						</div>
 					</div>
@@ -334,17 +514,21 @@
 					<!-- 헤더 -->
 					<div class="customModalHeader d-flex align-items-center">
 						<div class="d-flex justify-content-between w-100">
-							<!-- 채팅방 이름(갠톡일 때) -->
-							<h5 v-if="roomInfo.chatRoomType == 'P'">상대방 아이디</h5>
-							<!-- 채팅방 이름(단톡일 때) -->
+							<!-- 채팅방 이름(갠톡일 때: 상대방 이름 표시) -->
+							<div v-if="roomInfo.chatRoomType == 'P'">
+								<h5 v-if="roomInfo.chatRoomName1 != memberId">{{ roomInfo.chatRoomName1 }}</h5>
+								<h5 v-if="roomInfo.chatRoomName2 != memberId">{{ roomInfo.chatRoomName2 }}</h5>
+							</div>
+							<!-- 채팅방 이름(단톡일 때: 지정한 채팅방 이름 표시) -->
 							<div v-if="roomInfo.chatRoomType == 'G'">
 								<div v-if="roomInfo.edit == true" class="d-flex align-items-center justify-content-between w-100">
 									<!-- 이름 변경 입력창 -->
-									<input v-model="roomInfo.chatRoomName" @input="roomInfo.chatRoomName = $event.target.value" class="changeNameInput">
+									<input v-model="roomInfo.chatRoomName1" @input="roomInfo.chatRoomName1 = $event.target.value" @keyup.enter="saveRoomName" class="changeNameInput">
 									<!-- 이름 변경 버튼 -->
 									<div class="d-flex justify-content-end">
+										<!-- 이름변경 저장 버튼 -->
 										<button type="button" @click="saveRoomName" class="hide-style confirmNameBtn me-2" 
-											:disabled="roomInfo.chatRoomName.length < 1 || roomInfo.chatRoomName == roomInfoCopy.chatRoomName">
+											:disabled="(roomInfo.chatRoomName1.length < 1 || roomInfo.chatRoomName1.length > 10) || roomInfo.chatRoomName1 == roomInfoCopy.chatRoomName1">
 											<i class="ti ti-edit-circle ti-edit-circle-large"></i>
 										</button>
 										<!-- 이름 변경 취소 버튼 -->
@@ -354,18 +538,18 @@
 									</div>
 								</div>
 								<div v-else>
-									<h5>{{ roomInfo.chatRoomName }}</h5>
+									<h5>{{ roomInfo.chatRoomName1 }}</h5>
 								</div>
 							</div>
 							<div class="d-flex justify-content-end">
 								<!-- 메뉴 열기 버튼 -->
 								<button type="button" @click="showChatMenuModal" v-if="chatMenuModal == false && roomInfo.edit == false"
-										class="hide-style changeRoomNameBtn d-flex align-items-center pe-2">
+										class="hide-style changeRoomNameBtn d-flex align-items-end pe-2">
 									<i class="ti ti-dots-vertical"></i>
 								</button>
 								<!-- 메뉴 닫기 버튼 -->
 								<button type="button" @click="hideChatMenuModal" v-if="chatMenuModal == true && roomInfo.edit == false"
-										class="hide-style changeRoomNameBtn d-flex align-items-center pe-2">
+										class="hide-style changeRoomNameBtn d-flex align-items-end pe-2">
 									<i class="ti ti-dots"></i>
 								</button>
 								<!-- 닫기 버튼 -->
@@ -374,24 +558,48 @@
 						</div>
 					</div>
 					<!-- 바디 -->
-					<div class="customModalBody short message-wrapper">
-						<div class="message" v-for="(message, index) in messageList" :key="index">
+					<div class="customModalBody short message-wrapper" ref="messageWrapper">
+						<div class="message" style="margin-top: 10px;" v-for="(message, index) in messageList" :key="index">
 							<!-- 사용자가 보내는 메세지일 때 -->
 							<div v-if="message.chatMessageType === 1 || message.chatMessageType === 4">
-								<h4>{{ message.memberId }}</h4>
-								<button v-if="message.memberId == memberId" @click="deleteMessage(index)">x</button>
-								<!-- 텍스트 메세지일 때 -->
-								<div v-if="message.attachmentNo === 0">{{ message.chatMessageContent }}</div>
-								<!-- 이미지 메세지일 때 -->
-								<img class="photo" v-if="message.attachmentNo != 0" 
-										:src="'${pageContext.request.contextPath}/download?attachmentNo=' + message.attachmentNo">
-								<div>{{ timeFormat(message.chatMessageTime) }}</div>
+								<!-- 상대방이 보낸 메세지일 때 -->
+								<div v-if="message.memberId != memberId">
+									<span style="font-size: 0.9em;" v-if="!sameTime(index)">{{ message.memberId }}</span>
+<!-- 								<span style="font-size: 0.9em;" v-if="!sameTime(index)">{{ findMemberById(index).memberNick }}</span> -->
+									<div class="d-flex align-items-end">
+										<!-- 텍스트 메세지일 때 -->
+										<div v-if="message.attachmentNo === 0" class="messageBox">{{ message.chatMessageContent }}</div>
+										<!-- 이미지 메세지일 때 -->
+										<img class="photoMessage" v-if="message.attachmentNo != 0" @load="scrollBottom"
+												:src="'${pageContext.request.contextPath}/download?attachmentNo=' + message.attachmentNo">
+										<div class="messageTime" v-if="displayTime(index)">{{ timeFormat(message.chatMessageTime) }}</div>
+									</div>
+								</div>
+								<!-- 내가 보낸 메세지일 때 -->
+								<div v-else>
+									<div class="d-flex align-items-end justify-content-end myMessage" 
+											@mouseover="showDeleteButton(index)" @mouseleave="hideDeleteButton(index)">
+										<!-- 메세지 삭제버튼 -->
+										<button v-if="showDeleteButtonIndex === index" @click="deleteMessage(index)" 
+											class="hide-style d-flex align-items-end deleteMessageBtn" style="padding-bottom: 1px; margin-right: 5px;">
+											<i class="ti ti-x"></i>
+										</button>
+										<div class="messageTime" v-if="displayTime(index)">{{ timeFormat(message.chatMessageTime) }}</div>
+										<!-- 텍스트 메세지일 때 -->
+										<div v-if="message.attachmentNo === 0" class="messageBox">{{ message.chatMessageContent }}</div>
+										<!-- 이미지 메세지일 때 -->
+										<img class="photoMessage myMessage" v-if="message.attachmentNo != 0" @load="scrollBottom"
+												:src="'${pageContext.request.contextPath}/download?attachmentNo=' + message.attachmentNo">
+									</div>
+								</div>
 							</div>
 							<!-- 시스템 메세지일 때 -->
-							<div v-if="message.chatMessageType === 5 || message.chatMessageType === 6">
-								<div>{{ timeFormat(message.chatMessageTime) }}</div>
-								<div>{{ message.chatMessageContent }}</div>
+							<div v-if="message.chatMessageType === 5 || message.chatMessageType === 6" class="sysMessage">
+								<div class="sysMsgTime text-center">{{ timeFormatDetailed(message.chatMessageTime) }}</div>
+								<div class="sysMsgContent text-center">{{ message.chatMessageContent }}</div>
 							</div>
+							<!-- 날짜 구분 메세지일 때 -->
+							<div v-if="message.chatMessageType === 10" class="sysMessageDate text-center">{{ timeFormatDetailed(message.chatMessageTime) }}</div>
 						</div>
 						
 						<!-- 메뉴 모달 -->
@@ -423,16 +631,23 @@
 					<!-- 푸터 -->
 					<div class="customModalFooter">
 						<div class="type-area d-flex">
-							<textarea v-model="text" ref="messageInput" @input="text = $event.target.value" class="type-box"></textarea>
+							<textarea v-model="text" ref="messageInput" @input="text = $event.target.value" @keyup.enter="sendMessage" class="type-box"></textarea>
 						</div>
 						<div class="footer-area d-flex align-items-center justify-content-between mt-1">
-							<div class="length-alert">
-								글자수를 초과했습니다.
+							<div style="width: 150px;">
+								<div class="length-alert" v-show="text.length > 300">
+									300자 이하로 입력하세요.
+								</div>
 							</div>
 							<div class="button-area d-flex justify-content-end">
-								<input class="form-control" type="file" accept=".png, .jpg, .gif" @change="sendPic">
-								<button type="button" class="hide-style me-2">이미지</button>
-								<button type="button" @click="sendMessage" class="hide-style">전송</button>
+								<label class="fakeBtn d-flex align-items-center justify-content-center me-2">
+				            		<i class="ti ti-photo-up"></i>
+				            		<input class="form-control d-none picInput" type="file" accept=".png, .jpg, .gif" @change="sendPic" />
+				            	</label>
+				            	<button type="button" @click="sendMessage" :disabled="text.length < 1 || text.length > 300" 
+				            				class="hide-style fakeBtn d-flex align-items-center justify-content-center">
+				            		<i class="ti ti-send" style="margin-right: 2px; margin-top: 1px;"></i>
+				            	</button>
 							</div>
 						</div>
 					</div>
@@ -453,8 +668,8 @@
 					<div class="customModalBody">
 						<div>
 							<label class="d-flex justify-content-between" v-for="(follow, index) in filteredFollowList">
-						    	{{ follow.memberId }}
-						    	<input type="checkbox" v-model="selectedMemberList" :value="follow.memberId">
+						    	{{ follow }}
+						    	<input type="checkbox" v-model="selectedMemberList" :value="follow">
 							</label>
 						</div>
 					</div>

@@ -12,8 +12,14 @@
 
 	<!-- 채팅방 생성 -->
 	<insert id="createRoom">
-		insert into chat_room(chat_room_no, chat_room_name, chat_room_start, chat_room_type)
-		values(#{chatRoomNo}, #{chatRoomName}, sysdate, #{chatRoomType})
+		insert into chat_room(
+			chat_room_no, chat_room_name1, chat_room_name2, 
+			chat_room_start, chat_room_type, chat_room_last
+		)
+		values(
+			#{chatRoomNo}, #{chatRoomName1}, #{chatRoomName2}, 
+			sysdate, #{chatRoomType}, sysdate
+		)
 	</insert>
 	
 	<!-- 채팅방 상세조회 -->
@@ -21,12 +27,15 @@
 		select * from chat_room where chat_room_no = #{chatRoomNo}	
 	</select>
 	
-	<!-- 채팅방 번호 리스트로 채팅방 조회 -->
+	<!-- 채팅방 번호 리스트로 채팅방 조회(마지막 메세지 시간 순 정렬) -->
 	<select id="findRooms" resultType="ChatRoomDto">
-		select * from chat_room where chat_room_no in
-		<foreach collection="list" item="chatRoomNo" open="(" close=")" separator=",">
-			${chatRoomNo}
-		</foreach>
+		<if test="list != null and list.size() > 0">
+			select * from chat_room where chat_room_no in
+			<foreach collection="list" item="chatRoomNo" open="(" close=")" separator=",">
+				${chatRoomNo}
+			</foreach>
+			order by chat_room_last desc
+		</if>
 	</select>
 	
 	<!-- 채팅방 삭제 -->
@@ -36,7 +45,13 @@
 	
 	<!-- 채팅방 이름 변경 -->
 	<update id="changeName">
-		update chat_room set chat_room_name = #{chatRoomName}
+		update chat_room set chat_room_name1 = #{chatRoomName1}
+		where chat_room_no = #{chatRoomNo}
+	</update>
+	
+	<!-- 메세지 보내면 마지막 메세지 시간 변경 -->
+	<update id="updateLast">
+		update chat_room set chat_room_last = sysdate
 		where chat_room_no = #{chatRoomNo}
 	</update>
 	
