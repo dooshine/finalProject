@@ -29,9 +29,28 @@
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/static/css/test.css">
     <!-- tabler 아이콘 -->
    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
-	
+    <!-- toastify -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+	<style>
+		.profile-image-wrapper {
+		    position: relative;
+		    display: inline-block;
+		}
+		
+		.profile-image {
+		    width: 200px;
+		    height: 200px;
+		    border-radius: 100%;
+		    transition: filter 0.3s;
+		}
+		
+		.profile-image:hover {
+		    filter: brightness(50%);
+}
+	</style>
 </head>
-<body>
+<body test>
 	<div class="container rounded p-3" style="background-color:white">
 	<div id="app">
 		
@@ -43,7 +62,10 @@
 			</div>
 			
 			<div class="row">
-				<img src="/static/image/profileDummy.png" style="width: 200px; height: auto; border-radius: 100%;">
+				<div>
+					<img :src="memberProfileImageObj !== ''  && memberProfileImageObj.attachmentNo !== undefined ? '/download/?attachmentNo='+memberProfileImageObj.attachmentNo :  ' /static/image/profileDummy.png' "
+						style="width: 200px; height: 200px; border-radius: 100%;">
+				</div>
 			</div>
 			
 			<div class="row">
@@ -62,8 +84,17 @@
 						<div class="modal-header">
 							<i class="fa-solid fa-xmark" style="color: #bcc0c8;" data-bs-dismiss="modal" aria-label="Close"></i>
 						</div>
-						<div class="modal-body">
-							<h3>{{memberNick}}<i class="fa-solid fa-pen-to-square" style="font-size: 14px;"></i></h3>
+						<div class="modal-body text-center">
+							<img :src="memberProfileImageObj !== ''  && memberProfileImageObj.attachmentNo !== undefined ? '/download/?attachmentNo='+memberProfileImageObj.attachmentNo :  ' /static/image/profileDummy.png' "
+								class="profile-image">
+							<h3>
+					            <span v-if="!editingNickname">{{ memberNick }}</span>
+					            <input v-else type="text" v-model="editedNickname" class="form-control" placeholder="새로운 닉네임"
+					            	:class="{'is-invalid':nickDuplicated}" @blur="nickDuplicatedCheck(memberNick)">
+					            <div class="invalid-feedback">이미 존재하는 아이디입니다.</div>
+					            <i v-if="!editingNickname" class="fa-solid fa-pen-to-square" style="font-size: 14px; margin-left: 10px; cursor: pointer;" @click="editingNickname=true"></i>
+					            <i v-else class="fa-solid fa-check" style="font-size: 14px; margin-left: 10px; cursor: pointer;" @click="updateNickname(memberNick)"></i>
+					        </h3>
 							<h5>@{{memberId}}</h5>
 						</div>
 					</div>
@@ -84,6 +115,10 @@
 						memberId:"",
 						memberNick:"",
 						modal:null,
+						memberProfileImageObj: {},
+						editedNickname:"",
+						editingNickname:false,
+						nickDuplicated:false,
 					};
 				},		
 				methods:{
@@ -104,6 +139,59 @@
 						if(this.modal == null) return;
 						this.modal.hide();
 					},
+					
+					async profileImage() {
+						const response = await axios.get("/member/profileImage");
+						
+						this.memberProfileImageObj = response.data;
+						
+					},
+					
+					
+					async nickDuplicatedCheck(memberNick) {
+
+	                    const resp = await axios.get("/member/nickDuplicatedCheck", {
+	                        params : {
+	                            memberNick : this.editedNickname
+	                        }
+	                    });
+	                    if(resp.data === "N") {
+	                        this.nickDuplicated = true;
+	                    }
+	                    else {
+	                        this.nickDuplicated = false;
+	                    }
+	                  },
+					
+					async updateNickname(memberNick) {
+						const response = await axios.get("/member/nickname",{
+							params:{
+								memberNick : this.editedNickname
+							}
+						});
+	                	  if (this.nickDuplicated === true) {
+	                		  return;
+	                	  }
+	                	  
+	                	  this.memberNick = this.editedNickname;
+	                	  this.editingNickname = false;
+						Toastify({
+	                        text: "변경 완료",
+	                        duration: 1000,
+	                        newWindow: false,
+	                        close: true,
+	                        gravity: "bottom", // `top` or `bottom`
+	                        position: "right", // `left`, `center` or `right`
+	                        style: {
+	                            background: "linear-gradient(to right, #84FAB0, #8FD3F4)",
+	                        },
+	                        // onClick: function(){} // Callback after click
+	                    }).showToast();
+					},
+					
+				},
+				created(){
+					this.profileImage();
 				},
 				mounted() {
 					this.profile();
