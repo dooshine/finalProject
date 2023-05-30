@@ -18,4 +18,6 @@ public interface TagRepo {
 	boolean delete(Long tagNo); 
 	// 특정글 태그 전체 불러오기 
 	List<String> selectAll(Long postNo);
+	// 특정글 태그 전체 삭제
+	void deleteByPostNo(Long postNo);
 }

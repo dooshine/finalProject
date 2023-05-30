@@ -29,4 +29,10 @@ public class PostImageRepoImpl implements PostImageRepo{
 		return sqlSession.selectList("postImage.selectAttachNoList",postNo);
 	}
 
+	@Override
+	public void deleteByPostNo(Long postNo) {
+		sqlSession.delete("postImage.deleteByPostNo",postNo);
+		
+	}
+
 }

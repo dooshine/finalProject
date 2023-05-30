@@ -132,7 +132,7 @@ public class PostShowService {
 			
 			// 댓글 가져오기 
 			postShowVO.setReplyList(replyRepo.getRepliesByPostNo(postNo));
-			System.out.println("게시글 번호가 "+postNo+"번인 게시글의 답글 리스트는 다음과 같습니다. replyList는 "+replyRepo.getRepliesByPostNo(postNo));
+//			System.out.println("게시글 번호가 "+postNo+"번인 게시글의 답글 리스트는 다음과 같습니다. replyList는 "+replyRepo.getRepliesByPostNo(postNo));
 		}
 		
 		return postShowList;

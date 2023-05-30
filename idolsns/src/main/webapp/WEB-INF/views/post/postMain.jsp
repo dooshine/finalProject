@@ -33,12 +33,6 @@
     	}
     </style>
    
-<!--    	model.addAttribute로 받은 memberId Vue의 Data영역에서 활용할 수 있도록 선언 -->
-<!--    	<script> -->
-<%-- //    		var sessionMemberId = '${memberId}'; --%>
-<!-- //   		Vue.provide('$sessionMemberId', sessionMemberId); -->
-<!--    	</script>  -->
-	
 
 	<div class="container-fluid" id="app">
 		
@@ -366,7 +360,7 @@
                 </div>      
             </div>
          </div>
-	  
+
 	     
 <!-- 	    <button type="button" onclick="relayout();" class="btn btn-white btn-outline-dark rounded-pill col-12 " data-bs-target="#modalmap" data-bs-toggle="modal">지도 테스트 모달</button> -->
 	    <!--------------- 게시물들 반복구간 ------------->
@@ -390,7 +384,7 @@
 								</div>
 			            </div>
 			            <div class="col-1 col-md-1 col-lg-1 d-flex align-items-start justify-content-end">
-			               <i class="fs-3 text-secondary ti ti-dots-vertical"></i>
+			               <i class="fs-3 text-secondary ti ti-dots-vertical" data-toggle="dropdown"></i>
 			            </div>
 							
 	       			</div>	
@@ -520,7 +514,7 @@
 				                			</div>
 				                		</div>
 				                		
-				                		<div class="col-9">
+				                		<div class="col-8">
 				                			<div class="row">
 				                				<h6>{{reply.replyContent}}</h6>
 				                			</div>
@@ -528,6 +522,9 @@
 <!-- 				                				<h6 class="col-1 text-start reply-text" style="white-space: nowrap;">좋아요 </h6> -->
 				                				<h6 class="col-1 text-start reply-text" @click="showRereplyInput(post.postNo,reply.replyNo),hideReplyInput()" style="white-space: nowrap;">댓글 달기</h6>	
 				                			</div>			                			
+				                		</div>
+				                		<div class="col-1" v-if="memberId === reply.replyId">
+				                			<i class="ti ti-x" @click="deleteReply(reply.replyNo)"></i>
 				                		</div>
 			                		</div>
 			                		<!-- 댓글 표시 -->
@@ -548,8 +545,11 @@
 							                				<h6 class="fs-7">{{rereply.replyId}}</h6>
 							                			</div>
 				                					</div>
-				                					<div class="col-7">
+				                					<div class="col-6">
 				                						<h6>{{rereply.replyContent}}</h6>
+				                					</div>
+				                					<div class="col-1">				                						
+				                						<i class="ti ti-x" @click="deleteRereply(rereply.replyNo)" v-if="rereply.replyId == memberId"></i>
 				                					</div>
 				                				</div>
 				                				<!-- 대댓글 들 -->
@@ -666,6 +666,7 @@
                 	// 안전장치
                 	loading:false,
                 	
+                	memberId:null,
                 };
             },
             computed:{  
@@ -687,6 +688,15 @@
 // 	                    }) 
 //             	},
             	
+            	async deletePost(postNo){
+					try {
+						await axios.head('http://localhost:8080/')
+					}
+					catch(error){
+						console.log(error);
+					}
+			    },
+            		
             	// 무한 페이징 게시글 불러오기 1페이지당 10개씩 매 페이지 별로 불러옴,
             	async fetchPosts(){
                     if(this.loading == true) return;//로딩중이면
@@ -820,6 +830,27 @@
                 	this.tempReplyNo = null;
                 },
                 
+                // 댓글 삭제
+                async deleteReply(replyNo){
+                	try{
+                		await axios.delete('http://localhost:8080/rest/post/reply/delete/'+replyNo);
+                		this.fetchPosts();
+                	}
+                	catch (error){
+                		console.error(error);
+                	}
+                
+                },
+                // 대댓글 삭제
+                async deleteRereply(replyNo){
+                	try{
+                		await axios.delete('http://localhost:8080/rest/post/reply/reDelete/'+replyNo);
+                		this.fetchPosts();
+                	}
+                	catch(error){
+                		console.error(error);
+                	}
+                },
               
                 // 댓글 창 관련 클릭 함수 -------------------------------
              	
@@ -882,7 +913,19 @@
             		        infowindow.open(map, marker);
             		    });
             		}
-            	}
+            	},
+            	setId(){ // 아이디 세팅
+            		const memberId = '${memberId}';
+                	if (memberId && memberId.trim() !== '') {
+                		    // memberId가 존재하고 빈 문자열이 아닌 경우
+                		    this.memberId = memberId;
+                	} else {
+                		    // memberId가 없거나 빈 문자열인 경우 기본 값 또는 예외 처리를 수행합니다.
+                		    this.memberId = null; // 기본 값으로 null을 할당하거나
+                		    // 예외 처리 로직을 추가합니다.
+                		    // 예: 오류 메시지 표시, 다른 로직 실행 등
+                	}            		
+            	},
             },
             watch:{
             	percent(){
@@ -918,6 +961,10 @@
             created(){
             	// 게시글 불러오기
             	this.fetchPosts();
+            	this.setId();
+            	
+            	
+            	
             },
         }).mount("#app");
     </script>

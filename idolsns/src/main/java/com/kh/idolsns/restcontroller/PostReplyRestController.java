@@ -6,6 +6,7 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -64,6 +65,22 @@ public class PostReplyRestController {
 		
 		System.out.println("dto is : "+ dto);
 		replyRepo.addReply(dto); 
+	}
+	
+	// 댓글 삭제
+	@DeleteMapping("/reply/delete/{replyNo}")
+	public void delete(@PathVariable Long replyNo)
+	{
+		// 그룹이 replyNo인 댓글 모두 삭제, 원 댓글 밑 그 밑의 대댓글 전부 삭제
+		replyRepo.deleteReplies(replyNo);
+	}
+	
+	// 대댓글 삭제
+	@DeleteMapping("/reply/reDelete/{replyNo}")
+	public void reDelete(@PathVariable Long replyNo)
+	{
+		// 댓글번호가 replyNo인 대댓글만을 삭제
+		replyRepo.deleteRereply(replyNo);
 	}
 
 }

@@ -1,9 +1,13 @@
 package com.kh.idolsns.restcontroller;
 
 
+import java.lang.reflect.Array;
 import java.sql.Date;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.http.HttpSession;
 
@@ -27,6 +31,7 @@ import com.kh.idolsns.dto.FreePostDto;
 import com.kh.idolsns.dto.MapDto;
 import com.kh.idolsns.dto.PostDto;
 import com.kh.idolsns.dto.PostImageDto;
+import com.kh.idolsns.dto.ReplyDto;
 import com.kh.idolsns.dto.SchedulePostDto;
 import com.kh.idolsns.repo.TagRepo;
 import com.kh.idolsns.repo.TogetherPostRepo;
@@ -37,6 +42,7 @@ import com.kh.idolsns.repo.MapRepo;
 import com.kh.idolsns.repo.PostImageRepo;
 import com.kh.idolsns.repo.PostRepo;
 import com.kh.idolsns.repo.PostWithNickRepo;
+import com.kh.idolsns.repo.ReplyRepo;
 import com.kh.idolsns.repo.SchedulePostRepo;
 
 @CrossOrigin
@@ -55,6 +61,12 @@ public class PostRestController {
     
     @Autowired
     private MapRepo mapRepo;
+    
+    @Autowired
+    private ReplyRepo replyRepo;
+    
+    @Autowired
+    private PostImageRepo postImageRepo;
     
     @Autowired
     private PostShowService postShowService;
@@ -240,6 +252,26 @@ public class PostRestController {
     // 통합게시물 삭제
     @DeleteMapping("/{postNo}")
     public boolean delete(@RequestParam Long postNo){
+    	
+    	// 지도 설정 삭제,
+    	mapRepo.delete(postNo); 
+
+    	// 댓글 모두 삭제,
+    	replyRepo.deleteByPostNo(postNo);
+    	
+    	// 태그 모두 삭제, 
+    	tagRepo.deleteByPostNo(postNo);
+    	
+    	// 첨부파일 모두 삭제
+    	Long tempAttachmentNo;
+    	List<PostImageDto> postImageList = postImageRepo.selectList(postNo);
+    	for(PostImageDto postImage : postImageList) {
+    		postImage.getAttachmentNo();
+    	}
+    	
+    	// 게시글 삭제, 
+    	
+    	
         return postRepo.delete(postNo);
     }
 
