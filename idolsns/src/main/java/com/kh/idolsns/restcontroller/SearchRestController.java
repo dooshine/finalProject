@@ -23,5 +23,11 @@ public class SearchRestController {
     public List<SearchMemberDto> selectSearchMember(@RequestParam String memberId){
         return sqlSession.selectList("search.selectSearchMember", memberId);
     }
-    
+
+    // 회원검색결과 조회
+    @GetMapping("/memberProfile")
+    public SearchMemberDto selectMemberProfile(@RequestParam String memberId){
+        // SearchMemberDto dto = sqlSession.selectOne("search.selectMemberProfile", memberId);
+        return sqlSession.selectOne("search.selectMemberProfile", memberId);
+    }
 }
