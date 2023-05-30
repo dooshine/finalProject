@@ -4,6 +4,7 @@ import java.sql.Date;
 import java.util.List;
 
 import com.kh.idolsns.dto.AttachmentDto;
+import com.kh.idolsns.dto.ReplyDto;
 
 import lombok.Data;
 
@@ -42,7 +43,12 @@ public class PostShowVO {
 	// ----------------------------------
 	// 프로필 사진 번호 
 	private Integer attachmentNo; 
-	// ---------------------------------
+	// ----------------------------------
 	// 좋아요 수
 	private Long likeCount;
+	// ----------------------------------
+	// 댓글 List형태로 받기
+	private List<ReplyDto> replyList; 
+	
+	
 }

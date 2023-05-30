@@ -36,4 +36,10 @@ public class PostLikeRepoImpl implements PostLikeRepo{
 		return (Integer) sqlSession.selectOne("postLike.check",postLikeDto) > 0 ;
 	}
 
+	@Override
+	public void deleteByPostNo(Long postNo) {
+		sqlSession.delete("postLike.deleteByPostNo",postNo);
+		
+	}
+
 }
