@@ -270,7 +270,7 @@ public class PointController {
 		
 		//DB의 잔여 금액 fundRemain을 0으로 변경
 		fundRepo.fundCancel(fundNo);
-		fundRepo.fundCancel2(fundNo);
+		//fundRepo.fundCancel2(fundNo);
 		
 		 //멤버 포인트 환불
 		String memberId = fundDto.getMemberId();

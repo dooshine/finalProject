@@ -13,14 +13,7 @@
         select fund_seq.nextval from dual
     </select>
     
-    <insert id="add">
-         insert into fund (
-          fund_no, post_no, fund_price, fund_time, member_id
-          ) 
-          values (
-          #{fundNo}, #{postNo}, #{fundPrice}, sysdate, #{memberId}
-          )
-    </insert>
+
     
     <!-- 사용 -->
     <insert id="add2">

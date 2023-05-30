@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- dtd -->
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+<mapper namespace="fundpostinte">
+
+   <resultMap type="FundDetailVO" id="fdvo">
+      <!-- FundPostImageDto (fund_post + post + fund_main_image) -->
+      <association property="fundPostImageDto">
+         <result column="post_no" property="postNo"/>
+         <result column="member_id" property="memberId"/>
+         <result column="fund_title" property="fundTitle"/>
+         <result column="post_start" property="postStart"/>
+         <result column="post_end" property="postEnd"/>
+         <result column="post_time" property="postTime"/>
+         <result column="fund_goal" property="fundGoal"/>
+         <result column="fund_state" property="fundState"/>
+         <result column="post_type" property="postType"/>
+         <result column="post_content" property="postContent"/>
+         <result column="attachment_no" property="attachmentNo"/>
+         <result column="sponsor_count" property="sponsorCount"/>
+         <result column="price_total" property="priceTotal"/>
+      </association>
+      
+      <!-- fund -->
+      <collection property="fundDtos" javaType="java.util.List"
+                  ofType="FundDto" select="fundByPostNo" column="post_no">
+      </collection>
+      
+      <!-- post_image -->
+      <collection property="attachmentNos" javaType="java.util.List"
+            ofType="PostImageDto" select="attachByPostNo" column="post_no"/>
+            
+   </resultMap>
+   
+   <select id="fundPostByPostNo" resultMap="fdvo" parameterType="Long">
+      select * from fundpostimage_detail where post_no=#{postNo} 
+   </select>
+   
+   <select id="fundByPostNo" resultType="FundDto" parameterType="Long">
+      select * from fund
+      where post_no=#{postNo}
+   </select>
+   
+   <select id="attachByPostNo" resultType="PostImageDto" parameterType="Long">
+      select * from post_image where post_no=#{postNo}
+   </select>
+   
+   <!-- SQL 구문 조각 생성 -->
+    <sql id="topNheader">
+       select * from (
+          select rownum rn, TMP.* from(
+    </sql>
+    <sql id="topNfooter">
+       )TMP
+       ) where rn between #{begin} and #{end}
+    </sql>
+    
+   <!-- 무한스크롤 페이징 목록 -->
+    <select id="infinite" resultType="FundPostImageDto">
+      <include refid="topNheader"/>          
+      select * from fundpostimage_view
+      order by post_time desc       
+      <include refid="topNfooter"/>
+    </select>
+    
+   <select id="list" resultType="FundPostImageDto">
+      select * from fundpostimage_view
+      order by post_time desc
+   </select>
+   
+   
+</mapper>
