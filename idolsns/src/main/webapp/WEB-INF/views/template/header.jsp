@@ -396,7 +396,7 @@
 				    	<div class="col-6 d-flex collapse navbar-collapse" id="navbarSupportedContent">
 				      		<form action="/search" class="d-flex w-100">
 				      			<div class="search-box w-100">
-					        		<input name="q" class="search-input me-2 w-100" placeholder="STARLINK 검색" type="text">
+					        		<input name="q" class="search-input me-2 w-100" placeholder="STARLINK 검색" type="text" value="${param.q}">
 					        	</div>
 				      		</form>
 				    	</div>
