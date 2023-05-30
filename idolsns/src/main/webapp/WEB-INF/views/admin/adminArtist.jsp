@@ -41,9 +41,9 @@
                         <th scope="col">
                             <input type="checkbox" @change="checkAllArtist($event)"> 전체
                         </th>
+                        <th scope="col">첨부사진</th>
                         <th scope="col">아티스트 이름</th>
                         <th scope="col">팔로워 수</th>
-                        <th scope="col">첨부사진 번호</th>
                         <th scope="col">관리도구</th>
                     </tr>
                 </thead>
@@ -53,9 +53,9 @@
                         <td>
                             <input type="checkbox" @change="checkArtist($event, artistView.artistNo)" :checked="selectedArtistObj[artistView.artistNo]">
                         </td>
-                        <td>{{artistView.artistName}}</td>
-                        <td>{{artistView.followCnt ?? 0}}</td>
                         <td>{{artistView.attachmentNo ?? "없음"}}</td>
+                        <td>{{fullName(artistView.artistName, artistView.artistEngName)}}</td>
+                        <td>{{artistView.followCnt ?? 0}}</td>
                         <td>관리</td>
                     </tr>
                 </tbody>
@@ -174,6 +174,12 @@
 
             // 아티스트 목록 조회
             this.loadArtistList();
+        },
+
+
+        // 아티스트 이름
+        fullName(name, engName){
+          return name + "(" + engName + ")";
         },
       },
       created(){
