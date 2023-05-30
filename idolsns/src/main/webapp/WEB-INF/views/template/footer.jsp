@@ -141,7 +141,6 @@
 					
 					// 새 메세지 알림 여부
 					newChatNoti: false,
-					//newChatRoomNoti: false,
 					chatRoomNoList: []
 				};
 			},
@@ -198,28 +197,22 @@
 						this.readMessage();
 					}
 					this.loadRoomList();
+					this.loadChatNoti();
 					this.scrollBottom();
 				},
 				// 참여중인 방 정보 가져오기
 				loadJoinRooms() {
 					this.joinRoomList = [];
-					//this.loadRoomList();
 					for(let i=0; i<this.chatRoomList.length; i++) {
 						this.joinRoomList[i] = this.chatRoomList[i];
 					}
-					/*const data = {
-							type: 7,
-							joinRooms: this.joinRoomList,
-							memberId: this.memberId
-					}
-					this.socket.send(JSON.stringify(data));*/
 				},
 				// 새 채팅 알림 있는지 확인
 				async loadChatNoti() {
 					const memberId = this.memberId;
 					const url = "${pageContext.request.contextPath}/chat/message/noti/" + memberId;
 					const resp = await axios.get(url);
-					console.log(resp.data);
+					//console.log(resp.data);
 					if(resp.data === true) this.newChatNoti = true;
 					else this.newChatNoti = false;
 				},
@@ -231,21 +224,22 @@
 						this.chatRoomNoList[i] = this.chatRoomList[i].chatRoomNo;
 					}
 					//console.log("chatRoomNoList: " + this.chatRoomNoList);
-					const memberId = this.memberId;
 					const url = "${pageContext.request.contextPath}/chat/message/noti";
 					const data = {
 							chatRoomNoList: this.chatRoomNoList,
-							memberId: memberId
+							memberId: this.memberId
 					};
 					const resp = await axios.post(url, data);
-					console.log(resp.data);
-					for(let i=0; i<resp.data.length; i++) {
-						for(let j=0; j<this.joinRoomList.length; j++) {
-							if(resp.data[i].chatRoomNo === this.joinRoomList[j].chatRoomNo) {
-								this.joinRoomList[j].newChat = true;
-							}
-						}
+					const numbers = resp.data.map(obj=>obj.chatRoomNo);
+					//console.log(numbers);
+					const filterArray = this.chatRoomList.filter(
+						room=>numbers.some(number=>number == room.chatRoomNo)
+					);
+					//console.log(filterArray);
+					if(filterArray.length > 0) {
+						filterArray.forEach(room=>{room.newChat=true});
 					}
+					this.loadChatNoti();
 				},
 				// 메세지 읽음
 				async readMessage() {
@@ -258,12 +252,10 @@
 				},
 				// 채팅 메인 모달 열기
 				showChatMainModal() {
-					//this.chatRoomList.splice(0);
 					this.followList.splice(0);
-					//this.loadRoomList();
+					this.loadRoomList();
 					this.loadFollowList();
 					this.loadJoinRooms();
-					this.loadChatRoomNoti();
 					this.chatMainModal = true;
 				},
 				// 채팅 메인 모달 닫기
@@ -280,7 +272,6 @@
 				hideCreateRoomModal() {
 					this.chatRoom.chatRoomName1 = "";
 					this.selectedMemberList.splice(0);
-					//this.selectedMemberList.push(this.memberId);
 					this.createRoomModal = false;
 					this.showChatMainModal();
 				},
@@ -308,9 +299,13 @@
 					this.getChatJoin();
 					// 메세지 읽기
 					this.readMessage();
+					this.loadRoomList();
 					this.chatRoomModal = true;
 					this.loadMessage();
-					//this.scrollBottom();
+					this.$nextTick(() => {
+					    this.text = "";
+					    this.$refs.messageInput.focus();
+					});
 				},
 				// 채팅방 모달 닫기
 				hideChatRoomModal() {
@@ -326,7 +321,6 @@
 					this.chatJoin = "";
 					this.chatMenuModal = false;
 					this.chatRoomModal = false;
-					this.text = "";
 				},
 				// 채팅방 메뉴 모달 열기
 				showChatMenuModal() {
@@ -354,6 +348,7 @@
 					const resp = await axios.get(url);
 					this.chatRoomList.splice(0);
 					this.chatRoomList.push(...resp.data);
+					this.loadChatRoomNoti();
 				},
 				// 팔로우 목록 불러오기
 				async loadFollowList() {
@@ -361,9 +356,9 @@
 					const resp = await axios.get(url);
 					//console.log("data: " + resp.data);
 					this.followList.push(...resp.data);
-					console.log("followList: " + this.followList);
+					//console.log("followList: " + this.followList);
 				},
-				// 채팅방 만들기 - 모달 안 닫힘 이유를 모르겠음
+				// 채팅방 만들기
 				createChatRoom() {
 					if(this.selectedMemberList.length > 1) {
 						this.chatRoom.chatRoomType = 'G';
@@ -381,16 +376,10 @@
 					this.socket.onmessage = (e) => {
 						app.messageHandler(e);
 						app.chatRoomList.splice(0);
-						app.loadRoomList();
 						app.chatRoom.chatRoomName1 = "";
-						//app.selectedMemberList.push(this.memberId);
-						//app.hideCreateRoomModal();
-						//app.createRoomModal = false;
-						//app.chatMainModal = true;
 					}
 					this.socket.send(JSON.stringify(data));
 					this.selectedMemberList.splice(0);
-					//this.hideCreateRoomModal();
 					this.createRoomModal = false;
 					this.chatMainModal = true;
 					setTimeout(() => {
@@ -447,8 +436,8 @@
 				},
 				// 메세지 보내기
 				sendMessage() {
-					if(this.textCount() < 1) return;
-					if(this.textCount() > 300) return;
+					if(this.textCount < 1) return;
+					if(this.textCount > 300) return;
 					this.firstMsg();
 					const data = {
 							type: 1,
@@ -456,16 +445,16 @@
 							chatMessageContent: this.text
 					};
 					this.socket.send(JSON.stringify(data));
-					const noti = {
+					this.clear();
+					/*const noti = {
 							type: 12,
 							memberId: this.memberId,
 							chatRoomNo: this.chatRoomNo,
 							receiverList: this.chatMemberList
 					};
 					this.socket.send(JSON.stringify(noti));
-					this.clear();
-					this.scrollBottom();
-					//this.loadRoomList();
+					this.scrollBottom();*/
+					this.loadRoomList();
 				},
 				// 보내는 메세지가 오늘의 첫 메세지인지 확인
 				firstMsg() {
@@ -481,12 +470,6 @@
 					else {
 						const lastMessage = this.messageList[this.messageList.length - 1];
 						const lastDate = new Date(lastMessage.chatMessageTime).toLocaleDateString();
-						//console.log("lastDate: " + lastDate)
-						console.log("lastDate: " + typeof lastDate);
-						console.log("lastDate: " + lastDate);
-						console.log("today: " + typeof today);
-						console.log("today: " + today);
-						console.log(lastDate === today);
 						if(lastDate === today) return;
 						const data = {
 								type: 10,
@@ -680,10 +663,6 @@
 			created() {
 				if(this.memberId != "" && memberId != ""){
 					this.connect();
-					/*this.chatRoomList.splice(0);
-					this.loadRoomList();
-					this.followList.splice(0);
-					this.loadFollowList();*/
 				}
 			},
 			mounted() {
@@ -714,6 +693,7 @@
 				chatRoomModal(value) {
 					if(value) {
 						this.$nextTick(() => {
+							//this.text = "";
 							this.$refs.messageInput.focus();
 						})
 					}

@@ -17,8 +17,24 @@
 	
 	<!-- 메세지 읽으면 삭제 -->
 	<delete id="readMessage">
-		delete chat_read where chat_room_no = #{chatRoomNo} and chat_receiver = #{chatReceiver}
+		delete chat_read 
+		where chat_room_no = #{chatRoomNo} and chat_receiver = #{chatReceiver}
 	</delete>
+	
+	<!-- 새 메세지 있는지 확인(전체 방) -->
+	<select id="newChatCount" resultType="int">
+		select count(*) from chat_read
+		where chat_receiver = #{memberId}
+	</select>
+	
+	<!-- 새 메세지 있는지 확인(개별 방) -->
+	<select id="newChatByRoom" resultType="ChatReadDto">
+		select * from chat_read
+		where chat_receiver = #{memberId} and chat_room_no in
+		<foreach collection="chatRoomNoList" item="chatRoomNo" open="(" close=")" separator=",">
+			#{chatRoomNo}
+		</foreach>
+	</select>
 	
 </mapper>
     

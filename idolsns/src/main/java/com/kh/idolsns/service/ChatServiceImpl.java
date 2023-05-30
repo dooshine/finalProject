@@ -90,7 +90,7 @@ public class ChatServiceImpl implements ChatService {
 		ChatRoomVO chatRoom = chatRooms.get(chatRoomNo);
 		// 입장
 		chatRoom.enter(member);
-		log.debug("chatRooms: " + chatRooms);
+		//log.debug("chatRooms: " + chatRooms);
 	}
 	
 	// 참여중인 방 퇴장
@@ -339,14 +339,14 @@ public class ChatServiceImpl implements ChatService {
 		else if(receiveVO.getType() == WebSocketConstant.NEW_ROOM) {
 			ChatRoomProcessVO processVO = mapper.readValue(message.getPayload(), ChatRoomProcessVO.class);
 			int chatRoomNo = chatRoomService.createChatRoom(processVO);
-			log.debug("new roomNo: " + chatRoomNo);
+			//log.debug("new roomNo: " + chatRoomNo);
 			chatRooms.put(chatRoomNo, new ChatRoomVO());
 			ChatRoomVO chatRoom = chatRooms.get(chatRoomNo);
 			chatRoom.enter(member);
-			log.debug("chatRooms after create: " + chatRooms);
+			//log.debug("chatRooms after create: " + chatRooms);
 		}
 		// 새 메세지 알림인 경우
-		else if(receiveVO.getType() == WebSocketConstant.NEW_MSG) {
+		/*else if(receiveVO.getType() == WebSocketConstant.NEW_MSG) {
 			// 채팅방 번호
 			int chatRoomNo  = receiveVO.getChatRoomNo();
 			// 보낸 회원 아이디
@@ -377,7 +377,7 @@ public class ChatServiceImpl implements ChatService {
 						.build();
 				chatNotiRepo.insert(chatNotiDto);
 			}
-		}
+		}*/
 	}
 
 }

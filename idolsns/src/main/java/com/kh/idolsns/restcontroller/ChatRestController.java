@@ -149,19 +149,25 @@ public class ChatRestController {
 	// 접속시 새 메세지 알림이 있는지 확인 (있으면 true 반환)
 	@GetMapping("/message/noti/{memberId}")
 	public boolean loadChatNoti(@PathVariable String memberId) {
-		return chatNotiRepo.myNotiList(memberId) > 0;
+		return chatReadRepo.newChatCount(memberId) > 0;
+		//return chatNotiRepo.myNotiList(memberId) > 0;
 	}
 	
 	// 채팅방 각각 새 메세지 알림 있는지 확인
+	/*@PostMapping("/message/noti")
+	public boolean chatNotiByRoom(@RequestBody ChatMemberJoinVO vo) {
+		return chatReadRepo.newChatCount(vo) > 0;
+	}*/
 	@PostMapping("/message/noti")
-	public List<ChatNotiDto> chatNotiByRoom(@RequestBody ChatMemberJoinVO vo) {
-		return chatNotiRepo.roomNotiList(vo.getChatRoomNoList(), vo.getMemberId());
+	public List<ChatReadDto> chatNotiByRoom(@RequestBody ChatMemberJoinVO vo) {
+		return chatReadRepo.newChatByRoom(vo.getChatRoomNoList(), vo.getMemberId());
+		//return chatNotiRepo.roomNotiList(vo.getChatRoomNoList(), vo.getMemberId());
 	}
 	
 	// 한 채팅방에 대한 알림 번호 목록 찾기
-	@PostMapping("/message/roomNoti")
+	/*@PostMapping("/message/roomNoti")
 	public List<Integer> chatNotiNoList(@RequestBody ChatMemberJoinVO vo) {
 		return chatNotiRepo.roomNotiNo(vo.getChatRoomNo(), vo.getMemberId());
-	}
+	}*/
 	
 }

@@ -152,7 +152,7 @@ public class ChatRoomServiceImpl implements ChatRoomService {
 		
 		// 채팅방에 참여자가 남아있는지 확인
 		boolean isEmpty = chatJoinRepo.findMembersByRoomNo(chatRoomNo).isEmpty();
-		log.debug("isEmpty: " + isEmpty);
+		//log.debug("isEmpty: " + isEmpty);
 		
 		// 채팅방에 참여자가 남아있지 않으면 chat_room에서 방 삭제
 		if(isEmpty) {

@@ -426,54 +426,54 @@
 						</div>
 					</div>
 					<div class="customModalBody">
-						<div class="chatRooms mb-2" v-for="(room, index) in joinRoomList" :key="index">
+						<div class="chatRooms mb-2" v-for="(room, index) in chatRoomList" :key="index">
 							<!-- 채팅방 이름(단톡일 때: 지정한 이름 표시) -->
-							<div v-if="joinRoomList[index].chatRoomType == 'G'">
+							<div v-if="chatRoomList[index].chatRoomType == 'G'">
 								<button @click="showChatRoomModal(index)" class="hide-style w-100 mb-3">
 									<div class="d-flex align-items-center mb-2">
 										<div class="text-start">
-											<h6>{{ joinRoomList[index].chatRoomName1 }}</h6>
+											<h6>{{ chatRoomList[index].chatRoomName1 }}</h6>
 										</div>
 										<!-- 새 메세지 알림 표시 -->
-										<div v-if="joinRoomList[index].newChat === true" class="notiMarkChat ms-2" style="margin-top: 2px;"></div>
+										<div v-if="chatRoomList[index].newChat === true" class="notiMarkChat ms-2" style="margin-top: 2px;"></div>
 									</div>
 									<div class="sysMsgContent d-flex justify-content-between">
 										<div>마지막 메세지</div>
 										<div>···</div>
-										<div>{{ timeFormatDetailed2(joinRoomList[index].chatRoomLast) }}</div>
+										<div>{{ timeFormatDetailed2(chatRoomList[index].chatRoomLast) }}</div>
 									</div>
 								</button>
 							</div>
 							<!-- 채팅방 이름(갠톡일 때: 상대방 이름 표시) -->
-							<div v-if="joinRoomList[index].chatRoomType == 'P'">
-								<button v-if="joinRoomList[index].chatRoomName1 != memberId" 
+							<div v-if="chatRoomList[index].chatRoomType == 'P'">
+								<button v-if="chatRoomList[index].chatRoomName1 != memberId" 
 											@click="showChatRoomModal(index)" class="hide-style w-100 mb-3">
 									<div class="d-flex align-items-center mb-2">
 										<div class="text-start">
-											<h6>{{ joinRoomList[index].chatRoomName1 }}</h6>
+											<h6>{{ chatRoomList[index].chatRoomName1 }}</h6>
 										</div>
 										<!-- 새 메세지 알림 표시 -->
-										<div v-if="joinRoomList[index].newChat === true" class="notiMarkChat ms-2" style="margin-top: 2px;"></div>
+										<div v-if="chatRoomList[index].newChat === true" class="notiMarkChat ms-2" style="margin-top: 2px;"></div>
 									</div>
 									<div class="sysMsgContent d-flex justify-content-between">
 										<div>마지막 메세지</div>
 										<div>···</div>
-										<div>{{ timeFormatDetailed2(joinRoomList[index].chatRoomLast) }}</div>
+										<div>{{ timeFormatDetailed2(chatRoomList[index].chatRoomLast) }}</div>
 									</div>
 								</button>
 								<button v-if="chatRoomList[index].chatRoomName2 != memberId" 
 											@click="showChatRoomModal(index)" class="hide-style w-100 mb-3">
 									<div class="d-flex align-items-center mb-2">
 										<div class="text-start">
-											<h6>{{ joinRoomList[index].chatRoomName2 }}</h6>
+											<h6>{{ chatRoomList[index].chatRoomName2 }}</h6>
 										</div>
 										<!-- 새 메세지 알림 표시 -->
-										<div v-if="joinRoomList[index].newChat === true" class="notiMarkChat ms-2" style="margin-top: 2px;"></div>
+										<div v-if="chatRoomList[index].newChat === true" class="notiMarkChat ms-2" style="margin-top: 2px;"></div>
 									</div>
 									<div class="sysMsgContent d-flex justify-content-between">
 										<div>마지막 메세지</div>
 										<div>···</div>
-										<div>{{ timeFormatDetailed2(joinRoomList[index].chatRoomLast) }}</div>
+										<div>{{ timeFormatDetailed2(chatRoomList[index].chatRoomLast) }}</div>
 									</div>
 								</button>
 							</div>
