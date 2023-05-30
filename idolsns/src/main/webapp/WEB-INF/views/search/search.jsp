@@ -30,11 +30,19 @@
         </thead>
         <tbody>
           <tr v-for="(artistSearch, i) in artistSearchList" :key="i">
-            <td>{{artistSearch.attachmentNo ?? "없슈"}}</td>
+            <td>
+              <!-- {{artistSearch.attachmentNo ?? "없슈"}} -->
+              <img :src="artistSearch.attachmentNo === 0 ? '/static/image/profileDummy.png' : '/download/?attachmentNo=' + artistSearch.attachmentNo" style="width: 100px; height: 100px;">
+            </td>
             <td><a :href="'/artist/'+artistSearch.artistEngNameLower">{{fullName(artistSearch.artistName, artistSearch.artistEngName)}}</a></td>
             <td>{{artistSearch.followCnt}}</td>
             <td>
               <button class="btn rounded-pill" :class="{'btn-primary':!artistSearch.isFollowPage, 'btn-secondary': artistSearch.isFollowPage}"  v-text="artistSearch.isFollowPage?'팔로우취소':'팔로우하기'" @click="followPage(artistSearch)">팔로우하기</button>
+            </td>
+          </tr>
+          <tr v-if="artistSearchList.length === 0">
+            <td colspan="4">
+              <h3 class="my-3">검색 결과가 없습니다</h3>
             </td>
           </tr>
         </tbody>
@@ -63,11 +71,16 @@
           <tr v-for="(memberSearch, i) in memberSearchList" :key="i">
             <!-- <td>{{memberSearch.attachmentNo ?? "없슈"}}</td> -->
             <td>
-              <img :src="memberSearch.attachmentNo === 0 ? '/static/image/profileDummy.png' : '/download/?attachmentNo=' + memberSearch.attachmentNo ">
+              <img :src="memberSearch.attachmentNo === 0 ? '/static/image/profileDummy.png' : '/download/?attachmentNo=' + memberSearch.attachmentNo" style="height: 100px; width: 100px;">
             </td>
             <td><a :href="'/artist/'+memberSearch.memberId">{{fullName(memberSearch.memberId, memberSearch.memberNick)}}</a></td>
             <td>
               <button class="btn rounded-pill" :class="{'btn-primary':!memberSearch.isFollowMember, 'btn-secondary': memberSearch.isFollowMember}"  v-text="memberSearch.isFollowMember?'팔로우취소':'팔로우하기'" @click="followMember(memberSearch)">팔로우하기</button>
+            </td>
+          </tr>
+          <tr v-if="memberSearchList.length === 0">
+            <td colspan="3">
+              <h3 class="my-3">검색 결과가 없습니다</h3>
             </td>
           </tr>
         </tbody>

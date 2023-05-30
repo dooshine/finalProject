@@ -53,10 +53,16 @@
                         <td>
                             <input type="checkbox" @change="checkArtist($event, artistView.artistNo)" :checked="selectedArtistObj[artistView.artistNo]">
                         </td>
-                        <td>{{artistView.attachmentNo ?? "없음"}}</td>
+                        <td>
+                            <img :src="previewURLList[i]===null ? artistView.profileSrc : previewURLList[i]" style="height: 50px; width: 50px;">
+                            <!-- <img v-if="previewURLList[i]!==null" :src="previewURLList[i]" style="height: 50px; width: 50px;"> -->
+                        </td>
                         <td>{{fullName(artistView.artistName, artistView.artistEngName)}}</td>
                         <td>{{artistView.followCnt ?? 0}}</td>
-                        <td>관리</td>
+                        <td>
+                            <input type="file" @change="handleFileUpload(i)">
+                            <button @click="uploadFile(i)">프로필사진 수정</button>
+                        </td>
                     </tr>
                 </tbody>
             </table>
@@ -80,16 +86,50 @@
 
           artistSearchObj : {
             name: "",
-          }
+          },
+          // 아티스트 프로필사진 목록   
+          attachmentList: [],
+          previewURLList: [],
         };
       },
       computed: {
-  
       },
       watch: {
 
       },
       methods: {
+        // 파일 업로드 시 프로필 사진 변경
+        handleFileUpload(index){
+            // 업로드 파일
+            const file = event.target.files[0];
+            // 첨부사진 임시보관
+            this.attachmentList[index] = file;
+            // 사진 미리보기 구현
+            if (file) {
+                this.previewURLList[index] = URL.createObjectURL(file);
+            }
+        },
+
+        // 대표페이지 프로필 사진 설정
+        async uploadFile(index){
+            // URL
+            const url = "http://localhost:8080/rest/admin/artistProfile";
+            
+            // 폼데이터 생성
+            const formData = new FormData();
+            formData.append('attachment', this.attachmentList[index]);
+            formData.append('artistNo', this.artistViewList[index].artistNo);
+
+            // 대표페이지 프로필사진 설정
+            const resp = await axios.post(url, formData);
+
+            // 새로고침
+            this.loadArtistViewList();
+            
+            alert("대표페이지 프로필사진 설정완료!");
+        },
+
+
         // 아티스트 생성
         async createArtist(){
             // URL
@@ -108,6 +148,8 @@
             const resp = await axios.get(url);
             // 반영
             this.artistViewList = resp.data;
+            this.attachmentList = new Array(this.artistViewList.length).fill(null);
+            this.previewURLList = new Array(this.artistViewList.length).fill(null);
             console.log("조회 실행");
         },
         // 아티스트 전체선택

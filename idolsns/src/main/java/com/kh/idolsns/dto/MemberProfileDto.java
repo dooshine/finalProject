@@ -5,16 +5,18 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+// 회원 아이디+닉네임+프로필사진번호 DTO
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class SearchMemberDto {
+public class MemberProfileDto {
     private String memberId;
     private String memberNick;
-    private int attachmentNo;
+    private Integer attachmentNo;
 
+    // 대표이미지 src
     public String getProfileSrc(){
-        return attachmentNo==0 ? "/static/image/profileDummy.png" : "/download/?attachmentNo=" + this.attachmentNo;
+        return attachmentNo==null ? "/static/image/profileDummy.png" : "/download/?attachmentNo=" + this.attachmentNo;
     }
 }
