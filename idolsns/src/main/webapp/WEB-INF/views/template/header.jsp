@@ -560,7 +560,7 @@
 											@mouseover="showDeleteButton(index)" @mouseleave="hideDeleteButton(index)">
 										<!-- 메세지 삭제버튼 -->
 										<button v-if="showDeleteButtonIndex === index" @click="deleteMessage(index)" 
-											class="hide-style d-flex align-items-end deleteMessageBtn" style="padding-bottom: 0.5px; margin-right: 5px;">
+											class="hide-style d-flex align-items-end deleteMessageBtn" style="padding-bottom: 1px; margin-right: 5px;">
 											<i class="ti ti-x"></i>
 										</button>
 										<div class="messageTime" v-if="displayTime(index)">{{ timeFormat(message.chatMessageTime) }}</div>

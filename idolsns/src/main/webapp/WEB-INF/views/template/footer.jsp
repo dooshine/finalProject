@@ -296,12 +296,12 @@
 					this.chatRoomNo = chatRoomNo;
 					this.loadRoomInfo();
 					this.loadChatMember();
-					this.loadMessage();
 					this.getChatJoin();
 					// 메세지 읽기
 					this.readMessage();
 					this.chatRoomModal = true;
-					this.scrollBottom();
+					this.loadMessage();
+					//this.scrollBottom();
 				},
 				// 채팅방 모달 닫기
 				hideChatRoomModal() {
@@ -438,8 +438,8 @@
 				},
 				// 메세지 보내기
 				sendMessage() {
-					if(this.text.length < 1) return;
-					if(this.text.length > 300) return;
+					if(this.textCount() < 1) return;
+					if(this.textCount() > 300) return;
 					this.firstMsg();
 					const data = {
 							type: 1,
@@ -626,10 +626,12 @@
 				},
 				// 스크롤 맨 아래로
 				scrollBottom() {
-				    const messageWrapper = this.$refs.messageWrapper;
-				    if(messageWrapper) {
-				    	messageWrapper.scrollTop = messageWrapper.scrollHeight;
-				    }
+					this.$nextTick(() => {
+					    const messageWrapper = this.$refs.messageWrapper;
+					    if(messageWrapper) {
+					    	messageWrapper.scrollTop = messageWrapper.scrollHeight;
+					    }
+					});
 				},
 				// 보낸 시간 확인
 				sameTime(index) {
@@ -661,6 +663,9 @@
 					return this.followList.filter(follow => 
 								!this.chatMemberList.some(member => 
 									member.memberId === follow));
+				},
+				textCount() {
+					return this.text.trim().length;
 				}
 			},
 			created() {

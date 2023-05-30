@@ -152,7 +152,7 @@ public class ChatRestController {
 	// 채팅방 각각 새 메세지 알림 있는지 확인
 	@PostMapping("/message/noti")
 	public List<Integer> chatNotiByRoom(@RequestBody ChatMemberJoinVO vo) {
-		return chatNotiRepo.notiNoList(vo.getChatRoomNoList(), vo.getMemberId());
+		return chatNotiRepo.notiList(vo.getChatRoomNoList(), vo.getMemberId());
 	}
 	
 }

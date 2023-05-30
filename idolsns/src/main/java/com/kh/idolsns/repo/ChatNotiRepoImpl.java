@@ -21,7 +21,7 @@ public class ChatNotiRepoImpl implements ChatNotiRepo {
 		return sql.selectOne("chatNoti.myNoti", memberId);
 	}
 	@Override
-	public List<Integer> notiNoList(List<Integer> chatRoomNoList, String memberId) {
+	public List<Integer> notiList(List<Integer> chatRoomNoList, String memberId) {
 		Map<String, Object> param = Map.of("chatRoomNoList", chatRoomNoList, "memberId", memberId);
 		return sql.selectList("chatNoti.notiList", param);
 	}
