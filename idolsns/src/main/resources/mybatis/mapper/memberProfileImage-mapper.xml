@@ -12,5 +12,14 @@
 		insert into member_profile_image(attachment_no, member_id)
 		values(#{attachmentNo}, #{memberId})
 	</insert>
+	
+	<select id="memberImageExist" resultType="MemberProfileImageDto">
+		select * from member_profile_image where member_id=#{memberId}
+	</select>
+	
+	<update id="imageUpdate">
+		update member_image_exist set attachment_no=#{attachmentNo}
+		where member_id=#{memberId}
+	</update>
 
 </mapper>
