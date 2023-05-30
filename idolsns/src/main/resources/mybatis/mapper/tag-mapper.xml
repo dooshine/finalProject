@@ -38,5 +38,10 @@
 		where tag_no = #{tagNo}
 	</delete>
 	
+	<!-- 태그 전체 삭제 -->
+	<delete id="deleteByPostNo">
+		delete from tag
+		where post_no = #{postNo}
+	</delete>
 	
 </mapper>

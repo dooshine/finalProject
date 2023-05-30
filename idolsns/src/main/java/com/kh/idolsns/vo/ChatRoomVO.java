@@ -1,27 +1,14 @@
 package com.kh.idolsns.vo;
 import java.io.IOException;
-import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 import org.springframework.web.socket.TextMessage;
-
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.kh.idolsns.dto.ChatRoomDto;
-import com.kh.idolsns.dto.ChatRoomPrivDto;
-
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Data
-@JsonIgnoreProperties
 public class ChatRoomVO {
-	
-	private String memberId;
-	private ChatRoomDto chatRoomDto;
-	private List<String> memberList;
-	private ChatRoomPrivDto chatRoomPrivDto;
-	private int chatRoomNo;
 
 	/** 사용자 저장소 **/
 	private Set<ChatMemberVO> members = new CopyOnWriteArraySet<>();
@@ -29,6 +16,7 @@ public class ChatRoomVO {
 	/** 입장 **/
 	public void enter(ChatMemberVO member) {
 		members.add(member);
+		//log.debug("members: " + members);
 	}
 	
 	/** 퇴장 **/

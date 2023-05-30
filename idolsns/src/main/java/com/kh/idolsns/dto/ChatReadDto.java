@@ -1,8 +1,9 @@
 package com.kh.idolsns.dto;
-import java.sql.Date;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 
 @Data
+@JsonIgnoreProperties
 public class ChatReadDto {
 
 	private int chatRoomNo;
@@ -10,7 +11,5 @@ public class ChatReadDto {
 	
 	private String chatSender;
 	private String chatReceiver;
-	
-	private Date chatReadTime;
 	
 }
