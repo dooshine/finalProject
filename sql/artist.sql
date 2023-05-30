@@ -52,7 +52,7 @@ select c.*, d.attachment_no from (
   order by c.artist_no asc;  
 
 select * from artist_view;
-
+update follow set attachment_no = #{attachmentNo} where artist_no = #{artistNo}
 
 -- 대표페이지 프로필 테이블 생성
 create table artist_profile(

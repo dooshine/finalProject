@@ -54,4 +54,9 @@ public class ReplyRepoImpl implements ReplyRepo{
 		return sqlSession.update("reply.updateReply", paramMap) > 0;
 	}
 
+	@Override
+	public void deleteByPostNo(Long postNo) {
+		sqlSession.delete("reply.deleteByPostNo",postNo);		
+	}
+
 }

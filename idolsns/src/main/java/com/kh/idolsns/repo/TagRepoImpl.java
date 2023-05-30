@@ -39,4 +39,9 @@ public class TagRepoImpl implements TagRepo{
 		return sqlSession.selectList("tag.selectAll",postNo);
 	}
 
+	@Override
+	public void deleteByPostNo(Long postNo) {
+		sqlSession.delete("tag.deleteByPostNo",postNo);
+	}
+
 }

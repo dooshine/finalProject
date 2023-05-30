@@ -1,5 +1,5 @@
 package com.kh.idolsns.repo;
-import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,11 +17,17 @@ public class ChatReadRepoImpl implements ChatReadRepo {
 		sql.insert("chatRead.saveMessage", dto);
 	}
 	@Override
-	public void updateReadTime(int chatMessageNo, String chatReceiver) {
-		Map<String, Object> param = new HashMap<>();
-		param.put("chatMessageNo", chatMessageNo);
-		param.put("chatReceiver", chatReceiver);
-		sql.update("chatRead.updateReadTime", param);
+	public void readMessage(ChatReadDto dto) {
+		sql.delete("chatRead.readMessage", dto);
+	}
+	@Override
+	public int newChatCount(String memberId) {
+		return sql.selectOne("chatRead.newChatCount", memberId);
+	}
+	@Override
+	public List<ChatReadDto> newChatByRoom(List<Integer> chatRoomNoList, String memberId) {
+		Map<String, Object> param = Map.of("chatRoomNoList", chatRoomNoList, "memberId", memberId);
+		return sql.selectList("chatRead.newChatByRoom", param);
 	}
 	
 }

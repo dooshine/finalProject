@@ -37,4 +37,15 @@
         select attachment_no from member_profile_image 
         where member_id = #{memberId}
     </select>
+
+    <!-- 로그인회원 팔로우 정보 불러오기 -->
+    <select id="selectMemberProfile" resultMap="smbdto">
+        <bind name="memberIdExist" value="memberId != null and !memberId.equals('')"/>
+        select member_id, member_nick from member
+        <where>
+        <if test="memberIdExist">
+          and member_id = #{memberId}
+        </if>
+        </where>
+    </select>
 </mapper>

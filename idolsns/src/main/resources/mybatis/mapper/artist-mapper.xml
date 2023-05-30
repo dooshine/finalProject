@@ -20,4 +20,21 @@
             or
             instr(artist_name , #{q}) > 0
     </select>
+
+    <!-- 대표페이지 프로필 생성 -->
+    <insert id="insertArtistProfile">
+        insert into artist_profile (artist_no, attachment_no) values (#{artistNo}, #{attachmentNo})
+    </insert>
+    <!-- 대표페이지 프로필 조회 -->
+    <select id="selectOneArtistProfile" resultType="ArtistProfileDto">
+        select * from artist_profile where artist_no = #{artistNo}
+    </select>
+    <!-- 대표페이지 프로필 수정 -->
+    <update id="updateArtistProfile">
+        update artist_profile set attachment_no = #{attachmentNo} where artist_no = #{artistNo}
+    </update>
+    <!-- 대표페이지 프로필 삭제 -->
+    <delete id="deleteArtistProfile">
+        delete from artist_profile where artist_no = #{artistNo}
+    </delete>
 </mapper>

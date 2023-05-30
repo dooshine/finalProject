@@ -7,6 +7,9 @@ import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 import com.kh.idolsns.service.ChatService;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Service
 public class WebSocketServer extends TextWebSocketHandler {
 
@@ -20,6 +23,7 @@ public class WebSocketServer extends TextWebSocketHandler {
 	
 	@Override
 	public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
+		log.debug("status: " + status);
 		chatService.disconnectHandler(session);
 	}
 	
