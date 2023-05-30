@@ -29,6 +29,8 @@ import com.kh.idolsns.service.ChatRoomService;
 import com.kh.idolsns.vo.ChatMemberJoinVO;
 import com.kh.idolsns.vo.ChatMessageVO;
 import com.kh.idolsns.vo.ChatRoomProcessVO;
+
+import io.swagger.v3.oas.models.security.SecurityScheme.In;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -154,6 +156,12 @@ public class ChatRestController {
 	@PostMapping("/message/noti")
 	public List<ChatNotiDto> chatNotiByRoom(@RequestBody ChatMemberJoinVO vo) {
 		return chatNotiRepo.roomNotiList(vo.getChatRoomNoList(), vo.getMemberId());
+	}
+	
+	// 한 채팅방에 대한 알림 번호 목록 찾기
+	@PostMapping("/message/roomNoti")
+	public List<Integer> chatNotiNoList(@RequestBody ChatMemberJoinVO vo) {
+		return chatNotiRepo.roomNotiNo(vo.getChatRoomNo(), vo.getMemberId());
 	}
 	
 }
