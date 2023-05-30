@@ -385,6 +385,7 @@
 			            </div>
 			            <div class="col-1 col-md-1 col-lg-1 d-flex align-items-start justify-content-end">
 			               <i class="fs-3 text-secondary ti ti-dots-vertical" data-toggle="dropdown"></i>
+			               <i class="ti ti-x" @click="deletePost(post.postNo)"></i>
 			            </div>
 							
 	       			</div>	
@@ -688,14 +689,7 @@
 // 	                    }) 
 //             	},
             	
-            	async deletePost(postNo){
-					try {
-						await axios.head('http://localhost:8080/')
-					}
-					catch(error){
-						console.log(error);
-					}
-			    },
+
             		
             	// 무한 페이징 게시글 불러오기 1페이지당 10개씩 매 페이지 별로 불러옴,
             	async fetchPosts(){
@@ -707,6 +701,7 @@
                     // 1페이지 부터 현재 페이지 까지 전부 가져옴 
                     const resp = await axios.get("http://localhost:8080/rest/post/pageReload/"+this.page);
 	                this.posts = resp.data;
+	                this.getLikePostIndex(this.posts);
 	                this.page++;
 	                
 	                this.loading=false;
@@ -716,6 +711,17 @@
 	                }
             	},
             	
+            	// 게시글 사겢 
+            	async deletePost(postNo){
+                	try{
+                		await axios.delete('http://localhost:8080/rest/post/'+postNo);
+                		this.fetchPosts();
+                	}
+                	catch (error){
+                		console.error(error);
+                	}
+			    },
+			    
             	// 사진 관련 
                 getAttachmentUrl(attachmentNo) {
             		return "http://localhost:8080/rest/attachment/download/"+attachmentNo;
@@ -733,14 +739,14 @@
                 
              	// 좋아요 관련 비동기 처리-----------------------------------
              	// 아이디 접속해 있고, 좋아요 클릭시에 실행
-             	async checkLike(postNo,index){
+             	checkLike(postNo,index){
                 	axios.get('http://localhost:8080/rest/post/like/'+postNo)
                 		.then(response => {
                 			console.log(response.data);
                 			// 응답이 좋아요면 좋아요 +1
                 			if(response.data== 'Like'){
                 				this.posts[index].likeCount = this.posts[index].likeCount + 1; 
-                				this.postLikeIndexList.push(index);
+                				this.postLikeIndexList.push(index);                			
                 			}
                 			// 응답이 좋아요 취소면 좋아요 -1
                 			else if(response.data=='disLike'){

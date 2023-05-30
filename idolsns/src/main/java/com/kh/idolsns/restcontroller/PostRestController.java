@@ -37,9 +37,11 @@ import com.kh.idolsns.repo.TagRepo;
 import com.kh.idolsns.repo.TogetherPostRepo;
 import com.kh.idolsns.service.PostShowService;
 import com.kh.idolsns.vo.PostShowVO;
+import com.kh.idolsns.repo.AttachmentRepo;
 import com.kh.idolsns.repo.FreePostRepo;
 import com.kh.idolsns.repo.MapRepo;
 import com.kh.idolsns.repo.PostImageRepo;
+import com.kh.idolsns.repo.PostLikeRepo;
 import com.kh.idolsns.repo.PostRepo;
 import com.kh.idolsns.repo.PostWithNickRepo;
 import com.kh.idolsns.repo.ReplyRepo;
@@ -50,26 +52,40 @@ import com.kh.idolsns.repo.SchedulePostRepo;
 @RequestMapping("/rest/post")
 public class PostRestController {
     
+	// 게시글 
     @Autowired
     private PostRepo postRepo;
 
     @Autowired
     private PostWithNickRepo postWithNickRepo;
 
+    // 태그
     @Autowired
     private TagRepo tagRepo;
     
+    //지도 정보
     @Autowired
     private MapRepo mapRepo;
     
+    // 답글
     @Autowired
     private ReplyRepo replyRepo;
     
+    // 게시물 좋아요
+    @Autowired
+    private PostLikeRepo postLikeRepo;
+    
+    // 게시글 이미지
     @Autowired
     private PostImageRepo postImageRepo;
     
+    // 게시글 게시 service
     @Autowired
     private PostShowService postShowService;
+    
+    // 이미지
+    @Autowired
+    private AttachmentRepo attachmentRepo;
     
     // 자유 게시물
     @Autowired
@@ -79,6 +95,7 @@ public class PostRestController {
     @Autowired
     private SchedulePostRepo schedulePostRepo;
     
+    // 같기아요
     @Autowired
     private TogetherPostRepo togetherPostRepo;    
     
@@ -251,8 +268,8 @@ public class PostRestController {
 
     // 통합게시물 삭제
     @DeleteMapping("/{postNo}")
-    public boolean delete(@RequestParam Long postNo){
-    	
+    public boolean delete(@PathVariable Long postNo){
+    	System.out.println("ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ");
     	// 지도 설정 삭제,
     	mapRepo.delete(postNo); 
 
@@ -263,16 +280,41 @@ public class PostRestController {
     	tagRepo.deleteByPostNo(postNo);
     	
     	// 첨부파일 모두 삭제
-    	Long tempAttachmentNo;
+    	Integer tempAttachmentNo;
     	List<PostImageDto> postImageList = postImageRepo.selectList(postNo);
     	for(PostImageDto postImage : postImageList) {
-    		postImage.getAttachmentNo();
+    		
+    		// 첨부파일 게시글 연결 테이블 삭제 
+    		tempAttachmentNo = postImage.getAttachmentNo();
+    		postImageRepo.delete(tempAttachmentNo);
+    		
+    		// 첨부파일 삭제
+    		attachmentRepo.delete(tempAttachmentNo);
+    	}
+    	
+    	// 게시물 좋아요 모두 삭제
+    	postLikeRepo.deleteByPostNo(postNo);
+    	System.out.println("ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ");
+    	// 타입 게시물 삭제
+    	String postType = postRepo.selectOne(postNo).getPostType(); 
+    	System.out.println("postType은 "+postType);
+    	System.out.println("ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ");
+    	if(postType.equals("자유"))
+    	{
+    		freePostRepo.delete(postNo);
+    	}
+    	else if (postType.equals("행사일정"))
+    	{
+    		schedulePostRepo.delete(postNo);
+    	}
+    	else if (postType.equals("같이가요"))
+    	{
+    		togetherPostRepo.delete(postNo);
     	}
     	
     	// 게시글 삭제, 
-    	
-    	
-        return postRepo.delete(postNo);
+    	return postRepo.delete(postNo);
+        
     }
 
 }

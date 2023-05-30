@@ -15,4 +15,6 @@ public interface PostRepo {
     boolean delete(Long postNo);
     // 모든 리스트 불러오기
     List<PostDto> selectList();
+    // 하나의 게시물 불러오기
+    PostDto selectOne(Long postNo);
 }

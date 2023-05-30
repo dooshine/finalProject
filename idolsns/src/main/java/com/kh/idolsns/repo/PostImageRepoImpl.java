@@ -35,4 +35,9 @@ public class PostImageRepoImpl implements PostImageRepo{
 		
 	}
 
+	@Override
+	public void delete(Integer attachmentNo) {
+		sqlSession.delete("postImage.delete",attachmentNo);		
+	}
+
 }

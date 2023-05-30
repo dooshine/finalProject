@@ -10,4 +10,5 @@ public interface PostImageRepo {
 	List<PostImageDto> selectList(Long postNo);
     List<String> selectAttachNoList(Long postNo);
     void deleteByPostNo(Long postNo);
+    void delete(Integer attachmentNo);
 }
