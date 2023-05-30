@@ -37,7 +37,7 @@ public class PostShowService {
 	public void postShowOne(Long postNo) 
 	{
 		PostShowVO postShowVO = postShowRepo.selectOne(postNo);
-		postShowVO.setTagList(tagRepo.selectAll(postNo));
+		postShowVO.setFreeTagList(tagRepo.selectAll(postNo));
 		postShowVO.setAttachmentList(postImageRepo.selectAttachNoList(postNo));
 		log.debug("postShowVO is {}",postShowVO);
 	}
@@ -52,8 +52,11 @@ public class PostShowService {
 			// 글번호 
 			postNo = postShowVO.getPostNo();
 			
-			// 태그 리스트
-			postShowVO.setTagList(tagRepo.selectAll(postNo));
+			// 고정 태그 리스트
+			postShowVO.setFixedTagList(tagRepo.selectFixedTagAll(postNo));
+			
+			// 자유 태그 리스트
+			postShowVO.setFreeTagList(tagRepo.selectFreeTagAll(postNo));
 			
 			// 첨부파일 
 			if(postImageRepo.selectAttachNoList(postNo).size()>0) {
@@ -83,8 +86,11 @@ public class PostShowService {
 			// 글번호 
 			postNo = postShowVO.getPostNo();
 			
-			// 태그 리스트
-			postShowVO.setTagList(tagRepo.selectAll(postNo));
+			// 고정 태그 리스트
+			postShowVO.setFixedTagList(tagRepo.selectFixedTagAll(postNo));
+			
+			// 자유 태그 리스트
+			postShowVO.setFreeTagList(tagRepo.selectFreeTagAll(postNo));
 			
 			// 첨부파일 
 			if(postImageRepo.selectAttachNoList(postNo).size()>0) {
@@ -115,9 +121,12 @@ public class PostShowService {
 			// 글번호 
 			postNo = postShowVO.getPostNo();
 			
-			// 태그 리스트
-			postShowVO.setTagList(tagRepo.selectAll(postNo));
+			// 고정 태그 리스트
+			postShowVO.setFixedTagList(tagRepo.selectFixedTagAll(postNo));
 			
+			// 자유 태그 리스트
+			postShowVO.setFreeTagList(tagRepo.selectFreeTagAll(postNo));
+						
 			// 첨부파일 
 			if(postImageRepo.selectAttachNoList(postNo).size()>0) {
 				postShowVO.setAttachmentList(postImageRepo.selectAttachNoList(postNo));

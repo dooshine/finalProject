@@ -2,8 +2,7 @@
     pageEncoding="UTF-8"%>
 <jsp:include page="/WEB-INF/views/template/header.jsp"></jsp:include>
 
-	<!-- 게시글 작성 코드 async-post.js -->
-	<script src="${pageContext.request.contextPath}/static/js/async-post.js"></script>
+
 		
 	<!------- 카카오 지도 관련-------->
 	<!-- 카카오 api 키 등록 -->
@@ -72,7 +71,7 @@
                         <p class="text-center">무엇에 대한 글인가요?(카테고리 설정)</p>
                         <div class="row justify-content-center"> 
                         	<button type="button" class="col-3 btn btn-primary btn-sm modal2 rounded-pill"
-	                        	data-bs-target="#modal2" data-bs-toggle="modal">
+	                        	data-bs-target="#modalfixed" data-bs-toggle="modal">
 	                        	자유
 	                        </button>
 	                        &nbsp;&nbsp;
@@ -128,7 +127,7 @@
                     <!-- footer -->
                     <div class="modal-footer">
                         <button type="button" class="btn btn-primary btn-sm"
-	                        	data-bs-target="#modal2" data-bs-toggle="modal">
+	                        	data-bs-target="#modalfixed" data-bs-toggle="modal">
 	                        	다음
 	                    </button>
 <!--                         <button type="button" class="btn btn-secondary btn-sm" -->
@@ -168,7 +167,7 @@
                     <!-- footer -->
                     <div class="modal-footer">
                         <button type="button" class="btn btn-primary btn-sm"
-	                        	data-bs-target="#modal2" data-bs-toggle="modal">
+	                        	data-bs-target="#modalfixed" data-bs-toggle="modal">
 	                        	다음
 	                    </button>
 <!--                         <button type="button" class="btn btn-secondary btn-sm" -->
@@ -178,6 +177,59 @@
                 </div>      
             </div>
         </div>
+        
+        <!-- 2-0.  고정 태그 창 -->
+        <div class="modal" tabindex="-1" role="dialog" id="modalfixed"
+                            data-bs-backdrop="static">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                
+                	<!-- header -->
+                    <div class="modal-header">
+                         <h5 class="modal-title"><i class="fa-solid fa-xmark fa-lg grey" data-bs-dismiss="modal"></i></h5>
+                    </div>
+                    
+                    <!-- body -->
+                    <div class="modal-body">
+                        <p class="text-center">글에 적용할 고정 태그를 입력해주세요</p>
+                        <div class="row text-center">
+                     	    <div class="col-1"></div>
+                        	<input type="text" class="col-7" placeholder="태그를 입력하세요"
+                        	@input="findFixedTagName = $event.target.value" v-model="findFixedTagName">
+                        	
+<!--                         	<div class="col-1"></div> -->
+<!--                         	<button class="col-2 tag-btn">입력</button> -->
+                        </div>
+					    <div class="row">
+					        <div class="mb-1" v-for="(findFixedTag, i) in findFixedTagList" :key="i">
+					            <div class="btn btn-secondary btn-sm rounded-pill mx-2" @click="addNewFixedTag(findFixedTag)">{{ findFixedTag }}</div>
+					        </div>
+					    </div>
+					    <div class="row mt-3">
+					        <div class="col">
+					            <button class="btn btn-primary btn-sm rounded-pill mx-2 fixed-tag" v-for="(newFixedTag, i) in newFixedTagList">{{ newFixedTag }}</button>
+					        </div>
+					    </div>
+                        
+                        <div class="row">
+                        	<h6 class="all-tag text text-primary"></h6>
+                        </div>                         
+                    </div>
+                    
+                    <!-- footer -->
+                    <div class="modal-footer">
+                       	<button type="button" class="btn btn-primary btn-sm fixed-tag-end"
+                            data-bs-target="#modal2" data-bs-toggle="modal">
+                        	자유태그 작성하기
+                        </button>
+<!--                         <button type="button" class="btn btn-secondary btn-sm" -->
+<!--                                 data-bs-dismiss="modal">닫기</button> -->
+                    </div>
+                    
+                </div>      
+            </div>
+         </div>
+        
                                 
 		<!-- 2.  태그 창 (첫번 째 창에서 다음 버튼이 클릭 되었을 때, 비동기로 현존하는 이벤트 태그들을 가져옴)-->
         <div class="modal" tabindex="-1" role="dialog" id="modal2"
@@ -192,7 +244,7 @@
                     
                     <!-- body -->
                     <div class="modal-body">
-                        <p class="text-center">글에 적용할 태그를 입력해주세요</p>
+                        <p class="text-center">글에 적용할 자유 태그를 입력해주세요</p>
                         <div class="row text-center">
                      	    <div class="col-1"></div>
                         	<input type="text" class="tag-input col-7" placeholder="태그를 입력하세요">
@@ -200,7 +252,7 @@
                         	<button class="col-2 tag-btn">입력</button>
                         </div>
                         <div class="row">
-                        	<h6 class="all-tag"></h6>
+                        	<h6 class="all-tag text text-primary"></h6>
                         </div>                         
                     </div>
                     
@@ -391,7 +443,7 @@
 	       			</div>	
 					<!-- 프로필 사진과 아이디 -->
 					
-					<!-- 태그와 글 태그들 -->
+					<!-- 고정 태그와 글 타입들 -->
 	                <div class="row mb-3 ">
 	                	<div class="col-1 col-md-1 col-lg-1 d-flex align-items-center justify-content-center">			            
 			            </div>
@@ -399,15 +451,15 @@
 							<div class="mx-1 px-2 h-20 bg-primary rounded-4 align-items-center justify-content-center">
 								<p class="fs-7 text-light">{{ post.postType }}</p>										 
 							</div>
-							<div v-for="tag in post.tagList" :key="tag" class="mx-1 px-2 h-20 bg-primary rounded-pill align-items-center justify-content-center">
-								<p class="fs-7 text-light">{{ tag }}</p>
+							<div v-for="fixedTag in post.fixedTagList" :key="fixedTag" class="mx-1 px-2 h-20 bg-primary rounded-pill align-items-center justify-content-center">
+								<p class="fs-7 text-light">{{ fixedTag }}</p>
 							</div>
 														 													    
 			            </div>
 						<div class="col-1 col-md-1 col-lg-1 d-flex align-items-center justify-content-center"> 
 			            </div>	                
 	                </div>
-	                <!-- 태그와 글 태그들 -->	 
+	                <!-- 고정 태그와 글 타입들 -->	 
 	                               
 	                <!-- 지도 맵이 있는 경우에만 지도 정보 표기 -->						
 	                <div class="row my-2" v-if="post.mapPlace !== '' && post.mapPlace !== null && post.mapPlace !== undefined">	                	
@@ -433,26 +485,12 @@
 		                	<!-- 글 -->
 		                	<div class="row">
 		                		<p>{{ post.postContent }}</p>
+		                		<div class="d-flex">
+		                		<p v-for="freeTag in post.freeTagList" :key="freeTag" class="fs-6 text-primary">\#{{ freeTag }} &nbsp;</p>	
+		                		</div>
 		                	</div>
+							
 		                	
-		                	<!-- 이미지 표시 -->
-		                	<div class="row">
-		                		<div v-if="post.attachmentList && post.attachmentList.length > 0"  class="d-flex">
-					                <div v-for="(attachmentNo, attachmentIndex) in post.attachmentList" :key="attachmentIndex">
-					                	<!-- 이미지인 경우 -->
-					                	<div v-if="checkImage(attachmentNo)">
-					                		<img :src="getAttachmentUrl(attachmentNo)" class="mx-1 px-1"style="max-width:100%;max-height:100%" alt="Attachment">
-					                	</div>
-					                	<div v-else>
-					                		<video :src="getAttachmentUrl(attachmentNo)" class="mx-1 px-1" style="max-width:100%;max-height:100%"  controls>
-				                		 	</video>
-					                	</div>					                    
-					                </div>
-					                <br>
-					            </div>
-					            <div v-else>
-					            </div>
-		                	</div>
 		                	
 		                	<!-- 구분선 -->
 		                	<div class="row">
@@ -667,6 +705,12 @@
                 	// 안전장치
                 	loading:false,
                 	
+                	// 입력시 고정태그 불러오기
+                	findFixedTagName: "",
+                	findFixedTagList: [],
+                	newFixedTagList: [],                	
+                	
+                	// 세션 맴버아이디
                 	memberId:null,
                 };
             },
@@ -674,22 +718,6 @@
             	
             },
             methods:{
-				// 모든 게시글 불러오기 
-//                 async fetchPosts() {
-// 	                await axios.get('http://localhost:8080/rest/post/all')
-// 	                    .then(response => {
-// 	                    	// 전체 게시글 데이터 가져오기
-// 	                        this.posts = response.data;
-// 	                     	// 게시글 인덱스별 좋아요 처리
-// 	                        this.getLikePostIndex(this.posts);
-// 	                     	this.replyFlagList = new Array(this.posts.length).fill(false);
-// 	                    })
-// 	                    .catch(error => {
-// 	                        console.error(error);                           
-// 	                    }) 
-//             	},
-            	
-
             		
             	// 무한 페이징 게시글 불러오기 1페이지당 10개씩 매 페이지 별로 불러옴,
             	async fetchPosts(){
@@ -711,7 +739,7 @@
 	                }
             	},
             	
-            	// 게시글 사겢 
+            	// 게시글 삭제 
             	async deletePost(postNo){
                 	try{
                 		await axios.delete('http://localhost:8080/rest/post/'+postNo);
@@ -726,14 +754,20 @@
                 getAttachmentUrl(attachmentNo) {
             		return "http://localhost:8080/rest/attachment/download/"+attachmentNo;
                 },
-                async checkImage(attachmentNo) {
+                async checkFileType(attachmentNo) {
                     try {
-                      const response = await axios.head('http://localhost:8080/rest/attachment/download/' + attachmentNo);
+                      const response = await axios.head('http://localhost:8080/rest/attachment/download/post/' + attachmentNo);
                       const contentType = response.headers['content-type'];
-                      return contentType.includes('image');
+                      console.log(contentType);
+                      if( contentType.includes('image')){
+                    	  return 'image';
+                      }
+                      else if(contentType.includes('video')){
+                    	  return 'video';
+                      }
+                      return 'unknown';
                     } catch (error) {
                       console.error(error);
-                      return false;
                     }
                 },
                 
@@ -932,13 +966,36 @@
                 		    // 예: 오류 메시지 표시, 다른 로직 실행 등
                 	}            		
             	},
+            	
+            	async loadFindFixedTagList(){
+                    if(this.findFixedTagName.length == 0) return;
+
+                    const resp = await axios.get("http://localhost:8080/rest/fixedTag/"+this.findFixedTagName);
+                    this.findFixedTagList = resp.data;
+					// console.log(this.findFixedTagList);
+                    // console.log("조회 실행");
+                },
+                // 고정태그 추가
+                addNewFixedTag (newFixedTag){
+                	if(!this.newFixedTagList.includes(newFixedTag))
+                	{
+                		this.newFixedTagList.push(newFixedTag);
+                        this.findFixedTagName = "";
+                        this.findFixedTagList = [];                		
+                	}                    
+                },
             },
             watch:{
             	percent(){
             		if(this.percent >= 80){
             			this.fetchPosts();
             		}
-            	}
+            	},
+            	findFixedTagName:_.throttle(function(){
+                    //this == 뷰 인스턴스
+                    this.loadFindFixedTagList();
+        		}, 250),
+            	
             },
             mounted() {
                 //윈도우 전체에 스크롤 이벤트를 설정(Vue가 아닌 JS 사용)
@@ -975,7 +1032,8 @@
         }).mount("#app");
     </script>
     
-    
+    <!-- 게시글 작성 코드 async-post.js -->
+	<script src="${pageContext.request.contextPath}/static/js/async-post.js"></script>
 	 <!-- 카카오 API구현 JS -->
 	<script src="${pageContext.request.contextPath}/static/js/post-map.js"></script>
 

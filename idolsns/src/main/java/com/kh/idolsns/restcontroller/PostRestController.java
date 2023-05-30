@@ -11,6 +11,7 @@ import java.util.Set;
 
 import javax.servlet.http.HttpSession;
 
+import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -52,6 +53,10 @@ import com.kh.idolsns.repo.SchedulePostRepo;
 @RequestMapping("/rest/post")
 public class PostRestController {
     
+	// 고정 태그는 repo가 없어서 sqlsession으로 대체 
+	@Autowired
+	private SqlSession sqlSession;
+	
 	// 게시글 
     @Autowired
     private PostRepo postRepo;
@@ -126,6 +131,28 @@ public class PostRestController {
 		 // 사진 정보를 해당 테이블의 정규화 테이블 추가할 떄 사용한다.
 		 return postDto.getPostNo();
     }
+    // -------------------- 고정태그정보 등록
+    @PostMapping("/fixed")
+    public void fixedTaging(@RequestBody Map<String,Object> fixedTagData) {
+    	List<String> fixedTagList = (List<String>) fixedTagData.get("fixedTag");
+    	Integer postNoI = (Integer) fixedTagData.get("postNo");
+    	Long postNo = (Long) postNoI.longValue();
+    	
+    	Long tempNo;
+    	TagDto tempDto = new TagDto();
+    	
+    	for(String fixedTag: fixedTagList)
+    	{
+    		tempNo = tagRepo.sequence();
+    		tempDto.setTagNo(tempNo);
+    		tempDto.setPostNo(postNo);
+    		tempDto.setTagType("고정");
+    		tempDto.setTagName(fixedTag);
+    		tagRepo.insert(tempDto);
+    	}
+    	
+    }
+    
     
     // -------------------- 태그정보 등록 
     @PostMapping("/tag")
@@ -269,7 +296,6 @@ public class PostRestController {
     // 통합게시물 삭제
     @DeleteMapping("/{postNo}")
     public boolean delete(@PathVariable Long postNo){
-    	System.out.println("ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ");
     	// 지도 설정 삭제,
     	mapRepo.delete(postNo); 
 
@@ -294,11 +320,8 @@ public class PostRestController {
     	
     	// 게시물 좋아요 모두 삭제
     	postLikeRepo.deleteByPostNo(postNo);
-    	System.out.println("ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ");
     	// 타입 게시물 삭제
     	String postType = postRepo.selectOne(postNo).getPostType(); 
-    	System.out.println("postType은 "+postType);
-    	System.out.println("ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ");
     	if(postType.equals("자유"))
     	{
     		freePostRepo.delete(postNo);
