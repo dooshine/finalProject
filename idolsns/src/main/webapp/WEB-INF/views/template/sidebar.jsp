@@ -22,7 +22,7 @@
         	<i class="fa-solid fa-house"> 홈</i></a>
         <a href="${pageContext.request.contextPath}/member/follower">
         	<i class="fa-solid fa-user"> 내 친구</i></a>
-        <a href="#" @click="toggleFollowPageList = !toggleFollowPageList">
+        <a href="#" @click="toggleMyArtist">
         	<i class="fa-solid fa-star"> 내 아이돌</i></a>
 			<div v-if="toggleFollowPageList" >
 				<a :href="'/artist/'+followPage" v-for="(followPage, i) in memberFollowObj.followPageList" :key="i">
@@ -51,6 +51,7 @@
   
 	  },
 	  methods: {
+
 		// 로그인 회원 팔로우 정보 로드
 		async loadMemberFollowInfo(){
 			// 로그인X → 실행 X
@@ -63,7 +64,19 @@
 			// 로그인 팔로우 정보 로드
 			this.memberFollowObj = resp.data;
 			console.table(this.memberFollowObj);
-		},		
+		},
+
+		// 내 아이돌 
+		toggleMyArtist(){
+			if(memberId===""){
+				if(!confirm("로그인이 필요한 페이지 입니다. 로그인하시겠습니까?")){
+					return;
+				}
+				window.location.href="http://localhost:8080/member/login";
+			} else {
+				this.toggleFollowPageList = !this.toggleFollowPageList
+			}
+		}
 	  },
 	  watch: {
   

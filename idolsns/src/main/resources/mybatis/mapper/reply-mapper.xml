@@ -18,8 +18,32 @@
 					sysdate, #{replyGroupNo})	
 	</insert>
 	
-	<select id="list" resultType="ReplyDto">
-		select * from reply where post_no=#{postNo}
+	<select id="list" resultType="ReplyDto" parameterType="Long">
+		select * from reply
+		where post_no=#{postNo}
+		order by reply_group_no desc, reply_no asc
 	</select>
+	
+	<select id="selectOne" resultType="ReplyDto" parameterType="Long">
+		select * from reply where reply_no=#{replyNo}
+	</select>
+	
+	<delete id="deleteReplies" parameterType="Long">
+		delete from reply where reply_group_no=#{replyGroupNo} 
+	</delete>
+	
+	<delete id="deleteRereply" parameterType="Long">
+		delete from reply where reply_no=#{replyNo}
+	</delete>
+	
+	<update id="updateReply" parameterType="replyDto">
+		update reply
+		set reply_content=#{replyContent}
+		where reply_no=#{replyNo}
+	</update>
+	
+	<delete id="deleteByPostNo">
+		delete from reply where post_no = #{post_no}
+	</delete>
 
 </mapper>

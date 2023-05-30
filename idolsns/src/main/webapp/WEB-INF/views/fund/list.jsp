@@ -166,57 +166,99 @@
 	            //데이터 설정 영역
 	            data(){
             	   return{
-				      fundings: [],
-	            	}
+            		// 목록을 위한 데이터
+       		    	percent: 0,
+       		    	page: 1,
+       		    	finish: false,
+			        fundings: [],
+			        // 무한스크롤 안전장치
+			        loading: false,
+	            	};
 	            	},
-	            	computed: {
-	            	},
-	            	methods: {
-	            		// FundPostImageDto 불러오기
-	            		async loadData(){
-							const resp = await axios.get("http://localhost:8080/rest/fund/")	  
-							console.log(resp.data);
-							this.fundings.push(...resp.data);
-							
-	            		},
-	            		getTimeDiff(funding) {
-	            			const startDate = new Date(funding.postStart);
-	            		      const endDate = new Date(funding.postEnd);
-	            		      const timeDiff = endDate.getTime() - startDate.getTime();
-	            		      if (timeDiff >= 24 * 60 * 60 * 1000) {
-	            		        // 1일 이상인 경우
-	            		        return Math.ceil(timeDiff / (24 * 60 * 60 * 1000))+"일 남음";
-	            		      } else {
-	            		    	// 1일 미만인 경우
-	            		          return "오늘마감";
-	            		        }
-	            		},
-	            		getProgress(funding) {
-	            			
-	            		},
-	            		link(funding){
-	            			console.log(funding.postNo)
-	            			const url = "/fund/detail?postNo="+funding.postNo;
-	            			window.location.href = url;
-	            		},
-	            		getImageUrl(funding) {
-	            		      if (funding.attachmentNo === null) {
-	            		        return "https://via.placeholder.com/150x150";
-	            		      } else {
-	            		        return "/rest/attachment/download/" + funding.attachmentNo;
-	            		      }
-            		    },
-            		    
-            		 	// 3자리 마다 ,
-        		      	formatCurrency(value) {
-        		            return value.toLocaleString();
-        	          	},
-	            	},
-	            	created() {
-	            		this.loadData();
-	            	}
-		  		}).mount("#app");
-		
+            	computed: {
+            	},
+            	methods: {
+	           		// FundPostImageDto 불러오기
+	           		async loadFundPostImageList(){
+	           			if(this.loading == true) return; // 로딩중이면
+	                       if(this.finish == true) return; // 다 불러왔으면
+	                       
+	                       this.loading = true;
+	                       
+						const resp = await axios.get("http://localhost:8080/rest/fund/page/"+this.page)	  
+						console.log(resp.data);
+						this.fundings.push(...resp.data);
+						this.page ++;
+						
+						this.loading = false;
+						
+						// 데이터가 10개 미만이면 더 읽을게 없다
+	                    if(resp.data.length < 10){ 
+	                        this.finish = true;
+	                    }
+						
+	           		},
+	           		getTimeDiff(funding) {
+	           			const startDate = new Date(funding.postStart);
+	           		      const endDate = new Date(funding.postEnd);
+	           		      const timeDiff = endDate.getTime() - startDate.getTime();
+	           		      if (timeDiff >= 24 * 60 * 60 * 1000) {
+	           		        // 1일 이상인 경우
+	           		        return Math.ceil(timeDiff / (24 * 60 * 60 * 1000))+"일 남음";
+	           		      } else {
+	           		    	// 1일 미만인 경우
+	           		          return "오늘마감";
+	           		        }
+	           		},
+	           		getProgress(funding) {
+	           			
+	           		},
+	           		link(funding){
+	           			console.log(funding.postNo)
+	           			const url = "/fund/detail?postNo="+funding.postNo;
+	           			window.location.href = url;
+	           		},
+	           		getImageUrl(funding) {
+	           		      if (funding.attachmentNo === null) {
+	           		        return "https://via.placeholder.com/150x150";
+	           		      } else {
+	           		        return "/rest/attachment/download/" + funding.attachmentNo;
+	           		      }
+	          		    },
+	          		    
+	          		 	// 3자리 마다 ,
+	      		      	formatCurrency(value) {
+	      		            return value.toLocaleString();
+	      	          	},
+	           	},
+	           	watch: {
+	                // percent가 변하면 eprcent의 값을 읽어와서 80% 이상인지 판정
+	                percent(){
+	                    if(this.percent >= 80) {
+	                        // console.log("데이터를 불러올 때가 된거 같아");
+	                        this.loadFundPostImageList();
+	                    }
+	                }
+	            },
+	            mounted() {
+	            	window.addEventListener("scroll", _.throttle(()=>{
+	                    // - 현재 스크롤의 위치(window.scrollY)
+	                    // - 브라우저의 높이(window.innerHeight)
+	                    // - ScreenFull.js나 Rallax.js 등 라이브러리 사용 가능
+	                    const height = document.body.clientHeight - window.innerHeight;
+	                    const current = window.scrollY;
+	                    const percent = (current/ height) * 100;
+	                    // console.log("percentage = " + Math.round(percent)+"%");
+
+	                    // data의 percent를 계산된 값으로 갱신
+	                    this.percent = Math.round(percent);
+	                },250));
+	            },
+	           	created() {
+	           		this.loadFundPostImageList();
+	           	}
+	  		}).mount("#app");
+
 
 		</script>
 

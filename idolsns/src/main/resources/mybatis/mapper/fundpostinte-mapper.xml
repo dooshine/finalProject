@@ -49,10 +49,29 @@
 		select * from post_image where post_no=#{postNo}
 	</select>
 	
+	<!-- SQL 구문 조각 생성 -->
+	 <sql id="topNheader">
+	 	select * from (
+	 		select rownum rn, TMP.* from(
+	 </sql>
+	 <sql id="topNfooter">
+	 	)TMP
+	 	) where rn between #{begin} and #{end}
+	 </sql>
+	 
+	<!-- 무한스크롤 페이징 목록 -->
+	 <select id="infinite" resultType="FundPostImageDto">
+		<include refid="topNheader"/>	 		
+		select * from fundpostimage_view
+		order by post_time desc	 	
+		<include refid="topNfooter"/>
+	 </select>
+	 
 	<select id="list" resultType="FundPostImageDto">
 		select * from fundpostimage_view
 		order by post_time desc
 	</select>
+	
 	
 	
 	
