@@ -447,13 +447,12 @@
 					this.socket.send(JSON.stringify(data));
 					this.clear();
 					/*const noti = {
-							type: 12,
-							memberId: this.memberId,
-							chatRoomNo: this.chatRoomNo,
-							receiverList: this.chatMemberList
+						type: 12,
+						memberId: this.memberId,
+						chatRoomNo: this.chatRoomNo,
+						receiverList: this.chatMemberList
 					};
-					this.socket.send(JSON.stringify(noti));
-					this.scrollBottom();*/
+					this.socket.send(JSON.stringify(noti));*/
 					this.loadRoomList();
 				},
 				// 보내는 메세지가 오늘의 첫 메세지인지 확인
@@ -703,6 +702,7 @@
 					handler: function(newValue) {
 						if(newValue && this.isFocused) {
 							this.readMessage();
+							this.loadRoomList();
 						}
 					},
 					immediate: true
@@ -711,6 +711,7 @@
 					handler: function(newValue) {
 						if(this.isVisible && newValue) {
 							this.readMessage();
+							this.loadRoomList();
 						}
 					},
 					immediate: true
