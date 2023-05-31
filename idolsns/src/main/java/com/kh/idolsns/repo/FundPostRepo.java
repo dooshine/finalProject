@@ -13,5 +13,6 @@ public interface FundPostRepo {
 	boolean update(FundPostDto dto);
 	void connect(PostImageDto postImageDto);
 	boolean sponsorCount(FundPostDto fundPostDto);
+	void updateFundState();
 
 }
