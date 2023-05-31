@@ -256,7 +256,31 @@
 		select * from member_follow_cnt where member_id=#{memberId}
 	</select>
 	
+	<insert id="memberExit">
+		insert into member_exit(member_id)
+		values(#{memberId})
+	</insert>
 	
+	<select id="memberExitFind" resultType="int">
+		select count(*) from member_exit where member_id = #{memberId}
+	</select>
+	
+	 <!-- 프로필 생성 -->
+    <insert id="insertProfile">
+        insert into member_profile_image (member_id, attachment_no) values (#{memberId}, #{attachmentNo})
+    </insert>
+     <!--프로필 조회 -->
+    <select id="selectOneProfile" resultType="MemberProfileImageDto">
+        select * from member_profile_image where member_id = #{memberId}
+    </select>
+     <!-- 프로필 수정 -->
+    <update id="updateProfile">
+        update member_profile_image set attachment_no = #{attachmentNo} where member_id = #{memberId}
+    </update>
+    <!-- 프로필 삭제 -->
+    <delete id="deleteProfile">
+        delete from member_profile_image where member_id = #{memberId}
+    </delete>
 	
 	<!-- (채팅) 회원 아이디 리스트로 상세조회 -->
 	<select id="chatMembers" resultType="MemberDto">
