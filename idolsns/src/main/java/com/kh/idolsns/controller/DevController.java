@@ -45,4 +45,10 @@ public class DevController {
     public String followCnt(){
         return "/dev/dev_memberFollowCnt";
     }
+
+    // 멤버 프로필 예제
+    @GetMapping("/memberProfile")
+    public String getMemberProfile(){
+        return "/dev/dev_getMemberProfile";
+    }
 }

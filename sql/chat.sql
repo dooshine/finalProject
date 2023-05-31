@@ -11,7 +11,7 @@ CREATE SEQUENCE chat_room_seq;
 
 -- 채팅방 참여자
 CREATE TABLE chat_join(
-	member_id REFERENCES member(member_id) ON DELETE SET NULL,
+	member_id  varchar2(20) NOT NULL,
 	chat_room_no NUMBER REFERENCES chat_room(chat_room_no) ON DELETE CASCADE,
 	chat_join_time DATE DEFAULT sysdate NOT NULL
 );
@@ -19,7 +19,7 @@ CREATE TABLE chat_join(
 -- 채팅 메세지
 CREATE TABLE CHAT_MESSAGE(
 	chat_message_no NUMBER PRIMARY KEY,
-	member_id REFERENCES member(member_id) ON DELETE SET NULL,
+	member_id  varchar2(20) NOT NULL,
 	chat_room_no REFERENCES chat_room(chat_room_no) ON DELETE CASCADE NOT NULL,
 	chat_message_time DATE DEFAULT sysdate NOT NULL,
 	chat_message_content varchar2(900) NOT NULL,
@@ -32,7 +32,7 @@ CREATE SEQUENCE chat_message_seq;
 CREATE TABLE chat_read(
 	chat_room_no REFERENCES chat_room(chat_room_no) ON DELETE CASCADE,
 	chat_message_no REFERENCES chat_message(chat_message_no) ON DELETE CASCADE,
-	chat_sender REFERENCES member(member_id) ON DELETE SET NULL,
+	chat_sender varchar2(20) NOT NULL,
 	chat_reciever varchar2(20) NOT NULL
 );
 
@@ -47,7 +47,7 @@ CREATE TABLE chat_like(
 CREATE TABLE chat_room_priv(
 	chat_room_no REFERENCES chat_room(chat_room_no) ON DELETE CASCADE NOT NULL,
 	chat_room_priv_i REFERENCES member(member_id) ON DELETE CASCADE NOT NULL,
-	chat_room_priv_u REFERENCES member(member_id) ON DELETE SET NULL,
+	chat_room_priv_u varchar2(20) NOT NULL,
 	PRIMARY KEY(chat_room_priv_i, chat_room_priv_u)
 );
 
