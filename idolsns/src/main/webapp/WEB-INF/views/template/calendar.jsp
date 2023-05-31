@@ -15,7 +15,9 @@
      
      
      
-      <div id='calendar'></div>
+      <div id='calendar'>
+      
+      </div>
      
      
      
