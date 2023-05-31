@@ -27,6 +27,7 @@ import com.kh.idolsns.configuration.CustomEmailProperties;
 import com.kh.idolsns.configuration.CustomFileuploadProperties;
 import com.kh.idolsns.dto.AttachmentDto;
 import com.kh.idolsns.dto.MemberDto;
+import com.kh.idolsns.dto.MemberExitDto;
 import com.kh.idolsns.dto.MemberFollowCntDto;
 import com.kh.idolsns.dto.MemberFollowInfoDto;
 import com.kh.idolsns.dto.MemberProfileImageDto;
@@ -263,8 +264,12 @@ public class MemberController {
 			attr.addAttribute("mode", "error");
 			return "redirect:exit";
 		}
-		
+			
 			memberRepo.exitDate(memberId);
+			
+				memberRepo.memberExit(memberId);
+			
+			
 			
 			session.removeAttribute("memberId");
 			session.removeAttribute("memberLevel");
@@ -352,6 +357,18 @@ public class MemberController {
 	public String idDuplicatedCheck(@RequestParam String memberId) {
 		int result = memberRepo.idDuplicatedCheck(memberId);
 		
+		if(result == 0) {
+			return "Y";
+		}
+		else {
+			return "N";
+		}
+	}
+	
+	@GetMapping("/idDuplicatedCheck2")
+	@ResponseBody
+	public String idDuplicatedCheck2(@RequestParam String memberId) {
+		int result = memberRepo.memberExitFind(memberId);
 		if(result == 0) {
 			return "Y";
 		}

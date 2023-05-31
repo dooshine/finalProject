@@ -9,7 +9,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>회원가입</title>
+    <title>마이페이지</title>
     <!-- 폰트어썸 cdn -->
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css">
     <!-- jquery cdn -->
@@ -124,7 +124,9 @@
 							<i class="fa-solid fa-xmark" style="color: #bcc0c8;" data-bs-dismiss="modal" aria-label="Close"></i>
 						</div>
 						<div class="modal-body text-center">
-							{{FollowMemberList}}
+							<div v-for="board in FollowMemberList">
+							{{board}}
+							</div>
 						</div>
 					</div>
 				</div>
@@ -137,7 +139,9 @@
 							<i class="fa-solid fa-xmark" style="color: #bcc0c8;" dat	a-bs-dismiss="modal" aria-label="Close"></i>
 						</div>
 						<div class="modal-body text-center">
-							{{FollowerMemberList}}
+							<div v-for="board in FollowerMemberList">
+								{{board}}
+							</div>
 						</div>
 					</div>
 				</div>
@@ -150,7 +154,9 @@
 							<i class="fa-solid fa-xmark" style="color: #bcc0c8;" data-bs-dismiss="modal" aria-label="Close"></i>
 						</div>
 						<div class="modal-body text-center">
-							{{FollowPageList}}
+							<div v-for="board in FollowPageList">
+								{{board}}	
+							</div>
 						</div>
 					</div>
 				</div>
@@ -167,12 +173,12 @@
 				</div>
 			</div>
 			<div class="row page">
-				<div v-show = "page > 0">
+				<div v-show = "page == 1">
 				
 					<h1>내가 쓴 글 </h1>
 				
 				</div>
-				<div v-show = "page < 3">
+				<div v-show = "page == 2">
 					
 					<h1>내가 좋아요 한 글 </h1>
 				
@@ -205,6 +211,8 @@
 						FollowerMemberList:[],
 						FollowPageList:[],
 						page : 1,
+						
+						targetMemberFollowObj: {},
 					};
 				},		
 				methods:{
@@ -321,12 +329,34 @@
 					},
 					
 					pagePlus(){
+						if(this.page == 1) {
 						this.page++;
+						}
+						return;
 					},
 					pageMinus() {
+						if(this.page == 2) {
 						this.page--;
+						}
+						return;
 					},
 					
+					
+					
+					// 로그인 회원 팔로우 정보 로드
+					async loadMemberFollowInfo(){
+						// 로그인X → 실행 X
+						if(memberId==="") return;
+						// url
+						const url = "http://localhost:8080/rest/follow/memberFollowProfileInfo/"
+						// 팔로우 목록 load
+						const resp = await axios.get(url, {params:{memberId: this.memberId}});
+
+						// 로그인 팔로우 정보 로드
+						this.targetMemberFollowObj = resp.data;
+						console.table(this.targetMemberFollowObj);
+					},
+
 				},
 				computed:{
 					 memberNickValid(){

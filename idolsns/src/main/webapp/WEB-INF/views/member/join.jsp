@@ -50,8 +50,8 @@
             </div>
             <div class="row mb-3">
                     <input type="text" v-model="memberId" class="form-control" 
-                    	:class="{ 'is-valid': memberIdValid && !idDuplicated, 'is-invalid': memberId !== '' && (!memberIdValid || idDuplicated)}" placeholder="아이디" 
-                    	@blur="idDuplicatedCheck(memberId)" name="memberId" id="memberId">
+                    	:class="{ 'is-valid': memberIdValid && !idDuplicated && !idDuplicated2, 'is-invalid': memberId !== '' && (!memberIdValid || idDuplicated || idDuplicated2)}" placeholder="아이디" 
+                    	@blur="idDuplicatedCheck(memberId) &&  idDuplicatedCheck2(memberId)" name="memberId" id="memberId">
                     <div class="valid-feedback">{{memberIdMessage}}</div>
   					<div class="invalid-feedback">{{memberIdMessage}}</div>
             </div>
@@ -120,6 +120,7 @@
                     page:1,
                     agree:false,
                     idDuplicated:false,
+                    idDuplicated2:false,
                     nickDuplicated:false,
                     emailDuplicated:false,
                     code:"",
@@ -142,6 +143,19 @@
                           this.idDuplicated = false; 
                       }
                       // this.idDuplicated= resp.data ==="Y";
+                  },
+                  
+                  async idDuplicatedCheck2(memberId) {
+                	 const resp = await axios.get("/member/idDuplicatedCheck2",{
+                		 params:{
+                			 memberId : this.memberId
+                		 }
+                	 }); 
+                	 if(resp.data === "N"){
+                         this.idDuplicated2 = true;
+                     }else{
+                         this.idDuplicated2 = false; 
+                     }
                   },
 
                   async nickDuplicatedCheck(memberNick) {
@@ -206,7 +220,7 @@
                   },
                   pagePlus(){
                 	  this.page++;
-                  }
+                  },
 
             },
             computed:{
@@ -218,9 +232,9 @@
                     if(this.memberId.length == 0) {
                         return "";
                     }
-                    if(this.memberIdValid && !this.idDuplicated) {
+                    if(this.memberIdValid && !this.idDuplicated && !this.idDuplicated2) {
                         return "사용 가능한 아이디입니다.";
-                    }else if(this.idDuplicated) {
+                    }else if(this.idDuplicated && this.idDuplicated2) {
                         return "이미 사용중인 아이디입니다.";
                     }
                     else {

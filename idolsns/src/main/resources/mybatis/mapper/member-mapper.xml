@@ -252,6 +252,15 @@
 		select * from member_follow_cnt where member_id=#{memberId}
 	</select>
 	
+	<insert id="memberExit">
+		insert into member_exit(member_id)
+		values(#{memberId})
+	</insert>
+	
+	<select id="memberExitFind" resultType="int">
+		select count(*) from member_exit where member_id = #{memberId}
+	</select>
+	
 	
 	
 	<!-- (채팅) 회원 아이디 리스트로 상세조회 -->
