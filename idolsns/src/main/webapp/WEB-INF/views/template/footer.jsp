@@ -3,24 +3,12 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 
-
-
-<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
-
-
-
-<!-- lodash -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.21/lodash.min.js"></script>
-<!-- <link rel="stylesheet" type="text/css" href="/static/css/clndr.css"> -->
             </div>
-      
-    
+
 	<div class="col-3">
 		<!-- 캘린더 영역 -->
-	
+	     <jsp:include page="/WEB-INF/views/template/calendar.jsp"></jsp:include>
 
-	
-	
 	 
 	</div>
 
@@ -39,124 +27,13 @@
     </main>
  
  
- 
+
+
 	<!-- 부트스트랩 js -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
 
 
-<script src="
-https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js
-"></script>
-
-
-
- 	<script>
-		Vue.createApp({
-			  data() {
-				    return {
-				      maintenance: {
-				        title: null,
-				        description: null,
-				        color: null,
-				        startedAt: moment().format('YYYY-MM-DD HH:mm:ss'),
-				        endedAt: moment().format('YYYY-MM-DD HH:mm:ss'),
-				      },
-				    };
-				  },
-				  mounted() {
-				    this.initCalendar();
-				    this.setDate(new Date(), new Date());
-				  },
-				  methods: {
-				    save() {
-				      // API Post
-				    },
-
-				    setDate(date1, date2) {
-				      this.maintenance.startedAt = moment(date1).format('YYYY-MM-DD 09:00:00');
-				      this.maintenance.endedAt = moment(date2).format('YYYY-MM-DD 18:00:00');
-
-				      $('#reservationtime').daterangepicker({
-				        timePicker: true,
-				        startDate: moment(date1).format('YYYY-MM-DD 09:00:00'),
-				        endDate: moment(date2).format('YYYY-MM-DD 18:00:00'),
-				        timePickerIncrement: 30,
-				        locale: {
-				          format: 'YYYY-MM-DD HH:mm:ss',
-				        },
-				      });
-				    },
-				    initCalendar() {
-				      $(document).ready(() => {
-				        const date = new Date();
-				        const d = date.getDate(),
-				          m = date.getMonth(),
-				          y = date.getFullYear();
-
-				        const { Calendar } = FullCalendar;
-				        const calendarEl = document.getElementById('calendar');
-				        const containerEl = document.getElementById('external-events');
-				        let numClicks = 0;
-				        let timeOut;
-				        const draggable = new FullCalendar.Draggable(containerEl, {
-				          itemSelector: '.external-event',
-				          eventData(eventEl) {
-				            return {
-				              title: eventEl.innerText,
-				              backgroundColor: window.getComputedStyle(eventEl, null).getPropertyValue('background-color'),
-				              borderColor: window.getComputedStyle(eventEl, null).getPropertyValue('background-color'),
-				              textColor: window.getComputedStyle(eventEl, null).getPropertyValue('color'),
-				            };
-				          },
-				        });
-
-				        const calendar = new Calendar(calendarEl, {
-				          headerToolbar: {
-				            left: 'prev,next today',
-				            center: 'title',
-				            right: 'dayGridMonth,timeGridWeek,timeGridDay',
-				          },
-				          themeSystem: 'bootstrap',
-				          editable: true,
-				          droppable: true,
-				          drop: (info) => {
-				            $('#maintenance').modal('show');
-				            this.setDate(new Date(info.dateStr), new Date(info.dateStr));
-				          },
-				          dateClick: (info) => {
-				            numClicks++;
-				            switch (numClicks) {
-				              case 2:
-				                numClicks = 0;
-				                $('#maintenance').modal('show');
-				                this.setDate(new Date(info.dateStr), new Date(info.dateStr));
-				                break;
-				              case 1:
-				                timeOut = setTimeout(() => {
-				                  numClicks = 0;
-				                }, 400);
-				                break;
-				              default:
-				                break;
-				            }
-				          },
-				          eventClick: (info) => {
-				            info.el.addEventListener('click', () => {
-				              $('#maintenance').modal('show');
-				            });
-				          },
-				        });
-				        calendar.render();
-				      });
-				    },
-				  },
-				});
-
-
-				
-				
-	</script>	
-
+<!-- 채팅방 -->
  
  	<script>
 		Vue.createApp({
