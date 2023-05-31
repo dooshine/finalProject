@@ -12,6 +12,20 @@
 <div class="container-fluid" id="app">
     <div class="row">
         <div class="col">
+            <a href="/dev/follow">팔로우 통합</a>
+        </div>
+        <div class="col">
+            <a href="/dev/followMember">모두 팔로우한 회원목록</a>
+        </div>
+        <div class="col">
+            <a href="/dev/memberFollowCnt">팔로우 수</a>
+        </div>
+        <div class="col">
+            <a href="/dev/memberProfile">회원프로필</a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
             <h1>회원 아이디 목록</h1>
         </div>
     </div>
