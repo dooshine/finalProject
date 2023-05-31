@@ -1,11 +1,15 @@
 package com.kh.idolsns.controller;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Controller;
@@ -16,9 +20,19 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.kh.idolsns.configuration.CustomEmailProperties;
+import com.kh.idolsns.configuration.CustomFileuploadProperties;
+import com.kh.idolsns.dto.AttachmentDto;
 import com.kh.idolsns.dto.MemberDto;
+import com.kh.idolsns.dto.MemberFollowCntDto;
+import com.kh.idolsns.dto.MemberFollowInfoDto;
+import com.kh.idolsns.dto.MemberProfileImageDto;
+import com.kh.idolsns.repo.AttachmentRepo;
+import com.kh.idolsns.repo.MemberFollowCntRepo;
+import com.kh.idolsns.repo.MemberProfileImageRepo;
 import com.kh.idolsns.repo.MemberRepo;
 import com.kh.idolsns.service.emailService;
 
@@ -35,6 +49,30 @@ public class MemberController {
 	@Autowired
 	private JavaMailSender sender;
 	
+	@Autowired
+	private AttachmentRepo attachmentRepo;
+	
+	@Autowired
+	private CustomEmailProperties customEmailProperties;
+	
+	@Autowired
+	private MemberProfileImageRepo memberProfileImageRepo;
+	
+	@Autowired
+	private CustomFileuploadProperties customFileuploadProperties;
+	
+	@Autowired
+	private MemberFollowCntRepo memberFollowCntRepo;
+	
+	@Autowired
+	private SqlSession sqlSession;
+	
+	private File dir;
+	@PostConstruct
+	public void init() {
+		dir = new File(customFileuploadProperties.getPath());
+	}
+	
 	//회원가입
 	@GetMapping("/join")
 	public String join() {
@@ -46,6 +84,8 @@ public class MemberController {
 		
 		// 멤버 생성
 		memberRepo.insert(memberDto);
+
+		
 		return "member/joinFinish";
 	}
 	
@@ -111,6 +151,7 @@ public class MemberController {
 		return "member/mypage";
 	}
 	
+	//마이페이지 - 아이디, 닉네임 조회
 	@GetMapping("/profile")
 	@ResponseBody
 	public Map<String, String> profile(HttpSession session) {
@@ -123,6 +164,86 @@ public class MemberController {
 		result.put("memberNick", memberDto.getMemberNick());
 		
 		return result;
+	}
+	
+	//마이페이지 - 프로필 사진 조회
+	@GetMapping("/profileImage")
+	@ResponseBody
+	public MemberProfileImageDto memberProfileExist(HttpSession session) {
+		String memberId = (String) session.getAttribute("memberId");
+		MemberProfileImageDto memberProfileImageDto = memberProfileImageRepo.MemberImageExist(memberId);
+		return memberProfileImageDto;
+	}
+	
+	//마이페이지 - 닉네임 수정
+	@GetMapping("/nickname")
+	@ResponseBody
+	public String nickname(HttpSession session,
+			@RequestParam String memberNick,
+			RedirectAttributes attr) {
+		String memberId = (String) session.getAttribute("memberId");
+		
+		memberRepo.updateNick(memberId, memberNick);
+		
+		return "success";
+	}
+	
+	//마이페이지 - 프로필 사진 수정
+	@GetMapping("/editImage")
+	@ResponseBody
+	public String editImage(HttpSession session,
+													@RequestParam MultipartFile attach) throws IllegalStateException, IOException {
+		String memberId = (String) session.getAttribute("memberId");
+		if(!attach.isEmpty()) {
+			int attachmentNo1=attachmentRepo.sequence();
+			File target = new File(dir, String.valueOf(attachmentNo1));
+			attach.transferTo(target);
+			
+			attachmentRepo.insert(AttachmentDto.builder()
+					.attachmentNo(attachmentNo1)
+					.attachmentName(attach.getOriginalFilename())
+					.attachmentType(attach.getContentType())
+					.attachmentSize(attach.getSize())
+					.build()
+					);
+//			memberProfileImageRepo.insert(MemberProfileImageDto.bulider()
+//						.
+//					);
+		}
+		return memberId;
+	}
+	
+	//마이페이지 - 팔로우 수 조회
+	@GetMapping("/followCnt")
+	@ResponseBody
+	public Map<String, Object> follwCnt(HttpSession session) {
+		String memberId = (String) session.getAttribute("memberId");
+		MemberFollowCntDto memberFollowCntDto =  memberFollowCntRepo.followCnt(memberId);
+		
+		Map<String, Object> result = new HashMap<>();
+		
+		result.put("MemberFollowCnt", memberFollowCntDto.getMemberFollowCnt());
+		result.put("MemberFollowerCnt", memberFollowCntDto.getMemberFollowerCnt());
+		result.put("MemberPageCnt", memberFollowCntDto.getMemberPageCnt());
+		
+		System.out.println(result);
+		
+		return result;
+	}
+	
+	//마이페이지 - 팔로우, 팔로워, 페이지 리스트 조회
+	@GetMapping("/followList")
+	@ResponseBody
+	public Map<String, Object> followList(HttpSession session) {
+	    String memberId = (String) session.getAttribute("memberId");
+	    MemberFollowInfoDto dto = sqlSession.selectOne("follow.selectMemberFollowInfo", memberId);
+	    
+	    Map<String, Object> result = new HashMap<>();
+	    result.put("FollowMemberList", dto.getFollowMemberList());
+	    result.put("FollowerMemberList", dto.getFollowerMemberList());
+	    result.put("FollowPageList", dto.getFollowPageList());
+	    
+	    return result;
 	}
 	
 	//회원탈퇴
@@ -187,32 +308,6 @@ public class MemberController {
 		return "member/passwordFinish";
 	}
 	
-	//닉네임 변경
-	@GetMapping("/nickname")
-	public String nickname() {
-		return "member/nickname";
-	}
-	
-	@PostMapping("/nickname")
-	public String nickname(HttpSession session,
-							@RequestParam String changeNick,
-							RedirectAttributes attr) {
-		String memberId = (String) session.getAttribute("memberId");
-		MemberDto memberDto = memberRepo.selectOne(memberId);
-		
-		if(memberDto.getMemberNick().equals(changeNick)) {
-			attr.addAttribute("mode", "error");
-		}
-		
-		memberRepo.updateNick(memberId, changeNick);
-		
-		return "redirect:nicknameFinish";
-	}
-	
-	@GetMapping("/nicknameFinish")
-	public String nicknameFinish() {
-		return "member/nicknameFinish";
-	}
 	
 	//아이디 찾기
 	@GetMapping("/findId")

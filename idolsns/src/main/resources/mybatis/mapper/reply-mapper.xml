@@ -41,5 +41,9 @@
 		set reply_content=#{replyContent}
 		where reply_no=#{replyNo}
 	</update>
+	
+	<delete id="deleteByPostNo">
+		delete from reply where post_no = #{post_no}
+	</delete>
 
 </mapper>

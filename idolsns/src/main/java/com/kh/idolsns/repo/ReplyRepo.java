@@ -12,4 +12,5 @@ public interface ReplyRepo {
 	boolean deleteReplies(Long groupNo);
 	boolean deleteRereply(Long replyNo);
 	boolean updateReply(Long replyNo, String replyContent);
+	void deleteByPostNo(Long postNo);
 }

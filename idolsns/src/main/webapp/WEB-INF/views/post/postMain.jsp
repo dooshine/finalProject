@@ -28,16 +28,13 @@
     	.h-20{
     	height: 20px;
     	}
+    	.reply-text{
+    	font-size: 5px;
+    	}
     </style>
    
-<!--    	model.addAttribute로 받은 memberId Vue의 Data영역에서 활용할 수 있도록 선언 -->
-<!--    	<script> -->
-<%-- //    		var sessionMemberId = '${memberId}'; --%>
-<!-- //   		Vue.provide('$sessionMemberId', sessionMemberId); -->
-<!--    	</script>  -->
-	
 
-	<div class="container-fluid" id="app" test>
+	<div class="container-fluid" id="app">
 		
 		<!----------- 글쓰기 버튼 ------------>
 	    <div class="bg-white mb-2 p-4 rounded-4">
@@ -363,7 +360,7 @@
                 </div>      
             </div>
          </div>
-	  
+
 	     
 <!-- 	    <button type="button" onclick="relayout();" class="btn btn-white btn-outline-dark rounded-pill col-12 " data-bs-target="#modalmap" data-bs-toggle="modal">지도 테스트 모달</button> -->
 	    <!--------------- 게시물들 반복구간 ------------->
@@ -377,7 +374,6 @@
 			            <div class="col-1 col-md-1 col-lg-1 d-flex align-items-center justify-content-center">
 			               <img class="rounded-circle img-fluid" src="static/image/profileDummy.png">
 			            </div>
-<!-- 			            	<p>{{ post.postNo }}</p> -->
 			            <div class="col-10 col-md-10 col-lg-10 align-items-center justify-content-start">
 														
 								<div class="row">
@@ -388,13 +384,12 @@
 								</div>
 			            </div>
 			            <div class="col-1 col-md-1 col-lg-1 d-flex align-items-start justify-content-end">
-			               <i class="fs-3 text-secondary ti ti-dots-vertical"></i>
+			               <i class="fs-3 text-secondary ti ti-dots-vertical" data-toggle="dropdown"></i>
+			               <i class="ti ti-x" @click="deletePost(post.postNo)"></i>
 			            </div>
 							
 	       			</div>	
 					<!-- 프로필 사진과 아이디 -->
-					
-					
 					
 					<!-- 태그와 글 태그들 -->
 	                <div class="row mb-3 ">
@@ -424,7 +419,7 @@
 						<div class="col-1 col-md-1 col-lg-1 d-flex align-items-center justify-content-center"> 
 			            </div>            
 	                </div>
-	                <!-- 지도 -->
+	                <!-- 지도 맵이 있는 경우에만 지도 정보 표기 -->	
 	                
 	                
 	                <!-- 글 내용 -->
@@ -466,6 +461,7 @@
 		                	
 		                	<!-- 좋아요, 댓글, 공유하기 -->
 		                	<div class="row">
+		                	
 		                		<!-- 좋아요 -->		                		
 		                		<div class="col-4 text-start text-primary">
 		                			<div class="row" v-if="postLikeIndexList.includes(index)">
@@ -487,14 +483,124 @@
 		                		</div>
 		                		<!-- 좋아요 -->
 		                		
-		                		<!-- 댓글 -->
-							    <div class="col-4 text-center text-secondary">
-							    	<i class="fs-4 ti ti-message"></i>
+		                		<!-- 댓글 작성버튼 -->
+							    <div class="col-4 text-center text-secondary">				
+							    	<i class="fs-4 ti ti-message" @click="showReplyInput(index)"></i>					    
 							    </div>
-							    <!-- 댓글 -->
-							    <div class="col-4 text-end text-secondary"><i class="fs-4 ti ti-share"></i></div> 
+							    <!-- 댓글 작성버튼 -->
+							    
+							    <!-- 공유하기 버튼 -->
+							    <div class="col-4 text-end text-secondary"><i class="fs-4 ti ti-share"></i></div>
+							    <!-- 공유하기 버튼 -->
+							     
 		                	</div>
-		                		   
+		                	
+		                	<!-- 구분선 -->
+		                	<div class="row">
+		                		<hr class="mt-2" style="width:100%;">		                
+		                	</div>
+		                	
+		                	<!-- 댓글, 대댓글 보여주는 창 -->
+		                	<div class="row" v-if="post.replyList.length >= 1">
+								<div v-for="(reply,replyIdx) in post.replyList" :key="replyIdx">
+									<!-- 댓글 표시 -->
+									<div class="d-flex align-items-center justify-content-center mb-1" v-if="reply.replyNo == reply.replyGroupNo">
+										
+				                		<div class="col-2 text-center ">
+				                			<div class="row w-50 h-50 text-center m-auto">
+				                				<img class="img-fluid rounded-circle " src="static/image/profileDummy.png">
+				                			</div>
+				                			<div class="row w-50 h-50 text-center m-auto">
+				                				<h6 class="fs-7">{{reply.replyId}}</h6>
+				                			</div>
+				                		</div>
+				                		
+				                		<div class="col-8">
+				                			<div class="row">
+				                				<h6>{{reply.replyContent}}</h6>
+				                			</div>
+				                			<div class="row d-flex flex-nowrap">
+<!-- 				                				<h6 class="col-1 text-start reply-text" style="white-space: nowrap;">좋아요 </h6> -->
+				                				<h6 class="col-1 text-start reply-text" @click="showRereplyInput(post.postNo,reply.replyNo),hideReplyInput()" style="white-space: nowrap;">댓글 달기</h6>	
+				                			</div>			                			
+				                		</div>
+				                		<div class="col-1" v-if="memberId === reply.replyId">
+				                			<i class="ti ti-x" @click="deleteReply(reply.replyNo)"></i>
+				                		</div>
+			                		</div>
+			                		<!-- 댓글 표시 -->
+			                		
+			                		<!-- 대댓글 표시 -->
+			                		<div v-for="(rereply,rereplyIdx) in post.replyList.slice(replyIdx+1)" :key='rereplyIdx'>			                							                				             				
+			                				<!-- 대댓글이 들어갈 조건 -->
+				                			<div v-if="reply.replyNo === rereply.replyGroupNo"><!-- 특정 댓글의 그룹번호가 특정 댓글번호와 일치할 때, -->				                				
+				                				<!-- 대댓글 들 -->
+				                				<div class="row ">
+				                					<div class="col-2">
+				                					</div>
+				                					<div class="col-2 text-center">
+				                						<div class="row w-50 h-50 text-center m-auto">
+					                						<img class="img-fluid rounded-circle " src="static/image/profileDummy.png">
+					                					</div>
+							                			<div class="row w-50 h-50 text-center m-auto">
+							                				<h6 class="fs-7">{{rereply.replyId}}</h6>
+							                			</div>
+				                					</div>
+				                					<div class="col-6">
+				                						<h6>{{rereply.replyContent}}</h6>
+				                					</div>
+				                					<div class="col-1">				                						
+				                						<i class="ti ti-x" @click="deleteRereply(rereply.replyNo)" v-if="rereply.replyId == memberId"></i>
+				                					</div>
+				                				</div>
+				                				<!-- 대댓글 들 -->
+				                			</div>
+				                			<!-- 대댓글이 들어갈 조건 -->
+				                	</div>
+				                	
+				                	<!-- 대댓글 작성 창 -->
+		                			<div v-if=" post.postNo === tempPostNo && reply.replyNo === tempReplyNo">
+		                				<div class="row">
+		                					<div class="col-2">
+		                					</div>
+		                					<div class="col-2 text-center">
+		                						<div class="row w-50 h-50 text-center m-auto">
+			                						<img class="img-fluid rounded-circle " src="static/image/profileDummy.png">
+			                					</div>
+					                			<div class="row w-50 h-50 text-center m-auto">
+					                				<h6 class="fs-7">${memberId }</h6>
+					                			</div>
+		                					</div>
+		                					<div class="col-7">
+		                						<input type="text" v-model="rereplyContent" class="w-100 rounded-4 border border-secondary ">
+		                					</div>
+		                					<div class="col-1">
+		                						<i class="fs-2 text-primary ti ti-arrow-badge-right-filled" @click="rereplySending(post.postNo,reply.replyNo,index)"></i>
+		                					</div>
+		                				</div>
+		                			</div>
+				                	<!-- 대댓글 작성 창 -->
+				                	
+				                	<!-- 대댓글 표시 -->
+							    </div> 								             		
+		                	</div>
+		                	<!-- 댓글, 대댓글 보여주는 창 -->
+		                	
+		                	<!-- 댓글 작성창  -->
+							<!-- 댓글 작성버튼 눌렸을 때만 나오게됨 -->
+		                	<div class="row" v-if="replyFlagList[index]"> 
+		                		<div class="col-1">
+		                			<img class="rounded-circle img-fluid" src="static/image/profileDummy.png">
+		                		</div>
+		                		<div class="col-10 mt-1">
+		                			<input type="text" placeholder=" 댓글을 입력하세요." v-model="replyContent" class="w-100 rounded-4 border border-secondary "> 
+		                		</div>
+		                		<div class="col-1">
+		                			<i class="fs-2 text-primary ti ti-arrow-badge-right-filled" @click="replySending(post.postNo,index)"></i>
+		                		</div>		                		
+		                	</div>
+		                	<!-- 댓글 작성창  -->
+		                	
 			            </div>
 						<div class="col-1 col-md-1 col-lg-1 d-flex align-items-center justify-content-center"> 
 			            </div>       
@@ -521,8 +627,7 @@
                 
        	 </div>
        	 <!--------------- 게시물들 반복구간 ------------->
-       	 
-      
+
 	</div>
 
     <!-- Vue.createApp구간 -->
@@ -539,7 +644,30 @@
                 	// 좋아요 게시글 인덱스 배열
                 	postLikeIndexList: [], 
                 	
+                	// 댓글 작성 여부 체크용 배열
+                	replyFlagList: [],
                 	
+                	// 댓글 작성 글자 
+                	replyContent: '',
+                	
+                	// 대댓글 위치 특정용 임시 postNo, replyNo
+                	tempPostNo:null ,
+                	tempReplyNo:null ,
+                	
+                	// 대댓글 작성 글자
+                	rereplyContent: '', 
+                	
+                	// 무한 페이징 영역
+                	percent:0,
+                	
+                	// 목록을 위한 데이터
+                	page:1, 
+                	finish:false,
+                	
+                	// 안전장치
+                	loading:false,
+                	
+                	memberId:null,
                 };
             },
             computed:{  
@@ -547,17 +675,53 @@
             },
             methods:{
 				// 모든 게시글 불러오기 
-                fetchPosts: function() {
-	                axios.get('http://localhost:8080/rest/post/all')
-	                    .then(response => {
-	                        this.posts = response.data; // 데이터를 할당
-	                        this.getLikePostIndex(this.posts);	                        
-	                    })
-	                    .catch(error => {
-	                        console.error(error);                           
-	                    }) 
+//                 async fetchPosts() {
+// 	                await axios.get('http://localhost:8080/rest/post/all')
+// 	                    .then(response => {
+// 	                    	// 전체 게시글 데이터 가져오기
+// 	                        this.posts = response.data;
+// 	                     	// 게시글 인덱스별 좋아요 처리
+// 	                        this.getLikePostIndex(this.posts);
+// 	                     	this.replyFlagList = new Array(this.posts.length).fill(false);
+// 	                    })
+// 	                    .catch(error => {
+// 	                        console.error(error);                           
+// 	                    }) 
+//             	},
+            	
+
+            		
+            	// 무한 페이징 게시글 불러오기 1페이지당 10개씩 매 페이지 별로 불러옴,
+            	async fetchPosts(){
+                    if(this.loading == true) return;//로딩중이면
+                    if(this.finish == true) return;//다 불러왔으면
+                    
+                    this.loading = true;
+                    
+                    // 1페이지 부터 현재 페이지 까지 전부 가져옴 
+                    const resp = await axios.get("http://localhost:8080/rest/post/pageReload/"+this.page);
+	                this.posts = resp.data;
+	                this.getLikePostIndex(this.posts);
+	                this.page++;
+	                
+	                this.loading=false;
+	                
+	                if(resp.data.length < 10){
+	                	this.finish = true;
+	                }
             	},
             	
+            	// 게시글 사겢 
+            	async deletePost(postNo){
+                	try{
+                		await axios.delete('http://localhost:8080/rest/post/'+postNo);
+                		this.fetchPosts();
+                	}
+                	catch (error){
+                		console.error(error);
+                	}
+			    },
+			    
             	// 사진 관련 
                 getAttachmentUrl(attachmentNo) {
             		return "http://localhost:8080/rest/attachment/download/"+attachmentNo;
@@ -573,17 +737,16 @@
                     }
                 },
                 
-             	// 좋아요 관련 비동기 처리--------------------------------
-                
-             		// 아이디 접속해 있고, 좋아요 클릭시에 실행
-             	async checkLike(postNo,index){
+             	// 좋아요 관련 비동기 처리-----------------------------------
+             	// 아이디 접속해 있고, 좋아요 클릭시에 실행
+             	checkLike(postNo,index){
                 	axios.get('http://localhost:8080/rest/post/like/'+postNo)
                 		.then(response => {
                 			console.log(response.data);
                 			// 응답이 좋아요면 좋아요 +1
                 			if(response.data== 'Like'){
                 				this.posts[index].likeCount = this.posts[index].likeCount + 1; 
-                				this.postLikeIndexList.push(index);
+                				this.postLikeIndexList.push(index);                			
                 			}
                 			// 응답이 좋아요 취소면 좋아요 -1
                 			else if(response.data=='disLike'){
@@ -598,7 +761,7 @@
                 		})
                 },
                 
-                	// postNo를 List로 송신하고 좋아요 되있는 index 번호를 수신
+                // postNo를 List로 송신하고 좋아요 되있는 index 번호를 수신
                 getLikePostIndex(posts){
                 	
                 	postNoList = [];
@@ -614,13 +777,91 @@
                			console.error(error);
                		})
                 	              		
-                },	
+                },
+             	// 좋아요 관련 비동기 처리------------------------------------
+                
+             	
+             	
+                // 댓글 창 관련 클릭 함수 -------------------------------              
+              	// 전송 버튼 클릭 시
+                async replySending(postNo,index){
+                	try{
+                		const replyDto = {postNo: postNo, replyContent:this.replyContent};
+                    	const response = await axios.post('http://localhost:8080/rest/post/reply/',replyDto);
+                    	this.fetchPosts();
+                    }
+                	catch (error){
+                		console.error(error);
+                	}
                 	
+                	this.hideReplyInput(index)
+                },
+                // 댓글 쓰기 창 띄우기 (다른 창들은 모두 닫음) 
+                showReplyInput(index){
+					this.replyContent = '';                 	
+                	this.replyFlagList = this.replyFlagList.map(() => false); 
+                	this.replyFlagList[index] = true;
+                },
+                // 댓글 쓰기 창 숨기기
+                hideReplyInput(index){
+                	this.replyFlagList[index] = false;
+                },
                 
+                // 대댓글 전송 버튼 클릭 시 
+                async rereplySending(postNo,replyNo,index){
+                	try{
+                		const replyDto = {postNo: postNo, replyContent:this.rereplyContent, replyGroupNo: replyNo};
+                    	const response = await axios.post('http://localhost:8080/rest/post/rereply/',replyDto);
+                    	this.fetchPosts();
+                    }
+                	catch (error){
+                		console.error(error);
+                	}
+                	
+                	this.hideRereplyInput();
+                },
                 
-             	// 좋아요 관련 비동기 처리--------------------------------
+//             	// 대댓글 쓰기 창 띄우기 (다른 창들은 모두 닫음)
+                showRereplyInput(postNo,replyNo){
+					this.rereplyContent = ''; 
+					this.tempPostNo = postNo;
+					this.tempReplyNo = replyNo;
+					console.log(postNo);
+                	console.log(replyNo);
+                },
                 
+                hideRereplyInput(){
+                	this.rereplyContent = '';
+                	this.tempPostNo = null;
+                	this.tempReplyNo = null;
+                },
                 
+                // 댓글 삭제
+                async deleteReply(replyNo){
+                	try{
+                		await axios.delete('http://localhost:8080/rest/post/reply/delete/'+replyNo);
+                		this.fetchPosts();
+                	}
+                	catch (error){
+                		console.error(error);
+                	}
+                
+                },
+                // 대댓글 삭제
+                async deleteRereply(replyNo){
+                	try{
+                		await axios.delete('http://localhost:8080/rest/post/reply/reDelete/'+replyNo);
+                		this.fetchPosts();
+                	}
+                	catch(error){
+                		console.error(error);
+                	}
+                },
+              
+                // 댓글 창 관련 클릭 함수 -------------------------------
+             	
+                
+             	
             	// 모달창 클릭 시 지도 정보 불러오기-------------------------
             	showMap(keyword){
             		this.showMapModalText = keyword;
@@ -678,11 +919,58 @@
             		        infowindow.open(map, marker);
             		    });
             		}
+            	},
+            	setId(){ // 아이디 세팅
+            		const memberId = '${memberId}';
+                	if (memberId && memberId.trim() !== '') {
+                		    // memberId가 존재하고 빈 문자열이 아닌 경우
+                		    this.memberId = memberId;
+                	} else {
+                		    // memberId가 없거나 빈 문자열인 경우 기본 값 또는 예외 처리를 수행합니다.
+                		    this.memberId = null; // 기본 값으로 null을 할당하거나
+                		    // 예외 처리 로직을 추가합니다.
+                		    // 예: 오류 메시지 표시, 다른 로직 실행 등
+                	}            		
+            	},
+            },
+            watch:{
+            	percent(){
+            		if(this.percent >= 80){
+            			this.fetchPosts();
+            		}
             	}
             },
             mounted() {
-                // 게시글 불러오기
-                this.fetchPosts();
+                //윈도우 전체에 스크롤 이벤트를 설정(Vue가 아닌 JS 사용)
+                //- 주의할 점은 스크롤 이벤트는 발생빈도가 엄청나다는 것
+                //- 쓰로틀링, 디바운스 등으로 억제시킬 필요가 있음
+                //- this를 통일시키기 위해 화살표 함수(arrow function)를 사용
+            	 window.addEventListener("scroll", _.throttle(()=>{
+                     //console.log("스크롤 이벤트");
+                     //console.log(this);
+
+                     //스크롤은 몇 % 위치에 있는가? 를 알고 싶다면
+                     //- 전체 문서의 높이(document.body.clientHeight)
+                     //- 현재 스크롤의 위치(window.scrollY)
+                     //- 브라우저의 높이(window.innerHeight)
+                     //- ScreenFull.js나 Rallax.js 등 라이브러리 사용 가능
+                     const height = document.body.clientHeight - window.innerHeight;
+                     const current = window.scrollY;
+                     const percent = (current / height) * 100;
+                     //console.log("percent = " + Math.round(percent));
+                     
+                     //data의 percent를 계산된 값으로 갱신
+                     this.percent = Math.round(percent);
+                 }, 250));
+            	
+            },
+            created(){
+            	// 게시글 불러오기
+            	this.fetchPosts();
+            	this.setId();
+            	
+            	
+            	
             },
         }).mount("#app");
     </script>

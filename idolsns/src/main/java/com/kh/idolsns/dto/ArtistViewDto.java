@@ -23,4 +23,8 @@ public class ArtistViewDto {
     private Integer followCnt;
     // 대표페이지 대표이미지
     private Integer attachmentNo;
+
+    public String getProfileSrc(){
+        return attachmentNo==null ? "/static/image/profileDummy.png" : "/download/?attachmentNo=" + this.attachmentNo;
+    }
 }
