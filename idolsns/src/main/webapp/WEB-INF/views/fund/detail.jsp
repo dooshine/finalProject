@@ -120,10 +120,21 @@
 			<div class="row mt-3" style="padding-left: 1em">
 				<div v-html="fundDetail.postContent"></div>
 			</div>
-					
+			
+		<hr>
+			<!-- 태그 출력 -->
+			<div class="row mt-3">
+				<div class="col">
+					<button class="btn btn-primary" v-for="(tag, i) in fundDetail.tagNames"
+								@click="tagLink(i)">
+					{{ tag }}
+					</button>
+				</div>
+			</div>
 		</div>
 		</div>             
-		<hr>
+		
+	<!-- ------------------------ 댓글 ------------------------------- -->
 	
 	  <h3>댓글</h3>
 	  <div v-if="replies.length == 0">댓글이 없습니다.</div>
@@ -256,6 +267,7 @@
 		          postContent: "",
 		          imageURL: "",
 		          fundTotal: "",
+		          tagNames: [],
 		        },
 		        replies: [],
 		        // 댓글창 보여주기
@@ -319,6 +331,11 @@
         			const postNo = this.fundDetail.postNo;
 					const resp = await axios.get("http://localhost:8080/rest/fund/attaches/"+postNo)	  
 					this.fundDetail.attachmentNos.push(...resp.data);
+        		},
+        		async loadTagNames() {
+        			const postNo = this.fundDetail.postNo;
+        			const resp = await axios.get("/rest/fund/tag/"+postNo);
+        			this.fundDetail.tagNames.push(...resp.data);
         		},
 		       // fundTotal & fundSponsorCount 불러오기
         		async loadFundVO(){
@@ -421,6 +438,12 @@
 				showUpdateForm(i) {
 					this.updateReplyObj.index = i
 					this.reReplies[i] = false;
+				},
+				// 태그 클릭시 
+				tagLink(i){
+					console.log(this.fundDetail.tagNames[i]);
+					const url = ""
+					window.location.href = url;
 				}
 		      	
 		    },
@@ -430,6 +453,7 @@
 		    	  this.loadAttachNos();
 		    	  this.loadFundVO();
 		    	  this.loadReplies();
+		    	  this.loadTagNames();
 		    	},
 		    mounted() {
 		    	}
