@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.kh.idolsns.dto.MemberDto;
-import com.kh.idolsns.vo.AdminMemberSearchVO;
+import com.kh.idolsns.dto.MemberExitDto;
 
 
 @Repository
@@ -129,6 +129,11 @@ public class MemberRepoImpl implements MemberRepo{
 	public int idDuplicatedCheck(String memberId) {
 		return sqlSession.selectOne("member.idDuplicatedCheck", memberId);
 	}
+	
+	@Override
+	public int memberExitFind(String memberId) {
+		return sqlSession.selectOne("member.memberExitFind",memberId);
+	}
 
 	@Override
 	public int nickDuplicatedCheck(String memberNick) {
@@ -180,5 +185,14 @@ public class MemberRepoImpl implements MemberRepo{
 	public void clean() {
 		sqlSession.delete("member.clean");
 	}
+
+	@Override
+	public void memberExit(String memberId) {
+		sqlSession.insert("member.memberExit", memberId);
+	}
+
+	
+
+	
 	
 }
