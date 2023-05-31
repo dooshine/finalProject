@@ -547,8 +547,10 @@
 									</div>
 								</div>
 								<!-- 채팅방 이름 -->
-								<div v-else style="max-width: 266px;">
-									<h5 class="chatRoomNameDiv">{{ roomInfo.chatRoomName1 }}</h5>
+								<div v-else style="max-width: 200px;">
+									<h5 class="chatRoomNameDiv" :title="roomInfo.chatRoomName1">
+										{{ roomInfo.chatRoomName1 }}
+									</h5>
 								</div>
 							</div>
 							<div class="d-flex justify-content-end">

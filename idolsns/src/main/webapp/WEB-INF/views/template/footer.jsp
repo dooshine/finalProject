@@ -676,6 +676,18 @@
 					//console.log("in focus");
 					this.isFocused = true;
 				});
+				// 브라우저 스크롤 테스트
+				window.addEventListener("scroll", function() {
+					console.log("브라우저 스크롤");
+				})
+			},
+			updated: function() {
+				const messageWrapper = this.$refs.messageWrapper;
+				if(messageWrapper) {
+					messageWrapper.addEventListener('scroll', function() {
+						console.log("모달 스크롤");
+					})
+				}
 			},
 			watch: {
 				// 채팅방 모달 켜질 때 메세지 입력창으로 커서 이동되게
