@@ -18,4 +18,6 @@ public class ChatMessageVO {
 	private int attachmentNo;
 	private int chatMessageType;
 	
+	private int page;
+	
 }

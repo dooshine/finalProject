@@ -59,15 +59,15 @@ public class ChatRestController {
 	}
 	
 	// 메세지 불러오기
-	@GetMapping("/message/{chatRoomNo}")
-	public List<ChatMessageVO> roomMessage(@PathVariable int chatRoomNo) {
-		List<ChatMessageDto> tempList = chatMessageRepo.messageList(chatRoomNo);
+	@PostMapping("/message")
+	public List<ChatMessageVO> roomMessage(@RequestBody ChatMessageVO vo) {
+		List<ChatMessageDto> tempList = chatMessageRepo.messageList(vo);
 		List<ChatMessageVO> list = new ArrayList<>();
 		for(ChatMessageDto chatMessageDto : tempList) {
 			//log.debug("dto attachmentNo: " + chatMessageDto.getAttachmentNo());
 			list.add(ChatMessageVO.builder()
 							.chatMessageNo(chatMessageDto.getChatMessageNo())
-							.chatRoomNo(chatRoomNo)
+							.chatRoomNo(vo.getChatRoomNo())
 							.memberId(chatMessageDto.getMemberId())
 							.chatMessageTime(chatMessageDto.getChatMessageTime().getTime())
 							.chatMessageContent(chatMessageDto.getChatMessageContent())

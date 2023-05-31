@@ -39,9 +39,19 @@
 	</insert>
 	
 	<!-- 메세지 불러오기 -->
+	<sql id="topNheader">
+		select * from (
+			select rownum rn, TMP.* from (
+	</sql>
+	<sql id="topNfooter">
+			)TMP
+		) where rn between #{begin} and #{end}
+	</sql>
 	<select id="listMessage" resultType="ChatMessageDto">
-		select * from chat_message where chat_room_no = #{chatRoomNo}
-		order by chat_message_no asc
+		<include refid="topNheader"/>	
+			select * from chat_message where chat_room_no = #{chatRoomNo}
+			order by chat_message_no desc
+		<include refid="topNfooter"/>
 	</select>
 	
 	<!-- 보낸 메세지 삭제 -->

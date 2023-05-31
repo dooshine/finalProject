@@ -141,7 +141,13 @@
 					
 					// 새 메세지 알림 여부
 					newChatNoti: false,
-					chatRoomNoList: []
+					chatRoomNoList: [],
+					
+					// 무한스크롤
+					currentScroll: "",
+					page: 0,
+					finish: false,
+					loading: false
 				};
 			},
 			methods: {
@@ -348,11 +354,13 @@
 				// 로그인한 회원이 속해있는 채팅방 목록
 				async loadRoomList() {
 					const memberId = this.memberId;
-					const url = "${pageContext.request.contextPath}/chat/chatRoom/" + memberId;
-					const resp = await axios.get(url);
-					this.chatRoomList.splice(0);
-					this.chatRoomList.push(...resp.data);
-					this.loadChatRoomNoti();
+					if(memberId.length > 0) {
+						const url = "${pageContext.request.contextPath}/chat/chatRoom/" + memberId;
+						const resp = await axios.get(url);
+						this.chatRoomList.splice(0);
+						this.chatRoomList.push(...resp.data);
+						this.loadChatRoomNoti();
+					}
 				},
 				// 팔로우 목록 불러오기
 				async loadFollowList() {
@@ -428,16 +436,28 @@
 				},
 				// 메세지 불러오기
 				async loadMessage() {
-					const chatRoomNo = this.chatRoomNo;
-					this.messageList.splice(0);
-					const url = "${pageContext.request.contextPath}/chat/message/" + chatRoomNo;
-					const resp = await axios.get(url);
+					if(this.loading == true) return;
+					if(this.finish == true) return;
+					this.loading = true;
+					//this.messageList.splice(0);
+					//const url = "${pageContext.request.contextPath}/chat/message/" + chatRoomNo + "/page" + this.page;
+					const url = "${pageContext.request.contextPath}/chat/message"
+					const data = {
+							chatRoomNo: this.chatRoomNo,
+							page: this.page+1
+					}
+					const resp = await axios.post(url, data);
 					for(let i=0; i<resp.data.length; i++) {
 						if(resp.data[i].chatMessageTime >= this.chatJoin)
 							console.log(resp.data[i].chatRoomNo)
 							this.messageList.push(resp.data[i]);
 					}
+					this.page++;
+					this.loading = false;
 					this.scrollBottom();
+					if(resp.data.length < 10) {
+						this.finish = true;
+					}
 				},
 				// 보내는 메세지가 오늘의 첫 메세지인지 확인
 				firstMsg() {
@@ -677,16 +697,21 @@
 					this.isFocused = true;
 				});
 				// 브라우저 스크롤 테스트
-				window.addEventListener("scroll", function() {
+				/*window.addEventListener("scroll", function() {
 					console.log("브라우저 스크롤");
-				})
+				})*/
 			},
 			updated: function() {
 				const messageWrapper = this.$refs.messageWrapper;
 				if(messageWrapper) {
-					messageWrapper.addEventListener('scroll', function() {
+					messageWrapper.addEventListener('scroll', _.throttle(() => {
 						console.log("모달 스크롤");
-					})
+						//const height = messageWrapper.clientHeight - messageWrapper.innerHeight;
+						const current = messageWrapper.scrollTop;
+						//console.log("height: " + height);
+						//console.log("current: " + current);
+						this.currentScroll = current;
+					}, 250));
 				}
 			},
 			watch: {
@@ -717,6 +742,13 @@
 						}
 					},
 					immediate: true
+				},
+				// 무한스크롤
+				currentScroll() {
+					if(this.currentScroll == 0) {
+						console.log("더주ㅓ");
+						this.loadMessage();
+					}
 				}
 			}
 		}).mount("#header-area");
