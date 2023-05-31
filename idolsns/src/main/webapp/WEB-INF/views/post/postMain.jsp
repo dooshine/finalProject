@@ -14,7 +14,18 @@
     <!-- tabler 아이콘 -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
      
+    <!-- swiper cdn -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css"/>
+	<script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
+	
+	     
     <style>
+		/*   이미지 스와이핑 창 스타일 */
+    	.swiper { 
+		width: 600px;
+		height: 600px;
+		}
+		
     	.address{
     	font-size:10px;
     	}
@@ -270,7 +281,7 @@
             </div>
          </div>
                   
-        <!-- 3. 글 및 업로드 창 (두 번째 창에서 다음 버튼이 클릭 되었을 때, 비동기로 현존하는 아이돌 태그들을 가져옴)-->
+        <!-- 3. 글 및 파일 업로드 창 (두 번째 창에서 다음 버튼이 클릭 되었을 때, 비동기로 현존하는 아이돌 태그들을 가져옴)-->
         <div class="modal" tabindex="-1" role="dialog" id="modal3"
                             data-bs-backdrop="static">
             <div class="modal-dialog" role="document">
@@ -491,6 +502,122 @@
 		                	</div>
 							
 		                	
+		                	<!-- 이미지 표시 -->
+		                	<div class="row">
+		                		<div v-if="post.attachmentList && post.attachmentList.length > 0"  class="d-flex">
+					                <!-- 단일 이미지인 경우 -->
+					                <div v-if="post.attachmentList.length == 1" class="row text-center" >
+					                	<div v-for="(attachmentNo, attachmentIndex) in post.attachmentList" :key="attachmentIndex" class="col-6">
+					                		<img :src="getAttachmentUrl(attachmentNo)" @click="setModalImageUrl(attachmentNo)" class="img-fluid" style="max-width:100%;aspect-ratio:1/1;" alt="Attachment" data-bs-target="#image-modal" data-bs-toggle="modal">
+					                	</div>                	        	
+					                </div>
+					                <!-- 두 개 이상의 이미지인 경우 -->
+					                <div v-else-if="post.attachmentList.length > 1" class="row text-center">
+					                	<div v-for="(attachmentNo, attachmentIndex) in post.attachmentList" :key="attachmentIndex" class="col-6">
+					                		<img :src="getAttachmentUrl(attachmentNo)"  @click="setModalImageUrl(attachmentNo)" class="img-fluid mb-3" style="max-width:100%;aspect-ratio:1/1;" alt="Attachment" data-bs-target="#image-modal" data-bs-toggle="modal">
+					                	</div>
+					                </div>
+					                
+					                <!-- 두 개 이상의 이미지인 경우 (이미지 스와이핑 : 나중에하자 ㅅ....) -->
+<!-- 					                <div v-else-if="post.attachmentList.length = -999" class="row text-center"> -->
+<!-- 					                	<div v-for="(attachmentNo, attachmentIndex) in post.attachmentList" :key="attachmentIndex" class="col-6"> -->
+<!-- 					                		첫 번째 이미지는 그냥 모달로 보여줌 -->
+<!-- 					                		<div v-if="attachmentIndex === 0"> -->
+<!-- 					                			<img :src="getAttachmentUrl(attachmentNo)" @click="setModalImageUrl(attachmentNo)" class="img-fluid" style="max-width:100%;aspect-ratio:1/1;" alt="Attachment" data-bs-target="#image-modal" data-bs-toggle="modal"> -->
+<!-- 					                		</div> -->
+<!-- 					                		이후의 이미지는 swiper를 사용하여 보여줌 -->
+<!-- 					                		<div v-else-if="attachmentIndex == 1 "> -->
+<!-- 					                			<img :src="getAttachmentUrl(attachmentNo)" @click="setModalImageUrlList(post.attachmentList)" class="img-fluid" style="max-width:100%;aspect-ratio:1/1;" alt="Attachment" data-bs-target="#imageList-modal" data-bs-toggle="modal"> -->
+<!-- 					                		</div> -->
+<!-- 					                	</div> -->
+<!-- 					                </div> -->
+
+					                <!-- 이미지 출력 모달창 -->
+					                <div class="modal" tabindex="-1" role="dialog" id="image-modal"
+                           					 data-bs-backdrop="true">
+                           					 <div class="modal-dialog modal-lg" role="image">
+                           					 	<div class="modal-content">
+                           					 		<img :src="modalImageUrl">
+                           					 	</div>                           					 	
+                           					 </div>
+                           			</div>
+                           			<!-- 다중 이미지 스와이핑 모달창 나중에 보자...-->
+<!-- 					                <div class="modal" tabindex="-1" role="dialog" id="imageList-modal" -->
+<!--                            					 data-bs-backdrop="true"  test> -->
+<!--                            					 <div class="modal-dialog modal-lg" role="image"> -->
+<!--                            					 	<div class="modal-content"> -->
+<!--                            					 		header -->
+<!-- 										            <div class="modal-header"> -->
+<!-- 										                <h5 class="modal-title"><i class="fa-solid fa-xmark fa-lg grey" data-bs-dismiss="modal"></i></h5> -->
+<!-- 										            </div> -->
+										            
+<!-- 										            body -->
+<!--                            					 		<div class="modal-body"> -->
+<!-- 	                           					 		Slider main container -->
+<!-- 														<div class="swiper-container w-100"> -->
+<!-- 														  Additional required wrapper -->
+<!-- 														  <div class="swiper-wrapper"> -->
+<!-- 														  	<div class="swiper-slide mx-5"> -->
+<!-- 														  		<img class="img-fluid" style="width:200px;height:200px;" src="https://cdn.pixabay.com/photo/2023/05/21/06/05/water-jet-8007873_640.jpg"> -->
+<!-- 														  	</div> -->
+<!-- 														  	<div class="swiper-slide mx-5"> -->
+<!-- 														  		<img class="img-fluid" style="width:200px;height:200px;" src="https://cdn.pixabay.com/photo/2023/05/21/06/05/water-jet-8007873_640.jpg"> -->
+<!-- 														  	</div> -->
+<!-- 														  	<div class="swiper-slide mx-5"> -->
+<!-- 														  		<img class="img-fluid"  style="width:200px;height:200px;" src="https://cdn.pixabay.com/photo/2023/05/21/06/05/water-jet-8007873_640.jpg"> -->
+<!-- 														  	</div> -->
+<!-- 														  	<div v-for="(modalImageUrlitem, urlIdx) in modalImageUrlList" :key="urlIdx"> -->
+<!-- 														  		Slides -->
+<!-- 														  		<div  class="swiper-slide" style="width:80%;height:80%;"> -->
+<!-- 														  			<img v-if="urlIdx>0" :src="getAttachmentUrl(modalImageUrlitem)" class="swiper-slide img-fluid"> -->
+<!-- 														  		</div> -->
+<!-- 														  	</div> -->
+<!-- 														  </div>													   -->
+<!-- 														  If we need pagination -->
+<!-- 														  <div class="swiper-pagination"></div> -->
+														
+														 
+														
+	<!-- 													  If we need scrollbar -->
+	<!-- 													  <div class="swiper-scrollbar"></div> -->
+<!-- 														</div> -->
+<!-- 													</div> -->
+													
+<!-- 													footer -->
+<!-- 										            <div class="modal-footer"> -->
+<!-- 										            If we need navigation buttons -->
+<!-- 														  <div class="swiper-button-prev"></div> -->
+<!-- 														  <div class="swiper-button-next"></div> -->
+<!-- 										            </div> -->
+<!--                            					 	</div>					 	 -->
+<!--                            					 </div> -->
+<!--                            			</div> -->
+                           			
+					               
+					                
+					                <div v-for="(attachmentNo, attachmentIndex) in post.attachmentList" :key="attachmentIndex">
+					                	<!-- 일단 이미지만 -->
+					                	
+					                	
+					                
+<!-- 					                	이미지인 경우 -->
+<!-- 					                	<div v-if="checkFileType(attachmentNo) === 'image' "> -->
+<!-- 					                		<img :src="getAttachmentUrl(attachmentNo)" class="mx-1 px-1"style="max-width:100%;max-height:100%" alt="Attachment"> -->
+<!-- 					                	</div> -->
+<!-- 					                	<div v-else-if="checkFileType(attachmentNo) === 'video'"> -->
+<!-- 					                		<video :src="getAttachmentUrl(attachmentNo)" class="mx-1 px-1" style="max-width:100%;max-height:100%"  controls> -->
+<!-- 				                		 	</video> -->
+<!-- 					                	</div> -->
+<!-- 					                	<div v-else-if="checkFileType(attachmentNo) === 'unknown'"> -->
+<!-- 					                		<h1>언노운</h1> -->
+<!-- 					                	</div>					                     -->
+					                </div>
+					                <br>
+					            </div>
+					            <div v-else>
+					            </div>
+		                	</div>
+		                	
 		                	
 		                	<!-- 구분선 -->
 		                	<div class="row">
@@ -646,18 +773,18 @@
 	                <!-- 글 내용 -->
 	                
 	                <!-- 이미지 -->
-	                <div class="row my-2">
-	                	<div class="col-1 col-md-1 col-lg-1 align-items-center justify-content-center">
+<!-- 	                <div class="row my-2"> -->
+<!-- 	                	<div class="col-1 col-md-1 col-lg-1 align-items-center justify-content-center"> -->
 			               
-			            </div>
-			            <div class="col-10 col-md-10 col-lg-10 align-items-center">							
-		                	<div class="row">
+<!-- 			            </div> -->
+<!-- 			            <div class="col-10 col-md-10 col-lg-10 align-items-center">							 -->
+<!-- 		                	<div class="row"> -->
 
-		                	</div>		                		   
-			            </div>
-						<div class="col-1 col-md-1 col-lg-1 d-flex align-items-center justify-content-center"> 
-			            </div>       
-	                </div>
+<!-- 		                	</div>		                		    -->
+<!-- 			            </div> -->
+<!-- 						<div class="col-1 col-md-1 col-lg-1 d-flex align-items-center justify-content-center">  -->
+<!-- 			            </div>        -->
+<!-- 	                </div> -->
 	                <!-- 글 내용 -->
 
                 </div>
@@ -665,8 +792,11 @@
                 
        	 </div>
        	 <!--------------- 게시물들 반복구간 ------------->
-
 	</div>
+	
+
+	
+	
 
     <!-- Vue.createApp구간 -->
     <script>
@@ -712,6 +842,12 @@
                 	
                 	// 세션 맴버아이디
                 	memberId:null,
+                	
+                	// 모달 이미지 URL
+                	modalImageUrl:null,
+                	
+                	modalImageUrlList:[],
+                	
                 };
             },
             computed:{  
@@ -750,25 +886,31 @@
                 	}
 			    },
 			    
-            	// 사진 관련 
-                getAttachmentUrl(attachmentNo) {
+				 // 이미지, 비디오 관련 
+			    setModalImageUrl(attachmentNo){
+			    	this.modalImageUrl = this.getAttachmentUrl(attachmentNo)
+			    },
+                getAttachmentUrl(attachmentNo) {		
             		return "http://localhost:8080/rest/attachment/download/"+attachmentNo;
                 },
                 async checkFileType(attachmentNo) {
                     try {
-                      const response = await axios.head('http://localhost:8080/rest/attachment/download/post/' + attachmentNo);
-                      const contentType = response.headers['content-type'];
-                      console.log(contentType);
-                      if( contentType.includes('image')){
-                    	  return 'image';
-                      }
-                      else if(contentType.includes('video')){
-                    	  return 'video';
-                      }
-                      return 'unknown';
+                        const response = await axios.head('http://localhost:8080/rest/attachment/download/post/' + attachmentNo);
+                        const contentType = response.headers['content-type'];
+                        if (contentType.includes('image')) {
+                            return 'image';
+                        } else if (contentType.includes('video')) {
+                            return 'video';
+                        }
+                        return;
                     } catch (error) {
-                      console.error(error);
+                        console.error(error);
+                        // 오류 처리
                     }
+                },
+                setModalImageUrlList(attachmentList)
+                {
+                	this.modalImageUrlList = attachmentList;
                 },
                 
              	// 좋아요 관련 비동기 처리-----------------------------------
@@ -1032,7 +1174,9 @@
         }).mount("#app");
     </script>
     
-    <!-- 게시글 작성 코드 async-post.js -->
+    <!-- 이미지 스와이핑 창 -->
+    <script src="${pageContext.request.contextPath}/static/js/swiping-image.js"></script>
+    <!-- 게시글 작성 ajax -->
 	<script src="${pageContext.request.contextPath}/static/js/async-post.js"></script>
 	 <!-- 카카오 API구현 JS -->
 	<script src="${pageContext.request.contextPath}/static/js/post-map.js"></script>
