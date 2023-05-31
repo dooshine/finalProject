@@ -49,10 +49,6 @@ public class ChatServiceImpl implements ChatService {
 	private ChatRoomService chatRoomService;
 	@Autowired
 	private ChatRoomRepo chatRoomRepo;
-	@Autowired
-	private NotiRepo notiRepo;
-	@Autowired
-	private ChatNotiRepo chatNotiRepo;
 	
 	// 저장소
 	private Map<Integer, ChatRoomVO> chatRooms = Collections.synchronizedMap(new HashMap<>());
@@ -210,6 +206,13 @@ public class ChatServiceImpl implements ChatService {
 		chatRoom.broadcast(jsonMessage);
 	}
 	
+	// 방 초대 알림
+	public void broadcastNewRoom(int chatRoomNo, TextMessage jsonMessage) throws IOException {
+		if(!roomExist(chatRoomNo)) return;
+		ChatRoomVO chatRoom = chatRooms.get(chatRoomNo);
+		chatRoom.broadcast(jsonMessage);
+	}
+	
 	// 메세지 삭제
 	public void deleteMessage(long chatMessageNo) {
 		chatMessageRepo.deleteMessage(chatMessageNo);
@@ -311,6 +314,12 @@ public class ChatServiceImpl implements ChatService {
 			TextMessage jsonMessage = new TextMessage(json);
 			this.broadcastDelete(chatRoomNo, jsonMessage);
 		}
+		// 입장인 경우
+		else if(receiveVO.getType() == WebSocketConstant.JOIN) {
+			int chatRoomNo = receiveVO.getChatRoomNo();
+			ChatRoomVO chatRoom = chatRooms.get(chatRoomNo);
+			chatRoom.enter(member);
+		}
 		// 채팅방 나가기, 초대인 경우
 		else if(receiveVO.getType() == WebSocketConstant.LEAVE || receiveVO.getType() == WebSocketConstant.INVITE || receiveVO.getType() == WebSocketConstant.DATE) {
 			int chatRoomNo = receiveVO.getChatRoomNo();
@@ -343,6 +352,7 @@ public class ChatServiceImpl implements ChatService {
 			chatRooms.put(chatRoomNo, new ChatRoomVO());
 			ChatRoomVO chatRoom = chatRooms.get(chatRoomNo);
 			chatRoom.enter(member);
+			this.broadcastNewRoom(chatRoomNo, message);
 			//log.debug("chatRooms after create: " + chatRooms);
 		}
 		// 새 메세지 알림인 경우

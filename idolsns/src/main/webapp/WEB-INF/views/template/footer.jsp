@@ -95,6 +95,7 @@
 					chatRoomModal: false,
 					chatMenuModal: false,
 					inviteMemberModal: false,
+					memberListModal: false,
 					
 					// main에서 가져옴
 					chatRoom: {
@@ -106,7 +107,11 @@
 					},
 					chatRoomList: [],
 					followList: [],
+					followProfileList: [],
 					selectedMemberList: [],
+					selectedMemberIdList: [],
+					chatRoomIdList: [],
+					chatRoomProfileList: [],
 					
 					// chatRoomNo에서 가져옴
 					text: "",
@@ -173,6 +178,7 @@
 				},
 				messageHandler(e) {
 					const parsedData = JSON.parse(e.data);
+					//console.log(parsedData);
 					// 타입이 3인(삭제인) 메세지는 리스트에 추가하지 않음
 					if(parsedData.type == 3) {
 						this.messageList.splice(0);
@@ -190,7 +196,10 @@
 						this.chatRoomList.splice(0);
 						this.loadRoomList(); return;
 					}
-					this.messageList.push(parsedData);
+					// 현재 방에 해당하는 메세지만 불러오기
+					if(parsedData.chatRoomNo === this.chatRoomNo) {						
+						this.messageList.push(parsedData);
+					}
 					// 사용자가 페이지를 보고있는 경우 메세지 읽음 처리
 					if(this.isVisible && this.isFocused && parsedData.memberId != this.memberId &&
 							this.chatRoomNo == parsedData.chatRoomNo && this.chatRoomModal === true) {
@@ -198,7 +207,9 @@
 					}
 					this.loadRoomList();
 					this.loadChatNoti();
-					this.scrollBottom();
+					if(parsedData.type === 1 || parsedData.type === 4) {						
+						this.scrollBottom();
+					}
 				},
 				// 참여중인 방 정보 가져오기
 				loadJoinRooms() {
@@ -319,6 +330,7 @@
 					this.chatMemberList.splice(0);
 					this.messageList.splice(0);
 					this.chatJoin = "";
+					this.memberListModal = false;
 					this.chatMenuModal = false;
 					this.chatRoomModal = false;
 				},
@@ -330,6 +342,16 @@
 				// 채팅방 메뉴 모달 닫기
 				hideChatMenuModal() {
 					this.chatMenuModal = false;
+				},
+				// 단체채팅방 참여자 모달 열기
+				showMemberListModal() {
+					if(this.chatRoomModal == false) return;
+					this.hideChatMenuModal();
+					this.memberListModal = true;
+				},
+				// 단체채팅방 참여자 모달 닫기
+				hideMemberListModal() {
+					this.memberListModal = false;
 				},
 				// 초대 모달 열기
 				showInviteMemberModal() {
@@ -344,11 +366,36 @@
 				// 로그인한 회원이 속해있는 채팅방 목록
 				async loadRoomList() {
 					const memberId = this.memberId;
-					const url = "${pageContext.request.contextPath}/chat/chatRoom/" + memberId;
-					const resp = await axios.get(url);
-					this.chatRoomList.splice(0);
-					this.chatRoomList.push(...resp.data);
-					this.loadChatRoomNoti();
+					if(memberId.length > 0) {
+						const url = "${pageContext.request.contextPath}/chat/chatRoom/" + memberId;
+						const resp = await axios.get(url);
+						this.chatRoomList.splice(0);
+						this.chatRoomList.push(...resp.data);
+						this.loadChatRoomNoti();
+						
+						console.log("resp.data.length: " + resp.data.length);
+						// 갠톡인 경우 상대방 아이디 따로 빼두기
+						for (let i = 0; i < resp.data.length; i++) {
+							if (resp.data[i].chatRoomType === 'P') {
+							    if (resp.data[i].chatRoomName1 !== this.memberId && !this.chatRoomIdList.includes(resp.data[i].chatRoomName1)) {
+							      	this.chatRoomIdList.push(resp.data[i].chatRoomName1);
+							    }
+							    if (resp.data[i].chatRoomName2 !== this.memberId && !this.chatRoomIdList.includes(resp.data[i].chatRoomName2)) {
+							      this.chatRoomIdList.push(resp.data[i].chatRoomName2);
+							    }
+							}
+						}
+						const url2 = "${pageContext.request.contextPath}/rest/member/getMemberProfile";
+						const resp2 = await axios.get(url2, {
+							params: {
+								memberIdList: this.chatRoomIdList
+							},
+							paramsSerializer: params => {
+								return new URLSearchParams(params).toString();
+							}
+						})
+						this.chatRoomProfileList = resp2.data;
+					}
 				},
 				// 팔로우 목록 불러오기
 				async loadFollowList() {
@@ -357,6 +404,16 @@
 					//console.log("data: " + resp.data);
 					this.followList.push(...resp.data);
 					//console.log("followList: " + this.followList);
+					const url2 = "${pageContext.request.contextPath}/rest/member/getMemberProfile";
+					const resp2 = await axios.get(url2, {
+						params: {
+							memberIdList: this.followList
+						},
+						paramsSerializer: params => {
+							return new URLSearchParams(params).toString();
+						}
+					})
+					this.followProfileList = resp2.data;
 				},
 				// 채팅방 만들기
 				createChatRoom() {
@@ -366,11 +423,15 @@
 					else {
 						this.chatRoom.chatRoomType = 'P';
 					}
+					for(let i=0; i<this.selectedMemberList.length; i++) {
+						this.selectedMemberIdList[i] = this.selectedMemberList[i].memberId;
+					}
+					console.log("selectedMemberIdList: " + this.selectedMemberIdList);
 					const data = {
 							type: 11,
 							memberId: this.memberId,
 							chatRoomDto: this.chatRoom,
-							memberList: this.selectedMemberList
+							memberList: this.selectedMemberIdList
 					}
 					const app = this;
 					this.socket.onmessage = (e) => {
@@ -417,7 +478,32 @@
 					if(member) {						
 						return {
 							memberNick: member.memberNick,
-							memberId: member.memberId
+							memberId: member.memberId,
+							profileSrc: member.profileSrc
+						}
+					}
+					else return null;
+				},
+				findMemberByIdInMain(index) {
+					//const findId = this.chatRoomList[index].chatRoomName1;
+					let findId;
+					if(this.chatRoomList[index].chatRoomType == 'P') {
+						if(this.chatRoomList[index].chatRoomName1 != this.memberId) {
+							findId = this.chatRoomList[index].chatRoomName1;
+						}
+						else if(this.chatRoomList[index].chatRoomName2 != this.memberId) {
+							findId = this.chatRoomList[index].chatRoomName2;
+						}
+					}
+					//console.log("findId: " + findId);
+					const member = this.chatRoomProfileList.find(function(member) {
+						return member.memberId === findId;
+					})
+					if(member) {
+						return {
+							memberNick: member.memberNick,
+							memberId: member.memberId,
+							profileSrc: member.profileSrc
 						}
 					}
 					else return null;
@@ -430,31 +516,10 @@
 					const resp = await axios.get(url);
 					for(let i=0; i<resp.data.length; i++) {
 						if(resp.data[i].chatMessageTime >= this.chatJoin)
+							console.log(resp.data[i].chatRoomNo)
 							this.messageList.push(resp.data[i]);
 					}
 					this.scrollBottom();
-				},
-				// 메세지 보내기
-				sendMessage() {
-					if(this.textCount < 1) return;
-					if(this.textCount > 300) return;
-					this.firstMsg();
-					const data = {
-							type: 1,
-							chatRoomNo: this.chatRoomNo,
-							chatMessageContent: this.text
-					};
-					this.socket.send(JSON.stringify(data));
-					this.clear();
-					/*const noti = {
-							type: 12,
-							memberId: this.memberId,
-							chatRoomNo: this.chatRoomNo,
-							receiverList: this.chatMemberList
-					};
-					this.socket.send(JSON.stringify(noti));
-					this.scrollBottom();*/
-					this.loadRoomList();
 				},
 				// 보내는 메세지가 오늘의 첫 메세지인지 확인
 				firstMsg() {
@@ -479,32 +544,38 @@
 						this.socket.send(JSON.stringify(data));
 					}
 				},
-				// 사진 보내기
+				// 메세지 보내기(실시간 알림 전송 포함)
+				sendMessage() {
+					if(this.textCount < 1) return;
+					if(this.textCount > 300) return;
+					this.firstMsg();
+					const data = {
+						type: 1,
+						chatRoomNo: this.chatRoomNo,
+						chatMessageContent: this.text
+					};
+					this.socket.send(JSON.stringify(data));
+					this.clear();
+					this.loadRoomList();
+				},
+				// 사진 보내기(실시간 알림 전송 포함)
 				async sendPic() {
 					const fileInput = document.querySelector('.picInput');
 					const file = fileInput.files[0];
+					console.log("전송")
 					const formData = new FormData();
 					formData.append("attach", file);
 					const url = "${pageContext.request.contextPath}/rest/attachment/upload";
 					const resp = await axios.post(url, formData);
 					if(resp.data) {
 						const data = {
-								type: 4, 
-								chatRoomNo: this.chatRoomNo,
-								attachmentNo: resp.data.attachmentNo,
-								chatMessageContent: "사진 " + resp.data.attachmentNo
+							type: 4,
+							chatRoomNo: this.chatRoomNo,
+							attachmentNo: resp.data.attachmentNo,
+							chatMessageContent: "사진 " + resp.data.attachmentNo
 						}
 						this.socket.send(JSON.stringify(data));
-						const noti = {
-								type: 12,
-								memberId: this.memberId,
-								chatRoomNo: this.chatRoomNo,
-								receiverList: this.chatMemberList
-						};
-						this.socket.send(JSON.stringify(noti));
-						/*this.clear();*/
-						/*fileInput = [];*/
-						this.scrollBottom();
+						this.loadRoomList();
 					}
 				},
 				// 시간 포멧 설정
@@ -515,7 +586,7 @@
 					return moment(chatMessageTime).format("YYYY년 M월 D일 dddd");
 				},
 				timeFormatDetailed2(chatRoomLast) {
-					return moment(chatRoomLast).format("YYYY년 M월 D일 dddd");
+					return moment(chatRoomLast).format("YYYY년 M월 D일");
 				},
 				// 메세지 삭제버튼 보이기
 				showDeleteButton(index) {
@@ -582,7 +653,8 @@
 				},
 				// 채팅방 이름 변경
 				async saveRoomName() {
-					if(this.roomInfo.chatRoomName1.length > 10) return;
+					if(this.roomInfo.chatRoomName1.length < 1) return;
+					if(this.roomInfo.chatRoomName1.length > 20) return;
 					const chatRoomNo = this.chatRoomNo;
 					const url = "${pageContext.request.contextPath}/chat/chatRoom/changeName";
 					const data = this.roomInfo;
@@ -703,6 +775,7 @@
 					handler: function(newValue) {
 						if(newValue && this.isFocused) {
 							this.readMessage();
+							this.loadRoomList();
 						}
 					},
 					immediate: true
@@ -711,6 +784,7 @@
 					handler: function(newValue) {
 						if(this.isVisible && newValue) {
 							this.readMessage();
+							this.loadRoomList();
 						}
 					},
 					immediate: true
