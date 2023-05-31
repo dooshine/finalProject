@@ -102,7 +102,8 @@
 						</div>
 						<div class="modal-body text-center">
 							<img :src="memberProfileImageObj !== ''  && memberProfileImageObj.attachmentNo !== undefined ? '/download/?attachmentNo='+memberProfileImageObj.attachmentNo :  ' /static/image/profileDummy.png' "
-								class="profile-image">
+								class="profile-image" @click="openFileInput">
+							<input type="file" ref="fileInput" style="display: none;"@change="handleFileUpload()">
 							<h3>
 					            <span v-if="!editingNickname">{{ memberNick }}</span>
 					            <input v-else type="text" v-model="editedNickname" class="form-control" placeholder="새로운 닉네임"
@@ -211,11 +212,18 @@
 						FollowerMemberList:[],
 						FollowPageList:[],
 						page : 1,
+						file : null,
+						attachmentList:[],
+						previewURLList:[], 
+						artistViewList:[],
 						
 						targetMemberFollowObj: {},
 					};
 				},		
 				methods:{
+					openFileInput() {
+					      this.$refs.fileInput.click();
+					    },
 					async profile() {
 						const response = await axios.get("/member/profile");
 						const {memberId, memberNick} = response.data;
@@ -341,21 +349,53 @@
 						return;
 					},
 					
-					
-					
-					// 로그인 회원 팔로우 정보 로드
-					async loadMemberFollowInfo(){
-						// 로그인X → 실행 X
-						if(memberId==="") return;
-						// url
-						const url = "http://localhost:8080/rest/follow/memberFollowProfileInfo/"
-						// 팔로우 목록 load
-						const resp = await axios.get(url, {params:{memberId: this.memberId}});
+					// 파일 업로드 시 프로필 사진 변경
+		            handleFileUpload(event) {
+		                // 업로드 파일
+		                const file = event.target.files[0];
+		                // 첨부사진 임시보관
+		                this.attachmentList[index] = file;
+		                // 사진 미리보기 구현
+		                if (file) {
+		                    this.previewURLList[index] = URL.createObjectURL(file);
+		                }
+		            },
 
-						// 로그인 팔로우 정보 로드
-						this.targetMemberFollowObj = resp.data;
-						console.table(this.targetMemberFollowObj);
-					},
+		            // 대표페이지 프로필 사진 설정
+		            async uploadFile(index) {
+		                // URL
+		                const url = "http://localhost:8080/rest/member/memberProfile";
+
+		                // 폼데이터 생성
+		                const formData = new FormData();
+		                formData.append('attachment', this.attachmentList[index]);
+		                formData.append('memberId', this.artistViewList[index].artistNo);
+
+		                // 대표페이지 프로필사진 설정
+		                const resp = await axios.post(url, formData);
+
+		                // 새로고침
+		                this.loadArtistViewList();
+
+		                alert("대표페이지 프로필사진 설정완료!");
+		            },
+
+
+
+		            // 로그인 회원 팔로우 정보 로드
+		            async loadMemberFollowInfo() {
+		                // 로그인X → 실행 X
+		                if (memberId === "") return;
+		                // url
+		                const url = "http://localhost:8080/rest/follow/memberFollowProfileInfo/"
+		                // 팔로우 목록 load
+		                const resp = await axios.get(url, { params: { memberId: this.memberId } });
+
+		                // 로그인 팔로우 정보 로드
+		                this.targetMemberFollowObj = resp.data;
+		                console.table(this.targetMemberFollowObj);
+		            },
+				
 
 				},
 				computed:{
