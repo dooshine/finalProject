@@ -1,15 +1,21 @@
 package com.kh.idolsns.restcontroller;
 
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.kh.idolsns.dto.MemberDto;
+import com.kh.idolsns.dto.MemberProfileDto;
+import com.kh.idolsns.dto.MemberSimpleProfileDto;
 import com.kh.idolsns.repo.MemberRepo;
+import com.kh.idolsns.repo.MemberSimpleProfileRepo;
 
 @CrossOrigin
 @RestController
@@ -18,6 +24,8 @@ public class MemberRestController {
 
 	@Autowired 
 	private MemberRepo memberRepo;
+	@Autowired
+	private MemberSimpleProfileRepo memberSimpleProfileRepo;
 	
 	 @GetMapping("/{memberId}")
 	 public MemberDto getMember(@PathVariable String memberId) {
@@ -44,6 +52,14 @@ public class MemberRestController {
 	@GetMapping("memberEmail/{memberEmail}")
 	public String memberEmail(@PathVariable String memberEmail) {
 		return memberRepo.joinEmail(memberEmail) == null? "Y":"N";
+	}
+
+
+
+	// 회원 아이디 목록 받아서 회원프로필정보 반환
+	@GetMapping("/getMemberProfile")
+	public List<MemberSimpleProfileDto> getMemberProfile(@RequestParam List<String> memberIdList){
+		return memberSimpleProfileRepo.profile(memberIdList);
 	}
 
 }

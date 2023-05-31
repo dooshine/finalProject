@@ -8,6 +8,14 @@
 
 <!-- mapper -->
 <mapper namespace="artist">
+    <!-- 대표페이지 시퀀스 생성 -->
+    <select id="sequence" resultType="Integer">
+        select artist_seq.nextval from dual
+    </select>
+    <!-- 대표페이지 생성 -->
+    <insert id="insertArtist">
+        insert into artist (artist_no, artist_name, artist_eng_name, artist_eng_name_lower) values (#{artistNo}, #{artistName}, #{artistEngName}, #{artistEngNameLower})
+    </insert>
     <!-- 대표페이지 정보 조회(대표페이지 영어이름) -->
     <select id="selectArtistViewByEngName" resultType="ArtistViewDto">
         select * from artist_view where artist_eng_name_lower = #{artistEngNameLower}

@@ -14,7 +14,7 @@
     </div>
     <div class="row mt-3">
         <div class="col-3">
-            <img :src="newArtistObj.previewURL" style="height: 100%; width: 100%;">
+            <img :src="newArtistObj.previewURL" style="width: 100%; ">
         </div>
         <div class="col-9 container-fluid">
             <div class="row">
@@ -312,9 +312,28 @@
         fullName(name, engName){
           return name + "(" + engName + ")";
         },
+
+
+
+        // 테스트
+        async test(){
+            const url = "http://localhost:8080/rest/member/getMemberProfile";
+            
+            const resp = await axios.get(url, {
+                params: {
+                    memberIdList:["testuser1", "testuser2", "testuser3"]
+                },
+                paramsSerializer: params => {
+		            return new URLSearchParams(params).toString();
+                }
+            })
+
+            console.log(resp.data);
+        }
       },
       created(){
         this.loadArtistViewList();
+        this.test();
       },
     }).mount('#app')
 </script>

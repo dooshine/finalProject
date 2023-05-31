@@ -17,7 +17,7 @@ import com.kh.idolsns.dto.ChatJoinDto;
 import com.kh.idolsns.dto.ChatMessageDto;
 import com.kh.idolsns.dto.ChatNotiDto;
 import com.kh.idolsns.dto.ChatReadDto;
-import com.kh.idolsns.dto.MemberSimpleProfileTempDto;
+import com.kh.idolsns.dto.MemberSimpleProfileDto;
 import com.kh.idolsns.dto.NotiDto;
 import com.kh.idolsns.repo.AttachmentRepo;
 import com.kh.idolsns.repo.ChatJoinRepo;

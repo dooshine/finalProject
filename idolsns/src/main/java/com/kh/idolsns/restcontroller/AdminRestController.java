@@ -10,6 +10,7 @@ import javax.annotation.PostConstruct;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -35,6 +36,7 @@ import com.kh.idolsns.vo.AdminMemberSearchVO;
 import com.kh.idolsns.vo.TagCntSearchVO;
 
 // 관리자 Rest Controller
+@CrossOrigin
 @RestController
 @RequestMapping("/rest/admin/")
 public class AdminRestController {
