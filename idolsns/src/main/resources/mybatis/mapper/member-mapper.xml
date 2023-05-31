@@ -19,7 +19,7 @@
 	</select>
 
 	<!-- 관리자 회원 목록 조회 -->
-	<select id="selectList" resultType="MemberDto">
+	<select id="selectList" resultType="MemberProfileFollowDto">
 		<bind name="memberIdExist" value="memberId != null and !memberId.equals('')"/>
 		<bind name="memberNickExist" value="memberNick != null and !memberNick.equals('')"/>
 		<bind name="minPointExist" value="minPoint != null"/>
@@ -32,7 +32,11 @@
 		<bind name="searchLoginDaysExist" value="searchLoginDays != null"/>
 		<bind name="orderListExist" value="orderList != null and orderList.size() > 0"/>
 
-		select * from member
+		select * from member 
+			left join member_profile_image 
+			on member.member_id = member_profile_image.member_id
+			left join member_follow_cnt
+			on member.member_id = member_follow_cnt.member_id
 		<!-- 조건절 -->
 		<where>
 			<!-- 아이디 -->

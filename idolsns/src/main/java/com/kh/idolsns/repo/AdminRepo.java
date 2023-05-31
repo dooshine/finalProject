@@ -2,7 +2,7 @@ package com.kh.idolsns.repo;
 
 import java.util.List;
 
-import com.kh.idolsns.dto.MemberDto;
+import com.kh.idolsns.dto.MemberProfileFollowDto;
 import com.kh.idolsns.dto.TagCntDto;
 import com.kh.idolsns.dto.TagDto;
 import com.kh.idolsns.vo.AdminMemberSearchVO;
@@ -19,5 +19,5 @@ public interface AdminRepo {
     List<TagCntDto> adminTagCntSelectList(TagCntSearchVO tagCntSearchVO);
 
     // 모든 회원목록 조회
-	List<MemberDto> adminSelectMemberList(AdminMemberSearchVO adminMemberSearchVO);
+	List<MemberProfileFollowDto> adminSelectMemberList(AdminMemberSearchVO adminMemberSearchVO);
 }
