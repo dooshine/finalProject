@@ -42,6 +42,76 @@
         </div>
     </div>
 
+    <!-- # 회원리스트 검색도구 -->
+    <div class="row mt-3">
+        <div class="col back-gray border border-secondary-subtle p-4">
+            <!-- 검색타이틀 -->
+            <!-- <div class="row">
+                <div class="col">
+                    <h3>검색설정</h3>
+                </div>
+            </div> -->
+            <!-- 검색옵션 -->
+            <div class="row">
+                <div class="col">
+                    <label>
+                        아티스트번호
+                        <input class="ms-3" type="text">
+                        <%-- <input class="ms-3" type="text" v-model="memberSearchVO.memberId"> --%>
+                    </label>
+                </div>
+                <div class="col">
+                    <label>
+                        아티스트이름
+                        <%-- <input class="ms-3" type="text" v-model="memberSearchVO.memberNick"> --%>
+                    </label>
+                </div>
+                <div class="col">
+                    프로필사진 설정 여부
+                    <label class="ms-3">
+                        <%-- <input type="checkbox" v-model="profileExist"> --%>
+                        설정
+                    </label>
+                    <label class="ms-3">
+                        <%-- <input type="checkbox" v-model="noProfile"> --%>
+                        미설정
+                    </label>
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col-8">
+                    <%-- <label>
+                        1차 정렬
+                        <select v-model="memberSearchVO.orderList[0]">
+                            <option value="">선택하세요</option>
+                            <option value="memberId">아이디순</option>
+                            <option value="memberJoin">최근가입순</option>
+                            <option value="memberLogin">최근로그인순</option>
+                            <option value="memberPoint">포인트순</option>
+                        </select>
+                    </label>
+                    <label class="ms-3">
+                        2차 정렬
+                        <select v-model="memberSearchVO.orderList[1]">
+                            <option value="">선택하세요</option>
+                            <option value="memberId">아이디순</option>
+                            <option value="memberJoin">최근가입순</option>
+                            <option value="memberLogin">최근로그인순</option>
+                            <option value="memberPoint">포인트순</option>
+                        </select>
+                    </label> --%>
+                </div>
+            </div>
+            <!-- 검색버튼 -->
+            <div class="row mt-3 text-end">
+                <div class="col">
+                    <%-- <button class="btn btn-success" type="button" @click="searchMember">검색하기</button> --%>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
     <!-- 아티스트 목록 -->
     <div class="row mt-5">
         <div class="col">

@@ -10,9 +10,6 @@
     .total-cnt {
         color: forestgreen;
     }
-    .cursor-pointer:hover {
-    cursor: pointer;
-    }
 </style>
 
 <div class="container" id="app">
@@ -185,7 +182,7 @@
                             {{member.memberLogin === null ? "미접속": member.memberLogin }}
                         </td>
                         <!-- <td>{{member.memberLogin === null ? "미접속": member.memberLogin }}</td> -->
-                        <td><i class="fa-solid fa-user-xmark" data-bs-toggle="hasBlockmodal" data-bs-target="#repotModal1" @click="setReportDto(member.memberId)"></i>
+                        <td><i class="fa-solid fa-user-xmark" data-bs-toggle="modal" data-bs-target="#repotModal1" @click="setReportDto(member.memberId)"></i>
                     <button class="btn btn-primary" @click="followMember(member.memberId)">팔로우하기</button>
                         </td>
                     </tr>
@@ -193,22 +190,13 @@
             </table>
         </div>
     </div>
-
-
-
-
-    <!-- # 페이지네이션 -->
     <div class="row">
         <div class="col text-center">
             <nav aria-label="...">
                 <ul class="pagination justify-content-center">
-                  <li class="page-item" :class="{disabled: pageObj.isFirst}"><span class="page-link cursor-pointer" @click="showFirstPage">&laquo;</span></li>
-                  <li class="page-item" :class="{disabled: !pageObj.hasPrev}"><span class="page-link cursor-pointer">&lt;</span></li>
-                  <li class="page-item" v-for="i in pageObj.finishBlock-pageObj.startBlock+1" :key="i">
-                    <a href="#" class="page-link">{{pageObj.startBlock + i - 1}}</a>
+                  <li v-for="i in pageObj.end-pageObj.begin+1" :key="i">
+                    {{i}}
                   </li>
-                  <li class="page-item" :class="{disabled: !pageObj.hasNext}"><span class="page-link cursor-pointer" @click="showFirstPage">&gt;</span></li>
-                  <li class="page-item" :class="{disabled: pageObj.isLast}"><span class="page-link cursor-pointer">&raquo;</span></li>
                   <!-- <li class="page-item disabled">
                     <span class="page-link">Previous</span>
                   </li>
@@ -225,6 +213,74 @@
         </div>
     </div>
 
+    <style>
+        .modal-border {
+            border: 1px solid #dee2e6;
+        }
+        .no-border {
+            border: 1px solid transparent !important;
+        }
+    </style>
+    <!-- 신고 모달1 -->
+    <div class="modal" tabindex="-1" role="dialog" id="repotModal1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content position-relative">
+                <div class="modal-header">
+                    <h4 class="modal-title mx-auto" style="color: #ff4757;">신고</h4>
+                </div>
+                <!-- 닫기 버튼 -->
+                <div style="position: absolute !important; top: 1.5em !important; right: 1.5em !important;">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body p-0">
+                    <!-- 모달에서 표시할 실질적인 내용 구성 -->
+                    <div class="w-100 modal-border" style="border-bottom: 1px solid #dee2e6; padding: 0.5em;">
+                        <button class="modal-content align-items-center" style="border: 1px solid transparent; font-weight: bold;">({{reportDto.reportTargetPrimaryKey}}) 신고 사유를 선택해주세요</button>
+                    </div>
+                    
+                    <div v-for="(reportFor, i) in reportForList" :key="i" class="w-100 modal-border" style="border-bottom: 1px solid #dee2e6; padding: 0.5em;">
+                        <button v-text="reportFor" class="modal-content align-items-center" style="border: 1px solid transparent;" data-bs-target="#repotModal2" data-bs-toggle="modal" @click="setReportFor(reportFor)"></button>
+                    </div>
+                    
+                    <div class="w-100 modal-content" style="border: 1px solid transparent; padding: 0.5em;">
+                        <button class="modal-content align-items-center" style="border: 1px solid transparent;" data-bs-target="#repotModal2" data-bs-toggle="modal" @click="setReportFor('기타')">기타</button>
+                    </div>
+                </div>
+            </div>      
+        </div>
+    </div>
+    <!-- 신고 모달2 -->
+    <div class="modal" tabindex="-1" role="dialog" id="repotModal2">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content position-relative">
+                <div class="modal-header">
+                    <h4 class="modal-title mx-auto">선택한 항목</h4>
+                </div>
+
+                <!-- 이전버튼 -->
+                <div class="carousel carousel-dark" style="position: absolute !important; top: 1.5em !important; left: 1.5em !important; width: 1.5em; height: 1.5em;">
+                    <button class="carousel-control-prev w-100 h-100" type="button" data-bs-target="#repotModal1" data-bs-toggle="modal">
+                        <span class="carousel-control-prev-icon" aria-hidden="true" style="padding: 4px;"></span>
+                    </button>
+                </div>
+
+                <!-- 닫기 버튼 -->
+                <div style="position: absolute !important; top: 1.5em !important; right: 1.5em !important;">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+
+                <!-- 모달에서 표시할 실질적인 내용 구성 -->
+                <div class="modal-body align-items-center">
+                    <p style="text-align: center;">{{reportDto.reportFor}}</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger w-100" data-bs-dismiss="modal" @click="reportMember">신고하기</button>
+                </div>
+            </div>      
+        </div>
+    </div>
 </div>
 
 
@@ -249,6 +305,15 @@
             searchLoginDays: "",
             orderList: [],
           },
+          // 신고 리스트
+          reportForList: [ "부적절한 컨텐츠 게시", "선정/폭력성", "스팸/광고", "거짓 또는 사기", "테스트리폿사유" ],
+          // 회원신고 생성 시 신고 내용을 담은 object   
+          reportDto: {
+            memberId: memberId,
+            reportTargetType: "회원",
+            reportTargetPrimaryKey: "",
+            reportFor: "",
+          },
           // 회원리스트  
           memberList: [],
           // 선택된 회원 Object
@@ -260,61 +325,13 @@
           // 페이지 Obj
           pageObj: {
             page: 1,
-            size: 1,
-            blocksize: 10,
-            total: 0, 
-
-            
-            
-            
-            // 블럭에서 뜨는 첫번째 게시물
+            size: 10,
             get begin(){
                 return (this.page - 1) * this.size + 1;
-            },
-            // 블럭에서 뜨는 마지막 게시물
-            get end(){
-                return Math.min(this.page * this.size, this.total);
-            },
-
-            // 페이지 총 수
-            get totalPage(){
-                return Math.floor((this.total + this.size - 1) / this.size);
-            },
-            // 시작 블럭
-            get startBlock(){
-                return this.page - this.page % this.blocksize + 1;
-            },
-            // 마지막 블럭
-            get finishBlock(){
-                return Math.min(this.startBlock + this.blocksize - 1, this.totalPage);
-            },
-
-
-            // 처음블럭 판별
-            get isFirst(){
-                return this.page === 1;
-            },
-            // 마지막블럭 판별
-            get isLast(){
-                return this.page >= this.totalPage;
-            },
-            // 이전블럭 존재판별
-            get hasPrev(){
-                return this.startBlock > 1;
-            },
-            // 다음블럭 존재판별
-            get hasNext(){
-                return this.finishBlock < this.totalPage;
-            },
-            // 이전블럭 페이지번호
-            get getPrevPage(){
-                return this.startBlock - 1 ;
-            },
-            // 다음블럭 페이지번호
-            get getPrevPage(){
-                return this.finishBlock + 1 ;
-            },
-
+            }, 
+            // get end(){
+            //     return ;
+            // },
           },
         // end: this.page * this.size < memberList.length ? this.page * this.size : memberList.length,
 
@@ -335,11 +352,34 @@
   
       },
       methods: {
+        showModal(){
+            if(this.modal == null) return;
+            this.modal.show();
+        },
+        hideModal(){
+            if(this.modal == null) return;
+            this.modal.hide();
+        },
         // 멤버 불러오기
         async loadMemberList(){
             const url = "http://localhost:8080/rest/admin/member"
             const response = await axios.post(url, this.memberSearchVO);
             this.memberList = _.cloneDeep(response.data);
+        },
+        // 신고 대상 설정
+        setReportDto(target){
+            this.reportDto.reportTargetPrimaryKey = target;
+        },
+        // 신고 이유 설정
+        setReportFor(reportFor){
+            this.reportDto.reportFor = reportFor;
+            console.log(this.reportDto.reportFor);
+        },
+        // 회원신고 생성
+        async reportMember(target){
+            console.log(this.reportDto);
+            const url = "http://localhost:8080/rest/report/"
+            const resp = await axios.post(url, this.reportDto);
         },
         // 회원 비동기 검색
         async searchMember(){
@@ -359,6 +399,7 @@
             if(memberId==="") return;
             const url = "http://localhost:8080/rest/follow/member";
             const resp = await axios.get(url, { param: {memberId: memberId} });
+            console.log(resp.data);
         },
 
 
@@ -453,22 +494,6 @@
         fullName(name, engName){
           return name + "(" + engName + ")";
         },
-
-
-
-        // ################################# 페이지네이션 method #################################
-        showFirstPage(){
-            this.pageObj.page = 1;
-        },
-        showPrevBlock(){
-            this.pageObj.page = this.pageObj.getPrevPage;
-        },
-        showNextBlock(){
-            this.pageObj.page = this.pageObj.getNextPage;
-        },
-        showLastPage(){
-            this.pageObj.page = this.pageObj.totalPage;
-        },
       },
       watch: {
         "agree": function(){
@@ -502,17 +527,7 @@
         memberList: {
           deep: true,
           handler(newVal, oldVal) {
-            this.pageObj.total = this.memberList.length;
-            // this.pageObj.end = Math.min(this.pageObj.page * this.pageObj.size, this.memberList.length);
-            // this.pageObj.totalPage = 
-            // this.pageObj.end = this.pageObj.page * this.pageObj.size < this.memberList.length ? this.pageObj.page * this.pageObj.size : this.memberList.length;
-            console.log(this.pageObj);
-          }
-        },
-        pageObj: {
-          deep: true,
-          handler(newVal, oldVal) {
-            // this.pageObj.end = Math.min(this.pageObj.page * this.pageObj.size, this.memberList.length);
+            this.pageObj.end = Math.min(this.pageObj.page * this.pageObj.size, this.memberList.length);
             // this.pageObj.end = this.pageObj.page * this.pageObj.size < this.memberList.length ? this.pageObj.page * this.pageObj.size : this.memberList.length;
           }
         },
@@ -522,6 +537,7 @@
             this.loadMemberFollow();
       },
       mounted(){
+        // this.modal = new bootstrap.Modal(this.$refs.modal03);
       },
     }).mount('#app')
   </script>
