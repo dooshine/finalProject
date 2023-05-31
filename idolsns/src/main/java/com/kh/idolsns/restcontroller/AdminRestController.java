@@ -93,6 +93,8 @@ public class AdminRestController {
     @PostMapping("/member")
     public List<MemberProfileFollowDto> selectMemberList(@RequestBody AdminMemberSearchVO adminMemberSearchVO){
         return adminService.adminSelectMemberList(adminMemberSearchVO);
+        // System.out.println(adminMemberSearchVO.toString());
+        // return null;
     }
 
 
