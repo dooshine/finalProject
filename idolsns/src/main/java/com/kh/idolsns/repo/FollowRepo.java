@@ -15,4 +15,7 @@ public interface FollowRepo {
 
     // 팔로우 리스트 조회
     List<FollowDto> selectFollowList(FollowDto followDto);
+    
+    //팔로우, 팔로워, 페이지 리스트 조회
+//   MemberFollowInfoDto
 }
