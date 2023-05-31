@@ -47,7 +47,7 @@ public class ChatRestController {
 	@Autowired
 	private ChatReadRepo chatReadRepo;
 	@Autowired
-	private MemberSimpleProfileRepo profileRepo;
+	private MemberSimpleProfileRepo memberSimpleProfileRepo;
 	
 	// 채팅방 목록 불러오기
 	@GetMapping("/chatRoom/{memberId}")
@@ -131,7 +131,7 @@ public class ChatRestController {
 		for(int i=0; i<memberList.size(); i++) {
 			memberIdList.add(memberList.get(i).getMemberId());
 		}
-		return profileRepo.profile(memberIdList);
+		return memberSimpleProfileRepo.profile(memberIdList);
 	}
 	
 	// 메세지 읽음 처리

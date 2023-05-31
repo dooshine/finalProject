@@ -106,7 +106,11 @@
 					},
 					chatRoomList: [],
 					followList: [],
+					followProfileList: [],
 					selectedMemberList: [],
+					selectedMemberIdList: [],
+					chatRoomIdList: [],
+					chatRoomProfileList: [],
 					
 					// chatRoomNo에서 가져옴
 					text: "",
@@ -354,6 +358,29 @@
 						this.chatRoomList.splice(0);
 						this.chatRoomList.push(...resp.data);
 						this.loadChatRoomNoti();
+						
+						console.log("resp.data.length: " + resp.data.length);
+						// 갠톡인 경우 상대방 아이디 따로 빼두기
+						for (let i = 0; i < resp.data.length; i++) {
+							if (resp.data[i].chatRoomType === 'P') {
+							    if (resp.data[i].chatRoomName1 !== this.memberId && !this.chatRoomIdList.includes(resp.data[i].chatRoomName1)) {
+							      	this.chatRoomIdList.push(resp.data[i].chatRoomName1);
+							    }
+							    if (resp.data[i].chatRoomName2 !== this.memberId && !this.chatRoomIdList.includes(resp.data[i].chatRoomName2)) {
+							      this.chatRoomIdList.push(resp.data[i].chatRoomName2);
+							    }
+							}
+						}
+						const url2 = "${pageContext.request.contextPath}/rest/member/getMemberProfile";
+						const resp2 = await axios.get(url2, {
+							params: {
+								memberIdList: this.chatRoomIdList
+							},
+							paramsSerializer: params => {
+								return new URLSearchParams(params).toString();
+							}
+						})
+						this.chatRoomProfileList = resp2.data;
 					}
 				},
 				// 팔로우 목록 불러오기
@@ -363,6 +390,16 @@
 					//console.log("data: " + resp.data);
 					this.followList.push(...resp.data);
 					//console.log("followList: " + this.followList);
+					const url2 = "${pageContext.request.contextPath}/rest/member/getMemberProfile";
+					const resp2 = await axios.get(url2, {
+						params: {
+							memberIdList: this.followList
+						},
+						paramsSerializer: params => {
+							return new URLSearchParams(params).toString();
+						}
+					})
+					this.followProfileList = resp2.data;
 				},
 				// 채팅방 만들기
 				createChatRoom() {
@@ -372,11 +409,15 @@
 					else {
 						this.chatRoom.chatRoomType = 'P';
 					}
+					for(let i=0; i<this.selectedMemberList.length; i++) {
+						this.selectedMemberIdList[i] = this.selectedMemberList[i].memberId;
+					}
+					console.log("selectedMemberIdList: " + this.selectedMemberIdList);
 					const data = {
 							type: 11,
 							memberId: this.memberId,
 							chatRoomDto: this.chatRoom,
-							memberList: this.selectedMemberList
+							memberList: this.selectedMemberIdList
 					}
 					const app = this;
 					this.socket.onmessage = (e) => {
@@ -423,7 +464,32 @@
 					if(member) {						
 						return {
 							memberNick: member.memberNick,
-							memberId: member.memberId
+							memberId: member.memberId,
+							profileSrc: member.profileSrc
+						}
+					}
+					else return null;
+				},
+				findMemberByIdInMain(index) {
+					//const findId = this.chatRoomList[index].chatRoomName1;
+					let findId;
+					if(this.chatRoomList[index].chatRoomType == 'P') {
+						if(this.chatRoomList[index].chatRoomName1 != this.memberId) {
+							findId = this.chatRoomList[index].chatRoomName1;
+						}
+						else if(this.chatRoomList[index].chatRoomName2 != this.memberId) {
+							findId = this.chatRoomList[index].chatRoomName2;
+						}
+					}
+					//console.log("findId: " + findId);
+					const member = this.chatRoomProfileList.find(function(member) {
+						return member.memberId === findId;
+					})
+					if(member) {
+						return {
+							memberNick: member.memberNick,
+							memberId: member.memberId,
+							profileSrc: member.profileSrc
 						}
 					}
 					else return null;
@@ -470,9 +536,9 @@
 					if(this.textCount > 300) return;
 					this.firstMsg();
 					const data = {
-							type: 1,
-							chatRoomNo: this.chatRoomNo,
-							chatMessageContent: this.text
+						type: 1,
+						chatRoomNo: this.chatRoomNo,
+						chatMessageContent: this.text
 					};
 					this.socket.send(JSON.stringify(data));
 					this.clear();
@@ -482,16 +548,17 @@
 				async sendPic() {
 					const fileInput = document.querySelector('.picInput');
 					const file = fileInput.files[0];
+					console.log("전송")
 					const formData = new FormData();
 					formData.append("attach", file);
 					const url = "${pageContext.request.contextPath}/rest/attachment/upload";
 					const resp = await axios.post(url, formData);
 					if(resp.data) {
 						const data = {
-								type: 4, 
-								chatRoomNo: this.chatRoomNo,
-								attachmentNo: resp.data.attachmentNo,
-								chatMessageContent: "사진 " + resp.data.attachmentNo
+							type: 4,
+							chatRoomNo: this.chatRoomNo,
+							attachmentNo: resp.data.attachmentNo,
+							chatMessageContent: "사진 " + resp.data.attachmentNo
 						}
 						this.socket.send(JSON.stringify(data));
 						this.loadRoomList();
@@ -505,7 +572,7 @@
 					return moment(chatMessageTime).format("YYYY년 M월 D일 dddd");
 				},
 				timeFormatDetailed2(chatRoomLast) {
-					return moment(chatRoomLast).format("YYYY년 M월 D일 dddd");
+					return moment(chatRoomLast).format("YYYY년 M월 D일");
 				},
 				// 메세지 삭제버튼 보이기
 				showDeleteButton(index) {

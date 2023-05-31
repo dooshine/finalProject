@@ -280,6 +280,7 @@
 			margin-right:5px;
 			font-size: 0.9em;
 			max-width: 200px;
+			word-break: break-all;
 		}
 		
 		.myMessage > .messageBox  {
@@ -385,6 +386,10 @@
 			text-overflow: ellipsis;
 			word-break: break-all;
 		}
+		
+		.profileImg {
+			border-radius: 100px;
+		}
     </style>
 </head>
 
@@ -395,7 +400,7 @@
     	<!----------------------------------------------- 헤더 시작 ----------------------------------------------->
         <header>
         	<div id="header-area">
-				<nav class="navbar navbar-expand-md navbar-light bg-light">
+				<nav class="navbar navbar-expand-sm navbar-light bg-light">
 				  	<div class="container-fluid">
 				  		<div class="col-3">
 					    	<a class="navbar-brand" href="/">STARLINK</a>
@@ -437,17 +442,25 @@
 							<!-- 채팅방 이름(단톡일 때: 지정한 이름 표시) -->
 							<div v-if="chatRoomList[index].chatRoomType == 'G'">
 								<button @click="showChatRoomModal(index)" class="hide-style w-100 mb-3">
-									<div class="d-flex align-items-center mb-2">
-										<div class="text-start">
-											<h6>{{ chatRoomList[index].chatRoomName1 }}</h6>
+									<div class="d-flex align-items-center w-100">
+										<div class="col-3 d-flex justify-content-center align-items-center" 
+											style="height: 45px; width: 45px; background-color: #a294f9; border-radius: 100px; color: white; font-size: 1.3em;">
+											{{ chatRoomList[index].chatRoomName1[0] }}
 										</div>
-										<!-- 새 메세지 알림 표시 -->
-										<div v-if="chatRoomList[index].newChat === true" class="notiMarkChat ms-2" style="margin-top: 2px;"></div>
-									</div>
-									<div class="sysMsgContent d-flex justify-content-between">
-										<div>마지막 메세지</div>
-										<div>···</div>
-										<div>{{ timeFormatDetailed2(chatRoomList[index].chatRoomLast) }}</div>
+										<div class="col-9 ms-3">
+											<div class="d-flex align-items-center mb-2">
+												<div class="text-start">
+													<h6>{{ chatRoomList[index].chatRoomName1 }}</h6>
+												</div>
+												<!-- 새 메세지 알림 표시 -->
+												<div v-if="chatRoomList[index].newChat === true" class="notiMarkChat ms-2" style="margin-top: 2px;"></div>
+											</div>
+											<div class="sysMsgContent d-flex justify-content-between">
+												<div>마지막 메세지</div>
+												<div>·</div>
+												<div>{{ timeFormatDetailed2(chatRoomList[index].chatRoomLast) }}</div>
+											</div>
+										</div>
 									</div>
 								</button>
 							</div>
@@ -457,7 +470,7 @@
 											@click="showChatRoomModal(index)" class="hide-style w-100 mb-3">
 									<div class="d-flex align-items-center mb-2">
 										<div class="text-start">
-											<h6>{{ chatRoomList[index].chatRoomName1 }}</h6>
+											<h6>{{ findMemberByIdInMain(index).memberNick }}</h6>
 										</div>
 										<!-- 새 메세지 알림 표시 -->
 										<div v-if="chatRoomList[index].newChat === true" class="notiMarkChat ms-2" style="margin-top: 2px;"></div>
@@ -508,9 +521,21 @@
 							  	<label for="chatRoomNameInput">채팅방 이름</label>
 							</div>
 							<!-- 팔로우 목록 -->
-							<label class="d-flex justify-content-between" v-for="(follow, index) in followList">
-						    	{{ follow }}
-						    	<input type="checkbox" v-model="selectedMemberList" :value="follow">
+							<label v-for="(follow, index) in followProfileList" class="w-100 mb-3">
+								<div class="d-flex w-100">
+									<div class="d-flex align-items-center col-9">
+										<div class="me-3">
+											<img :src="follow.profileSrc" class="profileImg" style="height: 45px; width: 45px;">
+										</div>
+										<div>
+											<div style="font-size: 0.95em;">{{ follow.memberNick }}</div>
+											<div style="font-size: 0.9em; color: #7f7f7f;">@{{ follow.memberId }}</div>
+										</div>
+									</div>
+									<div class="col-3 d-flex justify-content-end">
+				    					<input type="checkbox" v-model="selectedMemberList" :value="follow">
+				    				</div>
+				    			</div>
 							</label>
 						</div>
 					</div>
@@ -576,9 +601,12 @@
 							<div v-if="message.chatMessageType === 1 || message.chatMessageType === 4">
 								<!-- 상대방이 보낸 메세지일 때 -->
 								<div v-if="message.memberId != memberId">
-									<span style="font-size: 0.9em;" v-if="!sameTime(index)">{{ message.memberId }}</span>
-<!-- 								<span style="font-size: 0.9em;" v-if="!sameTime(index)">{{ findMemberById(index).memberNick }}</span> -->
-									<div class="d-flex align-items-end">
+									<div class="d-flex align-items-center">
+										<img :src="findMemberById(index).profileSrc" v-if="!sameTime(index)" 
+											class="profileImg me-2" style="height: 30px; width: 30px;">
+										<span style="font-size: 0.8em;" v-if="!sameTime(index)" style="margin: 0;">{{ findMemberById(index).memberNick }}</span>
+									</div>
+									<div class="d-flex align-items-end" style="margin-left: 36.5px;">
 										<!-- 텍스트 메세지일 때 -->
 										<div v-if="message.attachmentNo === 0" class="messageBox">{{ message.chatMessageContent }}</div>
 										<!-- 이미지 메세지일 때 -->

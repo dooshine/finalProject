@@ -72,7 +72,7 @@
             
             const resp = await axios.get(url, {
                 params: {
-                    memberIdList:["testuser1", "testuser2", "testuser3"]
+                    memberIdList: this.memberIdList
                 },
                 paramsSerializer: params => {
 		            return new URLSearchParams(params).toString();
