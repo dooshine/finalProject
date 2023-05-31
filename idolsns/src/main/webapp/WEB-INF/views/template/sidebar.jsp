@@ -64,7 +64,6 @@
 
 			// 로그인 팔로우 정보 로드
 			this.memberFollowObj = resp.data;
-			console.table(this.memberFollowObj);
 		},
 
 		// 내 아이돌 

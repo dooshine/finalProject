@@ -17,14 +17,14 @@ import com.kh.idolsns.dto.ChatNotiDto;
 import com.kh.idolsns.dto.ChatReadDto;
 import com.kh.idolsns.dto.ChatRoomDto;
 import com.kh.idolsns.dto.MemberDto;
-import com.kh.idolsns.dto.MemberSimpleProfileTempDto;
+import com.kh.idolsns.dto.MemberSimpleProfileDto;
 import com.kh.idolsns.repo.ChatJoinRepo;
 import com.kh.idolsns.repo.ChatMessageRepo;
 import com.kh.idolsns.repo.ChatNotiRepo;
 import com.kh.idolsns.repo.ChatReadRepo;
 import com.kh.idolsns.repo.ChatRoomRepo;
 import com.kh.idolsns.repo.MemberRepo;
-import com.kh.idolsns.repo.MemberSimpleProfileTempRepo;
+import com.kh.idolsns.repo.MemberSimpleProfileRepo;
 import com.kh.idolsns.service.ChatRoomService;
 import com.kh.idolsns.vo.ChatMemberJoinVO;
 import com.kh.idolsns.vo.ChatMessageVO;
@@ -51,7 +51,7 @@ public class ChatRestController {
 	@Autowired
 	private ChatReadRepo chatReadRepo;
 	@Autowired
-	private MemberSimpleProfileTempRepo profileRepo;
+	private MemberSimpleProfileRepo profileRepo;
 	@Autowired
 	private ChatNotiRepo chatNotiRepo;
 	
@@ -131,7 +131,7 @@ public class ChatRestController {
 	
 	// 채팅방 참여자 목록 조회 - 수정
 	@GetMapping("/chatRoom/chatMember/{chatRoomNo}")
-	public List<MemberSimpleProfileTempDto> loadChatMember(@PathVariable int chatRoomNo) {
+	public List<MemberSimpleProfileDto> loadChatMember(@PathVariable int chatRoomNo) {
 		List<ChatJoinDto> memberList = chatJoinRepo.findMembersByRoomNo(chatRoomNo);
 		List<String> memberIdList = new ArrayList<>();
 		for(int i=0; i<memberList.size(); i++) {

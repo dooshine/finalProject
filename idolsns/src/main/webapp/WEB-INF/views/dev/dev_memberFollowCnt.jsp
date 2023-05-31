@@ -25,6 +25,9 @@
         <div class="col">
             <a href="/dev/memberFollowCnt">팔로우 수</a>
         </div>
+        <div class="col">
+            <a href="/dev/memberProfile">회원프로필</a>
+        </div>
     </div>
     <!-- # 팔로우 통계 예시 -->
     <!-- 모든회원 팔로우 통계 타이틀 -->
