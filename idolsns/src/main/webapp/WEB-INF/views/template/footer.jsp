@@ -95,6 +95,7 @@
 					chatRoomModal: false,
 					chatMenuModal: false,
 					inviteMemberModal: false,
+					memberListModal: false,
 					
 					// main에서 가져옴
 					chatRoom: {
@@ -206,7 +207,9 @@
 					}
 					this.loadRoomList();
 					this.loadChatNoti();
-					this.scrollBottom();
+					if(parsedData.type === 1 || parsedData.type === 4) {						
+						this.scrollBottom();
+					}
 				},
 				// 참여중인 방 정보 가져오기
 				loadJoinRooms() {
@@ -327,6 +330,7 @@
 					this.chatMemberList.splice(0);
 					this.messageList.splice(0);
 					this.chatJoin = "";
+					this.memberListModal = false;
 					this.chatMenuModal = false;
 					this.chatRoomModal = false;
 				},
@@ -338,6 +342,16 @@
 				// 채팅방 메뉴 모달 닫기
 				hideChatMenuModal() {
 					this.chatMenuModal = false;
+				},
+				// 단체채팅방 참여자 모달 열기
+				showMemberListModal() {
+					if(this.chatRoomModal == false) return;
+					this.hideChatMenuModal();
+					this.memberListModal = true;
+				},
+				// 단체채팅방 참여자 모달 닫기
+				hideMemberListModal() {
+					this.memberListModal = false;
 				},
 				// 초대 모달 열기
 				showInviteMemberModal() {
