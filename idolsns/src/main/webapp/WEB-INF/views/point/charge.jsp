@@ -50,7 +50,7 @@
 	    }
 	    
 	     .tab_list.active {
-	      color: #77E9CC;
+	      color: #6A53FB;
 	       font-weight:bold;
 	        
 	    }
@@ -69,7 +69,7 @@
 	        left: 0;
 	        width: 100%;
 	        height: 4px;
-	        background-color: #77E9CC;
+	        background-color: #6A53FB;
 	        
 	    }
 	    
@@ -110,7 +110,7 @@
 
         <div style="padding-left: 0.5em; padding-right: 0.5em;">
             <p class="container rounded p-3 border">내 포인트: 
-            <span class="amount" style="color:#77E9CC; font-weight:bold">{{ formattedAmount }}</span>원</p>
+            <span class="amount" style="color:#6A53FB; font-weight:bold">{{ formattedAmount }}</span>원</p>
         </div>
 
         <form id="chargeForm" method="post" style="padding-left: 0.7em; padding-right: 0.7em;">
