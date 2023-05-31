@@ -141,13 +141,7 @@
 					
 					// 새 메세지 알림 여부
 					newChatNoti: false,
-					chatRoomNoList: [],
-					
-					// 무한스크롤
-					currentScroll: "",
-					page: 0,
-					finish: false,
-					loading: false
+					chatRoomNoList: []
 				};
 			},
 			methods: {
@@ -436,28 +430,16 @@
 				},
 				// 메세지 불러오기
 				async loadMessage() {
-					if(this.loading == true) return;
-					if(this.finish == true) return;
-					this.loading = true;
-					//this.messageList.splice(0);
-					//const url = "${pageContext.request.contextPath}/chat/message/" + chatRoomNo + "/page" + this.page;
-					const url = "${pageContext.request.contextPath}/chat/message"
-					const data = {
-							chatRoomNo: this.chatRoomNo,
-							page: this.page+1
-					}
-					const resp = await axios.post(url, data);
+					const chatRoomNo = this.chatRoomNo;
+					this.messageList.splice(0);
+					const url = "${pageContext.request.contextPath}/chat/message/" + chatRoomNo;
+					const resp = await axios.get(url);
 					for(let i=0; i<resp.data.length; i++) {
 						if(resp.data[i].chatMessageTime >= this.chatJoin)
 							console.log(resp.data[i].chatRoomNo)
 							this.messageList.push(resp.data[i]);
 					}
-					this.page++;
-					this.loading = false;
 					this.scrollBottom();
-					if(resp.data.length < 10) {
-						this.finish = true;
-					}
 				},
 				// 보내는 메세지가 오늘의 첫 메세지인지 확인
 				firstMsg() {
@@ -696,23 +678,6 @@
 					//console.log("in focus");
 					this.isFocused = true;
 				});
-				// 브라우저 스크롤 테스트
-				/*window.addEventListener("scroll", function() {
-					console.log("브라우저 스크롤");
-				})*/
-			},
-			updated: function() {
-				const messageWrapper = this.$refs.messageWrapper;
-				if(messageWrapper) {
-					messageWrapper.addEventListener('scroll', _.throttle(() => {
-						console.log("모달 스크롤");
-						//const height = messageWrapper.clientHeight - messageWrapper.innerHeight;
-						const current = messageWrapper.scrollTop;
-						//console.log("height: " + height);
-						//console.log("current: " + current);
-						this.currentScroll = current;
-					}, 250));
-				}
 			},
 			watch: {
 				// 채팅방 모달 켜질 때 메세지 입력창으로 커서 이동되게
@@ -742,13 +707,6 @@
 						}
 					},
 					immediate: true
-				},
-				// 무한스크롤
-				currentScroll() {
-					if(this.currentScroll == 0) {
-						console.log("더주ㅓ");
-						this.loadMessage();
-					}
 				}
 			}
 		}).mount("#header-area");
