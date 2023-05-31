@@ -16,6 +16,12 @@
     <insert id="insertArtist">
         insert into artist (artist_no, artist_name, artist_eng_name, artist_eng_name_lower) values (#{artistNo}, #{artistName}, #{artistEngName}, #{artistEngNameLower})
     </insert>
+    <!-- 대표페이지 삭제 -->
+    <delete id="deleteArtistByArtistNo">
+        delete from artist where artist_no = #{artistNo}
+    </delete>
+
+
     <!-- 대표페이지 정보 조회(대표페이지 영어이름) -->
     <select id="selectArtistViewByEngName" resultType="ArtistViewDto">
         select * from artist_view where artist_eng_name_lower = #{artistEngNameLower}

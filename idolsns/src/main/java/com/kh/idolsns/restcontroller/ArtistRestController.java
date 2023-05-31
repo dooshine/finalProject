@@ -1,15 +1,17 @@
 package com.kh.idolsns.restcontroller;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,11 +20,11 @@ import org.springframework.web.multipart.MultipartFile;
 import com.kh.idolsns.dto.ArtistDto;
 import com.kh.idolsns.dto.ArtistProfileDto;
 import com.kh.idolsns.dto.ArtistViewDto;
-import com.kh.idolsns.dto.AttachmentDto;
 import com.kh.idolsns.repo.ArtistRepo;
 import com.kh.idolsns.repo.AttachmentRepo;
 import com.kh.idolsns.service.AttachmentService;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/rest/artist")
 public class ArtistRestController {
@@ -52,8 +54,6 @@ public class ArtistRestController {
     // 대표페이지 생성
     @PostMapping("/")
     public void createArtist(@RequestParam("attachment") MultipartFile attachment, @ModelAttribute ArtistDto artistDto) throws IllegalStateException, IOException{
-        System.out.println("대표페이지 생성까지 왔슈");
-        System.out.println("대표페이지 생성 로직 구성하슈");
         // 파일저장
         // attachment저장
         // artist 저장
@@ -79,11 +79,19 @@ public class ArtistRestController {
             // # 3. pageProfile 저장
             // 조회 후 insert | update
             if(!artistRepo.isArtistExistByArtistEngNameLower(artistDto.getArtistEngNameLower())){
-                sqlSession.insert("artist.insertArtistProfile", ArtistProfileDto.builder().artistNo(artistNo).attachmentNo(attachmentNo).build());
-            } else {
                 sqlSession.update("artist.updateArtistProfile", ArtistProfileDto.builder().artistNo(artistNo).attachmentNo(attachmentNo).build());
+            } else {
+                sqlSession.insert("artist.insertArtistProfile", ArtistProfileDto.builder().artistNo(artistNo).attachmentNo(attachmentNo).build());
             }
             
+        }
+    }
+
+    // 대표페이지 삭제
+    @DeleteMapping("/")
+    public void deleteArtist(@RequestBody List<Integer> artistNoList){
+        for(Integer artistNo : artistNoList){
+            artistRepo.deleteArtist(artistNo);
         }
     }
 
