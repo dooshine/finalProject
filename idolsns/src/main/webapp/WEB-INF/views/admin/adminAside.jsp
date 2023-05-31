@@ -23,16 +23,16 @@
         <a href="${pageContext.request.contextPath}/admin/member">
         	<i class="fa-solid fa-user">회원목록</i></a>
         <a href="${pageContext.request.contextPath}/admin/report">
-        	<i class="fa-solid fa-star">신고목록</i></a>
+        	<i class="fa-solid fa-list">신고목록</i></a>
         <a href="${pageContext.request.contextPath}/admin/sanction">
-        	<i class="fa-solid fa-sack-dollar">제재목록</i></a>
+        	<i class="fa-solid fa-list">제재목록</i></a>
         <a href="${pageContext.request.contextPath}/admin/tag">
-        	<i class="fa-sharp fa-solid fa-coins">태그 목록조회</i></a>
+        	<i class="fa-sharp fa-solid fa-tags">태그 목록조회</i></a>
         <a href="${pageContext.request.contextPath}/admin/tagCnt">
-        	<i class="fa-sharp fa-solid fa-coins">태그별 사용량 조회</i></a>
+        	<i class="fa-sharp fa-solid fa-tags">태그별 사용량 조회</i></a>
         <a href="${pageContext.request.contextPath}/admin/fixedTag">
-        	<i class="fa-sharp fa-solid fa-coins">고정태그</i></a>
+        	<i class="fa-sharp fa-solid fa-tags">고정태그</i></a>
 		<a href="${pageContext.request.contextPath}/admin/artist">
-			<i class="fa-sharp fa-solid fa-coins">아티스트 조회</i></a>
+			<i class="fa-sharp fa-solid fa-star">아티스트 조회</i></a>
   	</div>
   </aside>

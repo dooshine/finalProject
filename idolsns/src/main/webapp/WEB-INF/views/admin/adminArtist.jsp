@@ -13,9 +13,32 @@
         </div>
     </div>
     <div class="row mt-3">
-        <div class="col">
-            <input type="text" v-model="newArtistName">
-            <button class="btn btn-primary" @click="createArtist">아티스트 생성</button>
+        <div class="col-3">
+            <img :src="newArtistObj.previewURL" style="height: 100%; width: 100%;">
+        </div>
+        <div class="col-9 container-fluid">
+            <div class="row">
+                <div class="col-4"><label>새 아티스트 이름</label></div>
+                <div class="col-8"><input class="w-50" type="text" v-model="newArtistObj.artistName"></div>
+            </div>
+            <div class="row mt-3">
+                <div class="col-4"><label>새 아티스트 영어이름</label></div>
+                <div class="col-8"><input class="w-50" type="text" v-model="newArtistObj.artistEngName"></div>
+            </div>
+            <div class="row mt-3">
+                <div class="col-4"><label>새 아티스트 영어이름(소문자, 띄어쓰기 X)</label></div>
+                <div class="col-8"><input class="w-50" type="text" v-model="newArtistObj.artistEngNameLower"></div>
+            </div>
+            <div class="row">
+                <div class="offset-10 col-2">
+                    <button class="btn btn-primary ms-auto" @click="createArtist">아티스트 생성</button>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <input type="file" @change="handleNewArtistFileUpload">
+                </div>
+            </div>
         </div>
     </div>
 
@@ -81,8 +104,14 @@
           selectedArtistObj: {},
           // 선택된 태그 List
           selectedArtistList: [],
-          // 새로운 아티스트 이름
-          newArtistName: "",
+          // 새로운 아티스트 Obj
+          newArtistObj: {
+            artistName: "",
+            artistEngName: "",
+            artistEngNameLower: "",
+            attachment: null,
+            previewURL: "/static/image/profileDummy.png",
+          },
 
           artistSearchObj : {
             name: "",
@@ -129,16 +158,76 @@
             alert("대표페이지 프로필사진 설정완료!");
         },
 
+        
+        // # 아티스트 생성
+        
+        // 새 아티스트 사진 미리보기
+        handleNewArtistFileUpload(){
+            // 업로드 파일
+            const file = event.target.files[0];
 
-        // 아티스트 생성
+            // 미선택 처리
+            if(file === undefined){
+                this.newArtistObj.attachment = null;
+                this.newArtistObj.previewURL = "/static/image/profileDummy.png";
+                return;
+            }
+
+            this.newArtistObj.attachment = file;
+            this.newArtistObj.previewURL = URL.createObjectURL(file);
+        },
+
+
         async createArtist(){
+            // 1. 유효형 검사
+            const artistNameRegex = /^[가-힣]{2,10}$/;            
+            const artistNameEngRegex = /^[\sa-zA-Z]{2,30}$/;            
+            const artistNameEngLowerRegex = /^[a-z]{2,30}$/;            
+
+            if(!artistNameRegex.test(this.newArtistObj.artistName)){
+                alert("아티스트의 이름을 다시 입력해주세요");
+                return;
+            }
+            if(!artistNameEngRegex.test(this.newArtistObj.artistEngName)){
+                alert("아티스트의 영어이름을 다시 입력해주세요");
+                return;
+            }
+            if(!artistNameEngLowerRegex.test(this.newArtistObj.artistEngNameLower)){
+                alert("아티스트의 영어 소문자이름을 다시 입력해주세요");
+                return;
+            }
+
+            // 2. 중복 검사
             // URL
-            const url = "http://localhost:8080/rest/admin/artist";
+            const isArtistExistUrl = "http://localhost:8080/rest/artist/check";
+            // 아티스트 중복검사
+
+            console.log(this.newArtistObj.artistEngNameLower);
+            const isArtistExist = await axios.get(isArtistExistUrl, {params: {artistEngNameLower: this.newArtistObj.artistEngNameLower}});
+            if(isArtistExist.data){
+                alert("아티스트의 영어 소문자 이름이 중복되므로 다시 입력해주세요");
+                return;
+            }
+            
+            // 3. 아티스트 생성
+            
+            // URL
+            const createArtisturl = "http://localhost:8080/rest/artist/";
+            
+            // 폼데이터 생성
+            const formData = new FormData();
+            formData.append('attachment', this.newArtistObj.attachment);
+            formData.append('artistName', this.newArtistObj.artistName);
+            formData.append('artistEngName', this.newArtistObj.artistEngName);
+            formData.append('artistEngNameLower', this.newArtistObj.artistEngNameLower);
+            
             // 아티스트 생성
-            await axios.post(url, {artistName: this.newArtistName});
+            await axios.post(createArtisturl, formData);
 
             this.loadArtistViewList();
-            this.newArtistName = "";
+
+            // 새 아티스트 입력창 초기화
+            this.newArtistObj.artistEngNameLower = "";
         },
         // 아티스트 목록 조회
         async loadArtistViewList () {
