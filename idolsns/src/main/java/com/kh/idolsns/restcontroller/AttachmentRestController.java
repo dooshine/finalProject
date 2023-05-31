@@ -255,7 +255,7 @@ public class AttachmentRestController {
 		return null;
 	}
 	
-	//업로드
+	// 펀딩 게시물 업로드
 		@PostMapping("/upload3")
 		public AttachmentDto upload3(
 						@RequestParam MultipartFile attach

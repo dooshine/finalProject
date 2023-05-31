@@ -30,10 +30,17 @@
 		where post_no=#{postNo}
 	</select>
 	
-	<!-- U 펀딩 게시물 수정 -->
-	<update id="edit" parameterType="FundPostDto">
+	<!-- U 펀딩 게시물 펀딩 무산 -->
+	<update id="updateFundFail">
 		update fund_post
-		set fund_state=#{fundState}
+		set fund_state='펀딩 무산'
+		where post_no=#{postNo}
+	</update>
+	
+	<!-- U 펀딩 게시물 펀딩 성공 -->
+	<update id="updateFundSuccess">
+		update fund_post
+		set fund_state='펀딩 성공'
 		where post_no=#{postNo}
 	</update>
 	

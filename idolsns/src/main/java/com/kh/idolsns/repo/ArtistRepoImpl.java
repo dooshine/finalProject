@@ -39,6 +39,9 @@ public class ArtistRepoImpl implements ArtistRepo{
         sqlSession.insert("artist.insertArtist", artistDto);
     }
 
-    
-    
+    // 대표페이지 삭제(대표페이지 번호)
+    @Override
+    public void deleteArtist(Integer artistNo) {
+        sqlSession.delete("artist.deleteArtistByArtistNo", artistNo);
+    }
 }

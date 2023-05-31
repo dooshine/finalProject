@@ -15,5 +15,8 @@ public interface ArtistRepo {
     
     // 대표페이지 생성
     void createArtist(ArtistDto artistDto);
+
+    // 대표페이지 artistNo로 삭제
+    void deleteArtist(Integer artistNo);
     
 }

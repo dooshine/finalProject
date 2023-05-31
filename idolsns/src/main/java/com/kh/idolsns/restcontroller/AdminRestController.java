@@ -27,7 +27,7 @@ import com.kh.idolsns.dto.ArtistDto;
 import com.kh.idolsns.dto.ArtistProfileDto;
 import com.kh.idolsns.dto.ArtistViewDto;
 import com.kh.idolsns.dto.AttachmentDto;
-import com.kh.idolsns.dto.MemberDto;
+import com.kh.idolsns.dto.MemberProfileFollowDto;
 import com.kh.idolsns.dto.TagCntDto;
 import com.kh.idolsns.dto.TagDto;
 import com.kh.idolsns.repo.AttachmentRepo;
@@ -91,7 +91,7 @@ public class AdminRestController {
 
 	// 멤버 목록 불러오기
     @PostMapping("/member")
-    public List<MemberDto> selectMemberList(@RequestBody AdminMemberSearchVO adminMemberSearchVO){
+    public List<MemberProfileFollowDto> selectMemberList(@RequestBody AdminMemberSearchVO adminMemberSearchVO){
         return adminService.adminSelectMemberList(adminMemberSearchVO);
     }
 

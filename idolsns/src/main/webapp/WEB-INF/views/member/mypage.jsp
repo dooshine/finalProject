@@ -9,7 +9,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>회원가입</title>
+    <title>마이페이지</title>
     <!-- 폰트어썸 cdn -->
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css">
     <!-- jquery cdn -->
@@ -102,7 +102,8 @@
 						</div>
 						<div class="modal-body text-center">
 							<img :src="memberProfileImageObj !== ''  && memberProfileImageObj.attachmentNo !== undefined ? '/download/?attachmentNo='+memberProfileImageObj.attachmentNo :  ' /static/image/profileDummy.png' "
-								class="profile-image">
+								class="profile-image" @click="openFileInput">
+							<input type="file" ref="fileInput" style="display: none;"@change="handleFileUpload()">
 							<h3>
 					            <span v-if="!editingNickname">{{ memberNick }}</span>
 					            <input v-else type="text" v-model="editedNickname" class="form-control" placeholder="새로운 닉네임"
@@ -124,7 +125,9 @@
 							<i class="fa-solid fa-xmark" style="color: #bcc0c8;" data-bs-dismiss="modal" aria-label="Close"></i>
 						</div>
 						<div class="modal-body text-center">
-							{{FollowMemberList}}
+							<div v-for="board in FollowMemberList">
+							{{board}}
+							</div>
 						</div>
 					</div>
 				</div>
@@ -137,7 +140,9 @@
 							<i class="fa-solid fa-xmark" style="color: #bcc0c8;" dat	a-bs-dismiss="modal" aria-label="Close"></i>
 						</div>
 						<div class="modal-body text-center">
-							{{FollowerMemberList}}
+							<div v-for="board in FollowerMemberList">
+								{{board}}
+							</div>
 						</div>
 					</div>
 				</div>
@@ -150,7 +155,9 @@
 							<i class="fa-solid fa-xmark" style="color: #bcc0c8;" data-bs-dismiss="modal" aria-label="Close"></i>
 						</div>
 						<div class="modal-body text-center">
-							{{FollowPageList}}
+							<div v-for="board in FollowPageList">
+								{{board}}	
+							</div>
 						</div>
 					</div>
 				</div>
@@ -167,12 +174,12 @@
 				</div>
 			</div>
 			<div class="row page">
-				<div v-show = "page > 0">
+				<div v-show = "page == 1">
 				
 					<h1>내가 쓴 글 </h1>
 				
 				</div>
-				<div v-show = "page < 3">
+				<div v-show = "page == 2">
 					
 					<h1>내가 좋아요 한 글 </h1>
 				
@@ -205,9 +212,18 @@
 						FollowerMemberList:[],
 						FollowPageList:[],
 						page : 1,
+						file : null,
+						attachmentList:[],
+						previewURLList:[], 
+						artistViewList:[],
+						
+						targetMemberFollowObj: {},
 					};
 				},		
 				methods:{
+					openFileInput() {
+					      this.$refs.fileInput.click();
+					    },
 					async profile() {
 						const response = await axios.get("/member/profile");
 						const {memberId, memberNick} = response.data;
@@ -321,12 +337,66 @@
 					},
 					
 					pagePlus(){
+						if(this.page == 1) {
 						this.page++;
+						}
+						return;
 					},
 					pageMinus() {
+						if(this.page == 2) {
 						this.page--;
+						}
+						return;
 					},
 					
+					// 파일 업로드 시 프로필 사진 변경
+		            handleFileUpload(event) {
+		                // 업로드 파일
+		                const file = event.target.files[0];
+		                // 첨부사진 임시보관
+		                this.attachmentList[index] = file;
+		                // 사진 미리보기 구현
+		                if (file) {
+		                    this.previewURLList[index] = URL.createObjectURL(file);
+		                }
+		            },
+
+		            // 대표페이지 프로필 사진 설정
+		            async uploadFile(index) {
+		                // URL
+		                const url = "http://localhost:8080/rest/member/memberProfile";
+
+		                // 폼데이터 생성
+		                const formData = new FormData();
+		                formData.append('attachment', this.attachmentList[index]);
+		                formData.append('memberId', this.artistViewList[index].artistNo);
+
+		                // 대표페이지 프로필사진 설정
+		                const resp = await axios.post(url, formData);
+
+		                // 새로고침
+		                this.loadArtistViewList();
+
+		                alert("대표페이지 프로필사진 설정완료!");
+		            },
+
+
+
+		            // 로그인 회원 팔로우 정보 로드
+		            async loadMemberFollowInfo() {
+		                // 로그인X → 실행 X
+		                if (memberId === "") return;
+		                // url
+		                const url = "http://localhost:8080/rest/follow/memberFollowProfileInfo/"
+		                // 팔로우 목록 load
+		                const resp = await axios.get(url, { params: { memberId: this.memberId } });
+
+		                // 로그인 팔로우 정보 로드
+		                this.targetMemberFollowObj = resp.data;
+		                console.table(this.targetMemberFollowObj);
+		            },
+				
+
 				},
 				computed:{
 					 memberNickValid(){
