@@ -6,7 +6,7 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import com.kh.idolsns.dto.MemberDto;
+import com.kh.idolsns.dto.MemberProfileFollowDto;
 import com.kh.idolsns.dto.TagCntDto;
 import com.kh.idolsns.dto.TagDto;
 import com.kh.idolsns.vo.AdminMemberSearchVO;
@@ -44,7 +44,7 @@ public class AdminRepoImpl implements AdminRepo {
 
     // 모든 회원목록 조회
 	@Override
-	public List<MemberDto> adminSelectMemberList(AdminMemberSearchVO adminMemberSearchVO) {
+	public List<MemberProfileFollowDto> adminSelectMemberList(AdminMemberSearchVO adminMemberSearchVO) {
 		return sqlSession.selectList("member.selectList", adminMemberSearchVO);
 	}
     

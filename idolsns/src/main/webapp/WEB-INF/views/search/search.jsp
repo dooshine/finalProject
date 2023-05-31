@@ -30,7 +30,7 @@
 
 <div class="row" id="search-body">
   <div class="col">
-    <div class="row border-bottom">
+    <div class="row m-0 border-bottom">
       <div class="col cursor-pointer text-center" :class="{select: mode ==='artist'}"  @click="changeMode('artist')"><i class="fa-solid fa-star">대표페이지</i></div>
       <div class="col cursor-pointer text-center p-0" :class="{select: mode ==='member'}" @click="changeMode('member')"><i class="fa-solid fa-user">회원</i></div>
       <div class="col cursor-pointer text-center p-0" :class="{select: mode ==='tag'}" @click="changeMode('tag')"><i class="fa-sharp fa-solid fa-tags">태그</i></div>
@@ -65,7 +65,7 @@
                 </td>
                 <td class="cursor-pointer" @click="goArtistPage(artistSearch)">
                   <div class="search-table-col">
-                    {{artistSearch.followCnt}}
+                    {{artistSearch.followCnt ?? 0}}
                   </div>
                 </td>
                 <td>
@@ -102,17 +102,17 @@
               <tr v-for="(memberSearch, i) in memberSearchList" :key="i">
                 <td class="cursor-pointer">
                   <div class="search-table-col">
-                    항목1
+                    <img :src="memberSearch.attachmentNo === 0 ? '/static/image/profileDummy.png' : '/download/?attachmentNo=' + memberSearch.attachmentNo" style="height: 50px; width: 50px;">
                   </div>
                 </td>
                 <td class="cursor-pointer">
                   <div class="search-table-col">
-                    항목2
+                    {{fullName(memberSearch.memberId, memberSearch.memberNick)}}
                   </div>
                 </td>
                 <td>
                   <div class="search-table-col">
-                    <button>팔로우하기</button>
+                    <button class="btn rounded-pill" :class="{'btn-primary':!memberSearch.isFollowMember, 'btn-secondary': memberSearch.isFollowMember}"  v-text="memberSearch.isFollowMember?'팔로우취소':'팔로우하기'" @click="followMember(memberSearch)">팔로우하기</button>
                   </div>
                 </td>
               </tr>
@@ -238,6 +238,11 @@
           memberSearchList: [],
           memberPage: 1,
           search: true,
+
+          // 태그 검색목록
+          tagSearchList: [],
+          postSearchList: [],
+
 
           followObj: {
             memberId: memberId,

@@ -13,10 +13,10 @@
         </div>
     </div>
     <div class="row mt-3">
-        <div class="col-3">
+        <div class="col-2">
             <img :src="newArtistObj.previewURL" style="width: 100%; ">
         </div>
-        <div class="col-9 container-fluid">
+        <div class="col-10 container-fluid">
             <div class="row">
                 <div class="col-4"><label>새 아티스트 이름</label></div>
                 <div class="col-8"><input class="w-50" type="text" v-model="newArtistObj.artistName"></div>
@@ -36,7 +36,7 @@
             </div>
             <div class="row">
                 <div class="col">
-                    <input type="file" @change="handleNewArtistFileUpload">
+                    <input type="file" @change="handleNewArtistFileUpload" ref="attach">
                 </div>
             </div>
         </div>
@@ -84,7 +84,7 @@
                         <td>{{artistView.followCnt ?? 0}}</td>
                         <td>
                             <input type="file" @change="handleFileUpload(i)">
-                            <button @click="uploadFile(i)">프로필사진 수정</button>
+                            <button class="btn btn-primary" @click="setArtistProfile(i)">프로필사진 수정</button>
                         </td>
                     </tr>
                 </tbody>
@@ -140,7 +140,10 @@
         },
 
         // 대표페이지 프로필 사진 설정
-        async uploadFile(index){
+        async setArtistProfile(index){
+            // 비어있을경우 실행X
+            if(this.attachmentList[index] === null) return;
+
             // URL
             const url = "http://localhost:8080/rest/admin/artistProfile";
             
@@ -227,7 +230,14 @@
             this.loadArtistViewList();
 
             // 새 아티스트 입력창 초기화
+            this.newArtistObj.artistName = "";
+            this.newArtistObj.artistEngName = "";
             this.newArtistObj.artistEngNameLower = "";
+            this.newArtistObj.attachment = null;
+            this.newArtistObj.previewURL= "/static/image/profileDummy.png";
+
+            // 파일인풋 초기화
+            this.$refs.attach.value="";
         },
         // 아티스트 목록 조회
         async loadArtistViewList () {
@@ -290,12 +300,17 @@
 
         // # 아티스트 삭제(이름)
         async deleteArtistByNo(){
-            // 태그변경 전처리 함수
+            // 아티스트 선택 전처리 함수
             if(!this.preArtistAccess()) return;
+
+            // 사용자 확인
+            const selectedCnt = this.selectedArtistList.length;
+            if(selectedCnt===0 && !confirm(selectedCnt + "개의 대표페이지를 삭제하시겠습니까?")) return;
 
             // URL
             const url = "http://localhost:8080/rest/artist/"
             // 아티스트 삭제
+
             const resp = await axios.delete(url, { 
                 data: this.selectedArtistList,
             });
@@ -304,7 +319,9 @@
             this.setSelectedArtistEmpty();
 
             // 아티스트 목록 조회
-            this.loadArtistList();
+            this.loadArtistViewList();
+
+            alert(selectedCnt + "개의 대표페이지가 삭제되었습니다.")
         },
 
 
@@ -315,25 +332,10 @@
 
 
 
-        // 테스트
-        async test(){
-            const url = "http://localhost:8080/rest/member/getMemberProfile";
-            
-            const resp = await axios.get(url, {
-                params: {
-                    memberIdList:["testuser1", "testuser2", "testuser3"]
-                },
-                paramsSerializer: params => {
-		            return new URLSearchParams(params).toString();
-                }
-            })
-
-            console.log(resp.data);
-        }
+        
       },
       created(){
         this.loadArtistViewList();
-        this.test();
       },
     }).mount('#app')
 </script>

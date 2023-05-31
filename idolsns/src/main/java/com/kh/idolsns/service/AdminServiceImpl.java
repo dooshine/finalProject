@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.kh.idolsns.dto.MemberDto;
+import com.kh.idolsns.dto.MemberProfileFollowDto;
 import com.kh.idolsns.dto.TagCntDto;
 import com.kh.idolsns.dto.TagDto;
 import com.kh.idolsns.repo.AdminRepo;
@@ -45,7 +45,7 @@ public class AdminServiceImpl implements AdminService {
 
     // 회원(member) 목록 조회
     @Override
-    public List<MemberDto> adminSelectMemberList(AdminMemberSearchVO adminMemberSearchVO) {
+    public List<MemberProfileFollowDto> adminSelectMemberList(AdminMemberSearchVO adminMemberSearchVO) {
         return adminRepo.adminSelectMemberList(adminMemberSearchVO);
     }
 }
