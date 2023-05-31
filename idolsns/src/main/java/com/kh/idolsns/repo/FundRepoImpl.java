@@ -31,7 +31,8 @@ public class FundRepoImpl implements FundRepo{
 //         } else {
 //            sqlSession.insert("fund.add", dto);
 //         }
-         sqlSession.insert("fund.add", fundDto);
+	   	fundDto.setFundRemain(fundDto.getFundPrice());
+		sqlSession.insert("fund.add", fundDto);
       }
 
    

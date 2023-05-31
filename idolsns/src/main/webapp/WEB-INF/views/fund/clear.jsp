@@ -33,7 +33,6 @@
 
     </style>
     
-    
 
 		
 	<div id="app">
@@ -47,14 +46,14 @@
 			
 				<tr>
 					<th>펀딩 프로젝트</th>
-					<td>{{ fundDto.fundTitle }}</td>
+					<td>{{ fundDetail.fundTitle }}</td>
 				</tr>
 			
 			
 			
 				<tr>
 					<th>펀딩 상태</th>
-					<td>{{ fundPostDto.fundState }}</td>
+					<td>{{ fundDetail.fundState }}</td>
 				</tr>
 				
 				<tr>
@@ -68,16 +67,15 @@
 				</tr>
 				
 		
-				<tr>
-					<th>후원 금액</th>
-					<td>{{ fundDto.fundPrice }}</td>
-				</tr>
-				
-				
+			  	<tr>
+			         <th>후원 금액</th>
+			         <td>{{ formatCurrency(fundDto.fundPrice) }}</td>
+		        </tr>
 				
 				<tr>
 					<th>펀딩 마감일</th>
 					<td>{{ fundDetail.postEnd }}</td>
+					
 				</tr>
 				
 				
@@ -88,89 +86,56 @@
 	  </div>
 	</div>
 		
+						
+    <script src="https://unpkg.com/vue@3.2.36"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 			
-			
-<script>
-  Vue.createApp({
-    data() {
-      return {
-    	     postNo:'',
-   	    	fundNo:'',
-   	        fundDto: {},
-   	        fundPostDto: {},
-    	    
-    	  fundDetail: {
-	          fundPrice: "",
+
+	
+	<script>
+	  Vue.createApp({
+	    data() {
+	      return {
+	        fundDetail: {
+	         
 	          fundNo: "",
 	          postNo: "",
-	          memberId: memberId, // memberId를 Vue 데이터에 추가하고, 값을 바인딩합니다.
-	          fundTime: "",
-	          attachmentNos: [],
-	          attachmentNo: "",
 	          fundTitle: "",
 	          postStart: "",
 	          postEnd: "",
-	          postTime: "",
 	          fundGoal: "",
-	          fundSponsorCount: "",
 	          fundState: "",
-	          postType: "",
-	          postContent: "",
-	          imageURL: "",
 	          fundTotal: "",
+	          fundTime: "",
+	          fundPrice: "",
 	        },
-   
-      }
-    },
-
-    methods: {
-		// postNo 설정		    	
-	    setPostNo() {
-	      const params = new URLSearchParams(location.search);
-	      const postNo = params.get("postNo");
-	      this.fundDetail.postNo = postNo;
+	      };
 	    },
-	    // FundPostListDto 불러오기
-	    async loadFundPosts(){
-	    	const postNo = this.fundDetail.postNo;
-			const resp = await axios.get("http://localhost:8080/rest/fund/"+postNo)	  
-			this.fundDetail = { ...this.fundDetail, ...resp.data };
-		},
-	
-       // fundTotal & fundSponsorCount 불러오기
-		async loadFundVO(){
-	    	const postNo = this.fundDetail.postNo;
-			const resp = await axios.get("http://localhost:8080/rest/fund/fundlist/"+postNo)	  
-			this.fundDetail.fundState = resp.date.fundState;
-			this.fundDetail.postEnd = resp.data.postEnd;
-		},
-		
-      async loadOrderDetail() {
-        try {
-          const url = "/rest/fund/order/" + this.fundNo;
-          const response = await axios.get(url);
-          this.fundDto = response.data;
-          } catch (error) {
-          console.error(error);
-        }
-      },
-     
-    },
-    created() {
+	    methods: {
+	      async loadOrderDetail() {
+	        const url = "/rest/fund/order/" + this.fundNo;
+	        const resp = await axios.get(url);
+	        this.fundDto = resp.data;
+	        this.fundDetail.postNo = resp.data.postNo;
+	        this.loadFundPosts(); // loadOrderDetail()에서 loadFundPosts()를 호출합니다.
 
-      	this.setPostNo();
-   		this.fundNo = window.location.search.split("=")[1]; // URL에서 fundNo 값을 추출합니다.
-      	this.loadOrderDetail();
-	  	  this.loadFundPosts();
-
-	  	  this.loadFundVO();
-
-	      
-    }
-  }).mount("#app");
-</script>
-	
-			
+	      },
+	      async loadFundPosts() {
+	        const postNo = this.fundDetail.postNo;
+	        const resp = await axios.get("/rest/fund/" + postNo);
+	        this.fundDetail = { ...this.fundDetail, ...resp.data };
+	      },
+	      formatCurrency(value) {
+	        return value.toLocaleString();
+	      },
+	    },
+	    created() {
+	      this.fundNo = window.location.search.split("=")[1]; // URL에서 fundNo 값을 추출합니다.
+	      this.loadOrderDetail();
+	      this.loadFundPosts();
+	    },
+	  }).mount("#app");
+	</script>
 			
 			
 	

@@ -251,7 +251,6 @@ public class PointController {
 	@GetMapping("/cancelOrder")
 	public String cancelOrder(
 			@RequestParam long fundNo, 
-			@RequestParam long postNo, 
 			HttpServletResponse resp,
 			RedirectAttributes attr,
 			HttpSession session) throws URISyntaxException, IOException, NoHandlerFoundException {
@@ -265,8 +264,7 @@ public class PointController {
 			throw new NoHandlerFoundException(null, null, null);
 		}
 		
-		//이거 해결할거~
-		fundRepo.selectTotal(postNo);
+
 		
 		//DB의 잔여 금액 fundRemain을 0으로 변경
 		fundRepo.fundCancel(fundNo);

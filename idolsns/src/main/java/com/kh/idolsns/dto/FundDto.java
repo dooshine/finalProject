@@ -2,10 +2,7 @@ package com.kh.idolsns.dto;
 
 import java.util.Date;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Data
 public class FundDto {
@@ -25,7 +22,7 @@ public class FundDto {
 			return "참여 중";
 		}
 		else {
-			return "펀딩 취소";
+			return "후원 취소";
 		}
 		
 	}

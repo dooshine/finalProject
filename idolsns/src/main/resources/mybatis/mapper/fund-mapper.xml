@@ -18,10 +18,10 @@
     <!-- 사용 -->
     <insert id="add">
         insert into fund (
-        fund_no, post_no, fund_price, fund_time, member_id, fund_title
+        fund_no, post_no, fund_price, fund_time, member_id, fund_title, fund_remain
         ) 
         values (
-        #{fundNo}, #{postNo}, #{fundPrice}, sysdate, #{memberId}, #{fundTitle}
+        #{fundNo}, #{postNo}, #{fundPrice}, sysdate, #{memberId}, #{fundTitle}, #{fundRemain}
         )
     </insert>
 
@@ -62,7 +62,7 @@
    <!-- 후원 취소 -->
    <update id="fundCancel">
      UPDATE fund
-     SET fund_price = 0
+     SET fund_remain = 0
      WHERE fund_no = #{fundNo}
    </update>
    
