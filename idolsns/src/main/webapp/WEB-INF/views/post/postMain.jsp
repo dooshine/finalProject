@@ -686,7 +686,7 @@
 				                			</div>
 				                			<div class="row d-flex flex-nowrap">
 <!-- 				                				<h6 class="col-1 text-start reply-text" style="white-space: nowrap;">좋아요 </h6> -->
-				                				<h6 class="col-1 text-start reply-text" @click="showRereplyInput(post.postNo,reply.replyNo),hideReplyInput()" style="white-space: nowrap;">댓글 달기</h6>	
+				                				<h6 class="col-1 text-start reply-text text-secondary" @click="showRereplyInput(post.postNo,reply.replyNo),hideReplyInput()" style="white-space: nowrap;">댓글 달기</h6>	
 				                			</div>			                			
 				                		</div>
 				                		<div class="col-1" v-if="memberId === reply.replyId">

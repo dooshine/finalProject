@@ -59,7 +59,7 @@
 			Left OUTER JOIN member mb ON p.member_id = mb.member_id
 			Left OUTER JOIN member_profile_image mpi ON p.member_id = mpi.member_id
 			WHERE p.post_type != '펀딩'
-			ORDER BY p.post_no ASC
+			ORDER BY p.post_no desc
 		<include refid="topNfooter"></include>
 		
 	</select>
@@ -67,6 +67,7 @@
 
 	<!-- 특정 유저가 좋아요한 게시글 무한스크롤 페이징 목록 -->
 	<select id="likeInfinite" resultType="PostShowVO">
+		<include refid="topNheader"></include>
     	SELECT testuserP.*,sp.schedule_start, sp.schedule_end,
                     tp.together_start, tp.together_end,
                     m.map_place, mb.member_nick , mpi.attachment_no
@@ -81,10 +82,13 @@
         Left outer join map m on testuserP.post_no = m.post_no
         Left OUTER JOIN member mb ON testuserP.member_id = mb.member_id
         Left OUTER JOIN member_profile_image mpi ON testuserP.member_id = mpi.member_id
-        ORDER BY testuserP.post_no ASC
+        ORDER BY testuserP.post_no desc
+        <include refid="topNfooter"></include>
 	</select>
+	
 	<!-- 특정 유저가 작성한 게시글 무한스크롤 페이징 목록 -->
 	<select id="writeInfinite" resultType="PostShowVO">
+		<include refid="topNheader"></include>
 	    SELECT testuserP.*,sp.schedule_start, sp.schedule_end,
                     tp.together_start, tp.together_end,
                     m.map_place, mb.member_nick , mpi.attachment_no
@@ -98,10 +102,13 @@
         Left outer join map m on testuserP.post_no = m.post_no
         Left OUTER JOIN member mb ON testuserP.member_id = mb.member_id
         Left OUTER JOIN member_profile_image mpi ON testuserP.member_id = mpi.member_id
-        ORDER BY testuserP.post_no ASC
+        ORDER BY testuserP.post_no desc
+        <include refid="topNfooter"></include>
 	</select>
+	
 	<!-- 특정 유저가 작성한 게시글 무한스크롤 페이징 목록 -->
 	<select id="fixedTagInfinite" resultType="PostShowVO">
+		<include refid="topNheader"></include>
 		SELECT testuserP.*,sp.schedule_start, sp.schedule_end,
                     tp.together_start, tp.together_end,
                     m.map_place, mb.member_nick , mpi.attachment_no
@@ -116,6 +123,7 @@
         Left outer join map m on testuserP.post_no = m.post_no
         Left OUTER JOIN member mb ON testuserP.member_id = mb.member_id
         Left OUTER JOIN member_profile_image mpi ON testuserP.member_id = mpi.member_id
-        ORDER BY testuserP.post_no ASC
+        ORDER BY testuserP.post_no desc
+        <include refid="topNfooter"></include>
 	</select>
 </mapper> 
