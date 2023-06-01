@@ -36,7 +36,7 @@
 
     <!-- custom 테스트 css -->
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/static/css/test.css">
-    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/static/css/custom.css">
+    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/static/css/component.css">
     
     <!-- 폰트css -->
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/static/css/load.css" />
@@ -192,6 +192,7 @@
     		padding: 16px;
     		height: 440px;
     		overflow-y: auto;
+    		overflow-x: hidden;
     		
     		/* 파폭 스크롤 커스텀 */
     		scrollbar-width: thin;
@@ -268,6 +269,9 @@
     		outline: none;
     		font-size: 0.9em;
     		padding: 0;
+    		
+    		-ms-overflow-style: none; /* 인터넷 익스플로러 */
+  			scrollbar-width: none;
     	}
     	.type-box::-webkit-scrollbar {
     		display: none;
@@ -434,6 +438,14 @@
 		.btn-close {
 			box-shadow: none;
 		}
+		
+		.chatRoomName {
+			display: block;
+			white-space: nowrap;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			word-break: break-all;
+		}
     </style>
 </head>
 
@@ -493,7 +505,7 @@
 										</div>
 										<div class="col-9 ms-3">
 											<div class="d-flex align-items-center mb-2">
-												<div class="text-start">
+												<div class="text-start" :title="chatRoomList[index].chatRoomName1">
 													<h6>{{ chatRoomList[index].chatRoomName1 }}</h6>
 												</div>
 												<!-- 새 메세지 알림 표시 -->
@@ -520,8 +532,14 @@
 										<div class="col-9 ms-3">
 											<div class="d-flex align-items-center mb-2">
 												<div class="text-start d-flex align-items-baseline">
-													<h6 class="me-2">{{ findMemberByIdInMain(index).memberNick }}</h6>
-													<div class="sysMsgContent">@{{ findMemberByIdInMain(index).memberId }}</div>
+													<div class="me-2 w-100" style="max-width: 120px">
+														<h6 class="chatRoomName" style="max-width: 120px" :title="findMemberByIdInMain(index).memberNick">
+															{{ findMemberByIdInMain(index).memberNick }}
+														</h6>
+													</div>
+													<div class="sysMsgContent">
+														@{{ findMemberByIdInMain(index).memberId }}
+													</div>
 												</div>
 												<!-- 새 메세지 알림 표시 -->
 												<div v-if="chatRoomList[index].newChat === true" class="notiMarkChat ms-2"></div>
@@ -537,15 +555,21 @@
 								<!-- 갠톡 채팅방 이름 2 -->
 								<button v-if="chatRoomList[index].chatRoomName2 != memberId" 
 											@click="showChatRoomModal(index)" class="hide-style w-100 mb-3">
-									<div class="d-flex align-items-center mb-2">
+									<div class="d-flex align-items-center mb-2 chatRoomName">
 										<div class="col-3 d-flex justify-content-center align-items-center" style="height: 45px; width: 45px;">
 											<img :src="findMemberByIdInMain(index).profileSrc" class="profileImg" style="height: 45px; width: 45px;">
 										</div>
 										<div class="col-9 ms-3">
 											<div class="d-flex align-items-center mb-2">
 												<div class="text-start d-flex align-items-baseline">
-													<h6 class="me-2">{{ findMemberByIdInMain(index).memberNick }}</h6>
-													<div class="sysMsgContent">@{{ findMemberByIdInMain(index).memberId }}</div>
+													<div class="me-2 w-100" style="max-width: 120px">
+														<h6 class="chatRoomName" style="max-width: 120px" :title="findMemberByIdInMain(index).memberNick">
+															{{ findMemberByIdInMain(index).memberNick }}
+														</h6>
+													</div>
+													<div class="sysMsgContent">
+														@{{ findMemberByIdInMain(index).memberId }}
+													</div>
 												</div>
 												<!-- 새 메세지 알림 표시 -->
 												<div v-if="chatRoomList[index].newChat === true" class="notiMarkChat ms-2"></div>
@@ -608,8 +632,8 @@
 						<div class="d-flex justify-content-between w-100">
 							<!-- 채팅방 이름(갠톡일 때: 상대방 이름 표시) -->
 							<div v-if="roomInfo.chatRoomType == 'P'">
-								<h5 v-if="roomInfo.chatRoomName1 != memberId">{{ roomInfo.chatRoomName1 }}</h5>
-								<h5 v-if="roomInfo.chatRoomName2 != memberId">{{ roomInfo.chatRoomName2 }}</h5>
+								<h5>{{ findMemberByIdInRoom().memberNick }}</h5>
+								<!-- <h5 v-if="roomInfo.chatRoomName2 != memberId">{{ roomInfo.chatRoomName2 }}</h5> -->
 							</div>
 							<!-- 채팅방 이름(단톡일 때: 지정한 채팅방 이름 표시) -->
 							<div v-if="roomInfo.chatRoomType == 'G'">
