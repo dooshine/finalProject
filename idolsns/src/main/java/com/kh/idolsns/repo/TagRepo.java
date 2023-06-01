@@ -20,4 +20,8 @@ public interface TagRepo {
 	List<String> selectAll(Long postNo);
 	// 특정글 태그 전체 삭제
 	void deleteByPostNo(Long postNo);
+	// 특정글 고정 태그 전체 불러오기
+	List<String> selectFixedTagAll(Long postNo);
+	// 특정글 자유 태그 전체 불러오기
+	List<String> selectFreeTagAll(Long postNo);
 }
