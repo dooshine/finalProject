@@ -25,7 +25,7 @@
 		<bind name="minPointExist" value="minPoint != null"/>
     	<bind name="maxPointExist" value="maxPoint != null"/>
 		<bind name="memberEmailExist" value="memberEmail != null and !memberEmail.equals('')"/>
-		<bind name="memberAgreeListExist" value="memberAgreeList != null and !memberAgreeList.size() > 0"/>
+		<bind name="memberAgreeListExist" value="memberAgreeList != null and memberAgreeList.size() > 0"/>
 		<bind name="beginJoinDateExist" value="beginJoinDate != null and !beginJoinDate.equals('')"/>
     	<bind name="endJoinDateExist" value="endJoinDate != null and !endJoinDate.equals('')"/>
 		<bind name="memberLevelListExist" value="memberLevelList != null and memberLevelList.size() > 0"/>
@@ -41,16 +41,16 @@
 		<where>
 			<!-- 아이디 -->
 			<if test="memberIdExist">
-			and instr(member_id, #{memberId}) > 0
+			and instr(member.member_id, #{memberId}) > 0
 			</if>
 			<!-- 닉네임 -->
 			<if test="memberNickExist">
-			and instr(member_nick, #{memberNick}) > 0
+			and instr(member.member_nick, #{memberNick}) > 0
 			</if>
 
 		<!-- 이메일 -->
 		<if test="memberEmailExist">
-		and instr(member_email, #{memberEmail}) > 0
+		and instr(member.member_email, #{memberEmail}) > 0
 		</if>
 		<!-- 
 		(주의) XML은 태그 형식을 사용하므로 부등호 사용 부가
@@ -63,10 +63,19 @@
 		-->
 		<if test="memberLevelListExist">
 		<!-- and (member_level == '일반회원' or member_level == '우수회원') -->
-		and member_level in 
+		and member.member_level in 
 		<foreach collection="memberLevelList" 
 			open="(" close=")" item="memberLevel" separator=",">
 			#{memberLevel}
+		</foreach>
+		</if>
+
+		<if test="memberAgreeListExist">
+		<!-- and (member_level == '일반회원' or member_level == '우수회원') -->
+		and member.member_agree in 
+		<foreach collection="memberAgreeList" 
+			open="(" close=")" item="memberAgree" separator=",">
+			#{memberAgree}
 		</foreach>
 		</if>
 
@@ -79,14 +88,14 @@
 		-->
 		<choose>
 		<when test="minPointExist and maxPointExist">
-			and member_point between #{minPoint} and #{maxPoint}
+			and member.member_point between #{minPoint} and #{maxPoint}
 		</when>
 		<when test="minPointExist">
-			and member_point >= #{minPoint}
+			and member.member_point >= #{minPoint}
 		</when>
 		<when test="maxPointExist">
 			<![CDATA[
-			and member_point <= #{maxPoint}
+			and member.member_point <= #{maxPoint}
 			]]>
 		</when>
 		<otherwise></otherwise>
@@ -98,17 +107,17 @@
 		-->
 		<choose>
 		<when test="beginJoinDateExist  and  endJoinDateExist">
-			and member_join between 
+			and member.member_join between 
 			to_date(#{beginJoinDate}||' '||'00:00:00', 'YYYY-MM-DD HH24:MI:SS')
 			and 
 			to_date(#{endJoinDate}||' '||'23:59:59', 'YYYY-MM-DD HH24:MI:SS')
 		</when>
 		<when test="beginJoinDateExist">
-			and member_join >= to_date(#{beginJoinDate}||' '||'00:00:00', 'YYYY-MM-DD HH24:MI:SS')
+			and member.member_join >= to_date(#{beginJoinDate}||' '||'00:00:00', 'YYYY-MM-DD HH24:MI:SS')
 		</when>
 		<when test="endJoinDateExist">
 			<![CDATA[
-			and member_join <= to_date(#{endJoinDate}||' '||'23:59:59', 'YYYY-MM-DD HH24:MI:SS')
+			and member.member_join <= to_date(#{endJoinDate}||' '||'23:59:59', 'YYYY-MM-DD HH24:MI:SS')
 			]]>
 		</when>
 		<otherwise></otherwise>
@@ -121,7 +130,7 @@
 		<!-- and member_login between sysdate-#{searchLoginDays} and sysdate -->
 
 		<!-- 방법2 : 날짜를 뺄셈으로 구한 뒤 시간을 자정으로 변경 -->
-		and member_login between 
+		and member.member_login between 
 		to_date(
 			to_char(sysdate-#{searchLoginDays}, 'YYYY-MM-DD'),
 			'YYYY-MM-DD'

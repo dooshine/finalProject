@@ -10,12 +10,9 @@
     .total-cnt {
         color: forestgreen;
     }
-    .cursor-pointer:hover {
-    cursor: pointer;
-    }
 </style>
 
-<div class="container mt-5" id="app">
+<div class="container" id="app">
     <!-- # 회원조회 타이틀 -->
     <div class="row mt-3">
         <div class="col">
@@ -23,9 +20,16 @@
         </div>
     </div>
 
-    <!-- ######################## 회원리스트 검색도구 시작 ########################-->
+    <!-- # 회원리스트 검색도구 -->
     <div class="row mt-3">
         <div class="col back-gray border border-secondary-subtle p-4">
+            <!-- 검색타이틀 -->
+            <!-- <div class="row">
+                <div class="col">
+                    <h3>검색설정</h3>
+                </div>
+            </div> -->
+            <!-- 검색옵션 -->
             <div class="row">
                 <div class="col">
                     <label>
@@ -108,20 +112,20 @@
                         1차 정렬
                         <select v-model="memberSearchVO.orderList[0]">
                             <option value="">선택하세요</option>
-                            <option value="member.member_id asc">아이디순</option>
-                            <option value="member.member_join desc">최근가입순</option>
-                            <option value="member.member_login desc">최근로그인순</option>
-                            <option value="member.member_point desc">포인트순</option>
+                            <option value="memberId">아이디순</option>
+                            <option value="memberJoin">최근가입순</option>
+                            <option value="memberLogin">최근로그인순</option>
+                            <option value="memberPoint">포인트순</option>
                         </select>
                     </label>
                     <label class="ms-3">
                         2차 정렬
                         <select v-model="memberSearchVO.orderList[1]">
                             <option value="">선택하세요</option>
-                            <option value="member.member_id asc">아이디순</option>
-                            <option value="member.member_join desc">최근가입순</option>
-                            <option value="member.member_login desc">최근로그인순</option>
-                            <option value="member.member_point desc">포인트순</option>
+                            <option value="memberId">아이디순</option>
+                            <option value="memberJoin">최근가입순</option>
+                            <option value="memberLogin">최근로그인순</option>
+                            <option value="memberPoint">포인트순</option>
                         </select>
                     </label>
                 </div>
@@ -129,20 +133,19 @@
             <!-- 검색버튼 -->
             <div class="row mt-3 text-end">
                 <div class="col">
-                    <button class="btn btn-success" type="button" @click="loadMemberList">검색하기</button>
+                    <button class="btn btn-success" type="button" @click="searchMember">검색하기</button>
                 </div>
             </div>
         </div>
     </div>
-    <!-- ######################## 회원리스트 검색도구 끝 ########################-->
+    
 
-
-
-
-    <!-- ######################## 회원리스트 목록 시작 ########################-->
+    <!-- # 회원리스트 목록-->
     <div class="row mt-5">
         <div class="col-4">
-            전체 <b class="total-cnt">{{memberList.length}}</b>건
+            전체 <span class="total-cnt">{{memberList.length}}</span>건
+            <span class="ms-4">페이지<input class="ms-2" v-model.number="pageObj.page"></span>
+            <button @click="checkPageObj">확인</button>
         </div>
         <div class="offset-7 col-1">
             <button @click="changeMember"><i class="fa-solid fa-xmark"></i>삭제</button>
@@ -164,11 +167,6 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-if="memberList.length===0">
-                        <td colspan="8">
-                            <h3 class="m-3">검색 결과가 없습니다</h3>
-                        </td>
-                    </tr>
                     <tr v-for="(member, i) in memberList.slice(pageObj.begin - 1, pageObj.end)" :key="i">
                         <td>{{pageObj.begin + i}}</td>
                         <td><input type="checkbox" @change="checkMember($event, member.memberId)" :checked="selectedMemberObj[member.memberId]"></td>
@@ -183,43 +181,106 @@
                             {{member.memberJoin}}<br>
                             {{member.memberLogin === null ? "미접속": member.memberLogin }}
                         </td>
-                        <td>
-                            <button class="btn btn-primary" @click="followMember(member.memberId)">수정하기</button>
-                            <button class="btn btn-danger" @click="followMember(member.memberId)">제재
+                        <!-- <td>{{member.memberLogin === null ? "미접속": member.memberLogin }}</td> -->
+                        <td><i class="fa-solid fa-user-xmark" data-bs-toggle="modal" data-bs-target="#repotModal1" @click="setReportDto(member.memberId)"></i>
+                    <button class="btn btn-primary" @click="followMember(member.memberId)">팔로우하기</button>
                         </td>
                     </tr>
                 </tbody>
             </table>
         </div>
     </div>
-    <!-- ######################## 회원리스트 목록 끝 ########################-->
-
-
-
-
-    <!-- ######################## 회원리스트 페이지네이션 시작 ########################-->
-    <div class="row my-5">
+    <div class="row">
         <div class="col text-center">
             <nav aria-label="...">
                 <ul class="pagination justify-content-center">
-                  <!-- 첫 페이지로 이동 -->
-                  <li class="page-item" :class="{disabled: pageObj.isFirst}"><span class="page-link cursor-pointer" @click="showFirstPage">&laquo;</span></li>
-                  <!-- 이전 블럭으로 이동 -->
-                  <li class="page-item" :class="{disabled: !pageObj.hasPrev}"><span class="page-link cursor-pointer" @click="showPrevBlock">&lt;</span></li>
-                  <!-- 페이지번호 이동 -->
-                  <li class="page-item" :class="{active: pageObj.startBlock + i - 1 === pageObj.page}" :aria-current="{page: pageObj.startBlock + i - 1 === pageObj.page}" v-for="i in pageObj.finishBlock-pageObj.startBlock+1" :key="i">
-                    <span href="#" class="page-link" :class="{'cursor-pointer': pageObj.startBlock + i - 1 !== pageObj.page}" @click="showTargetPage(pageObj.startBlock + i - 1)">{{pageObj.startBlock + i - 1}}</span>
+                  <li v-for="i in pageObj.end-pageObj.begin+1" :key="i">
+                    {{i}}
                   </li>
-                  <!-- 다음 블럭으로 이동 -->
-                  <li class="page-item" :class="{disabled: !pageObj.hasNext}"><span class="page-link cursor-pointer" @click="showNextBlock">&gt;</span></li>
-                  <!-- 마지막 페이지로 이동 -->
-                  <li class="page-item" :class="{disabled: pageObj.isLast}"><span class="page-link cursor-pointer" @click="showLastPage">&raquo;</span></li>
+                  <!-- <li class="page-item disabled">
+                    <span class="page-link">Previous</span>
+                  </li>
+                  <li class="page-item"><a class="page-link" href="#">1</a></li>
+                  <li class="page-item active" aria-current="page">
+                    <span class="page-link">2</span>
+                  </li>
+                  <li class="page-item"><a class="page-link" href="#">3</a></li>
+                  <li class="page-item">
+                    <a class="page-link" href="#">Next</a>
+                  </li> -->
                 </ul>
             </nav>
         </div>
     </div>
-    <!-- ######################## 회원리스트 페이지네이션 끝 ########################-->
 
+    <style>
+        .modal-border {
+            border: 1px solid #dee2e6;
+        }
+        .no-border {
+            border: 1px solid transparent !important;
+        }
+    </style>
+    <!-- 신고 모달1 -->
+    <div class="modal" tabindex="-1" role="dialog" id="repotModal1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content position-relative">
+                <div class="modal-header">
+                    <h4 class="modal-title mx-auto" style="color: #ff4757;">신고</h4>
+                </div>
+                <!-- 닫기 버튼 -->
+                <div style="position: absolute !important; top: 1.5em !important; right: 1.5em !important;">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body p-0">
+                    <!-- 모달에서 표시할 실질적인 내용 구성 -->
+                    <div class="w-100 modal-border" style="border-bottom: 1px solid #dee2e6; padding: 0.5em;">
+                        <button class="modal-content align-items-center" style="border: 1px solid transparent; font-weight: bold;">({{reportDto.reportTargetPrimaryKey}}) 신고 사유를 선택해주세요</button>
+                    </div>
+                    
+                    <div v-for="(reportFor, i) in reportForList" :key="i" class="w-100 modal-border" style="border-bottom: 1px solid #dee2e6; padding: 0.5em;">
+                        <button v-text="reportFor" class="modal-content align-items-center" style="border: 1px solid transparent;" data-bs-target="#repotModal2" data-bs-toggle="modal" @click="setReportFor(reportFor)"></button>
+                    </div>
+                    
+                    <div class="w-100 modal-content" style="border: 1px solid transparent; padding: 0.5em;">
+                        <button class="modal-content align-items-center" style="border: 1px solid transparent;" data-bs-target="#repotModal2" data-bs-toggle="modal" @click="setReportFor('기타')">기타</button>
+                    </div>
+                </div>
+            </div>      
+        </div>
+    </div>
+    <!-- 신고 모달2 -->
+    <div class="modal" tabindex="-1" role="dialog" id="repotModal2">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content position-relative">
+                <div class="modal-header">
+                    <h4 class="modal-title mx-auto">선택한 항목</h4>
+                </div>
+
+                <!-- 이전버튼 -->
+                <div class="carousel carousel-dark" style="position: absolute !important; top: 1.5em !important; left: 1.5em !important; width: 1.5em; height: 1.5em;">
+                    <button class="carousel-control-prev w-100 h-100" type="button" data-bs-target="#repotModal1" data-bs-toggle="modal">
+                        <span class="carousel-control-prev-icon" aria-hidden="true" style="padding: 4px;"></span>
+                    </button>
+                </div>
+
+                <!-- 닫기 버튼 -->
+                <div style="position: absolute !important; top: 1.5em !important; right: 1.5em !important;">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+
+                <!-- 모달에서 표시할 실질적인 내용 구성 -->
+                <div class="modal-body align-items-center">
+                    <p style="text-align: center;">{{reportDto.reportFor}}</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger w-100" data-bs-dismiss="modal" @click="reportMember">신고하기</button>
+                </div>
+            </div>      
+        </div>
+    </div>
 </div>
 
 
@@ -244,6 +305,39 @@
             searchLoginDays: "",
             orderList: [],
           },
+          // 신고 리스트
+          reportForList: [ "부적절한 컨텐츠 게시", "선정/폭력성", "스팸/광고", "거짓 또는 사기", "테스트리폿사유" ],
+          // 회원신고 생성 시 신고 내용을 담은 object   
+          reportDto: {
+            memberId: memberId,
+            reportTargetType: "회원",
+            reportTargetPrimaryKey: "",
+            reportFor: "",
+          },
+          // 회원리스트  
+          memberList: [],
+          // 선택된 회원 Object
+          selectedMemberObj: {},
+          // 선택된 회원 List
+          selectedMemberList: [],
+
+
+          // 페이지 Obj
+          pageObj: {
+            page: 1,
+            size: 10,
+            get begin(){
+                return (this.page - 1) * this.size + 1;
+            }, 
+            // get end(){
+            //     return ;
+            // },
+          },
+        // end: this.page * this.size < memberList.length ? this.page * this.size : memberList.length,
+
+
+          modal: null,
+
           // 체크리스트
           // 동의/비동의
           agree: false,
@@ -252,95 +346,63 @@
           user: false,
           adminUser: false,
           // 1차정렬/2차정렬
-
-          // 회원리스트  
-          memberList: [],
-
-
-          // 선택된 회원 Object
-          selectedMemberObj: {},
-          // 선택된 회원 List
-          selectedMemberList: [],
-
-
-          // 페이지네이션 Obj
-          pageObj: {
-            page: 1,
-            size: 10,
-            blocksize: 10,
-            total: 0, 
-
-            // 블럭에서 뜨는 첫번째 게시물
-            get begin(){
-                return (this.page - 1) * this.size + 1;
-            },
-            // 블럭에서 뜨는 마지막 게시물
-            get end(){
-                return Math.min(this.page * this.size, this.total);
-            },
-
-            // 페이지 총 수
-            get totalPage(){
-                return Math.floor((this.total + this.size - 1) / this.size);
-            },
-            // 시작 블럭
-            get startBlock(){
-                
-                return Math.floor((this.page - 1)/this.blocksize) * this.blocksize + 1
-            },
-            // 마지막 블럭
-            get finishBlock(){
-                return Math.min(this.startBlock + this.blocksize - 1, this.totalPage);
-            },
-
-
-            // 처음블럭 판별
-            get isFirst(){
-                return this.page === 1;
-            },
-            // 마지막블럭 판별
-            get isLast(){
-                return this.page >= this.totalPage;
-            },
-            // 이전블럭 존재판별
-            get hasPrev(){
-                return this.startBlock > 1;
-            },
-            // 다음블럭 존재판별
-            get hasNext(){
-                return this.finishBlock < this.totalPage;
-            },
-            // 이전블럭 페이지번호
-            get getPrevPage(){
-                return this.startBlock - 1 ;
-            },
-            // 다음블럭 페이지번호
-            get getNextPage(){
-                return this.finishBlock + 1 ;
-            },
-
-          },
-
         };
       },
       computed: {
   
       },
       methods: {
+        showModal(){
+            if(this.modal == null) return;
+            this.modal.show();
+        },
+        hideModal(){
+            if(this.modal == null) return;
+            this.modal.hide();
+        },
         // 멤버 불러오기
         async loadMemberList(){
             const url = "http://localhost:8080/rest/admin/member"
             const response = await axios.post(url, this.memberSearchVO);
-            console.log(response.data);
-            this.memberList = response.data;
+            this.memberList = _.cloneDeep(response.data);
+        },
+        // 신고 대상 설정
+        setReportDto(target){
+            this.reportDto.reportTargetPrimaryKey = target;
+        },
+        // 신고 이유 설정
+        setReportFor(reportFor){
+            this.reportDto.reportFor = reportFor;
+            console.log(this.reportDto.reportFor);
+        },
+        // 회원신고 생성
+        async reportMember(target){
+            console.log(this.reportDto);
+            const url = "http://localhost:8080/rest/report/"
+            const resp = await axios.post(url, this.reportDto);
         },
         // 회원 비동기 검색
-        // async searchMember(){
-            // const url = "http://localhost:8080/rest/report/test/";
-            // const resp = await axios.post(url, this.memberSearchVO);
-            // this.memberList = _.cloneDeep(resp.data);
+        async searchMember(){
+            const url = "http://localhost:8080/rest/report/test/";
+            const resp = await axios.post(url, this.memberSearchVO);
+            this.memberList = _.cloneDeep(resp.data);
             // console.table(this.memberSearchVO);
-        // },
+        },
+        // 회원 팔로우 생성
+        async followMember(followTargetId){
+            const url = "http://localhost:8080/rest/follow/member";
+            const resp = await axios.post(url, { followTargetPrimaryKey: followTargetId });
+        },
+        // 팔로우 목록(회원) 불러오기
+        async loadMemberFollow(){
+            // 로그인한 상태가 아니라면 실행X
+            if(memberId==="") return;
+            const url = "http://localhost:8080/rest/follow/member";
+            const resp = await axios.get(url, { param: {memberId: memberId} });
+            console.log(resp.data);
+        },
+
+
 
         // 회원 개별선택
         checkMember(e, memberId){
@@ -379,9 +441,9 @@
             alert(selectedCnt + "개의 회원의 정보가 변경되었습니다.")
         },
 
-        // 선택회원 일괄처리 (회원 수정-자유,고정, 삭제-회원이름) 전처리 함수
+        // 선택회원 일괄처리 (회원 수정-자유,고정, 삭제-태그이름) 전처리 함수
         preMemberAccess(){
-            // 1. 선택된 회원 이름 리스트 초기화
+            // 1. 선택된 태그 이름 리스트 초기화
             this.setSelectedMemberList();
             
             // 2. 선택된 항목이 없다면 실행 X
@@ -389,21 +451,24 @@
 
             return true;
         },
-        // 선택된 회원 존재여부 확인
+        // 선택된 태그 존재여부 확인
         isSelectedMemberExist(){
-            // 선택된 회원 갯수
+            // 선택된 태그 갯수
             const selectedMemberLeng = this.selectedMemberList.length;
-            // 선택된 회원 존재여부
+            // 선택된 태그 존재여부
             const selectedMemberExist = selectedMemberLeng !== 0;
             return selectedMemberExist;
         },
+
+
+
 
         
         // 선택된 회원 배열 생성
         setSelectedMemberList(){
             this.selectedMemberList = Object.keys(this.selectedMemberObj);
         },
-        // 선택된 회원 초기화
+        // 선택된 태그 초기화
         setSelectedMemberEmpty(){
             this.selectedMemberObj = {};
             this.selectedMemberList = [];
@@ -420,44 +485,29 @@
             }
         },
 
+        checkPageObj(){
+            console.table(this.pageObj);
+        },
+
+
         // 풀네임 생성
         fullName(name, engName){
           return name + "(" + engName + ")";
         },
-
-
-
-        // ################################# 페이지네이션 method 시작 #################################
-        showFirstPage(){
-            this.pageObj.page = 1;
-        },
-        showPrevBlock(){
-            this.pageObj.page = this.pageObj.getPrevPage;
-        },
-        showNextBlock(){
-            this.pageObj.page = this.pageObj.getNextPage;
-        },
-        showLastPage(){
-            this.pageObj.page = this.pageObj.totalPage;
-        },
-        showTargetPage(page){
-            this.pageObj.page = page;
-        },
-        // ################################# 페이지네이션 method 끝 #################################
       },
       watch: {
         "agree": function(){
             if(this.agree){
-                this.memberSearchVO.memberAgreeList.push("Y");
+                this.memberSearchVO.memberAgreeList.push("동의");
             } else {
-                this.memberSearchVO.memberAgreeList = this.memberSearchVO.memberAgreeList.filter(item=>item!=="Y");
+                this.memberSearchVO.memberAgreeList = this.memberSearchVO.memberAgreeList.filter(item=>item!=="동의");
             }
         },
         "disagree": function(){
             if(this.disagree){
-                this.memberSearchVO.memberAgreeList.push("N");
+                this.memberSearchVO.memberAgreeList.push("비동의");
             } else {
-                this.memberSearchVO.memberAgreeList = this.memberSearchVO.memberAgreeList.filter(item=>item!=="N");
+                this.memberSearchVO.memberAgreeList = this.memberSearchVO.memberAgreeList.filter(item=>item!=="비동의");
             }
         },
         "user": function(){
@@ -477,14 +527,17 @@
         memberList: {
           deep: true,
           handler(newVal, oldVal) {
-            this.pageObj.total = this.memberList.length;
+            this.pageObj.end = Math.min(this.pageObj.page * this.pageObj.size, this.memberList.length);
+            // this.pageObj.end = this.pageObj.page * this.pageObj.size < this.memberList.length ? this.pageObj.page * this.pageObj.size : this.memberList.length;
           }
         },
       },
       created(){
             this.loadMemberList();
+            this.loadMemberFollow();
       },
       mounted(){
+        // this.modal = new bootstrap.Modal(this.$refs.modal03);
       },
     }).mount('#app')
   </script>
