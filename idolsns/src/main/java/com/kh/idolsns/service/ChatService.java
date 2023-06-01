@@ -8,5 +8,6 @@ public interface ChatService {
 	void connectHandler(WebSocketSession session);
 	void disconnectHandler(WebSocketSession session);
 	void receiveHandler(WebSocketSession session, TextMessage message) throws IOException;
+	//void connectHandler(WebSocketSession session, TextMessage message) throws JsonMappingException, JsonProcessingException;
 	
 }

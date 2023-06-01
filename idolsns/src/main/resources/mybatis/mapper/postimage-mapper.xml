@@ -21,4 +21,14 @@
 		select attachment_no from post_image
 		where post_no = #{postNo}
 	</select>
+	
+	<delete id="deleteByPostNo">
+		delete from post_image
+		where post_no = #{postNo}
+	</delete>
+	
+	<delete id="delete">
+		delete from post_image
+		where attachment_no = #{attachmentNo}
+	</delete>
 </mapper>

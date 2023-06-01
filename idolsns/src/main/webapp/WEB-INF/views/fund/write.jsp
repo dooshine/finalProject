@@ -52,7 +52,6 @@
     });
 </script>
 
-
    <style>
    	     @media screen and (max-width:992px) {
 		  	.col-6 {
@@ -69,7 +68,8 @@
 		   	}
 	
 	</style>
-
+	
+<div id="app">
 
 	<div id="d-flex justify-content-center">
 	  <div class="container rounded p-3" style="background-color:white">
@@ -110,7 +110,8 @@
 	</div>
 	
 
-<!-- 		이미지(여러 개) : <input type="file" name="attaches" multiple> -->
+
+
 
 	<div class="input-group mb-3">
 	  <div class="input-group-prepend">
@@ -124,12 +125,88 @@
 
 
 
+		<button type="submit" class="btn btn-primary mb-5" @click="insertFixedTagList">글쓰기</button>
+		<input type="hidden" v-for="(newFixedTag, i) in newFixedTagList" 
+					:key="i" v-model="newFixedTag" name="newFixedTagList">
 
-		<button class="btn btn-primary mb-5" type="submit">글쓰기</button>
 	</form>
+	
+	
+		<!-- 고정태그 입력 시 목록 불러오기 -->
+	    <div class="row mt-3">
+	        <div class="col">
+	            태그 : <input type="text" @input="findFixedTagName = $event.target.value" v-model="findFixedTagName">
+	        </div>
+	    </div>
+	    <div class="row">
+	        <div v-for="(findFixedTag, i) in findFixedTagList" :key="i">
+	            <button class="btn btn-secondary" @click="addNewFixedTag(findFixedTag)">{{ findFixedTag }}</button>
+	        </div>
+	    </div>
+	    <div class="row mt-3">
+	        <div class="col">
+	            <button class="btn btn-primary" v-for="(newFixedTag, i) in newFixedTagList"
+	            				@click="deleteTag(i)">{{ newFixedTag }}</button>
+	        </div>
+	    </div>
+	</div>
 </div>
 	</div>
-	  </div>
+</div>
 
-	
+		<script src="https://unpkg.com/vue@3.2.36"></script>
+	    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+	    <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.21/lodash.min.js"></script>
+	    
+		<script>
+		 Vue.createApp({
+	            //데이터 설정 영역
+	            data(){
+            	   return{
+            		// 입력 시 고정태그 불러오기
+   	          	      findFixedTagName: "",
+         	          findFixedTagList: [],
+         	          newFixedTagList: [],
+            	   }
+	            	},
+            	computed: {
+            	},
+            	methods: {
+            		async loadFindFixedTagList(){
+                        if(this.findFixedTagName.length == 0) return;
+
+                        const resp = await axios.get("http://localhost:8080/rest/fixedTag/"+this.findFixedTagName);
+                        this.findFixedTagList = resp.data;
+                        console.log(this.findFixedTagList);
+                        // console.log("조회 실행");
+                    },
+                    // 고정태그 추가
+                    addNewFixedTag (newFixedTag){
+                        this.newFixedTagList.push(newFixedTag);
+                        this.findFixedTagName = "";
+                        this.findFixedTagList = [];
+                    },
+                    deleteTag(i){
+                    	this.newFixedTagList.splice(i, 1);
+                    },
+                    async insertFixedTagList() {
+                    	const url = "/rest/fund/tag";
+                    	const resp = axios.post(url, this.newFixedTagList)
+                    },
+                    
+	           	},
+	           	watch: {
+	           		findFixedTagName:_.throttle(function(){
+	                    //this == 뷰 인스턴스
+	                    this.loadFindFixedTagList();
+	        }, 250),
+	            },
+	            mounted() {
+	            },
+	           	created() {
+	           	}
+	  		}).mount("#app");
+
+		</script>
+
 <jsp:include page="/WEB-INF/views/template/footer.jsp"></jsp:include>

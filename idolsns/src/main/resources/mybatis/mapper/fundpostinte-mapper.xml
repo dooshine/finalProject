@@ -33,11 +33,21 @@
 		<!-- post_image -->
 		<collection property="attachmentNos" javaType="java.util.List"
 				ofType="PostImageDto" select="attachByPostNo" column="post_no"/>
+		
+		<!-- tag -->
+		<collection property="tagNames" javaType="java.util.List"
+				ofType="TagDto" select="tagByPostNo" column="post_no"/>
 				
 	</resultMap>
 	
 	<select id="fundPostByPostNo" resultMap="fdvo" parameterType="Long">
-		select * from fundpostimage_detail where post_no=#{postNo} 
+		select * from fundpostimage_detail 
+		where post_no=#{postNo} 
+	</select>
+	
+	<select id="tagByPostNo" resultType="TagDto" parameterType="Long">
+		select * from tag
+		where post_no=#{postNo}
 	</select>
 	
 	<select id="fundByPostNo" resultType="FundDto" parameterType="Long">
@@ -46,7 +56,8 @@
 	</select>
 	
 	<select id="attachByPostNo" resultType="PostImageDto" parameterType="Long">
-		select * from post_image where post_no=#{postNo}
+		select * from post_image 
+		where post_no=#{postNo}
 	</select>
 	
 	<!-- SQL 구문 조각 생성 -->
@@ -59,19 +70,39 @@
 	 	) where rn between #{begin} and #{end}
 	 </sql>
 	 
+	 <!-- 태그&펀딩제목 검색해서 무한스크롤 페이징 목록 -->
+	<select id="selectListWithTag" resultType="FundListWithTagDto">
+		<include refid="topNheader"/>	 		
+			select * from fundlist_with_tag
+		  	where instr(fund_title, #{searchKeyword}) > 0
+					  or
+					 instr(tag_name, #{searchKeyword}) > 0
+		  	order by post_time desc	 	 	
+		<include refid="topNfooter"/> 
+	</select>
+	
+	<!-- 검색어 있는 무한스크롤 페이징 목록 -->
+	 <select id="infiniteWithKeyword" resultType="FundPostImageDto">
+		<include refid="topNheader"/>	 		
+			select * from fundpostimage_view
+		  	where instr(fund_title, #{searchKeyword}) > 0
+		  	order by post_time desc	 	 	
+		<include refid="topNfooter"/>
+	 </select>
+	 
 	<!-- 무한스크롤 페이징 목록 -->
 	 <select id="infinite" resultType="FundPostImageDto">
 		<include refid="topNheader"/>	 		
-		select * from fundpostimage_view
-		order by post_time desc	 	
+			select * from fundpostimage_view
+		  	order by post_time desc	 	 	
 		<include refid="topNfooter"/>
 	 </select>
+	 
+	 
 	 
 	<select id="list" resultType="FundPostImageDto">
 		select * from fundpostimage_view
 		order by post_time desc
 	</select>
-	
-	
-	
+
 </mapper>

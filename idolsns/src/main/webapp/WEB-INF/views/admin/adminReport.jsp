@@ -5,7 +5,7 @@
 <jsp:include page="/WEB-INF/views/admin/adminHeader.jsp"></jsp:include>
 
 <!-- 제어영역 설정 -->
-<div class="container" id="app">
+<div class="container mt-5" id="app">
     <!-- # 신고조회 타이틀 -->
     <div class="row">
         <div class="col">

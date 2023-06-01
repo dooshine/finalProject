@@ -9,8 +9,11 @@ import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,8 +29,12 @@ import com.kh.idolsns.configuration.CustomEmailProperties;
 import com.kh.idolsns.configuration.CustomFileuploadProperties;
 import com.kh.idolsns.dto.AttachmentDto;
 import com.kh.idolsns.dto.MemberDto;
+import com.kh.idolsns.dto.MemberExitDto;
+import com.kh.idolsns.dto.MemberFollowCntDto;
+import com.kh.idolsns.dto.MemberFollowInfoDto;
 import com.kh.idolsns.dto.MemberProfileImageDto;
 import com.kh.idolsns.repo.AttachmentRepo;
+import com.kh.idolsns.repo.MemberFollowCntRepo;
 import com.kh.idolsns.repo.MemberProfileImageRepo;
 import com.kh.idolsns.repo.MemberRepo;
 import com.kh.idolsns.service.emailService;
@@ -57,6 +64,15 @@ public class MemberController {
 	@Autowired
 	private CustomFileuploadProperties customFileuploadProperties;
 	
+	@Autowired
+	private MemberFollowCntRepo memberFollowCntRepo;
+	
+	@Autowired
+	private SqlSession sqlSession;
+	
+	@Autowired
+	private PasswordEncoder encoder;
+	
 	private File dir;
 	@PostConstruct
 	public void init() {
@@ -71,6 +87,8 @@ public class MemberController {
 	
 	@PostMapping("/join")
 	public String join(@ModelAttribute MemberDto memberDto) {
+//		String encrypt  = encoder.encode(memberDto.getMemberPw());
+//		memberDto.setMemberPw(encrypt);
 		
 		// 멤버 생성
 		memberRepo.insert(memberDto);
@@ -141,6 +159,7 @@ public class MemberController {
 		return "member/mypage";
 	}
 	
+	//마이페이지 - 아이디, 닉네임 조회
 	@GetMapping("/profile")
 	@ResponseBody
 	public Map<String, String> profile(HttpSession session) {
@@ -155,6 +174,7 @@ public class MemberController {
 		return result;
 	}
 	
+	//마이페이지 - 프로필 사진 조회
 	@GetMapping("/profileImage")
 	@ResponseBody
 	public MemberProfileImageDto memberProfileExist(HttpSession session) {
@@ -163,6 +183,7 @@ public class MemberController {
 		return memberProfileImageDto;
 	}
 	
+	//마이페이지 - 닉네임 수정
 	@GetMapping("/nickname")
 	@ResponseBody
 	public String nickname(HttpSession session,
@@ -175,6 +196,7 @@ public class MemberController {
 		return "success";
 	}
 	
+	//마이페이지 - 프로필 사진 수정
 	@GetMapping("/editImage")
 	@ResponseBody
 	public String editImage(HttpSession session,
@@ -192,11 +214,46 @@ public class MemberController {
 					.attachmentSize(attach.getSize())
 					.build()
 					);
-//			memberProfileImageRepo.insert(MemberProfileImageDto.bulider()
-//						.
-//					);
+			memberProfileImageRepo.insert(MemberProfileImageDto.builder()
+						.attachmentNo(attachmentNo1)
+						.memberId(memberId)
+						.build()
+					);
 		}
 		return memberId;
+	}
+	
+	//마이페이지 - 팔로우 수 조회
+	@GetMapping("/followCnt")
+	@ResponseBody
+	public Map<String, Object> follwCnt(HttpSession session) {
+		String memberId = (String) session.getAttribute("memberId");
+		MemberFollowCntDto memberFollowCntDto =  memberFollowCntRepo.followCnt(memberId);
+		
+		Map<String, Object> result = new HashMap<>();
+		
+		result.put("MemberFollowCnt", memberFollowCntDto.getMemberFollowCnt());
+		result.put("MemberFollowerCnt", memberFollowCntDto.getMemberFollowerCnt());
+		result.put("MemberPageCnt", memberFollowCntDto.getMemberPageCnt());
+		
+		System.out.println(result);
+		
+		return result;
+	}
+	
+	//마이페이지 - 팔로우, 팔로워, 페이지 리스트 조회
+	@GetMapping("/followList")
+	@ResponseBody
+	public Map<String, Object> followList(HttpSession session) {
+	    String memberId = (String) session.getAttribute("memberId");
+	    MemberFollowInfoDto dto = sqlSession.selectOne("follow.selectMemberFollowInfo", memberId);
+	    
+	    Map<String, Object> result = new HashMap<>();
+	    result.put("FollowMemberList", dto.getFollowMemberList());
+	    result.put("FollowerMemberList", dto.getFollowerMemberList());
+	    result.put("FollowPageList", dto.getFollowPageList());
+	    
+	    return result;
 	}
 	
 	//회원탈퇴
@@ -216,8 +273,12 @@ public class MemberController {
 			attr.addAttribute("mode", "error");
 			return "redirect:exit";
 		}
-		
+			
 			memberRepo.exitDate(memberId);
+			
+				memberRepo.memberExit(memberId);
+			
+			
 			
 			session.removeAttribute("memberId");
 			session.removeAttribute("memberLevel");
@@ -305,6 +366,18 @@ public class MemberController {
 	public String idDuplicatedCheck(@RequestParam String memberId) {
 		int result = memberRepo.idDuplicatedCheck(memberId);
 		
+		if(result == 0) {
+			return "Y";
+		}
+		else {
+			return "N";
+		}
+	}
+	
+	@GetMapping("/idDuplicatedCheck2")
+	@ResponseBody
+	public String idDuplicatedCheck2(@RequestParam String memberId) {
+		int result = memberRepo.memberExitFind(memberId);
 		if(result == 0) {
 			return "Y";
 		}

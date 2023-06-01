@@ -63,7 +63,7 @@
 				var formData = new FormData();		
 				// 3. 글 작성 버튼 클릭 시, 업로드 과정-----------------------------------------------
 				$(".write-finish").click(function(){
-					
+					window.location.reload();
 					
 					let postText = $(".post").val();					
 					// postDto에 삽입하기 위해 post로 송신할 JSON 객체생성

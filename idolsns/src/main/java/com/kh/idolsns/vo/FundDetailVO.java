@@ -5,6 +5,7 @@ import java.util.List;
 import com.kh.idolsns.dto.FundDto;
 import com.kh.idolsns.dto.FundPostImageDto;
 import com.kh.idolsns.dto.PostImageDto;
+import com.kh.idolsns.dto.TagDto;
 
 import lombok.Data;
 
@@ -14,4 +15,5 @@ public class FundDetailVO {
 	private List<PostImageDto> attachmentNos;
 	private List<FundDto> fundDtos;
 	private List<FundVO> fundVOs;
+	private List<TagDto> tagNames;
 }

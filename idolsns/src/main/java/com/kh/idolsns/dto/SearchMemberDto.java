@@ -15,6 +15,6 @@ public class SearchMemberDto {
     private int attachmentNo;
 
     public String getProfileSrc(){
-        return "/download/?attachmentNo=" + this.attachmentNo;
+        return attachmentNo==0 ? "/static/image/profileDummy.png" : "/download/?attachmentNo=" + this.attachmentNo;
     }
 }

@@ -21,7 +21,7 @@
 	<select id="list" resultType="ReplyDto" parameterType="Long">
 		select * from reply
 		where post_no=#{postNo}
-		order by reply_group_no desc, reply_no asc
+		order by reply_group_no asc, reply_no asc
 	</select>
 	
 	<select id="selectOne" resultType="ReplyDto" parameterType="Long">
@@ -41,5 +41,9 @@
 		set reply_content=#{replyContent}
 		where reply_no=#{replyNo}
 	</update>
+	
+	<delete id="deleteByPostNo">
+		delete from reply where post_no = #{post_no}
+	</delete>
 
 </mapper>

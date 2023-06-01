@@ -10,9 +10,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.kh.idolsns.dto.MemberDto;
+import com.kh.idolsns.dto.MemberProfileFollowDto;
 import com.kh.idolsns.dto.ReportDto;
-import com.kh.idolsns.repo.MemberRepo;
 import com.kh.idolsns.repo.ReportRepo;
 import com.kh.idolsns.service.AdminService;
 import com.kh.idolsns.service.ReportService;
@@ -59,7 +58,7 @@ public class ReportRestController {
 
     // 테스트
     @PostMapping("/test")
-    public List<MemberDto> test(@RequestBody AdminMemberSearchVO adminMemberSearchVO){
+    public List<MemberProfileFollowDto> test(@RequestBody AdminMemberSearchVO adminMemberSearchVO){
         // System.out.println(adminMemberSearchVO);
         return adminService.adminSelectMemberList(adminMemberSearchVO);
     }

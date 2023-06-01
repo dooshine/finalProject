@@ -14,5 +14,13 @@ public class NotiRepoImpl implements NotiRepo {
 	public void insert(NotiDto dto) {
 		sql.insert("noti.save", dto);
 	}
+	@Override
+	public int sequence() {
+		return sql.selectOne("noti.sequence");
+	}
+	@Override
+	public void delete(int notiNo) {
+		sql.delete("noti.delete", notiNo);
+	}
 
 }

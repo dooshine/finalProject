@@ -30,5 +30,10 @@
         select count(*) from post_like where member_id = #{memberId} and post_no = #{postNo}
     </select>
     
+    <!-- 좋아요 삭제 -->
+    <delete id="deleteByPostNo">
+    	delete from post_like
+    	where post_no = #{postNo}
+    </delete>
     
 </mapper>

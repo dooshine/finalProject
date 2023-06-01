@@ -48,4 +48,9 @@ public class PostRepoImpl implements PostRepo{
 	public List<PostDto> selectList() {
 		return sqlSession.selectList("post.selectList");
 	}
+
+	@Override
+	public PostDto selectOne(Long postNo) {
+		return sqlSession.selectOne("post.selectOne",postNo);
+	}
 }

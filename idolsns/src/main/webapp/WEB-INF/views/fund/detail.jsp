@@ -118,14 +118,29 @@
 			<div class="row mt-3" style="padding-left: 1em">
 				<div v-html="fundDetail.postContent"></div>
 			</div>
+
 					
 	</div>
 		
 		
 		
 	
-           
+
+			
 		<hr>
+			<!-- 태그 출력 -->
+			<div class="row mt-3">
+				<div class="col">
+					<button class="btn btn-primary" v-for="(tag, i) in fundDetail.tagNames"
+								@click="tagLink(i)">
+					{{ tag }}
+					</button>
+				</div>
+			</div>
+		</div>
+		</div>             
+		
+	<!-- ------------------------ 댓글 ------------------------------- -->
 	
 	<!-- 댓글창 -->
 	
@@ -147,8 +162,6 @@
 				</div>
 	        	<div v-else>
 	        		{{ reply.replyContent }}
-	        		replyNo : {{ reply.replyNo }}
-	        		groupNo: {{ reply.replyGroupNo }}	
 	        		<!-- 대댓글 버튼 -->
 		        	<button v-if="reply.replyNo == reply.replyGroupNo" 
 		        			@click="showRereplyForm(i)">
@@ -181,8 +194,6 @@
 				</div>
 				<div class="card-body" v-else>
 					→ {{reply.replyId}} : {{ reply.replyContent }}
-					replyNo : {{ reply.replyNo }}
-					groupNo: {{ reply.replyGroupNo }}
 	        		<!-- 대댓글 버튼 -->
 		    
 		        		<i v-if="reply.replyNo == reply.replyGroupNo" 
@@ -260,6 +271,7 @@
 		          postContent: "",
 		          imageURL: "",
 		          fundTotal: "",
+		          tagNames: [],
 		        },
 		        replies: [],
 		        // 댓글창 보여주기
@@ -323,6 +335,11 @@
         			const postNo = this.fundDetail.postNo;
 					const resp = await axios.get("http://localhost:8080/rest/fund/attaches/"+postNo)	  
 					this.fundDetail.attachmentNos.push(...resp.data);
+        		},
+        		async loadTagNames() {
+        			const postNo = this.fundDetail.postNo;
+        			const resp = await axios.get("/rest/fund/tag/"+postNo);
+        			this.fundDetail.tagNames.push(...resp.data);
         		},
 		       // fundTotal & fundSponsorCount 불러오기
         		async loadFundVO(){
@@ -425,6 +442,12 @@
 				showUpdateForm(i) {
 					this.updateReplyObj.index = i
 					this.reReplies[i] = false;
+				},
+				// 태그 클릭시 
+				tagLink(i){
+					console.log(this.fundDetail.tagNames[i]);
+					const url = ""
+					window.location.href = url;
 				}
 		      	
 		    },
@@ -434,6 +457,7 @@
 		    	  this.loadAttachNos();
 		    	  this.loadFundVO();
 		    	  this.loadReplies();
+		    	  this.loadTagNames();
 		    	},
 		    mounted() {
 		    	}

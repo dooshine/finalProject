@@ -9,7 +9,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>회원가입</title>
+    <title>마이페이지</title>
     <!-- 폰트어썸 cdn -->
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css">
     <!-- jquery cdn -->
@@ -50,7 +50,7 @@
 }
 	</style>
 </head>
-<body test>
+<body>
 	<div class="container rounded p-3" style="background-color:white">
 	<div id="app">
 		
@@ -58,7 +58,6 @@
 			<div class="row">
 				<a href="${pageContext.request.contextPath}/member/exit">회원탈퇴</a>
 				<a href="${pageContext.request.contextPath}/member/password">비밀번호 변경</a>
-				<a href="${pageContext.request.contextPath}/member/nickname">닉네임 변경</a>
 			</div>
 			
 			<div class="row">
@@ -75,7 +74,24 @@
 				</div>
 				<div class="col-4 text-right">
 					<button type = "button" class="btn btn-primary mt-4" v-on:click = "showModal">프로필 수정</button>
-				</div>				
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-4 " style="display: flex; justify-content: space-between; flex-direction: column; align-items: center;" 
+					v-on:click="showFollowModal">
+					<span >팔로우</span>
+					<span>{{ MemberFollowCnt }}명</span>
+				</div>
+				<div class="col-4 " style="display: flex; justify-content: space-between; flex-direction: column; align-items: center;"
+					v-on:click="showFollowerModal">
+					<span>팔로워</span>
+					<span>{{ MemberFollowerCnt }}명</span>
+				</div>
+				<div class="col-4 " style="display: flex; justify-content: space-between; flex-direction: column; align-items: center;"
+					v-on:click="showPageModal">
+					<span>페이지</span>
+					<span>{{ MemberPageCnt }}명</span>
+				</div>
 			</div>
 			
 			<div class="modal" tabindex = "-1" role="dialog" id="modal" data-bs-backdrop="static" ref="modal">
@@ -86,12 +102,13 @@
 						</div>
 						<div class="modal-body text-center">
 							<img :src="memberProfileImageObj !== ''  && memberProfileImageObj.attachmentNo !== undefined ? '/download/?attachmentNo='+memberProfileImageObj.attachmentNo :  ' /static/image/profileDummy.png' "
-								class="profile-image">
+								class="profile-image" @click="openFileInput">
+							<input type="file" ref="fileInput" style="display: none;"@change="handleFileUpload()">
 							<h3>
 					            <span v-if="!editingNickname">{{ memberNick }}</span>
 					            <input v-else type="text" v-model="editedNickname" class="form-control" placeholder="새로운 닉네임"
-					            	:class="{'is-invalid':nickDuplicated}" @blur="nickDuplicatedCheck(memberNick)">
-					            <div class="invalid-feedback">이미 존재하는 아이디입니다.</div>
+					            	:class="{'is-invalid':editedNickname !== '' && (!memberNickValid || nickDuplicated)}" @blur="nickDuplicatedCheck(memberNick)">
+					            <div class="invalid-feedback">{{memberNickMessage}}</div>
 					            <i v-if="!editingNickname" class="fa-solid fa-pen-to-square" style="font-size: 14px; margin-left: 10px; cursor: pointer;" @click="editingNickname=true"></i>
 					            <i v-else class="fa-solid fa-check" style="font-size: 14px; margin-left: 10px; cursor: pointer;" @click="updateNickname(memberNick)"></i>
 					        </h3>
@@ -101,7 +118,73 @@
 				</div>
 			</div>
 			
+			<div class="modal" tabindex = "-1" role="dialog" id="followModal" data-bs-backdrop="static" ref="followModal">
+				<div class="modal-dialog" role="document">
+					<div class="modal-content	">
+						<div class="modal-header">
+							<i class="fa-solid fa-xmark" style="color: #bcc0c8;" data-bs-dismiss="modal" aria-label="Close"></i>
+						</div>
+						<div class="modal-body text-center">
+							<div v-for="board in FollowMemberList">
+							{{board}}
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			<div class="modal" tabindex = "-1" role="dialog" id="followerModal" data-bs-backdrop="static" ref="followerModal">
+				<div class="modal-dialog" role="document">
+					<div class="modal-content	">
+						<div class="modal-header">
+							<i class="fa-solid fa-xmark" style="color: #bcc0c8;" dat	a-bs-dismiss="modal" aria-label="Close"></i>
+						</div>
+						<div class="modal-body text-center">
+							<div v-for="board in FollowerMemberList">
+								{{board}}
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			<div class="modal" tabindex = "-1" role="dialog" id="pageModal" data-bs-backdrop="static" ref="pageModal">
+				<div class="modal-dialog" role="document">
+					<div class="modal-content	">
+						<div class="modal-header">
+							<i class="fa-solid fa-xmark" style="color: #bcc0c8;" data-bs-dismiss="modal" aria-label="Close"></i>
+						</div>
+						<div class="modal-body text-center">
+							<div v-for="board in FollowPageList">
+								{{board}}	
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			
 			<hr>
+			
+			<div class="row">
+				<div class="col-6 text-center" @click="pageMinus()">
+					<i class="fa-solid fa-list"></i>
+				</div>
+				<div class="col-6 text-center">
+					<i class="fa-sharp fa-regular fa-heart" @click="pagePlus()"></i>
+				</div>
+			</div>
+			<div class="row page">
+				<div v-show = "page == 1">
+				
+					<h1>내가 쓴 글 </h1>
+				
+				</div>
+				<div v-show = "page == 2">
+					
+					<h1>내가 좋아요 한 글 </h1>
+				
+				</div>
+			</div>
 			
 		</div>
 	
@@ -115,13 +198,32 @@
 						memberId:"",
 						memberNick:"",
 						modal:null,
+						followModal:null,
+						followerModal:null,
+						pageModal:null,
 						memberProfileImageObj: {},
 						editedNickname:"",
 						editingNickname:false,
 						nickDuplicated:false,
+						MemberFollowCnt:0,
+						MemberFollowerCnt:0,
+						MemberPageCnt:0,
+						FollowMemberList:[],
+						FollowerMemberList:[],
+						FollowPageList:[],
+						page : 1,
+						file : null,
+						attachmentList:[],
+						previewURLList:[], 
+						artistViewList:[],
+						
+						targetMemberFollowObj: {},
 					};
 				},		
 				methods:{
+					openFileInput() {
+					      this.$refs.fileInput.click();
+					    },
 					async profile() {
 						const response = await axios.get("/member/profile");
 						const {memberId, memberNick} = response.data;
@@ -131,6 +233,24 @@
 						
 					},
 					
+					async followCnt() {
+						const response = await axios.get("/member/followCnt");
+						const{MemberFollowCnt, MemberFollowerCnt, MemberPageCnt} = response.data;
+						
+						this.MemberFollowCnt = MemberFollowCnt;
+						this.MemberFollowerCnt = MemberFollowerCnt;
+						this.MemberPageCnt = MemberPageCnt;
+					},
+					
+					async followList() {
+						const response = await axios.get("/member/followList");
+						const{FollowMemberList, FollowerMemberList, FollowPageList} = response.data;
+						
+						this.FollowMemberList = FollowMemberList;
+						this.FollowerMemberList = FollowerMemberList;
+						this.FollowPageList = FollowPageList;
+					},
+					
 					showModal(){
 						if(this.modal == null) return;
 						this.modal.show();
@@ -138,6 +258,33 @@
 					hideModal(){
 						if(this.modal == null) return;
 						this.modal.hide();
+					},
+					
+					showFollowModal() {
+						if(this.followModal == null) return;
+						this.followModal.show();
+					},
+					hideFollowModal() {
+						if(this.followModal == null) return;
+						this.followModal.hide();
+					},
+					
+					showFollowerModal() {
+						if(this.followerModal == null) return;
+						this.followerModal.show();
+					},
+					hideFollowerModal() {
+						if(this.followerModal == null) return;
+						this.followerModal.hide();
+					},
+					
+					showPageModal() {
+						if(this.pageModal == null) return;
+						this.pageModal.show();
+					},
+					hidePageModal() {
+						if(this.pageModal == null) return;
+						this.pageModal.hide();
 					},
 					
 					async profileImage() {
@@ -189,13 +336,97 @@
 	                    }).showToast();
 					},
 					
+					pagePlus(){
+						if(this.page == 1) {
+						this.page++;
+						}
+						return;
+					},
+					pageMinus() {
+						if(this.page == 2) {
+						this.page--;
+						}
+						return;
+					},
+					
+					// 파일 업로드 시 프로필 사진 변경
+		            handleFileUpload(event) {
+		                // 업로드 파일
+		                const file = event.target.files[0];
+		                // 첨부사진 임시보관
+		                this.attachmentList[index] = file;
+		                // 사진 미리보기 구현
+		                if (file) {
+		                    this.previewURLList[index] = URL.createObjectURL(file);
+		                }
+		            },
+
+		            // 대표페이지 프로필 사진 설정
+		            async uploadFile(index) {
+		                // URL
+		                const url = "http://localhost:8080/rest/member/memberProfile";
+
+		                // 폼데이터 생성
+		                const formData = new FormData();
+		                formData.append('attachment', this.attachmentList[index]);
+		                formData.append('memberId', this.artistViewList[index].artistNo);
+
+		                // 대표페이지 프로필사진 설정
+		                const resp = await axios.post(url, formData);
+
+		                // 새로고침
+		                this.loadArtistViewList();
+
+		                alert("대표페이지 프로필사진 설정완료!");
+		            },
+
+
+
+		            // 로그인 회원 팔로우 정보 로드
+		            async loadMemberFollowInfo() {
+		                // 로그인X → 실행 X
+		                if (memberId === "") return;
+		                // url
+		                const url = "http://localhost:8080/rest/follow/memberFollowProfileInfo/"
+		                // 팔로우 목록 load
+		                const resp = await axios.get(url, { params: { memberId: this.memberId } });
+
+		                // 로그인 팔로우 정보 로드
+		                this.targetMemberFollowObj = resp.data;
+		                console.table(this.targetMemberFollowObj);
+		            },
+				
+
+				},
+				computed:{
+					 memberNickValid(){
+		                    const regex = /^[가-힣0-9a-z!@#$.-_]{1,10}$/;
+		                    return regex.test(this.editedNickname);
+		                },
+		                memberNickMessage(){
+		                  
+		                    if(this.memberNickValid && !this.nickDuplicated) {
+		                        return "사용 가능한 닉네임입니다.";
+		                    }
+		                    else if(this.nickDuplicated) {
+		                        return "이미 사용중인 닉네임입니다.";
+		                    }
+		                    else{
+		                        return "한글, 영문, 숫자, 특수문자 등을 사용하여 1~16자로 작성하세요.";
+		                    }
+		                },
 				},
 				created(){
 					this.profileImage();
 				},
 				mounted() {
 					this.profile();
+					this.followCnt();
+					this.followList();
 					this.modal = new bootstrap.Modal(this.$refs.modal);
+					this.followModal = new bootstrap.Modal(this.$refs.followModal);
+					this.followerModal = new bootstrap.Modal(this.$refs.followerModal);
+					this.pageModal = new bootstrap.Modal(this.$refs.pageModal);
 				},
 			}).mount("#app");
 		</script>
