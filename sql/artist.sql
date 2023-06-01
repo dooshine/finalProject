@@ -45,14 +45,14 @@ select c.*, d.attachment_no from (
       where follow_target_type = '대표페이지'
       group by follow_target_primary_key
     ) b
-    on a.artist_name = b.artist_name
+    on a.artist_eng_name_lower = b.artist_name
   ) c
   left join artist_profile d
   on c.artist_no = d.artist_no
   order by c.artist_no asc;  
 
 select * from artist_view;
-
+update follow set attachment_no = #{attachmentNo} where artist_no = #{artistNo}
 
 -- 대표페이지 프로필 테이블 생성
 create table artist_profile(

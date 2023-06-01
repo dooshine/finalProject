@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.kh.idolsns.dto.FollowDto;
 import com.kh.idolsns.dto.MemberFollowCntDto;
 import com.kh.idolsns.dto.MemberFollowInfoDto;
+import com.kh.idolsns.dto.MemberFollowProfileInfoDto;
 import com.kh.idolsns.service.FollowService;
 
 @CrossOrigin
@@ -143,6 +144,13 @@ public class FollowRestController {
     public MemberFollowInfoDto selectMemberFollowInfo(@RequestParam String memberId){
         MemberFollowInfoDto dto = sqlSession.selectOne("follow.selectMemberFollowInfo", memberId);
         System.out.println(dto.toString());
+        return dto;
+    }
+
+    // 특정회원 팔로우 프로필 정보 불러오기
+    @GetMapping("/memberFollowProfileInfo")
+    public MemberFollowProfileInfoDto selectMemberFollowProfileInfo(@RequestParam String memberId){
+        MemberFollowProfileInfoDto dto = sqlSession.selectOne("follow.selectMemberFollowProfileInfo", memberId);
         return dto;
     }
 }

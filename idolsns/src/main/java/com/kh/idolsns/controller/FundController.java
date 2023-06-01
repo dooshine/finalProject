@@ -26,6 +26,7 @@ import com.kh.idolsns.dto.FundMainImageDto;
 import com.kh.idolsns.dto.FundPostDto;
 import com.kh.idolsns.dto.PostDto;
 import com.kh.idolsns.dto.PostImageDto;
+import com.kh.idolsns.dto.TagDto;
 import com.kh.idolsns.repo.AttachmentRepo;
 import com.kh.idolsns.repo.FundMainImageRepo;
 import com.kh.idolsns.repo.FundPostImageRepo;
@@ -34,6 +35,7 @@ import com.kh.idolsns.repo.FundRepo;
 import com.kh.idolsns.repo.MemberRepo;
 import com.kh.idolsns.repo.PostImageRepo;
 import com.kh.idolsns.repo.PostRepo;
+import com.kh.idolsns.repo.TagRepo;
 import com.kh.idolsns.vo.SearchVO;
 
 @Controller
@@ -44,6 +46,8 @@ public class FundController {
 	@Autowired
 	private MemberRepo memberRepo;
 	
+	@Autowired
+	private TagRepo tagRepo;
 	
 	@Autowired
 	private PostRepo postRepo;
@@ -83,136 +87,9 @@ public class FundController {
 	@GetMapping("/write")
 	public String write(@ModelAttribute PostImageDto postImageDto,
 								Model model) {
-		
 		return "fund/write";
 	}
 	
-	// 펀딩 게시물 등록(다중파일 업로드)
-//	@PostMapping("/write")
-//	public String write(
-//							HttpSession session,
-//							@ModelAttribute FundPostDto fundPostDto,
-//							@ModelAttribute PostDto postDto,
-//							@RequestParam MultipartFile attach,
-//							RedirectAttributes attr
-//							) throws IllegalStateException, IOException {
-//		
-//		// # 통합게시물 등록
-//		// 1. 통합게시물 시퀀스 발행
-//        Long postNo = postRepo.sequence();
-//        postDto.setPostNo(postNo);
-//
-//        // 2. 통합게시물 작성자
-//        String memberId = (String)session.getAttribute("memberId");
-//        postDto.setMemberId(memberId);
-//
-//        // 3. 통합게시물 게시물종류 설정(Fix!!)
-//        postDto.setPostType("펀딩");
-//
-//        // 4. 통합게시물 등록
-//        postRepo.insert(postDto);
-//
-//		// # 펀딩게시물 등록
-//        // 1. 펀딩게시물 시퀀스 설정
-//        fundPostDto.setPostNo(postNo);
-//        
-//        // 2. 펀딩게시물 작성자
-//        fundPostDto.setMemberId(memberId);
-//        
-//        // 3. 펀딩게시물 등록
-//		fundPostRepo.insert(fundPostDto);
-//		
-//		// # 파일 등록
-//		if(!attach.isEmpty()) {
-//	         int attachmentNo = attachmentRepo.sequence();   
-//	         File target = new File(dir, String.valueOf(attachmentNo));
-//	         attach.transferTo(target);
-//	         
-//	         attachmentRepo.insert(AttachmentDto.builder()
-//	                                 .attachmentNo(attachmentNo)
-//	                                 .attachmentName(attach.getOriginalFilename())
-//	                                 .attachmentType(attach.getContentType())
-//	                                 .attachmentSize(attach.getSize())
-//	                                 .build()
-//	               );
-//
-//	         postImageRepo.insert(PostImageDto.builder()
-//	        		 				.attachmentNo(attachmentNo)
-//	        		 				.postNo(postDto.getPostNo())
-//	         						.build()
-//	        		 );
-//	      }
-//		
-//		// 리디렉트어트리뷰트 추가
-//        attr.addAttribute("postNo", postNo);
-//		
-//		return "redirect:fund/detail";
-//	}
-	
-//	@PostMapping("/write2")
-//	public String write2(
-//							HttpSession session,
-//							@ModelAttribute FundPostDto fundPostDto,
-//							@ModelAttribute PostDto postDto,
-//							@ModelAttribute PostImageDto postImageDto,
-//							@RequestParam List<MultipartFile> attaches,
-//							RedirectAttributes attr
-//							) throws IllegalStateException, IOException {
-//		
-//		// # 통합게시물 등록
-//		// 1. 통합게시물 시퀀스 발행
-//        Long postNo = postRepo.sequence();
-//        postDto.setPostNo(postNo);
-//
-//        // 2. 통합게시물 작성자
-//        String memberId = (String)session.getAttribute("memberId");
-//        postDto.setMemberId(memberId);
-//
-//        // 3. 통합게시물 게시물종류 설정(Fix!!)
-//        postDto.setPostType("펀딩");
-//
-//        // 4. 통합게시물 등록
-//        postRepo.insert(postDto);
-//
-//		// # 펀딩게시물 등록
-//        // 1. 펀딩게시물 시퀀스 설정
-//        fundPostDto.setPostNo(postNo);
-//        
-//        // 2. 펀딩게시물 작성자
-//        fundPostDto.setMemberId(memberId);
-//        
-//        // 3. 펀딩게시물 등록
-//		fundPostRepo.insert(fundPostDto);
-//		
-//		// # DB 저장
-//		if(!attaches.isEmpty()) {
-//			for(MultipartFile attach : attaches) {
-//				int attachmentNo = attachmentRepo.sequence();   
-//				File target = new File(dir, String.valueOf(attachmentNo));
-//				attach.transferTo(target);	
-//				
-//				attachmentRepo.insert(AttachmentDto.builder()
-//						.attachmentNo(attachmentNo)
-//						.attachmentName(attach.getOriginalFilename())
-//						.attachmentType(attach.getContentType())
-//						.attachmentSize(attach.getSize())
-//						.build()
-//						);
-//				
-//				postImageRepo.insert(PostImageDto.builder()
-//						.attachmentNo(attachmentNo)
-//						.postNo(postNo)
-//						.build()
-//						);
-//			}
-//	      }
-//		
-//				
-//		// 리디렉트어트리뷰트 추가
-//        attr.addAttribute("postNo", postNo);
-//		
-//		return "redirect:detail";
-//	}
 	
 	// 펀딩게시물 등록
 	@PostMapping("/write3")
@@ -222,9 +99,9 @@ public class FundController {
 							@ModelAttribute PostDto postDto,
 							@RequestParam MultipartFile attach,
 							@RequestParam(required=false) List<Integer> attachmentNo,
-							RedirectAttributes attr
+							RedirectAttributes attr,
+						    @RequestParam List<String> newFixedTagList
 							) throws IllegalStateException, IOException {
-		
 		// # 통합게시물 등록
 		// 1. 통합게시물 시퀀스 발행
         Long postNo = postRepo.sequence();
@@ -236,8 +113,6 @@ public class FundController {
 
         // 3. 통합게시물 게시물종류 설정(Fix!!)
         postDto.setPostType("펀딩");
-        
-        System.out.println("-----------------이게 postDto-----------------" + postDto);
         // 4. 통합게시물 등록
         postRepo.insert(postDto);
 
@@ -248,9 +123,10 @@ public class FundController {
         // 2. 펀딩게시물 작성자
         fundPostDto.setMemberId(memberId);
         
-        System.out.println("-----------------이게 fundPostDto-----------------" + fundPostDto);
         // 3. 펀딩게시물 등록
 		fundPostRepo.insert(fundPostDto);
+		
+		// # 태그 등록은 비동기로 FundRestController에서 처리
 		
 		// # DB 저장
 		if(!attach.isEmpty()) {
@@ -285,6 +161,16 @@ public class FundController {
 		// 리디렉트어트리뷰트 추가
         attr.addAttribute("postNo", postNo);
 		
+        System.out.println(newFixedTagList);
+        for(String tagName: newFixedTagList) {
+        	tagRepo.insert(TagDto.builder()
+        				.postNo(postNo)
+        				.tagNo(tagRepo.sequence())
+        				.tagName(tagName)
+        				.tagType("고정")
+        				.build());
+        }
+        
 		return "redirect:detail";
 	}
 	

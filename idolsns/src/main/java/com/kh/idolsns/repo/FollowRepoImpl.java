@@ -37,5 +37,6 @@ public class FollowRepoImpl implements FollowRepo{
     public List<FollowDto> selectFollowList(FollowDto followDto) {
         return sqlSession.selectList("follow.selectFollowList", followDto);
     }
+
     
 }
