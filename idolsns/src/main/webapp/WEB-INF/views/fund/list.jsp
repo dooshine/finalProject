@@ -193,23 +193,23 @@
                           
                           this.loading = true;
                           
-                  const resp = await axios.get("http://localhost:8080/rest/fund/page/"+this.page);     
-                  console.log(resp.data);
-                  resp.data.fundPostImageDtos == null ? this.fundings.push(...resp.data.fundListWithTagDtos) : this.fundings.push(...resp.data.fundPostImageDtos);
-                  this.page ++;
-                  
-                  this.loading = false;
-                  
-                  // 데이터가 10개 미만이면 더 읽을게 없다
-                       if(resp.data.length < 10){ 
-                           this.finish = true;
-                       }
-                  
-                    },
+	                  const resp = await axios.get("http://localhost:8080/rest/fund/page/"+this.page);     
+	                  console.log(resp.data);
+	                  resp.data.fundPostImageDtos == null ? this.fundings.push(...resp.data.fundListWithTagDtos) : this.fundings.push(...resp.data.fundPostImageDtos);
+	                  this.page ++;
+	                  
+	                  this.loading = false;
+	                  
+	                  // 데이터가 10개 미만이면 더 읽을게 없다
+	                       if(resp.data.length < 10){ 
+	                           this.finish = true;
+	                       }
+	                  
+	                    },
                     
                     // 남은 시간 설정
                     getTimeDiff(funding) {
-                         const startDate = new Date(funding.postStart);
+                          const startDate = new Date(funding.postStart);
                           const endDate = new Date(funding.postEnd);
                           const currentDate = new Date();
                           const fundState = this.fundings.fundState;
