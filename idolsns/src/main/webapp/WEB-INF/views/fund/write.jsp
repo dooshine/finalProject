@@ -115,24 +115,14 @@
 
 	<div class="input-group mb-3">
 	  <div class="input-group-prepend">
-	    <span class="input-group-text">대표 이미지(1개)</span>
+	    <span class="input-group-text" @click="selectFile">대표 이미지(1개)</span>
 	  </div>
 	  <div class="custom-file">
-	    <input type="file" name="attach" class="custom-file-input" id="inputGroupFile01">
-
+	    <input type="file" name="attach" class="custom-file-input" id="inputGroupFile01"
+	    			ref="fileInput" style="display:none;">
 	  </div>
 	</div>
-
-
-
-		<button type="submit" class="btn btn-primary mb-5" @click="insertFixedTagList">글쓰기</button>
-		<input type="hidden" v-for="(newFixedTag, i) in newFixedTagList" 
-					:key="i" v-model="newFixedTag" name="newFixedTagList">
-
-	</form>
-	
-	
-		<!-- 고정태그 입력 시 목록 불러오기 -->
+	<!-- 고정태그 입력 시 목록 불러오기 -->
 	    <div class="row mt-3">
 	        <div class="col">
 	            태그 : <input type="text" @input="findFixedTagName = $event.target.value" v-model="findFixedTagName">
@@ -149,6 +139,17 @@
 	            				@click="deleteTag(i)">{{ newFixedTag }}</button>
 	        </div>
 	    </div>
+
+
+		<div class="row mt-3">
+			<button type="submit" class="btn btn-primary mb-5" @click="insertFixedTagList">글쓰기</button>
+			<input type="hidden" v-for="(newFixedTag, i) in newFixedTagList" 
+						:key="i" v-model="newFixedTag" name="newFixedTagList">
+		</div>
+
+	</form>
+	
+	
 	</div>
 </div>
 	</div>
@@ -167,6 +168,7 @@
    	          	      findFixedTagName: "",
          	          findFixedTagList: [],
          	          newFixedTagList: [],
+         	         el: '#app',
             	   }
 	            	},
             	computed: {
@@ -193,6 +195,9 @@
                     	const url = "/rest/fund/tag";
                     	const resp = axios.post(url, this.newFixedTagList)
                     },
+                    selectFile() {
+                    	this.$refs.fileInput.click();
+                    }
                     
 	           	},
 	           	watch: {

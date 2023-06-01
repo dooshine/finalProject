@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.kh.idolsns.configuration.CustomFileuploadProperties;
-import com.kh.idolsns.dto.ArtistProfileDto;
 import com.kh.idolsns.dto.AttachmentDto;
 import com.kh.idolsns.dto.MemberDto;
 import com.kh.idolsns.dto.MemberProfileImageDto;
@@ -87,9 +86,16 @@ public class MemberRestController {
 		return memberSimpleProfileRepo.profile(memberIdList);
 	}
 	
+	// 회원 아이디 받아서 회원 프로필정보 반환
+	@GetMapping("/getMemberProfileById/{memberId}")
+	public MemberSimpleProfileDto selectMemberProfileById(@PathVariable String memberId) {
+		return memberSimpleProfileRepo.selectProfileById(memberId);
+	}
+	
     // CREATE & UPDATE 프로필사진 설정
     @PostMapping("/memberProfile")
-    public void memberProfile(@RequestParam("attachment") MultipartFile attachment, @RequestParam("memberId") String memberId) throws IllegalStateException, IOException{
+    public void memberProfile(@RequestParam("attachment") MultipartFile attachment,
+    		@RequestParam("memberId") String memberId) throws IllegalStateException, IOException{
 
         if(!attachment.isEmpty()) {//파일이 있을 경우
 
@@ -111,7 +117,6 @@ public class MemberRestController {
 
 
             // # 2. pageProfile 저장
-
             // 조회 후 insert | update
             if(sqlSession.selectOne("member.selectOneProfile", memberId)==null){
                 sqlSession.insert("member.insertProfile", MemberProfileImageDto.builder().memberId(memberId).attachmentNo(attachmentNo).build());
