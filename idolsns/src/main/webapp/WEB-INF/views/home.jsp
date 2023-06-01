@@ -681,47 +681,44 @@
 		                	<div v-if="post.replyList.length >= 1">
 								<div v-for="(reply,replyIdx) in post.replyList" :key="replyIdx">
 									<!-- 댓글 표시 -->
-<!-- 									<div class="d-flex align-items-center justify-content-center mb-1" v-if="reply.replyNo == reply.replyGroupNo"> -->
 									<div class="row" v-if="reply.replyNo == reply.replyGroupNo">
-										<!-- 프로필 이미지 -->
+										
+										<!-- 댓글 프로필 이미지 -->
 				                		<div class="col-1">
 				                			<div class="row mt-2 text-center">
 				                				<img class="img-fluid rounded-circle " src="static/image/profileDummy.png">
 				                			</div>
-<!-- 				                			<div class="row w-50 h-50 text-center m-auto"> -->
-<!-- 				                				<h6 class="fs-7"></h6> -->
-<!-- 				                			</div> -->
 				                		</div>
 				                		
 				                		<!-- 댓글 상자 -->
-				                		<div class="col-10 align-items-center">
+				                		<div class="col-11 align-items-center">
 				                			<div class="mt-1"></div>
 				                			<div class="mx-2"></div>
-				                			<div v-if="reply.replyContent.length < reply.replyId.length" class="row grey-f5f5f5 rounded-3 text-left" :style="{ width: reply.replyId.length * 11 + 'px' }">
+				                			<!-- 댓글 아이디가 내용보다 길면 -->
+				                			<div v-if="reply.replyContent.length < reply.replyId.length" style="max-width:100%" class="row grey-f5f5f5 rounded-3 text-left" :style="{ width: reply.replyId.length * 11 + 'px' }">
 				                				<div class="row mt-2"></div>
 				                				<h6 class="mr-1 fs-12px fw-bold">{{reply.replyId}}</h6>
 				                				<h6 class="mr-1 fs-11px lh-lg" >{{reply.replyContent}}</h6>
 				                				<div class="row mb-1"></div>
 				                			</div>
-				                			<div v-else class="row grey-f5f5f5 rounded-3 text-left" :style="{ width: reply.replyContent.length * 11 + 'px' }">
+				                			<!-- 댓글 내용이 아이디보다 길면 -->
+				                			<div v-else class="row grey-f5f5f5 rounded-3 text-left" style="max-width:100%" :style="{ width: reply.replyContent.length * 11 + 'px' }">
 				                				<div class="row mt-2"></div>
 				                				<h6 class="mr-1 fs-12px fw-bold">{{reply.replyId}}</h6>
-				                				<h6 class="mr-1 fs-11px lh-lg" >{{reply.replyContent}}</h6>
+				                				<h6 class="mr-1 fs-11px lh-lg"  >{{reply.replyContent}}</h6>
 				                				<div class="row mb-1"></div>
 				                			</div>
+				                			
+				                			<!-- 댓글창 아이콘 -->
 				                			<div class="row d-flex flex-nowrap">
 <!-- 				                				<h6 class="col-1 text-start reply-text" style="white-space: nowrap;">좋아요 </h6> -->
-				                				<h6 class="col-1 mt-1 text-start reply-text text-secondary" @click="showRereplyInput(post.postNo,reply.replyNo),hideReplyInput()" style="white-space: nowrap;">댓글 달기</h6>	
+				                				<h6 class="col-1 mt-1 text-start reply-text text-secondary" @click="showRereplyInput(post.postNo,reply.replyNo),hideReplyInput()" style="white-space: nowrap;cursor:pointer;">댓글 달기</h6>
+				                				<!-- 댓글 삭제  -->
+				                				<h6 v-if="reply.replyId === memberId" class="col-l mt-1 text-start reply-text text-danger" style="cursor:pointer;" @click="deleteReply(reply.replyNo)">댓글 삭제</h6>
 				                			</div>
 				                			<div class="mb-1"></div>			                			
 				                		</div>
 				               			<!-- 댓글 상자 -->
-				               			
-				               			
-				                		<!--  -->
-				                		<div class="col-1" v-if="memberId === reply.replyId">
-				                			<i class="ti ti-x" @click="deleteReply(reply.replyNo)"></i>
-				                		</div>
 			                		</div>
 			                		<!-- 댓글 표시 -->
 			                		
@@ -731,18 +728,43 @@
 				                			<div v-if="reply.replyNo === rereply.replyGroupNo"><!-- 특정 댓글의 그룹번호가 특정 댓글번호와 일치할 때, -->				                				
 				                				<!-- 대댓글 들 -->
 				                				<div class="row ">
-				                					<div class="col-2">
+				                					<div class="col-1">
 				                					</div>
-				                					<div class="col-2 text-center">
-				                						<div class="row w-50 h-50 text-center m-auto">
-					                						<img class="img-fluid rounded-circle " src="static/image/profileDummy.png">
-					                					</div>
-							                			<div class="row w-50 h-50 text-center m-auto">
-							                				<h6 class="fs-7">{{rereply.replyId}}</h6>
+				                					<div class="col-1">
+							                			<div class="row my-2 text-center">
+							                				<img class="img-fluid rounded-circle" src="static/image/profileDummy.png">
 							                			</div>
 				                					</div>
-				                					<div class="col-6">
-				                						<h6>{{rereply.replyContent}}</h6>
+				                					<div class="col-9">
+							                			<div class="mt-1"></div>
+							                			<div class="mx-2"></div>
+							                			<!-- 대댓글 아이디가 내용보다 길면 -->
+							                			<div v-if="rereply.replyContent.length < rereply.replyId.length" style="max-width:100%" class="row grey-f5f5f5 rounded-3 text-left" :style="{ width: rereply.replyId.length * 11 + 'px' }">
+							                				<div class="row mt-2"></div>
+							                				<h6 class="mr-1 fs-12px fw-bold">{{rereply.replyId}}</h6>
+							                				<h6 class="mr-1 fs-11px lh-lg" >{{rereply.replyContent}}</h6>
+							                				<div class="row mb-1"></div>
+							                			</div>
+							                			<!-- 대댓글 내용이 아이디보다 길면 -->
+							                			<div v-else class="row grey-f5f5f5 rounded-3 text-left" style="max-width:100%" :style="{ width: rereply.replyContent.length * 11 + 'px' }">
+							                				<div class="row mt-2"></div>
+							                				<h6 class="mr-1 fs-12px fw-bold">{{rereply.replyId}}</h6>
+							                				<h6 class="mr-1 fs-11px lh-lg"  >{{rereply.replyContent}}</h6>
+							                				<div class="row mb-1"></div>
+							                			</div>
+							                			
+							                			<!-- 대댓글창 아이콘 -->
+							                			<div class="row d-flex flex-nowrap">
+			<!-- 				                				<h6 class="col-1 text-start reply-text" style="white-space: nowrap;">좋아요 </h6> -->
+							                				<h6 class="col-1 mt-1 text-start reply-text text-secondary" @click="showRereplyInput(post.postNo,reply.replyNo),hideReplyInput()" style="white-space: nowrap;cursor:pointer;">댓글 달기</h6>
+							                				<!-- 대댓글 삭제  -->
+							                				<h6 v-if="rereply.replyId === memberId" class="col-l mt-1 text-start reply-text text-danger" style="cursor:pointer;" @click="deleteReply(reply.replyNo)">댓글 삭제</h6>
+							                			</div>
+							                			<div class="mb-1"></div>		
+				                						
+				                					
+<!-- 				                						<h6 class="fs-7">{{rereply.replyId}}</h6> -->
+<!-- 				                						<h6>{{rereply.replyContent}}</h6> -->
 				                					</div>
 				                					<div class="col-1">				                						
 				                						<i class="ti ti-x" @click="deleteRereply(rereply.replyNo)" v-if="rereply.replyId == memberId"></i>
@@ -787,12 +809,21 @@
 		                		<div class="col-1">
 		                			<img class="rounded-circle img-fluid" src="static/image/profileDummy.png">
 		                		</div>
-		                		<div class="col-10 mt-1">
-		                			<input type="text" placeholder=" 댓글을 입력하세요." v-model="replyContent" class="w-100 rounded-4 border border-secondary "> 
+		                		<div class="col-11 mt-1">		                		
+		                			<div class="pt-2 ps-2 pe-2 w-100 rounded-4 grey-f5f5f5">
+		                					
+		                				<div class="mt-1"></div>
+		                					<textarea placeholder=" 댓글을 입력하세요." class="grey-f5f5f5 border-0 " style="min-width:100%;height:6em;outline:none;overflow:hidden;" v-model="replyContent" ></textarea>
+		                				<div class="d-flex">
+			                				<div class="col text-start"><i class="ti ti-x fx-12px text-primary" @click="hideReplyInput(index)"></i></div>
+			                				<div class="col text-end"><i class="fs-5 text-primary ti ti-arrow-badge-right-filled" @click="replySending(post.postNo,index)"></i></div>
+		                				</div>
+										
+		                			</div> 
 		                		</div>
-		                		<div class="col-1">
-		                			<i class="fs-2 text-primary ti ti-arrow-badge-right-filled" @click="replySending(post.postNo,index)"></i>
-		                		</div>		                		
+<!-- 		                		<div class="col-1"> -->
+<!-- 		                			<i class="fs-2 text-primary ti ti-arrow-badge-right-filled" @click="replySending(post.postNo,index)"></i> -->
+<!-- 		                		</div>		                		 -->
 		                	</div>
 		                	<!-- 댓글 작성창  -->
 		                	
