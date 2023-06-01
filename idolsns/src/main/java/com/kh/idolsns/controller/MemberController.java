@@ -18,6 +18,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -223,6 +224,34 @@ public class MemberController {
 		return memberId;
 	}
 	
+
+//	//마이페이지 - 프로필 사진 수정
+//	@GetMapping("/editImage")
+//	@ResponseBody
+//	public String editImage(HttpSession session,
+//													@RequestParam MultipartFile attach) throws IllegalStateException, IOException {
+//		String memberId = (String) session.getAttribute("memberId");
+//		if(!attach.isEmpty()) {
+//			int attachmentNo1=attachmentRepo.sequence();
+//			File target = new File(dir, String.valueOf(attachmentNo1));
+//			attach.transferTo(target);
+//			
+//			attachmentRepo.insert(AttachmentDto.builder()
+//					.attachmentNo(attachmentNo1)
+//					.attachmentName(attach.getOriginalFilename())
+//					.attachmentType(attach.getContentType())
+//					.attachmentSize(attach.getSize())
+//					.build()
+//					);
+//			memberProfileImageRepo.insert(MemberProfileImageDto.builder()
+//						.attachmentNo(attachmentNo1)
+//						.memberId(memberId)
+//						.build()
+//					);
+//		}
+//		return memberId;
+//	}
+	
 	//마이페이지 - 팔로우 수 조회
 	@GetMapping("/followCnt")
 	@ResponseBody
@@ -242,10 +271,9 @@ public class MemberController {
 	}
 	
 	//마이페이지 - 팔로우, 팔로워, 페이지 리스트 조회
-	@GetMapping("/followList")
+	@GetMapping("/followList/{memberId}")
 	@ResponseBody
-	public Map<String, Object> followList(HttpSession session) {
-	    String memberId = (String) session.getAttribute("memberId");
+	public Map<String, Object> followList(@PathVariable String memberId) {
 	    MemberFollowInfoDto dto = sqlSession.selectOne("follow.selectMemberFollowInfo", memberId);
 	    
 	    Map<String, Object> result = new HashMap<>();
