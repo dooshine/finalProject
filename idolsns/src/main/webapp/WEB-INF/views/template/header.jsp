@@ -442,7 +442,7 @@
 				<nav class="navbar navbar-expand-md navbar-light bg-light">
 				  	<div class="container-fluid">
 				  		<div class="col-3">
-					    	<a class="navbar-brand" href="/">STARLINK</a>
+					    	<a class="navbar-brand" href="/"><img src="static/image/logo2.jpg" style="width:130px"></a>
 					    </div>
 				    	<div class="col-6 d-flex collapse navbar-collapse" id="navbarSupportedContent">
 				      		<form action="/search" class="d-flex w-100">

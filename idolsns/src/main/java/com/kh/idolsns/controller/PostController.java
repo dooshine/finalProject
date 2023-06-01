@@ -114,4 +114,30 @@ public class PostController {
     public String rest(){
         return "/post/rest";
     }
+    
+    // 특정맴버가 좋아요한 게시물
+    @GetMapping("/likedpost/{likedMemberId}")
+    public String likedpost(@PathVariable String likedMemberId,
+    						Model model) {
+    	model.addAttribute("likedMemberId",likedMemberId);
+    	return "/post/memberLikePost";
+    }
+    
+    // 특정맴버가 작성한 게시물
+    @GetMapping("/writepost/{writeMemberId}")
+    public String writepost(@PathVariable String writeMemberId,
+    						Model model){
+    	model.addAttribute("writeMemberId",writeMemberId);
+    	return "/post/memberWritePost";
+    }
+    
+    // 특정 고정태그 게시물
+    @GetMapping("/fixedtagpost/{fixedTagName}")
+    public String fixedTagPost(@PathVariable String fixedTagName,
+    							Model model){
+    	model.addAttribute("fixedTagName", fixedTagName);
+    	return "/post/fixedTagPost";
+    }
+    								
+    							
 }

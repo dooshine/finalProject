@@ -48,8 +48,8 @@ public class PostShowRepoImpl implements PostShowRepo{
 		int end = page * 10; 
 		int begin = 1;
 		
-		Map<String, Object> param = Map.of("begin", begin, "end", end);
-		return null;
+		Map<String, Object> param = Map.of("begin", begin, "end", end,"memberId",memberId);
+		return sqlSession.selectList("postShow.likeInfinite",param);
 	}
 
 	@Override
@@ -57,8 +57,8 @@ public class PostShowRepoImpl implements PostShowRepo{
 		int end = page * 10; 
 		int begin = 1;
 		
-		Map<String, Object> param = Map.of("begin", begin, "end", end);
-		return null;
+		Map<String, Object> param = Map.of("begin", begin, "end", end,"memberId",memberId);
+		return sqlSession.selectList("postShow.writeInfinite",param);
 	}
 
 	@Override
@@ -66,8 +66,8 @@ public class PostShowRepoImpl implements PostShowRepo{
 		int end = page * 10; 
 		int begin = 1;
 		
-		Map<String, Object> param = Map.of("begin", begin, "end", end);
-		return null;
+		Map<String, Object> param = Map.of("begin", begin, "end", end,"tagName",tagName);
+		return sqlSession.selectList("postShow.fixedTagInfinite",param);
 	}
 }
 

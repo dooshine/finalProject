@@ -120,7 +120,7 @@
 			<div class="row mt-3" style="padding-left: 1em">
 				<div v-html="fundDetail.postContent"></div>
 			</div>
-			
+	
 		<hr>
 			<!-- 태그 출력 -->
 			<div class="row mt-3">
@@ -135,8 +135,11 @@
 		
 		<hr>
 		
-		<!-- ------------------------ 댓글 ------------------------------- -->
+	<!-- ------------------------ 댓글 ------------------------------- -->
+
+>>>>>>> refs/remotes/origin/main
 	
+	<!-- 댓글창 -->
 	  <h3>댓글</h3>
 	  <div v-if="replies.length == 0">댓글이 없습니다.</div>
 	  <div v-else>
