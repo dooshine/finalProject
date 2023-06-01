@@ -86,6 +86,7 @@
     		height: 500px;
     		z-index: 999;
     		display: block;
+    		box-shadow: 0px 3px 4px rgba(3, 21, 17, 0.08);
     		
     		/* 스크롤 설정 */
     		overflow-y: initial;
@@ -99,7 +100,7 @@
     		border: 0.5px solid #c8c8c8;
     		border-radius: 5px;
     		display: block;
-    		box-shadow: 0px 0px 5px 2px #e6e8e7;
+    		box-shadow: 0px 3px 4px rgba(3, 21, 17, 0.08);
     		padding: 16px;
     	}
     	.customModalSmall2 {
@@ -111,7 +112,7 @@
     		border: 0.5px solid #c8c8c8;
     		border-radius: 5px;
     		display: block;
-    		box-shadow: 0px 0px 5px 2px #e6e8e7;
+    		box-shadow: 0px 3px 4px rgba(3, 21, 17, 0.08);
     		padding: 16px;
     	}
     	.chatRoomModal,
@@ -142,7 +143,7 @@
     		border: 0.5px solid #c8c8c8;
     		border-radius: 5px;
     		display: block;
-    		box-shadow: 0px 0px 5px 2px #e6e8e7;
+    		box-shadow: 0px 3px 4px rgba(3, 21, 17, 0.08);
     		padding: 16px;
     		
     		/* 스크롤 설정 */
@@ -428,6 +429,10 @@
 		
 		.profileImg {
 			border-radius: 100px;
+		}
+		
+		.btn-close {
+			box-shadow: none;
 		}
     </style>
 </head>
