@@ -44,4 +44,14 @@
 		where post_no = #{postNo}
 	</delete>
 	
+	<!-- 고정 태그 목록 조회 -->
+	<select id="selectFixedTagAll" resultType="String">
+		select tag_name from tag where post_no = #{postNo} and tag_type = '고정' 
+	</select>
+	
+	<!-- 자유 태그 목록 조회 -->
+	<select id="selectFreeTagAll" resultType="String">
+		select tag_name from tag where post_no = #{postNo} and tag_type = '자유' 
+	</select>
+	
 </mapper>

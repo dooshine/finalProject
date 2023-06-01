@@ -306,4 +306,41 @@ public class AttachmentRestController {
 		return null;
 	}
 	
+	//다운로드
+		@GetMapping("/download/post/{attachmentNo}")
+		public ResponseEntity<ByteArrayResource> postDownload(
+										@PathVariable int attachmentNo) throws IOException {
+			//DB 조회
+			AttachmentDto attachmentDto = attachmentRepo.selectOne(attachmentNo);
+			if(attachmentDto == null) {//없으면 404
+				return ResponseEntity.notFound().build();
+			}
+			
+			//파일 찾기
+			File target = new File(dir, String.valueOf(attachmentNo));
+			
+			//보낼 데이터 생성
+			byte[] data = FileUtils.readFileToByteArray(target);
+			ByteArrayResource resource = new ByteArrayResource(data);
+			
+			MediaType mediaType = MediaType.parseMediaType(attachmentDto.getAttachmentType());
+			
+//			제공되는 모든 상수와 명령을 동원해서 최대한 오류 없이 편하게 작성
+			return ResponseEntity.ok()
+//						.header(HttpHeaders.CONTENT_TYPE, 
+//								MediaType.APPLICATION_OCTET_STREAM_VALUE)
+						.contentType(mediaType)
+						.contentLength(attachmentDto.getAttachmentSize())
+						.header(HttpHeaders.CONTENT_ENCODING, 
+													StandardCharsets.UTF_8.name())
+						.header(HttpHeaders.CONTENT_DISPOSITION,
+							ContentDisposition.attachment()
+										.filename(
+												attachmentDto.getAttachmentName(), 
+												StandardCharsets.UTF_8
+										).build().toString()
+						)
+						.body(resource);
+		}
+	
 }

@@ -1,9 +1,10 @@
 			// 페이지 로드
 			$(function(){				
 				
+				// 지도 위치 출력
 				$(".bttest").click(function(){
 					console.log(mapPlace);
-				})
+				});
 
 				// 1. 카테고리를 저장할 변수 선언 및 카테고리 전역 변수 categori에 저장
 				let categori = ""; 
@@ -32,27 +33,40 @@
 					togetherEnd = $(this).val();
 				});	
 				
+				
+				// 2-0. 고정 태그를 저장할 배열 선언 및 고정 태그 전역변수 fixedTag에 저정
+				let fixedTag = [];
+				$(".fixed-tag-end").click(function(){
+					fixedTagInputs = $(".fixed-tag");
+					var temp = "";
+					fixedTagInputs.each(function(){
+						temp = $(this).text();
+						fixedTag.push(temp);
+					})
+				});
+
 				// 2. 태그를 저장할 배열 선언 및 태그 전역 변수 tag에 저장
-				let tag = [];			
+				let tag = [];
+				let showTag = []; 			
 				// 태그 추가 버튼 클릭 시, 
 				$(".tag-btn").click(function(){
 					console.log("클릭함")
 					let tagInput = $(".tag-input").val();
-										
+					console.log(tagInput);								
 					if(tagInput==""||tagInput==null) // 태그 입력창에 아무것도 안적혀 있다면
 					{		
 						return
 					}
 					else{ // 태그 입력창에 적혀 있다면
-						
 						if(!tag.includes(tagInput)){ // 입력받은 태그가 중복이 아닐경우에만 
 							tag.push(tagInput);	   // 없으면 indexOf가 -1을 반환
+							showTag.push('#'+tagInput);
 						}
 						
 					}
 					
 					$(".tag-input").val(""); // 입력창 초기화	
-					let allTag = tag.join(", "); // 배열 문자열로 변환
+					let allTag = showTag.join(", "); // 배열 문자열로 변환
 					$(".all-tag").text(allTag); // 변환된 문자열을 출력
 					
 					console.log("태그에 저장된 내용은 다음과 같습니다  : "+tag);
@@ -63,7 +77,7 @@
 				var formData = new FormData();		
 				// 3. 글 작성 버튼 클릭 시, 업로드 과정-----------------------------------------------
 				$(".write-finish").click(function(){
-					window.location.reload();
+					
 					
 					let postText = $(".post").val();					
 					// postDto에 삽입하기 위해 post로 송신할 JSON 객체생성
@@ -81,18 +95,37 @@
 						  url: "http://localhost:8080/rest/post/",
 						  method: "post",
 						  data: postDto,
-						  success: function(postNo) {		  
+						  success: function(postNo) {
+							// 게시물 등록 성공 시에, 고정 태그 정보를 비동기로 서버에 등록
+						 	let fixedTagData ={
+								 fixedTag: fixedTag,
+								 postNo: postNo
+							};
+							$.ajax({
+								url: "http://localhost:8080/rest/post/fixed",
+								method: "post",
+								data: JSON.stringify(fixedTagData),
+								contentType: "application/json; charset=utf-8",
+								success: function(result) {
+									console.log(result);
+								},
+								  error: function(xhr, status, error) {
+								    console.log(error);
+								}
+							});
 						 	// 게시물 등록 성공 시에, 태그 정보를 비동기로 서버에 등록  
 						 	let tagData = {
 						 		tag: tag,
 						 		postNo: postNo
-						 	}
+						 	};
+						 	console.log("태그등록은?");
 						 	$.ajax({
 								url: "http://localhost:8080/rest/post/tag",
 								method: "post",
 								data: JSON.stringify(tagData),
 								contentType: "application/json; charset=utf-8",
 								success: function(result) {
+									console.log("태그 등록은 됌");
 									// 게시글 작성 이후 변수들 초기화 
 									categori ="";
 									$(".tag-input").val("");
@@ -103,6 +136,8 @@
 								},
 								  error: function(xhr, status, error) {
 								    console.log(error);
+								    console.log("태그 등록은 안됌");
+								    
 								}
 							});
 							// 게시물 등록 성공 시에, JSON 형태의 postData 전송
@@ -144,6 +179,7 @@
 									data: postDto,
 									success: function(result){
 										console.log(result);
+										
 									},
 									error: function(xhr,status,error){
 										console.log(error);
@@ -174,13 +210,17 @@
 										$('#preview').html("");
 										$("#fileInput").text("선택된 파일이 없습니다.");
 										
-										window.alert("글 게시가 완료되었습니다");	
+										window.alert("글 게시가 완료되었습니다");
+										location.reload();
 								      },
 								      error: function(xhr, status, error) {
 								        // handle error response
 								        console.log(error);
 								      }
 								});
+							}
+							else{
+								location.reload();
 							}
 				 	
 						  },

@@ -44,4 +44,15 @@ public class TagRepoImpl implements TagRepo{
 		sqlSession.delete("tag.deleteByPostNo",postNo);
 	}
 
+	@Override
+	public List<String> selectFixedTagAll(Long postNo) {		
+		return sqlSession.selectList("tag.selectFixedTagAll",postNo);
+	}
+
+	@Override
+	public List<String> selectFreeTagAll(Long postNo) {
+		// TODO Auto-generated method stub
+		return sqlSession.selectList("tag.selectFreeTagAll",postNo);
+	}
+
 }

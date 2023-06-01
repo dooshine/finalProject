@@ -87,8 +87,8 @@ public class MemberController {
 	
 	@PostMapping("/join")
 	public String join(@ModelAttribute MemberDto memberDto) {
-//		String encrypt  = encoder.encode(memberDto.getMemberPw());
-//		memberDto.setMemberPw(encrypt);
+		String encrypt  = encoder.encode(memberDto.getMemberPw());
+		memberDto.setMemberPw(encrypt);
 		
 		// 멤버 생성
 		memberRepo.insert(memberDto);
