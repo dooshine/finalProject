@@ -29,7 +29,7 @@
 </style>
     
   <!-- aside -->
-  <aside class ="col-12" id="aside-bar">
+  <aside class ="col-12 py-4" id="aside-bar">
 	<div class= "nav flex-column">
         <a href="${pageContext.request.contextPath}/">
         	<i class="fa-solid fa-house" :class="{selected: asideTab === '홈'}"> 홈</i></a>
@@ -42,7 +42,8 @@
 				</a>
 			</div>
         <a href="${pageContext.request.contextPath}/fund/list">
-        	<i class="fa-solid fa-comments-dollar" :class="{selected: asideTab === '펀딩'}"> 펀딩</i></a>
+        	<!-- <i class="fa-solid fa-comments-dollar" :class="{selected: asideTab === '펀딩'}"> 펀딩</i></a> -->
+			<i class="fa-solid fa-piggy-bank" :class="{selected: asideTab === '펀딩'}"> 펀딩</i></a>
         <a href="${pageContext.request.contextPath}/point/charge">
         	<i class="fa-solid fa-wallet" :class="{selected: asideTab === '충전'}"> 충전</i></a>
   	</div>

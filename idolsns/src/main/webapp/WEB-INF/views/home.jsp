@@ -5,7 +5,7 @@
 
 <div class="row">
     <div class="col">
-        <h1>본문</h1>
+        <h3 style="font-weight: bold;">본문</h3>
     </div>
 </div>
 
