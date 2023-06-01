@@ -19,4 +19,9 @@ public class MemberSimpleProfileRepoImpl implements MemberSimpleProfileRepo {
 		System.out.println(memberIdList.toString());
 		return sql.selectList("simpleProfile.profile", Map.of("memberIdList", memberIdList));
 	}
+
+	@Override
+	public MemberSimpleProfileDto selectProfileById(String memberId) {
+		return sql.selectOne(memberId);
+	}
 }
