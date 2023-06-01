@@ -32,8 +32,20 @@
     	.grey{
     	color: grey;
     	}
+    	.grey-e0e0e0{
+    	background-color: 	#E0E0E0;
+    	}
+    	.grey-f5f5f5{
+    	background-color: 	#f5f5f5;
+    	}
     	.fs-7{
     	font-size: 10px;
+    	}
+    	.fs-12px{
+    	font-size: 12px;
+    	}
+    	.fs-11px{
+    	font-size: 11px;
     	}
     	.h-20{
     	height: 20px;
@@ -43,7 +55,7 @@
     	}
     </style>
    
-
+<!-- 	<div class="container-fluid" id="app" test> -->
 	<div class="container-fluid" id="app">
 		
 		<!----------- 글쓰기 버튼 ------------>
@@ -666,29 +678,47 @@
 		                	</div>
 		                	
 		                	<!-- 댓글, 대댓글 보여주는 창 -->
-		                	<div class="row" v-if="post.replyList.length >= 1">
+		                	<div v-if="post.replyList.length >= 1">
 								<div v-for="(reply,replyIdx) in post.replyList" :key="replyIdx">
 									<!-- 댓글 표시 -->
-									<div class="d-flex align-items-center justify-content-center mb-1" v-if="reply.replyNo == reply.replyGroupNo">
-										
-				                		<div class="col-2 text-center ">
-				                			<div class="row w-50 h-50 text-center m-auto">
+<!-- 									<div class="d-flex align-items-center justify-content-center mb-1" v-if="reply.replyNo == reply.replyGroupNo"> -->
+									<div class="row" v-if="reply.replyNo == reply.replyGroupNo">
+										<!-- 프로필 이미지 -->
+				                		<div class="col-1">
+				                			<div class="row mt-2 text-center">
 				                				<img class="img-fluid rounded-circle " src="static/image/profileDummy.png">
 				                			</div>
-				                			<div class="row w-50 h-50 text-center m-auto">
-				                				<h6 class="fs-7">{{reply.replyId}}</h6>
-				                			</div>
+<!-- 				                			<div class="row w-50 h-50 text-center m-auto"> -->
+<!-- 				                				<h6 class="fs-7"></h6> -->
+<!-- 				                			</div> -->
 				                		</div>
 				                		
-				                		<div class="col-8">
-				                			<div class="row">
-				                				<h6>{{reply.replyContent}}</h6>
+				                		<!-- 댓글 상자 -->
+				                		<div class="col-10 align-items-center">
+				                			<div class="mt-1"></div>
+				                			<div class="mx-2"></div>
+				                			<div v-if="reply.replyContent.length < reply.replyId.length" class="row grey-f5f5f5 rounded-3 text-left" :style="{ width: reply.replyId.length * 11 + 'px' }">
+				                				<div class="row mt-2"></div>
+				                				<h6 class="mr-1 fs-12px fw-bold">{{reply.replyId}}</h6>
+				                				<h6 class="mr-1 fs-11px lh-lg" >{{reply.replyContent}}</h6>
+				                				<div class="row mb-1"></div>
+				                			</div>
+				                			<div v-else class="row grey-f5f5f5 rounded-3 text-left" :style="{ width: reply.replyContent.length * 11 + 'px' }">
+				                				<div class="row mt-2"></div>
+				                				<h6 class="mr-1 fs-12px fw-bold">{{reply.replyId}}</h6>
+				                				<h6 class="mr-1 fs-11px lh-lg" >{{reply.replyContent}}</h6>
+				                				<div class="row mb-1"></div>
 				                			</div>
 				                			<div class="row d-flex flex-nowrap">
 <!-- 				                				<h6 class="col-1 text-start reply-text" style="white-space: nowrap;">좋아요 </h6> -->
-				                				<h6 class="col-1 text-start reply-text text-secondary" @click="showRereplyInput(post.postNo,reply.replyNo),hideReplyInput()" style="white-space: nowrap;">댓글 달기</h6>	
-				                			</div>			                			
+				                				<h6 class="col-1 mt-1 text-start reply-text text-secondary" @click="showRereplyInput(post.postNo,reply.replyNo),hideReplyInput()" style="white-space: nowrap;">댓글 달기</h6>	
+				                			</div>
+				                			<div class="mb-1"></div>			                			
 				                		</div>
+				               			<!-- 댓글 상자 -->
+				               			
+				               			
+				                		<!--  -->
 				                		<div class="col-1" v-if="memberId === reply.replyId">
 				                			<i class="ti ti-x" @click="deleteReply(reply.replyNo)"></i>
 				                		</div>
