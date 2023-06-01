@@ -43,16 +43,16 @@
 	    }
 	
 	   
-	    .tab_list a {
+	    .tab_list:not(.active) a {
 	        text-decoration: none;
 	        color: #333;
 	        
 	    }
 	    
-	     .tab_list.active {
+	     .tab_list.active a {
 	      color: #6A53FB;
 	       font-weight:bold;
-	        
+		   text-decoration: none;
 	    }
 	
 	
@@ -86,7 +86,9 @@
     	.title {
    		font-weight:bold;
 	   	}
-	    
+	    .component {
+			border: 0.3px solid #dee2e6;
+		}
 	    
 	</style>
 
@@ -96,7 +98,7 @@
 	  <div id="app">
   
         	
-        	<div class="container rounded p-3" style="background-color:white">
+        	<div class="container rounded-3 p-3 shadow-sm" style="background-color:white">
         		 
 		        <ul class="point_header_tab">
 		            <li class="tab_list active"><a href="#">포인트 충전</a></li>

@@ -42,16 +42,16 @@
 	        
 	    }
 	
-	    .tab_list.active {
-	       font-weight:bold;
-	      	color: #6A53FB;
-	        
-	    }
-	
-	    .tab_list a {
+	    .tab_list:not(.active) a {
 	        text-decoration: none;
 	        color: #333;
 	        
+	    }
+	    
+	     .tab_list.active a {
+	      color: #6A53FB;
+	       font-weight:bold;
+		   text-decoration: none;
 	    }
 	
 	    .tab_list:hover {
