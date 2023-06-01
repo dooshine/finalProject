@@ -119,14 +119,8 @@
 				<div v-html="fundDetail.postContent"></div>
 			</div>
 
-					
-	</div>
-		
-		
-		
-	
-
 			
+	
 		<hr>
 			<!-- 태그 출력 -->
 			<div class="row mt-3">
@@ -137,14 +131,13 @@
 					</button>
 				</div>
 			</div>
-		</div>
-		</div>             
-		
+	
 	<!-- ------------------------ 댓글 ------------------------------- -->
+
 	
 	<!-- 댓글창 -->
 	
-	
+	  <h3>댓글</h3>
 	  <div v-if="replies.length == 0">댓글이 없습니다.</div>
 	  <div v-else>
 	      <div v-for="(reply, i) in replies" :key="reply.replyNo">
