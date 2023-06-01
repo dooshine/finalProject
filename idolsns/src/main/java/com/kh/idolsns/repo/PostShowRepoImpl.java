@@ -62,7 +62,7 @@ public class PostShowRepoImpl implements PostShowRepo{
 	}
 
 	@Override
-	public List<PostShowVO> selectFixedTagPostListByPagingReload(int page, String fixedTag) {
+	public List<PostShowVO> selectFixedTagPostListByPagingReload(int page, String tagName) {
 		int end = page * 10; 
 		int begin = 1;
 		
