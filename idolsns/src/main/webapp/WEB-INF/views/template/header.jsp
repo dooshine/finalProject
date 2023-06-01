@@ -36,7 +36,7 @@
 
     <!-- custom 테스트 css -->
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/static/css/test.css">
-    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/static/css/custom.css">
+    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/static/css/component.css">
     
     <!-- 폰트css -->
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/static/css/load.css" />
