@@ -44,7 +44,7 @@
 	
 	    .tab_list.active {
 	       font-weight:bold;
-	      	color: #77E9CC;
+	      	color: #6A53FB;
 	        
 	    }
 	
@@ -66,7 +66,7 @@
 	        left: 0;
 	        width: 100%;
 	        height: 4px;
-	        background-color: #77E9CC;
+	        background-color: #6A53FB;
 	        
 	    }
 	    
@@ -101,7 +101,7 @@
 	        <h3 class="title mt-5 mb-3" style="padding-left: 0.5em">사용 내역</h3>
 	        
 	        <div style="padding-left: 0.5em; padding-right: 0.5em;">
-	            <p class="container rounded p-3 border">내 포인트: <span class="amount" style="color:#77E9CC; font-weight:bold" >{{ formattedAmount }}</span>원</p>
+	            <p class="container rounded p-3 border">내 포인트: <span class="amount" style="color:#6A53FB; font-weight:bold" >{{ formattedAmount }}</span>원</p>
 	        </div>
 				
 			<div class="modal-body" style="padding-left: 0.5em; padding-right: 0.5em;">
@@ -111,6 +111,7 @@
 			        <th>사용일</th>
 			        <th>사용포인트</th>
 			        <th>사용 내역</th>
+			        <th>펀딩 상태</th>
 			        <th>더보기</th>
 			      </tr>
 			    </thead>
@@ -120,6 +121,7 @@
 			              <td>{{ fundDto.fundTime }}</td>
 			              <td>{{ fundDto.fundPrice }}</td>
 			              <td>{{ fundDto.fundTitle }}</td>
+			              <td>{{ fundDto.fundStatus }}</td>
 			              <td>
 			                <a :href="'detailOrder?fundNo=' + fundDto.fundNo">
 			                <button class="btn btn-sm btn-primary">

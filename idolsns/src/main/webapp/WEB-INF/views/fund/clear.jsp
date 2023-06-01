@@ -33,7 +33,6 @@
 
     </style>
     
-    
 
 		
 	<div id="app">
@@ -47,42 +46,36 @@
 			
 				<tr>
 					<th>펀딩 프로젝트</th>
-					<td>${fundInfoDto.fundTitle}</td>
+					<td>{{ fundDetail.fundTitle }}</td>
 				</tr>
-			
 			
 			
 			
 				<tr>
 					<th>펀딩 상태</th>
-					<td>${fundPostDto.fundState}</td>
+					<td>{{ fundDetail.fundState }}</td>
 				</tr>
 				
 				<tr>
 					<th>후원 번호</th>
-					<td>${fundDto.fundNo}</td>
+					<td>{{ fundDto.fundNo }}</td>
 				</tr>
 				
 				<tr>
 					<th>후원 날짜</th>
-					<td>${fundDto.fundTime}</td>
+					<td>{{ fundDto.fundTime }}</td>
 				</tr>
 				
-				<tr>
-					<th>결제일</th>
-					<td>${fundDto.fundTime}</td>
-				</tr>
-				
-				<tr>
-					<th>결제 금액</th>
-					<td>${fundDto.fundPrice}</td>
-				</tr>
-				
-				
+		
+			  	<tr>
+			         <th>후원 금액</th>
+			         <td>{{ formatCurrency(fundDto.fundPrice) }}</td>
+		        </tr>
 				
 				<tr>
 					<th>펀딩 마감일</th>
-					<td>${fundPostDto.postEnd}</td>
+					<td>{{ fundDetail.postEnd }}</td>
+					
 				</tr>
 				
 				
@@ -93,10 +86,56 @@
 	  </div>
 	</div>
 		
+						
+    <script src="https://unpkg.com/vue@3.2.36"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 			
-			
+
 	
-			
+	<script>
+	  Vue.createApp({
+	    data() {
+	      return {
+	        fundDetail: {
+	         
+	          fundNo: "",
+	          postNo: "",
+	          fundTitle: "",
+	          postStart: "",
+	          postEnd: "",
+	          fundGoal: "",
+	          fundState: "",
+	          fundTotal: "",
+	          fundTime: "",
+	          fundPrice: "",
+	        },
+	      };
+	    },
+	    methods: {
+	      async loadOrderDetail() {
+	        const url = "/rest/fund/order/" + this.fundNo;
+	        const resp = await axios.get(url);
+	        this.fundDto = resp.data;
+	        this.fundDetail.postNo = resp.data.postNo;
+	        this.loadFundPosts(); // loadOrderDetail()에서 loadFundPosts()를 호출합니다.
+
+	      },
+	      async loadFundPosts() {
+	        const postNo = this.fundDetail.postNo;
+	        const resp = await axios.get("/rest/fund/" + postNo);
+	        this.fundDetail = { ...this.fundDetail, ...resp.data };
+	      },
+	      formatCurrency(value) {
+	        return value.toLocaleString();
+	      },
+	    },
+	    created() {
+	      this.fundNo = window.location.search.split("=")[1]; // URL에서 fundNo 값을 추출합니다.
+	      this.loadOrderDetail();
+	      this.loadFundPosts();
+	    },
+	  }).mount("#app");
+	</script>
 			
 			
 	

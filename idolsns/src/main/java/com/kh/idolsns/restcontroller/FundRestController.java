@@ -141,10 +141,6 @@ public class FundRestController {
 		}
 		System.out.println(templist);
 	}
-	
-	
-	  
-	  
-	
-	
 }
+	
+

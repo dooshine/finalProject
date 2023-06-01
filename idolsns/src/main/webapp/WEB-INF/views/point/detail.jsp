@@ -64,8 +64,8 @@
         </a>
       </template>
       <!-- 7일 경과 후 충전 취소 안내 문구 -->
-      <template v-else>
-        <p class="text-muted" style="padding-left: 0.5em">
+     <template>
+        <p v-if="isCancellationDisabled" style="padding-left: 0.5em; color: red; font-size: 15px">
           결제 7일 경과 후 충전 취소가 불가합니다.
         </p>
       </template>

@@ -56,4 +56,11 @@
 		value(#{postNo}, #{attachmentNo})
 	</insert>
 	
+	
+   <select id="find" resultType="FundPostDto">
+      select * from fund_post where post_no = #{postNo}
+   </select>
+   
+	
+	
 </mapper>
