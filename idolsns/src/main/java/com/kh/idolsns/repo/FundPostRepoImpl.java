@@ -8,6 +8,7 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.kh.idolsns.dto.FundDto;
 import com.kh.idolsns.dto.FundPostDto;
 import com.kh.idolsns.dto.FundPostImageDto;
 import com.kh.idolsns.dto.PostImageDto;
@@ -52,6 +53,11 @@ public class FundPostRepoImpl implements FundPostRepo{
 	}
 
 	@Override
+	public FundPostDto find(Long postNo) {
+		 return sqlSession.selectOne("fundPost.find", postNo);
+	}
+	
+
 	public void updateFundState() {
 		// total값 포함& 모든 펀딩게시물 리스트 조회
 		List<FundPostImageDto> list = fundPostImageRepo.selectList();
@@ -78,13 +84,6 @@ public class FundPostRepoImpl implements FundPostRepo{
 		}
 	}
 
-//	@Override
-//	public void connect(Long postNo, int attachmentNo) {
-//		Map<String, Object> parameters = new HashMap<>();
-//		parameters.put("param1", postNo);
-//		parameters.put("param2", attachmentNo);
-//		sqlSession.insert("fundPost.connect", parameters);
-//	}
 
 
 

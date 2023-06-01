@@ -28,4 +28,9 @@ public class MemberProfileFollowDto {
     private int memberFollowCnt;
     // 팔로워 수
     private int memberFollowerCnt;
+
+	// 프로필이미지 src
+	public String getProfileSrc(){
+		return attachmentNo==0 ? "/static/image/profileDummy.png" : "/download/?attachmentNo=" + this.attachmentNo;
+	}
 }

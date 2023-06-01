@@ -15,4 +15,5 @@ public interface FundPostRepo {
 	boolean sponsorCount(FundPostDto fundPostDto);
 	void updateFundState();
 
+	FundPostDto find(Long postNo);
 }

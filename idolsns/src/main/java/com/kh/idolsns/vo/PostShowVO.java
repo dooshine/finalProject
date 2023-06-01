@@ -37,7 +37,8 @@ public class PostShowVO {
 	private String mapPlace;
 	// ----------------------------------
 	// 태그 정보,게시물 이미지는 DTO List형태로 받기
-	private List<String> tagList;
+	private List<String> freeTagList;
+	private List<String> fixedTagList;
 	
 	private List<String> attachmentList;
 	// ----------------------------------

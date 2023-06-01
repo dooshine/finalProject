@@ -90,7 +90,7 @@
 			  <span class="input-group-text" id="inputGroup-sizing-default">후원 금액</span>
 			  <input type="number" name="fundPrice" class="form-control" 
 			    aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm"
-			    placeholder="후원 금액을 입력하세요" v-model="fundPrice" @input="validateFundPrice">
+			    placeholder="후원 금액을 입력하세요" v-model="fundPrice" @input="validateFundPrice" min="0">
 			</div>
 						
 			<!-- Add the error message -->
