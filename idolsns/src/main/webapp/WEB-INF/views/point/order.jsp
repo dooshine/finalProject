@@ -183,7 +183,7 @@
 	                return this.amount.toLocaleString();
 	            },
 	            
-                <!--페이지네이션-->
+                // <!--페이지네이션-->
 	            totalPages() {
 	                return Math.ceil(this.items.length / this.itemsPerPage);
 	              },
@@ -233,7 +233,7 @@
 	              
 	          
 	              
-	              <!--페이지네이션-->
+	            //   <!--페이지네이션-->
 	        	 previousPage() {
 	        	      if (this.currentPage > 1) {
 	        	        this.currentPage--;
