@@ -400,7 +400,7 @@
 		}
 		
 		.notiMark {
-			position: fixed;
+			position: absolute;
 			top: 15px;
 			right: 20px;
 			border-radius: 10px;
@@ -442,7 +442,7 @@
 				<nav class="navbar navbar-expand-md navbar-light bg-light">
 				  	<div class="container-fluid">
 				  		<div class="col-3">
-					    	<a class="navbar-brand" href="/">STARLINK</a>
+					    	<a class="navbar-brand" href="/"><img src="static/image/logo2.jpg" style="width:130px"></a>
 					    </div>
 				    	<div class="col-6 d-flex collapse navbar-collapse" id="navbarSupportedContent">
 				      		<form action="/search" class="d-flex w-100">
@@ -786,12 +786,23 @@
 						</div>
 					</div>
 					<div class="customModalBody">
-						<div>
-							<label class="d-flex justify-content-between" v-for="(follow, index) in filteredFollowList">
-						    	{{ follow }}
-						    	<input type="checkbox" v-model="selectedMemberList" :value="follow">
-							</label>
-						</div>
+						<!-- 팔로우 목록 -->
+						<label v-for="(follow, index) in filteredFollowList" class="w-100 mb-3">
+							<div class="d-flex w-100">
+								<div class="d-flex align-items-center col-9">
+									<div class="me-3">
+										<img :src="follow.profileSrc" class="profileImg" style="height: 45px; width: 45px;">
+									</div>
+									<div>
+										<div style="font-size: 0.95em;">{{ follow.memberNick }}</div>
+										<div style="font-size: 0.9em; color: #7f7f7f;">@{{ follow.memberId }}</div>
+									</div>
+								</div>
+								<div class="col-3 d-flex justify-content-end">
+			    					<input type="checkbox" v-model="selectedMemberList" :value="follow">
+			    				</div>
+			    			</div>
+						</label>
 					</div>
 				</div>
 				<!---------------------------------------- 초대 모달 ---------------------------------------->
