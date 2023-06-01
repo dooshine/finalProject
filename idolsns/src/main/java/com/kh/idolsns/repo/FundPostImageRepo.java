@@ -10,6 +10,7 @@ import com.kh.idolsns.dto.TagDto;
 import com.kh.idolsns.vo.FundDetailVO;
 
 public interface FundPostImageRepo {
+
 	List<PostImageDto> selectAttachList(Long postNo);
 	FundDetailVO selectOne(Long postNo);
 	List<FundPostImageDto> selectList();

@@ -1,6 +1,6 @@
 package com.kh.idolsns.dto;
 
-import java.sql.Date;
+import java.util.Date;
 
 import lombok.Data;
 
@@ -19,4 +19,7 @@ public class FundPostDto {
 	private int sponsorCount;
 	private int priceTotal;
 
+	
+	
+	
 }

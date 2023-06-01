@@ -31,28 +31,42 @@
       <table class="table">
         <tr>
           <th>구분</th>
-          <td>{{ fundDto.fundTitle }}</td>
+          <td>{{ fundDetail.fundTitle }}</td>
         </tr>
         <tr>
-          <th>사용금액</th>
-          <td>{{ fundDto.fundPrice }}원</td>
+          <th>사용 포인트</th>
+          <td>{{ fundDto.fundPrice }}</td>
         </tr>
         <tr>
           <th>사용일</th>
           <td>{{ fundDto.fundTime }}</td>
         </tr>
+        
+        
+
+        <tr>
+          <th>펀딩 마감일</th>
+          <td>{{ fundDetail.postEnd }}</td>
+        </tr>
+
+        
+        <tr>
+          <th>후원 상태</th>
+          <td>{{ fundDetail.fundState }}</td>
+        </tr>
+        
       </table>
 
       <div class="d-flex justify-content-end">
-		  <!-- 결제 취소 버튼: 잔여 금액이 존재한다면 -->
-		  <template v-if="fundDto.fundPrice > 0">
+		  <!-- 후원 취소 버튼: 잔여 금액이 존재한다면 -->
+		  <template v-if="fundDto.fundRemain > 0">
 		    <a :href="'cancelOrder?fundNo=' + fundDto.fundNo" style="padding-left: 0.5em">
 		      <button class="btn btn-sm btn-danger" :disabled="isCancellationDisabled">
 		        후원 취소
 		      </button>
 		    </a>
 		    <p v-if="isCancellationDisabled" style="color: red; padding-left: 0.5em">
-		      펀딩 종료일 1일 전까지만 취소 가능합니다.
+		      펀딩 종료 1일 전까지만 취소 가능합니다.
 		    </p>
 		  </template>
 		</div>
@@ -60,33 +74,58 @@
   </div>
 </div>
 
-<script>
-  Vue.createApp({
-    data() {
-      return {
-        fundDto: {},
-        fundNo: ''
-      }
-    },
- 
-    methods: {
-      async loadOrderDetail() {
-        try {
-          const url = "/rest/fund/order/" + this.fundNo;
-          const response = await axios.get(url);
-          this.fundDto = response.data;
-          } catch (error) {
-          console.error(error);
-        }
-      }
-    },
-    created() {
-      this.fundNo = window.location.search.split("=")[1]; // URL에서 fundNo 값을 추출합니다.
-      this.loadOrderDetail();
-    }
-  }).mount("#app");
-</script>
 
-		
+	<script>
+	  Vue.createApp({
+	    data() {
+	      return {
+	        fundDetail: {
+	          fundNo: "",
+	          postNo: "",
+	          fundTitle: "",
+	          postStart: "",
+	          postEnd: "",
+	          fundGoal: "",
+	          fundState: "",
+	          fundTotal: "",
+	          fundTime: "",
+	          fundPrice: "",
+	        },
+	      };
+	    },
+	    computed: {
+	      isCancellationDisabled() {
+	        const startDate = new Date(this.fundDetail.postStart);
+	        const endDate = new Date(this.fundDetail.postEnd);
+	        const timeDiff = endDate.getTime() - startDate.getTime();
+	        const oneDayInMillis = 1000 * 60 * 60 * 24;
+	        return timeDiff <= oneDayInMillis;
+	      },
+	    },
+	    methods: {
+	      async loadOrderDetail() {
+	        const url = "/rest/fund/order/" + this.fundNo;
+	        const resp = await axios.get(url);
+	        this.fundDto = resp.data;
+	        this.fundDetail.postNo = resp.data.postNo;
+	        this.loadFundPosts(); // loadOrderDetail()에서 loadFundPosts()를 호출합니다.
+	      },
+	      async loadFundPosts() {
+	        const postNo = this.fundDetail.postNo;
+	        const resp = await axios.get("/rest/fund/" + postNo);
+	        this.fundDetail = { ...this.fundDetail, ...resp.data };
+	      },
+	      formatCurrency(value) {
+	        return value.toLocaleString();
+	      },
+	    },
+	    created() {
+	      this.fundNo = window.location.search.split("=")[1]; // URL에서 fundNo 값을 추출합니다.
+	      this.loadOrderDetail();
+	      this.loadFundPosts();
+	    },
+	  }).mount("#app");
+	</script>
+			
 		
 		<jsp:include page="/WEB-INF/views/template/footer.jsp"></jsp:include> 

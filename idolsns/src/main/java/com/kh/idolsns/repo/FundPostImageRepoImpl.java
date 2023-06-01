@@ -17,28 +17,29 @@ import com.kh.idolsns.vo.FundDetailVO;
 @Repository
 public class FundPostImageRepoImpl implements FundPostImageRepo{
 
-	@Autowired
-	private SqlSession sqlSession;
-	
-	@Override
-	public List<PostImageDto> selectAttachList(Long postNo) {
-		return sqlSession.selectList("fundpostinte.attachByPostNo", postNo);
-	}
+   @Autowired
+   private SqlSession sqlSession;
+   
+   @Override
+   public List<PostImageDto> selectAttachList(Long postNo) {
+      return sqlSession.selectList("fundpostinte.attachByPostNo", postNo);
+   }
 
-	@Override
-	public FundDetailVO selectOne(Long postNo) {
-		return sqlSession.selectOne("fundpostinte.fundPostByPostNo", postNo);
-	}
+   @Override
+   public FundDetailVO selectOne(Long postNo) {
+      return sqlSession.selectOne("fundpostinte.fundPostByPostNo", postNo);
+   }
 
-	@Override
-	public List<FundPostImageDto> selectList() {
-		return sqlSession.selectList("fundpostinte.list");
-	}
+   @Override
+   public List<FundPostImageDto> selectList() {
+      return sqlSession.selectList("fundpostinte.list");
+   }
 
-	@Override
-	public List<FundDto> selectFundList(Long postNo) {
-		return sqlSession.selectList("fundpostinte.fundByPostNo", postNo);
-	}
+   @Override
+   public List<FundDto> selectFundList(Long postNo) {
+      return sqlSession.selectList("fundpostinte.fundByPostNo", postNo);
+   }
+
 
 	@Override
 	public List<FundPostImageDto> selectListByPaging(int page, String searchKeyword) {
@@ -71,9 +72,6 @@ public class FundPostImageRepoImpl implements FundPostImageRepo{
 		return sqlSession.selectList("fundpostinte.selectListWithTag", param);
 	}
 
-	
-	
-	
 	
 
 }
