@@ -207,7 +207,7 @@
 					}
 					this.loadRoomList();
 					this.loadChatNoti();
-					if(parsedData.type === 1 || parsedData.type === 4) {						
+					if(parsedData.chatMessageType === 1 || parsedData.chatMessageType === 4 || parsedData.chatMessageType === 5 || parsedData.chatMessageType === 6) {						
 						this.scrollBottom();
 					}
 				},
@@ -220,37 +220,41 @@
 				},
 				// 새 채팅 알림 있는지 확인
 				async loadChatNoti() {
-					const memberId = this.memberId;
-					const url = "${pageContext.request.contextPath}/chat/message/noti/" + memberId;
-					const resp = await axios.get(url);
-					//console.log(resp.data);
-					if(resp.data === true) this.newChatNoti = true;
-					else this.newChatNoti = false;
+					console.log("memberId: " + this.memberId);
+					if(this.memberId.length > 0 && this.chatRoomList.length > 0) {
+						const url = "${pageContext.request.contextPath}/chat/message/noti/" + this.memberId;
+						const resp = await axios.get(url);
+						//console.log(resp.data);
+						if(resp.data === true) this.newChatNoti = true;
+						else this.newChatNoti = false;
+					}
 				},
 				// 방별로 새 알림 있는지 확인
 				async loadChatRoomNoti() {
-					this.chatRoomNoList = [];
-					//console.log("chatRoomNo: " + this.chatRoomList[0].chatRoomNo);
-					for(let i=0; i<this.chatRoomList.length; i++) {
-						this.chatRoomNoList[i] = this.chatRoomList[i].chatRoomNo;
+					if(this.chatRoomList.length > 0) {
+						this.chatRoomNoList = [];
+						//console.log("chatRoomNo: " + this.chatRoomList[0].chatRoomNo);
+						for(let i=0; i<this.chatRoomList.length; i++) {
+							this.chatRoomNoList[i] = this.chatRoomList[i].chatRoomNo;
+						}
+						//console.log("chatRoomNoList: " + this.chatRoomNoList);
+						const url = "${pageContext.request.contextPath}/chat/message/noti";
+						const data = {
+								chatRoomNoList: this.chatRoomNoList,
+								memberId: this.memberId
+						};
+						const resp = await axios.post(url, data);
+						const numbers = resp.data.map(obj=>obj.chatRoomNo);
+						//console.log(numbers);
+						const filterArray = this.chatRoomList.filter(
+							room=>numbers.some(number=>number == room.chatRoomNo)
+						);
+						//console.log(filterArray);
+						if(filterArray.length > 0) {
+							filterArray.forEach(room=>{room.newChat=true});
+						}
+						this.loadChatNoti();
 					}
-					//console.log("chatRoomNoList: " + this.chatRoomNoList);
-					const url = "${pageContext.request.contextPath}/chat/message/noti";
-					const data = {
-							chatRoomNoList: this.chatRoomNoList,
-							memberId: this.memberId
-					};
-					const resp = await axios.post(url, data);
-					const numbers = resp.data.map(obj=>obj.chatRoomNo);
-					//console.log(numbers);
-					const filterArray = this.chatRoomList.filter(
-						room=>numbers.some(number=>number == room.chatRoomNo)
-					);
-					//console.log(filterArray);
-					if(filterArray.length > 0) {
-						filterArray.forEach(room=>{room.newChat=true});
-					}
-					this.loadChatNoti();
 				},
 				// 메세지 읽음
 				async readMessage() {
@@ -317,6 +321,8 @@
 					    this.text = "";
 					    this.$refs.messageInput.focus();
 					});
+					this.memberListModal = false;
+					this.inviteMemberModal = false;
 				},
 				// 채팅방 모달 닫기
 				hideChatRoomModal() {
@@ -361,6 +367,7 @@
 				// 초대 모달 닫기
 				hideInviteMemberModal() {
 					this.selectedMemberList = [];
+					this.selectedMemberIdList = [];
 					this.inviteMemberModal = false;
 				},
 				// 로그인한 회원이 속해있는 채팅방 목록
@@ -404,16 +411,18 @@
 					//console.log("data: " + resp.data);
 					this.followList.push(...resp.data);
 					//console.log("followList: " + this.followList);
-					const url2 = "${pageContext.request.contextPath}/rest/member/getMemberProfile";
-					const resp2 = await axios.get(url2, {
-						params: {
-							memberIdList: this.followList
-						},
-						paramsSerializer: params => {
-							return new URLSearchParams(params).toString();
-						}
-					})
-					this.followProfileList = resp2.data;
+					if(this.followList.length > 0) {
+						const url2 = "${pageContext.request.contextPath}/rest/member/getMemberProfile";
+						const resp2 = await axios.get(url2, {
+							params: {
+								memberIdList: this.followList
+							},
+							paramsSerializer: params => {
+								return new URLSearchParams(params).toString();
+							}
+						})
+						this.followProfileList = resp2.data;
+					}
 				},
 				// 채팅방 만들기
 				createChatRoom() {
@@ -436,11 +445,11 @@
 					const app = this;
 					this.socket.onmessage = (e) => {
 						app.messageHandler(e);
-						app.chatRoomList.splice(0);
 						app.chatRoom.chatRoomName1 = "";
 					}
 					this.socket.send(JSON.stringify(data));
 					this.selectedMemberList.splice(0);
+					this.selectedMemberIdList.splice(0);
 					this.createRoomModal = false;
 					this.chatMainModal = true;
 					setTimeout(() => {
@@ -471,7 +480,23 @@
 				},
 				// 참여자 정보로 닉네임 가져오기
 				findMemberById(index) {
+					//console.log("실행");
 					const memberId = this.messageList[index].memberId;
+					const member = this.chatMemberList.find(function(member) {
+						return member.memberId === memberId;
+					})
+					//console.log("member: " + member.memberId);
+					if(member) {						
+						return {
+							memberNick: member.memberNick,
+							memberId: member.memberId,
+							profileSrc: member.profileSrc
+						}
+					}
+					else return null;
+				},
+				findMemberByIdInInvite(index) {
+					const memberId = this.filteredFollowList[index].memberId;
 					const member = this.chatMemberList.find(function(member) {
 						return member.memberId === memberId;
 					})
@@ -670,14 +695,17 @@
 				// 사용자 초대
 				async inviteMember() {
 					const chatRoomNo = this.chatRoomNo;
+					for(let i=0; i<this.selectedMemberList.length; i++) {
+						this.selectedMemberIdList[i] = this.selectedMemberList[i].memberId;
+					}
 					const url = "${pageContext.request.contextPath}/chat/chatRoom/invite";
 					//console.log("roomInfo: " + this.roomInfo);
 					const data1 = {
 							chatRoomNo: chatRoomNo,
-							memberList: this.selectedMemberList
+							memberList: this.selectedMemberIdList
 					};
 					const resp = await axios.post(url, data1);
-					const memberIds = this.selectedMemberList.join(", ");
+					const memberIds = this.selectedMemberIdList.join(", ");
 					const data2 = {
 							type: 6,
 							chatRoomNo: chatRoomNo,
@@ -685,6 +713,8 @@
 					};
 					this.socket.send(JSON.stringify(data2));
 					this.chatMemberList.splice(0);
+					this.selectedMemberList.splice(0);
+					this.selectedMemberIdList.splice(0);
 					this.loadChatMember();
 					this.hideInviteMemberModal();
 				},
@@ -724,9 +754,9 @@
 					return this.chatRoom.chatRoomName1.length;
 				},
 				filteredFollowList() {
-					return this.followList.filter(follow => 
+					return this.followProfileList.filter(follow => 
 								!this.chatMemberList.some(member => 
-									member.memberId === follow));
+									member.memberId === follow.memberId));
 				},
 				textCount() {
 					return this.text.trim().length;
