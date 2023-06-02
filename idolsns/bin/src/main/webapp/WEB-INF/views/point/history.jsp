@@ -21,19 +21,19 @@
 			}
 			   	
 		   
-		    ul.point_header_tab {
+		    ul.custom-tab-header {
 		      padding: 0;
 		      margin: 0;
 		    }
 		   
 	    /* 탭 메뉴 스타일 */
-	    .point_header_tab {
+	    .custom-tab-header {
 	        overflow: hidden;
 			width:100%;
 	
 	    }
 	
-	    .tab_list {
+	    .custom-tab-list {
 	        background-color: inherit;
 	        float: left;
 	        border-bottom: 0.5px solid #f5f5f5;
@@ -47,25 +47,25 @@
 	        
 	    }
 	
-	    .tab_list.active {
+	    .custom-tab-list.active {
 	    	color: #77E9CC;
 	       font-weight:bold;
 	      	
 	        
 	    }
 	
-	    .tab_list a {
+	    .custom-tab-list a {
 	        text-decoration: none;
 	        color: #333;
 	        
 	    }
 	
-	    .tab_list:hover {
+	    .custom-tab-list:hover {
 	    
 	    }
 	
 	    /* 하위 요소에 적용할 스타일 */
-	    .tab_list.active::after {
+	    .custom-tab-list.active::after {
 	        content: '';
 	        position: absolute;
 	        bottom: 0;
@@ -102,10 +102,10 @@
         	
         		 <div class="container rounded p-3" style="background-color:white">
         		 
-		        <ul class="point_header_tab">
-		            <li class="tab_list"><a href="charge">포인트 충전</a></li>
-		            <li class="tab_list active"><a href="#">충전 내역</a></li>
-		            <li class="tab_list"><a href="order">사용 내역</a></li>
+		        <ul class="custom-tab-header">
+		            <li class="custom-tab-list"><a href="charge">포인트 충전</a></li>
+		            <li class="custom-tab-list active"><a href="#">충전 내역</a></li>
+		            <li class="custom-tab-list"><a href="order">사용 내역</a></li>
 		        </ul>
 		        
 		        
