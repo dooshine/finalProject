@@ -59,7 +59,7 @@
     </style>
     
    	<div id="app">
-		<div class="container rounded p-3" style="background-color:white">
+		<div class="custom-container">
 			  
 		<div>
 			<h2 class="title text-center mt-5 mb-5">{{ fundDetail.fundTitle }}</h2>
@@ -141,49 +141,52 @@
 
 	<!-- 댓글창 -->
 	  <div v-if="replies.length == 0" >댓글이 없습니다.</div>
-	  <div v-else>
+	  <div v-else class="p-3">
 	      <div v-for="(reply, i) in replies" :key="reply.replyNo">
 	         
 	        <!-- 최상위 댓글이면 -->
 	        <div v-if="reply.replyNo == reply.replyGroupNo">
 	        
-		        	<div>{{ reply.replyId }}</div>
-			        	
-		        	<!-- 수정 폼 -->
-		        	<div v-if="updateReplyObj.index == i">
-				    	<textarea @blur="setUpdateReplyObj($event, i)" 
-				    	placeholder="수정 내용">{{ reply.replyContent }}</textarea>
-					    <button @click="saveUpdate(i)">저장</button>
-					    <button @click="cancelUpdate()">취소</button>
-					</div>
+		        	<div class="d-flex">
+		        		{{ reply.replyId }}
+		        		<i class="fs-5 text-secondary ti ti-dots-vertical ms-auto me-3"
+		        				@click="showModal(i)" style="position: relative;">
+		        				<div class="custom-modal" v-if="replies[i].modal" style="position: absolute; top: 0px; right: 0px; width:100px; ">
+							        <div class="custom-modal-header">
+							            <button type="button" @click="hideModal(i)" class="btn-close" style="position: absolute; top: 5px; right: 5px; height: 5px; width: 5px;"></button>
+							        </div>
+							        <div @click="hideModal(i)" class="custom-modal-body p-0" style="font-size: 16px;">
+							        	<div class="p-2" style=" border-bottom: 0.3px solid #dee2e6;" @click="replies[i].reReply=true;">댓글달기</div>
+							        	<div class="p-2"  style=" border-bottom: 0.3px solid #dee2e6;" @click="replies[i].edit=true;">수정</div>
+							        	<div class="p-2"  style=" border-bottom: 0.3px solid #dee2e6; ">삭제</div>
+							        </div>
+							    </div>
+		        		</i>
+		        	</div>
+		        	
 					
 					<!-- 최상위 댓글 내용 -->
-		        	<div v-else>
-		        		<div class="row grey-f5f5f5 rounded-3">
-			        		{{ reply.replyContent }}
-		        		</div>
-		        		<!-- 대댓글 버튼 -->
-			        	<button v-if="reply.replyNo == reply.replyGroupNo" 
-			        			@click="showRereplyForm(i)">
-			        		<i class="fa-solid fa-reply"></i>
-						</button>
-						<!-- 수정 버튼 -->
-			        	<button v-if="reply.replyId == replyObj.replyId"
-								@click="showUpdateForm(i)">
-			        		<i class="fa-solid fa-edit"></i>
-			        	</button>
-			        	<!-- 삭제 버튼 -->
-			        	<button v-if="reply.replyId == replyObj.replyId"
-								@click="deleteReply(i)">
-							<i class="fa-solid fa-trash-alt"></i>
-						</button>	
+	        		<div v-if="reply.edit == false" class="row grey-f5f5f5 rounded-3 font-gray2 mx-0 ps-3" 
+	        				:style="{ width: reply.replyId.length * 11 + 'px' }">
+		        		{{ reply.replyContent }}
+	        		</div>
+	        		<div v-else>
+	        			<textarea  @blur="setUpdateReplyObj($event, i)" class="row grey-f5f5f5 rounded-3 font-gray2 mx-0 ps-3" 
+	        				:style="{ width: reply.replyId.length * 11 + 'px' }">{{ reply.replyContent }}</textarea>
+	        			<button @click="saveUpdate(i)">수정</button>
+	        			<button @click="replies[i].edit = false;">취소</button>
+	        		</div>
+	        		
+		        	<div v-if="reply.reReply" >
+		        		<textarea @blur="setReReplyObj($event, i)" placeholder="대댓글 내용"></textarea>
+			        	<button @click="addReReply(i)">작성</button>
+			        	<button @click="reReplies[i] = false">취소</button>
 		        	</div>
 	        	
 	        </div>
 	        
 	        <!-- 대댓글이면 -->
 	        <div v-else>
-	        
 	        	<!-- 수정 폼 -->
 	        	<div v-if="updateReplyObj.index == i">
 	        		<div>
@@ -195,15 +198,29 @@
 	        		</div>
 				</div>
 				
+				<div class="custom-modal" v-if="reply.modal == true">
+			        <div class="custom-modal-header">
+			            헤더
+			            <button type="button" class="btn-close"></button>
+			        </div>
+			        <div class="custom-modal-body">바디</div>
+			        <div class="custom-modal-footer">푸터</div>
+			    </div>
+								
 				<!-- 대댓글 내용 -->
-				<div v-else>
-					<div>
+				<div v-else class="ms-4">
+					<div class="d-flex">
 						{{reply.replyId}}
+						<i class="fs-5 text-secondary ti ti-dots-vertical ms-auto me-3" 
+						data-toggle="dropdown"></i>
 					</div>
 					<div>
-						<div class="row grey-f5f5f5 rounded-3 text-left">
+						<div class="row grey-f5f5f5 rounded-3 font-gray2 mx-0 ps-3"
+								:style="{ width: reply.replyId.length * 11 + 'px' }">
 						 {{ reply.replyContent }}
 						</div>
+						<textarea v-if="reply.edit == true" class="row grey-f5f5f5 rounded-3 font-gray2 mx-0 ps-3"
+								:style="{ width: reply.replyId.length * 11 + 'px' }">{{ reply.replyContent }}</textarea>
 		        		<!-- 대댓글 버튼 -->
 			        	<button v-if="reply.replyNo == reply.replyGroupNo" 
 			        			@click="showRereplyForm(i)">
@@ -314,7 +331,9 @@
 				  index: -1,
 				  replyNo: "",
 				  replyContent: "",
-			   	}
+			   	},
+			   	// 댓글 설정 모달
+			   	modal: null,
 		      };
 		    },
 		    computed: {
@@ -384,6 +403,13 @@
 	                const postNo = this.fundDetail.postNo; // 게시물 번호
 	                const resp = await axios.get("http://localhost:8080/rest/reply/fund/"+postNo);
 	                this.replies = resp.data; // Vue data에 저장
+	                
+	                // 모달 토글 false 초기화
+	                for(let i = 0; i<this.replies.length; i++){
+	                	this.replies[i].modal = false;
+	                	this.replies[i].edit = false;
+	                	this.replies[i].reReply = false;
+	                }
 	              },
 	            // 작성한 comment 서버로 전송
                 async addReply() {
@@ -416,7 +442,7 @@
 					reReplyObj.postNo = this.fundDetail.postNo;
 					// 대댓글 내용 설정
 // 					this.reReplyObj.replyContent = event.target.value;
-					reReplyObj.replyContent = event.target.value;
+					reReplyObj.replyContent = event.target.value;3
 					// 대댓글 그룹 설정
 // 					this.reReplyObj.replyGroupNo = parentReplyNo;
 					reReplyObj.replyGroupNo = this.replies[index].replyGroupNo;
@@ -432,7 +458,7 @@
 				
 				// 수정하려는 댓글의 인덱스와 내용을 updateReply객체에 저장 
 				setUpdateReplyObj($event, i) {
-					this.reReplies[i] = false // 켜져있는 대댓글 작성폼 닫기
+					this.replies[i].edit = false; // 켜져있는 대댓글 작성폼 닫기
 					this.updateReplyObj.index = i;
 					this.updateReplyObj.replyNo = this.replies[i].replyNo;
 					this.updateReplyObj.replyContent = event.target.value;
@@ -468,7 +494,17 @@
 					console.log(this.fundDetail.tagNames[i]);
 					const url = ""
 					window.location.href = url;
-				}
+				},
+				// 모달 열기&닫기
+				showModal(i){
+					this.replies[i].modal = true;
+                },
+                hideModal(i){
+                	event.stopPropagation();
+                	this.replies[i].modal = false;
+                },
+                
+                
 		      	
 		    },
 		    created() {

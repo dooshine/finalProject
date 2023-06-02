@@ -124,7 +124,7 @@
               
 
         <div id="app">
-               <div class="container rounded p-3" style="background-color:white;">
+               <div class="custom-container">
                <div>
                      <input type="text" v-model="searchQuery" placeholder="검색창">
                      <button @click="searchFunding">검색</button>
