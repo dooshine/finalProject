@@ -13,11 +13,6 @@
 		    width: 100%; 
 		  }
     	}
-		   	section {
-			  font-family: "Noto Sans KR", sans-serif;
-			}
-			   	
-		   
 		    ul.custom-tab-header {
 		      padding: 0;
 		      margin: 0;

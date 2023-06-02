@@ -9,9 +9,16 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
    
-   
-<link rel="icon" href="/static/image/favicon.ico">
+    <!-- favicon -->
+	<link rel="icon" href="/static/image/favicon.ico">
             <title>스타링크</title>
+    
+    
+    <!-- 폰트css -->
+    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/static/css/load.css" />
+    
+    <!-- pretendard -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" />
     
   
     <!-- 폰트어썸 cdn -->
@@ -36,6 +43,7 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.6.1/sockjs.min.js"></script>
 
 
+	
 
 
 
@@ -43,8 +51,7 @@
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/static/css/test.css">
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/static/css/component.css">
     
-    <!-- 폰트css -->
-    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/static/css/load.css" />
+ 
     <!-- doo-css -->
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/static/css/doo.css" />
 
@@ -59,6 +66,8 @@
     </script>
     
     <style>
+    
+    	
     	@media screen and (max-width:767px) {
 		  	.hide-part {
 		    	display:none; 
