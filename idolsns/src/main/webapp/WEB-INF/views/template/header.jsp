@@ -8,7 +8,19 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>스타링크</title>
+   
+    <!-- favicon -->
+	<link rel="icon" href="/static/image/favicon.ico">
+            <title>스타링크</title>
+    
+    
+    <!-- 폰트css -->
+    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/static/css/load.css" />
+    
+    <!-- pretendard -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" />
+    
+  
     <!-- 폰트어썸 cdn -->
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css">
     <!-- tabler 아이콘 -->
@@ -31,6 +43,7 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.6.1/sockjs.min.js"></script>
 
 
+	
 
 
 
@@ -38,8 +51,7 @@
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/static/css/test.css">
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/static/css/component.css">
     
-    <!-- 폰트css -->
-    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/static/css/load.css" />
+ 
     <!-- doo-css -->
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/static/css/doo.css" />
 
@@ -54,6 +66,8 @@
     </script>
     
     <style>
+    
+    	
     	@media screen and (max-width:767px) {
 		  	.hide-part {
 		    	display:none; 
@@ -458,11 +472,12 @@
     <main>
     	<!----------------------------------------------- 헤더 시작 ----------------------------------------------->
         <header>
+   
         	<div id="header-area">
 				<nav class="navbar navbar-expand-md navbar-light back-white" style="box-shadow: 0px 3px 4px rgba(3, 21, 17, 0.1);">
 				  	<div class="container-fluid">
 				  		<div class="col-3 ps-2">
-					    	<a class="navbar-brand" href="/"><img src="/static/image/logo2.jpg" style="width:130px;"></a>
+					    	<a class="navbar-brand" href="/"><img src="/static/image/logo.png" style="width:130px;"></a>
 					    </div>
 				    	<div class="col-6 d-flex collapse navbar-collapse" id="navbarSupportedContent">
 				      		<form action="/search" class="d-flex w-100">
