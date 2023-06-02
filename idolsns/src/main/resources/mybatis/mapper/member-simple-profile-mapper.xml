@@ -19,5 +19,10 @@
 			</if>
 		</where>
 	</select>
+	
+	<select id="profileById" resultType="MemberSimpleProfileDto">
+		select * from member_simple_profile
+		where member_id=#{memberId}
+	</select>
 </mapper>
     

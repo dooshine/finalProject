@@ -279,10 +279,39 @@ public class PostRestController {
     	return posts;
     }
     
-    // 게시물 페이징 목록 처음 부터 현재 페이지까지 조회
+    // 게시물 페이징 목록 처음 부터 현재 페이지까지 조회 <-- 지금 쓰는거 
     @GetMapping("/pageReload/{page}")
     public List<PostShowVO> infiniteListReload(@PathVariable int page){
     	List<PostShowVO> posts = postShowService.postShowByPagingReload(page);
+    	return posts;
+    }
+    
+    // 특정맴버가 좋아요한 게시물
+    @PostMapping("/pageReload/memberLikePost")
+    public List<PostShowVO> likedPostListReload(@RequestBody Map<String,Object> likedPostData)
+    {	
+    	Integer page = (Integer) likedPostData.get("page"); 
+    	String likedMemberId = (String) likedPostData.get("likedMemberId");
+    	List<PostShowVO> posts = postShowService.likedPostShowByPagingReload(page, likedMemberId);
+    	return posts; 
+    }
+    
+    // 특정맴버가 작성한 게시물
+    @PostMapping("/pageReload/memberWritePost")
+    public List<PostShowVO> writePostListReload(@RequestBody Map<String,Object> writePostData){
+    	Integer page = (Integer) writePostData.get("page"); 
+    	String writeMemberId = (String) writePostData.get("writeMemberId");
+    	List<PostShowVO> posts = postShowService.writedPostShowByPagingReload(page, writeMemberId);
+    	return posts;
+    }
+    
+    // 특정 고정태그 게시물
+    @PostMapping("/pageReload/fixedTagPost")
+    public List<PostShowVO> fixedTagPostListReload(@RequestBody Map<String,Object> fixedTagPostData){
+    	Integer page = (Integer) fixedTagPostData.get("page"); 
+    	String tagName = (String) fixedTagPostData.get("fixedTagName");
+    	List<PostShowVO> posts = postShowService.fixedTagPostShowByPagingReload(page, tagName);
+    	System.out.println(posts);
     	return posts;
     }
     

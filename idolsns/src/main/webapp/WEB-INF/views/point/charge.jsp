@@ -43,16 +43,16 @@
 	    }
 	
 	   
-	    .tab_list a {
+	    .tab_list:not(.active) a {
 	        text-decoration: none;
 	        color: #333;
 	        
 	    }
 	    
-	     .tab_list.active {
+	     .tab_list.active a {
 	      color: #6A53FB;
 	       font-weight:bold;
-	        
+		   text-decoration: none;
 	    }
 	
 	
@@ -81,12 +81,33 @@
 	    .radio_label {
 			white-space: nowrap;
 		}
-	   
+		.custom-shadow {
+			box-shadow: 0px 3px 4px rgba(3, 21, 17, 0.1);
+		}
 	    
-    	.title {
-   		font-weight:bold;
+    	.custom-title {
+   			font-weight:bold;
+			padding-left: 12px;
 	   	}
-	    
+	    .custom-border-box {
+			margin-top: 16px;
+			margin-bottom: 16px;
+			border: 0.3px solid #dee2e6;
+			padding: 16px;
+			border-radius: 0.5rem;
+		}
+		.custom-hr {
+			margin-top: 16px;
+			margin-bottom: 16px;
+			background-color: #dee2e6;
+			height: 0.3px;
+		}
+		.custom-container {
+			box-shadow: 0px 3px 4px rgba(3, 21, 17, 0.1);
+			background-color: white;
+			padding: 24px;
+			border-radius: 0.5rem;
+		}
 	    
 	</style>
 
@@ -96,8 +117,8 @@
 	  <div id="app">
   
         	
-        	<div class="container rounded p-3" style="background-color:white">
-        		 
+        	<!-- <div class="container rounded-3 p-4 shadow-sm" style="background-color:white;"> -->
+        	<div class="container custom-container">
 		        <ul class="point_header_tab">
 		            <li class="tab_list active"><a href="#">포인트 충전</a></li>
 		            <li class="tab_list"><a href="history">충전 내역</a></li>
@@ -106,11 +127,11 @@
 		      
 		        
 		        
-		        <h3 class="title mt-5 mb-3" style="padding-left: 0.5em">포인트 충전</h3>
-
+		        <h3 class="title mt-5 mb-3" style="padding-left: 12px;">포인트 충전</h3>
+				
         <div style="padding-left: 0.5em; padding-right: 0.5em;">
-            <p class="container rounded p-3 border">내 포인트: 
-            <span class="amount" style="color:#6A53FB; font-weight:bold">{{ formattedAmount }}</span>원</p>
+            <div class="container my-3 custom-border-box">내 포인트: 
+				<span class="amount" style="color:#6A53FB; font-weight:bold">{{ formattedAmount }}</span>원</div>
         </div>
 
         <form id="chargeForm" method="post" style="padding-left: 0.7em; padding-right: 0.7em;">
@@ -143,7 +164,7 @@
 				
 				
 				<div class="mt-3">
-				    <p>충전 후 내 포인트: 
+				    <p class="my-3">충전 후 내 포인트: 
 				    <span class="amount">{{ (amount+parseInt(selectedAmount || 0)).toLocaleString() }}
 				    </span>원
 				    
@@ -167,8 +188,9 @@
 				</div>
 
 	            <div class="justify-content-center d-flex mt-3">
-	                <button type="submit" class="btn btn-lg btn-primary mb-5" @click="charge">충전하기</button>
+	                <button type="submit" class="btn btn-lg btn-primary mb-4" @click="charge">충전하기</button>
 	            </div>
+
 	       	 </form>
 	       	 
 	       	 </div>

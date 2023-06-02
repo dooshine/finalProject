@@ -219,9 +219,9 @@ public class PostShowService {
 	}
 	
 	// 고정 태그 글 맨 처음 페이지 부터 지금 페이지까지
-	public List<PostShowVO> fixedTagPostShowByPagingReload(int page,String fixedTag){
+	public List<PostShowVO> fixedTagPostShowByPagingReload(int page,String tagName){
 		
-		List<PostShowVO> postShowList = postShowRepo.selectFixedTagPostListByPagingReload(page, fixedTag);
+		List<PostShowVO> postShowList = postShowRepo.selectFixedTagPostListByPagingReload(page, tagName);
 		
 		Long postNo = 0l;
 		

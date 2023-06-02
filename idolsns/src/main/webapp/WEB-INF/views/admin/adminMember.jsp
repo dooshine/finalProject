@@ -13,10 +13,42 @@
     .cursor-pointer:hover {
     cursor: pointer;
     }
+
+    .pagination {
+        color: #6a53fb;
+    }
+    .pagination .page-link{
+        color: #6a53fb;
+    }
+    .pagination .page-link:hover{
+        color: #6a53fb;
+    }
+    .pagination .active span:hover {
+        color: white;
+    }
+    .pagination .active span{
+        color: white;
+        background-color: #6a53fb;
+        border-color: #6a53fb;
+    }
+    .pagination {
+        --bs-pagination-focus-box-shadow: 0px;
+    }
+    .form-check-input:checked {
+    }
+    .form-check-input {
+        -webkit-appearance: none;
+        appearance: none;
+    }
+    .form-check-input:focus {
+    }
+    .form-check-input:focus {
+    }
 </style>
 
-<div class="container mt-5" id="app">
+<div class="container mt-5 custom-container" id="app">
     <!-- # 회원조회 타이틀 -->
+    <input type="checkbox" class="form-check-input">
     <div class="row mt-3">
         <div class="col">
             <h1>회원 목록</h1>
@@ -266,8 +298,8 @@
           // 페이지네이션 Obj
           pageObj: {
             page: 1,
-            size: 10,
-            blocksize: 10,
+            size: 1,
+            blocksize: 5,
             total: 0, 
 
             // 블럭에서 뜨는 첫번째 게시물
