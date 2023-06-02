@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<jsp:include page="/WEB-INF/views/template/header.jsp"></jsp:include>
+<jsp:include page="/WEB-INF/views/template/header_member.jsp"></jsp:include>
 <%@ page import="javax.servlet.http.*" %>
 <!DOCTYPE html>
 <html lang="ko">
@@ -26,49 +26,69 @@
     <!-- custom 테스트 css -->
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/static/css/test.css">
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/static/css/commons mye.css">
+    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/static/css/component.css">
+    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/static/css/doo.css">
     <!-- toastify -->
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <style>
+    .container {
+        margin-top: 20px;
+    }
+     .container-rounded {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+</style>
 </head>
 <body>
-	<div class="container rounded p-3" style="background-color:white">
-		<div id="app">
-		
-			<h1>testuser1/Testuser1!</h1>
-			
-			<form action="login" method="post" autocomplete="off">
-			<div class="row mb-5">
-				<h1 style="text-align:center;">로그인</h1>
-			</div>
-			
-			
-			<div class="row mb-3">
-				<input type="text" name="memberId" placeholder="아이디">
-			</div>
-			
-			<div class="row mb-1">
-				<input type="password" name="memberPw" placeholder="비밀번호">
-			</div>
-			
-			<h5 style="color:red; font-size:11px;">${param.msg}</h5>
-			<br>
-			
-			<input style="display: none;" name="prevPage" value="${header.referer}">
 
-			<div class="row mb-3">
-				<button type="submit" class="btn btn-info w-100">로그인</button>
-			</div>
-			</form>
+	<br><br><br><br><br><br>
+	<div class="container" id = app>
+	
+	<!-- 로그인 왼쪽 -->
+	<div class="col-6" style="float:left; margin-left: 40px;">
+		<img src="/static/image/logo2.jpg" style="width:200px;">
+		<br><br>
+		<h3 class="font-gray2 font-bold">스타링크에서 당신의 아이돌과 소통하세요</h3>
+	</div>
+	
+	<!-- 로그인 오른쪽 -->
+	<div class="col-4 custom-container" style="background-color:white; float:right; margin-right: 100px;">
+		<form class="w-100" action="login" method="post" autocomplete="off">
 			
-			<div class="row mb-3">
-				<button type="button" onclick="location.href='${pageContext.request.contextPath}/member/findId'">아이디 찾기</button>
+			<div class="row mb-3 mt-4 mx-0">
+            	<input class="custom-input-rounded-container width: 100%;" type="text" name="memberId" placeholder="아이디">
+       		 </div>
+       		 
+       		 <div class="row mx-0 mb-1">
+            	<input class="custom-input-rounded-container" type="password" name="memberPw" placeholder="비밀번호">
+       		 </div>
+			
+			<h6 class="font-purple1 text-center" >${param.msg}</h6>
+			
+			
+			<div class="custom-hr"></div>
+
+			<div class="row my-3 mx-0 ">
+				<button type="submit" class="custom-btn btn-round btn-purple1" >로그인</button>
 			</div>
 			
-			<div class="row mb-3">
-				<button type="button" onclick="location.href='${pageContext.request.contextPath}/member/findPw'">비밀번호 찾기</button>
+		</form>
+			
+			
+			<div class="row mb-3  mx-0">
+				<button type="button" onclick="location.href='${pageContext.request.contextPath}/member/join'" class="custom-btn btn-round btn-purple1-secondary" >회원가입</button>
 			</div>
 			
-		</div>
+			<div class="text-center">
+			<a href="${pageContext.request.contextPath}/member/findId" style="text-decoration: none; color:gray;">아이디 /</a>
+			<a href="${pageContext.request.contextPath}/member/findPw" style="text-decoration: none; color:gray;">비밀번호 찾기</a>
+			</div>
+			
+	</div>
+		
 	</div>
 			<script>
 		        document.addEventListener('DOMContentLoaded', function() {
@@ -86,4 +106,3 @@
 		    </script>
 
 </body>
-<jsp:include page="/WEB-INF/views/template/footer.jsp"></jsp:include>
