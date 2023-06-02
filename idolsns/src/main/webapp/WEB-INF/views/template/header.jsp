@@ -36,7 +36,7 @@
 
     <!-- custom 테스트 css -->
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/static/css/test.css">
-    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/static/css/custom.css">
+    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/static/css/component.css">
     
     <!-- 폰트css -->
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/static/css/load.css" />
@@ -192,6 +192,7 @@
     		padding: 16px;
     		height: 440px;
     		overflow-y: auto;
+    		overflow-x: hidden;
     		
     		/* 파폭 스크롤 커스텀 */
     		scrollbar-width: thin;
@@ -268,6 +269,9 @@
     		outline: none;
     		font-size: 0.9em;
     		padding: 0;
+    		
+    		-ms-overflow-style: none; /* 인터넷 익스플로러 */
+  			scrollbar-width: none;
     	}
     	.type-box::-webkit-scrollbar {
     		display: none;
@@ -430,9 +434,19 @@
 		.profileImg {
 			border-radius: 100px;
 		}
-		
+		.back-white {
+			background-color: white;
+		}
 		.btn-close {
 			box-shadow: none;
+		}
+		
+		.chatRoomName {
+			display: block;
+			white-space: nowrap;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			word-break: break-all;
 		}
     </style>
 </head>
@@ -444,10 +458,10 @@
     	<!----------------------------------------------- 헤더 시작 ----------------------------------------------->
         <header>
         	<div id="header-area">
-				<nav class="navbar navbar-expand-md navbar-light bg-light">
+				<nav class="navbar navbar-expand-md navbar-light back-white" style="box-shadow: 0px 3px 4px rgba(3, 21, 17, 0.1);">
 				  	<div class="container-fluid">
-				  		<div class="col-3">
-					    	<a class="navbar-brand" href="/"><img src="static/image/logo2.jpg" style="width:130px"></a>
+				  		<div class="col-3 ps-2">
+					    	<a class="navbar-brand" href="/"><img src="/static/image/logo2.jpg" style="width:130px;"></a>
 					    </div>
 				    	<div class="col-6 d-flex collapse navbar-collapse" id="navbarSupportedContent">
 				      		<form action="/search" class="d-flex w-100">
@@ -456,7 +470,7 @@
 					        	</div>
 				      		</form>
 				    	</div>
-				    	<div class="col-3 d-flex justify-content-end collapse navbar-collapse">
+				    	<div class="col-3 d-flex justify-content-end collapse navbar-collapse pe-2">
 				    		<!-- 알림버튼 -->
 				    		<button class="noti-btn">
 								<img class="noti me-2 nav-item hide-part" alt="알림" src="/static/image/notificationIcon.png">
@@ -493,7 +507,7 @@
 										</div>
 										<div class="col-9 ms-3">
 											<div class="d-flex align-items-center mb-2">
-												<div class="text-start">
+												<div class="text-start" :title="chatRoomList[index].chatRoomName1">
 													<h6>{{ chatRoomList[index].chatRoomName1 }}</h6>
 												</div>
 												<!-- 새 메세지 알림 표시 -->
@@ -520,8 +534,14 @@
 										<div class="col-9 ms-3">
 											<div class="d-flex align-items-center mb-2">
 												<div class="text-start d-flex align-items-baseline">
-													<h6 class="me-2">{{ findMemberByIdInMain(index).memberNick }}</h6>
-													<div class="sysMsgContent">@{{ findMemberByIdInMain(index).memberId }}</div>
+													<div class="me-2 w-100" style="max-width: 120px">
+														<h6 class="chatRoomName" style="max-width: 120px" :title="findMemberByIdInMain(index).memberNick">
+															{{ findMemberByIdInMain(index).memberNick }}
+														</h6>
+													</div>
+													<div class="sysMsgContent">
+														@{{ findMemberByIdInMain(index).memberId }}
+													</div>
 												</div>
 												<!-- 새 메세지 알림 표시 -->
 												<div v-if="chatRoomList[index].newChat === true" class="notiMarkChat ms-2"></div>
@@ -537,15 +557,21 @@
 								<!-- 갠톡 채팅방 이름 2 -->
 								<button v-if="chatRoomList[index].chatRoomName2 != memberId" 
 											@click="showChatRoomModal(index)" class="hide-style w-100 mb-3">
-									<div class="d-flex align-items-center mb-2">
+									<div class="d-flex align-items-center mb-2 chatRoomName">
 										<div class="col-3 d-flex justify-content-center align-items-center" style="height: 45px; width: 45px;">
 											<img :src="findMemberByIdInMain(index).profileSrc" class="profileImg" style="height: 45px; width: 45px;">
 										</div>
 										<div class="col-9 ms-3">
 											<div class="d-flex align-items-center mb-2">
 												<div class="text-start d-flex align-items-baseline">
-													<h6 class="me-2">{{ findMemberByIdInMain(index).memberNick }}</h6>
-													<div class="sysMsgContent">@{{ findMemberByIdInMain(index).memberId }}</div>
+													<div class="me-2 w-100" style="max-width: 120px">
+														<h6 class="chatRoomName" style="max-width: 120px" :title="findMemberByIdInMain(index).memberNick">
+															{{ findMemberByIdInMain(index).memberNick }}
+														</h6>
+													</div>
+													<div class="sysMsgContent">
+														@{{ findMemberByIdInMain(index).memberId }}
+													</div>
 												</div>
 												<!-- 새 메세지 알림 표시 -->
 												<div v-if="chatRoomList[index].newChat === true" class="notiMarkChat ms-2"></div>
@@ -608,8 +634,8 @@
 						<div class="d-flex justify-content-between w-100">
 							<!-- 채팅방 이름(갠톡일 때: 상대방 이름 표시) -->
 							<div v-if="roomInfo.chatRoomType == 'P'">
-								<h5 v-if="roomInfo.chatRoomName1 != memberId">{{ roomInfo.chatRoomName1 }}</h5>
-								<h5 v-if="roomInfo.chatRoomName2 != memberId">{{ roomInfo.chatRoomName2 }}</h5>
+								<h5>{{ findMemberByIdInRoom().memberNick }}</h5>
+								<!-- <h5 v-if="roomInfo.chatRoomName2 != memberId">{{ roomInfo.chatRoomName2 }}</h5> -->
 							</div>
 							<!-- 채팅방 이름(단톡일 때: 지정한 채팅방 이름 표시) -->
 							<div v-if="roomInfo.chatRoomType == 'G'">
@@ -822,7 +848,7 @@
 					<button><a href="/dev/login?memberId=testuser3">testuser3</a></button>
 					<button><a href="/dev/login?memberId=adminuser1">adminuser3</a></button>
 				</div>
-				<div class="offset-5 col-3">
+				<!-- <div class="offset-5 col-3">
 					<c:if test="${memberId == null}">
 						<a href="${pageContext.request.contextPath}/member/login">로그인</a>
 						<a href="${pageContext.request.contextPath}/member/join">회원가입</a>
@@ -834,15 +860,15 @@
 					<c:if test="${memberLevel == '관리자'}">
 						<a href="${pageContext.request.contextPath}/admin/">관리자 페이지</a>
 					</c:if>
-				</div>
+				</div> -->
             </div>
         </header>
-          <hr>
+          <!-- <hr> -->
 
         <section class="container-fluid">
             <div class="row">
                 <div class="col-3 d-flex left-aside">
                     <jsp:include page="/WEB-INF/views/template/sidebar.jsp"></jsp:include>
                 </div>
-                <div class="col-6 article container-fluid py-5" style="padding:0px;">
+                <div class="col-6 article container-fluid py-4" style="padding:0px;">
                 
