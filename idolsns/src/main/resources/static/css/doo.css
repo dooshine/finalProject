@@ -147,6 +147,11 @@ color: #6A53FB;
     border-color: #6A53FB;
 } */
 
+.btn-primary-m {
+	background-color: white;
+    border-color: #6A53FB;
+}
+
 /* 라디오, 체크박스 색상설정 */
 input[type="radio"], input[type="checkbox"] {
     accent-color: #6A53FB;
