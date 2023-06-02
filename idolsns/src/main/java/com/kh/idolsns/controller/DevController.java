@@ -51,4 +51,10 @@ public class DevController {
     public String getMemberProfile(){
         return "/dev/dev_getMemberProfile";
     }
+
+    // css 예제
+    @GetMapping("/css")
+    public String css(){
+        return "/dev/dev_dooCss";
+    }
 }
