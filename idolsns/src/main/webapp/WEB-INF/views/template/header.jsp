@@ -407,8 +407,8 @@
 		
 		.notiMark {
 			position: absolute;
-			top: 15px;
-			right: 20px;
+			top: 5px;
+			right: 5px;
 			border-radius: 10px;
 			width: 12px;
 			height: 12px;
@@ -472,19 +472,19 @@
 				      		</form>
 				    	</div>
 				    	<div class="col-3 d-flex justify-content-end collapse navbar-collapse pe-2">
-							<!-- 유저버튼 -->
-							<button class="user-btn" @click="goToLoginPage()">
-								<img class="me-2 weez nav-item hide-part" alt="유저" src="/static/image/profileDummy.png">
-							</button>
 				    		<!-- 알림버튼 -->
-				    		<button class="noti-btn">
-								<img class="noti me-2 nav-item hide-part" alt="알림" src="/static/image/notificationIcon.png">
+				    		<button class="noti-btn me-2">
+								<img class="noti nav-item hide-part" alt="알림" src="/static/image/notificationIcon.png">
 							</button>
 							<!-- 위즈버튼 -->
-							<button class="weez-btn" @click="showChatMainModal">
+							<button class="weez-btn me-2" @click="showChatMainModal" style="position: relative;">
 								<img class="weez nav-item hide-part" alt="위즈" src="/static/image/dmIcon.png">
 								<!-- 새 채팅이 있는 경우 새 채팅 알림 마크 -->
 								<div v-if="newChatNoti === true" class="notiMark collapse navbar-collapse"></div>
+							</button>
+							<!-- 유저버튼 -->
+							<button class="user-btn" @click="goToLoginPage()">
+								<img class="me-2 weez nav-item hide-part" alt="유저" src="/static/image/profileDummy.png">
 							</button>
 							<!-- <div class="offset-5 col-3">
 					<c:if test="${memberId == null}">

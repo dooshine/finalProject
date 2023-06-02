@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>   
-<jsp:include page="/WEB-INF/views/template/header.jsp"></jsp:include> 
+<jsp:include page="/WEB-INF/views/template/header_member.jsp"></jsp:include> 
 
 <!DOCTYPE html>
 <html lang="ko">
@@ -27,20 +27,19 @@
 	 <!-- custom 테스트 css -->
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/static/css/test.css">
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/static/css/commons mye.css">
+     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/static/css/component.css">
+    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/static/css/doo.css">
      <!-- toastify -->
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 
 </head>
 <body>
-	 <div class="container rounded p-3" style="background-color:white">
-     <div id="app">
-		<form action="exit" method="post" autocomplete="off">
+	<!-- 회원탈퇴 -->
+     <div class="container" id="app">
+	 <div class="custom-container col-8" style="background-color:white ;">
+		<form class="w-100" action="exit" method="post" autocomplete="off">
 		
-			<div class="container">
-				<div class="row center">
-					<h1>회원탈퇴</h1>
-				</div>
 				
 				<div class="row">
 				    <label for="agreement">
@@ -63,7 +62,6 @@
 		
 		</form>
 	</div>
-	</div>	
 
 	<script>
 		Vue.createApp({
@@ -77,4 +75,3 @@
 
 </body>    
 
-<jsp:include page="/WEB-INF/views/template/footer.jsp"></jsp:include>

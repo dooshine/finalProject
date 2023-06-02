@@ -140,7 +140,7 @@ public class MemberController {
 		    return "redirect:login";
 		}
 		
-		return "redirect:" + prevPage;
+		return "redirect:/";
 	}
 	
 	//로그인 상태인지 아닌지 구분
