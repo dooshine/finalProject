@@ -67,6 +67,7 @@
     		width: 40px;
     		border: 0.3px solid #c7cbca;
     	}
+    	.user-btn,
     	.weez-btn,
     	.noti-btn,
     	.hide-style {
@@ -471,6 +472,10 @@
 				      		</form>
 				    	</div>
 				    	<div class="col-3 d-flex justify-content-end collapse navbar-collapse pe-2">
+							<!-- 유저버튼 -->
+							<button class="user-btn" @click="goToLoginPage()">
+								<img class="me-2 weez nav-item hide-part" alt="유저" src="/static/image/profileDummy.png">
+							</button>
 				    		<!-- 알림버튼 -->
 				    		<button class="noti-btn">
 								<img class="noti me-2 nav-item hide-part" alt="알림" src="/static/image/notificationIcon.png">
@@ -481,6 +486,19 @@
 								<!-- 새 채팅이 있는 경우 새 채팅 알림 마크 -->
 								<div v-if="newChatNoti === true" class="notiMark collapse navbar-collapse"></div>
 							</button>
+							<!-- <div class="offset-5 col-3">
+					<c:if test="${memberId == null}">
+						<a href="${pageContext.request.contextPath}/member/login">로그인</a>
+						<a href="${pageContext.request.contextPath}/member/join">회원가입</a>
+					</c:if>
+					<c:if test="${memberId != null}">
+						<a href="${pageContext.request.contextPath}/member/logout">로그아웃</a>
+						<a href="${pageContext.request.contextPath}/member/mypage">마이페이지</a>
+					</c:if>
+					<c:if test="${memberLevel == '관리자'}">
+						<a href="${pageContext.request.contextPath}/admin/">관리자 페이지</a>
+					</c:if>
+				</div> -->
 				    	</div>
 				  	</div>
 				</nav>

@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<jsp:include page="/WEB-INF/views/template/header.jsp"></jsp:include>
+<jsp:include page="/WEB-INF/views/template/header_member.jsp"></jsp:include>
 <%@ page import="javax.servlet.http.*" %>
 <!DOCTYPE html>
 <html lang="ko">
@@ -26,39 +26,49 @@
     <!-- custom 테스트 css -->
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/static/css/test.css">
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/static/css/commons mye.css">
+    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/static/css/component.css">
     <!-- toastify -->
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <style>
+    .container {
+        margin-top: 20px;
+    }
+</style>
 </head>
 <body>
-	<div class="container rounded p-3" style="background-color:white">
-		<div id="app">
-		
-			<h1>testuser1/Testuser1!</h1>
+
+	<br><br><br><br><br><br>
+	<div class="container" id = app>
+	
+	<!-- 로그인 왼쪽 -->
+	<div class="col-6" style="float:left; margin-left: 50px;">
+		<img src="/static/image/logo2.jpg" style="width:200px;">
+		<br><br>
+		<h3 style="font-weight: bold; color: grey;">스타링크에서 당신의 아이돌과 소통하세요</h3>
+	</div>
+	
+	<!-- 로그인 오른쪽 -->
+	<div class="col-3" style="background-color:white; float:right; margin-right: 200px;">
+		<form action="login" method="post" autocomplete="">
 			
-			<form action="login" method="post" autocomplete="off">
-			<div class="row mb-5">
-				<h1 style="text-align:center;">로그인</h1>
-			</div>
-			
-			
-			<div class="row mb-3">
-				<input type="text" name="memberId" placeholder="아이디">
-			</div>
-			
-			<div class="row mb-1">
-				<input type="password" name="memberPw" placeholder="비밀번호">
-			</div>
+			<div class="custom-input-rounded-container mb-3">
+            	<input class="custom-input " type="text" name="memberId" placeholder="아이디">
+       		 </div>
+       		 
+       		 <div class="custom-input-rounded-container mb-3">
+            	<input class="custom-input" type="password" name="memberPw" placeholder="비밀번호">
+       		 </div>
 			
 			<h5 style="color:red; font-size:11px;">${param.msg}</h5>
 			<br>
 			
-			<input style="display: none;" name="prevPage" value="${header.referer}">
 
 			<div class="row mb-3">
-				<button type="submit" class="btn btn-info w-100">로그인</button>
+				<button type="submit" class=" btn btn-primary w-50">로그인</button>
 			</div>
-			</form>
+			
+		</form>
 			
 			<div class="row mb-3">
 				<button type="button" onclick="location.href='${pageContext.request.contextPath}/member/findId'">아이디 찾기</button>
@@ -67,8 +77,13 @@
 			<div class="row mb-3">
 				<button type="button" onclick="location.href='${pageContext.request.contextPath}/member/findPw'">비밀번호 찾기</button>
 			</div>
+				<button type="button" onclick="location.href='${pageContext.request.contextPath}/member/join'">회원가입</button>
+			<div class="row mb-3">
 			
-		</div>
+			</div>
+		
+	</div>
+		
 	</div>
 			<script>
 		        document.addEventListener('DOMContentLoaded', function() {
@@ -86,4 +101,3 @@
 		    </script>
 
 </body>
-<jsp:include page="/WEB-INF/views/template/footer.jsp"></jsp:include>
