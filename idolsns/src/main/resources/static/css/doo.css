@@ -29,9 +29,9 @@
 }
 
 /* 타이틀 - 굵게 */
-.title {
+/* .title {
     font-weight:bold;
-}
+} */
 
 /* 외곽선 영역 */
 .custom-border-box {
@@ -69,9 +69,9 @@
 
 
 /* 커스텀글씨 색상 */
-.custom-color {
+/* .custom-color {
     color: #6A53FB;
-}
+} */
  
 .pagination .page-link {
     color: #6a53fb;
@@ -138,14 +138,14 @@ color: #6A53FB;
 /* [ 공통적용 영역 ] */
 
 /* ########################  버튼(색상)  ######################## */
-.btn-primary {
+/* .btn-primary {
     background-color: #6a53fb;
     border-color: #6A53FB;
 }
 .btn-primary:hover{
     background-color: #6a53fb;
     border-color: #6A53FB;
-}
+} */
 
 /* 라디오, 체크박스 색상설정 */
 input[type="radio"], input[type="checkbox"] {

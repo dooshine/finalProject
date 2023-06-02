@@ -46,7 +46,7 @@
 		.custom-container {
 			box-shadow: 0px 3px 4px rgba(3, 21, 17, 0.1);
 			background-color: white;
-			padding: 24px;
+			padding: 30px;
 			border-radius: 0.5rem;
 		}
 		.btn-primary {

@@ -104,7 +104,7 @@
 		
 		<div id="app">
 
-		 <div class="container rounded p-3" style="background-color:white">
+		 <div class="container custom-container" style="background-color:white">
         		 
 		        <ul class="custom-tab-header">
 		            <li class="custom-tab-list"><a href="charge">포인트 충전</a></li>
