@@ -51,8 +51,10 @@
 		.like-count {
 		  font-size: 14px;
 		  color: #777;
-		  
 		}
+		.grey-f5f5f5{
+    	background-color: 	#f5f5f5;
+    	}
 		
     </style>
     
@@ -137,43 +139,45 @@
 		
 	<!-- ------------------------ 댓글 ------------------------------- -->
 
->>>>>>> refs/remotes/origin/main
-	
 	<!-- 댓글창 -->
-	  <h3>댓글</h3>
-	  <div v-if="replies.length == 0">댓글이 없습니다.</div>
+	  <div v-if="replies.length == 0" >댓글이 없습니다.</div>
 	  <div v-else>
 	      <div v-for="(reply, i) in replies" :key="reply.replyNo">
 	         
 	        <!-- 최상위 댓글이면 -->
 	        <div v-if="reply.replyNo == reply.replyGroupNo">
-	        	<div>{{ reply.replyId }}</div>
-		        	
-	        	<!-- 수정 폼 -->
-	        	<div v-if="updateReplyObj.index == i">
-			    	<textarea @blur="setUpdateReplyObj($event, i)" 
-			    	placeholder="수정 내용">{{ reply.replyContent }}</textarea>
-				    <button @click="saveUpdate(i)">저장</button>
-				    <button @click="cancelUpdate()">취소</button>
-				</div>
-	        	<div v-else>
-	        		{{ reply.replyContent }}
-	        		<!-- 대댓글 버튼 -->
-		        	<button v-if="reply.replyNo == reply.replyGroupNo" 
-		        			@click="showRereplyForm(i)">
-		        		<i class="fa-solid fa-reply"></i>
-					</button>
-					<!-- 수정 버튼 -->
-		        	<button v-if="reply.replyId == replyObj.replyId"
-							@click="showUpdateForm(i)">
-		        		<i class="fa-solid fa-edit"></i>
-		        	</button>
-		        	<!-- 삭제 버튼 -->
-		        	<button v-if="reply.replyId == replyObj.replyId"
-							@click="deleteReply(i)">
-						<i class="fa-solid fa-trash-alt"></i>
-					</button>	
-	        	</div>
+	        
+		        	<div>{{ reply.replyId }}</div>
+			        	
+		        	<!-- 수정 폼 -->
+		        	<div v-if="updateReplyObj.index == i">
+				    	<textarea @blur="setUpdateReplyObj($event, i)" 
+				    	placeholder="수정 내용">{{ reply.replyContent }}</textarea>
+					    <button @click="saveUpdate(i)">저장</button>
+					    <button @click="cancelUpdate()">취소</button>
+					</div>
+					
+					<!-- 최상위 댓글 내용 -->
+		        	<div v-else>
+		        		<div class="row grey-f5f5f5 rounded-3">
+			        		{{ reply.replyContent }}
+		        		</div>
+		        		<!-- 대댓글 버튼 -->
+			        	<button v-if="reply.replyNo == reply.replyGroupNo" 
+			        			@click="showRereplyForm(i)">
+			        		<i class="fa-solid fa-reply"></i>
+						</button>
+						<!-- 수정 버튼 -->
+			        	<button v-if="reply.replyId == replyObj.replyId"
+								@click="showUpdateForm(i)">
+			        		<i class="fa-solid fa-edit"></i>
+			        	</button>
+			        	<!-- 삭제 버튼 -->
+			        	<button v-if="reply.replyId == replyObj.replyId"
+								@click="deleteReply(i)">
+							<i class="fa-solid fa-trash-alt"></i>
+						</button>	
+		        	</div>
 	        	
 	        </div>
 	        
@@ -182,7 +186,7 @@
 	        
 	        	<!-- 수정 폼 -->
 	        	<div v-if="updateReplyObj.index == i">
-	        		<div style="border: 0.3px solid #dee2e6;">
+	        		<div>
 		        		{{reply.replyId}} :<br>
 				    	<textarea @blur="setUpdateReplyObj($event, i)" 
 				    	placeholder="수정 내용">{{ reply.replyContent }}</textarea>
@@ -190,12 +194,16 @@
 					    <button @click="cancelUpdate()">취소</button>
 	        		</div>
 				</div>
+				
+				<!-- 대댓글 내용 -->
 				<div v-else>
 					<div>
 						{{reply.replyId}}
 					</div>
-					<div style="background-color: #6d6d6d;">
+					<div>
+						<div class="row grey-f5f5f5 rounded-3 text-left">
 						 {{ reply.replyContent }}
+						</div>
 		        		<!-- 대댓글 버튼 -->
 			        	<button v-if="reply.replyNo == reply.replyGroupNo" 
 			        			@click="showRereplyForm(i)">
@@ -213,6 +221,8 @@
 						</button>	
 					</div>
 				</div>
+				<!-- 대댓글 내용 끝 -->
+				
 	        </div>
 	        
 	        <!-- 대댓글 폼 -->
@@ -221,6 +231,7 @@
 	        	<button @click="addReReply(i)">작성</button>
 	        	<button @click="reReplies[i] = false">취소</button>
 	        </div>
+	        <!-- 대댓글 폼 끝 -->
 	        
 	      </div>
  	 </div>

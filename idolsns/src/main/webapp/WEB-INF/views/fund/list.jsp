@@ -201,7 +201,7 @@
 	                  this.loading = false;
 	                  
 	                  // 데이터가 10개 미만이면 더 읽을게 없다
-	                       if(resp.data.length < 10){ 
+	                       if(resp.data.length < 12){ 
 	                           this.finish = true;
 	                       }
 	                  
@@ -273,7 +273,7 @@
                   this.searchPage ++;
                   
                   // 데이터가 10개 미만이면 더 읽을게 없다
-                       if(resp.data.length < 10){
+                       if(resp.data.length < 12){
                            this.finish = true;
                           }
                       },
