@@ -88,6 +88,7 @@
          <div class="row">
             <a href="${pageContext.request.contextPath}/member/exit">회원탈퇴</a>
             <a href="${pageContext.request.contextPath}/member/password">비밀번호 변경</a>
+            <a href="${pageContext.request.contextPath}/member/logout">로그아웃</a>
          </div>
          
          <div class="row">

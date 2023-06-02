@@ -140,7 +140,15 @@ public class MemberController {
 		    return "redirect:login";
 		}
 		
-		return "redirect:" + prevPage;
+		return "redirect:/";
+	}
+	
+	//로그인 상태인지 아닌지 구분
+	@GetMapping("/goToLoginPage")
+	@ResponseBody
+	public String goToLoginPage(HttpSession session) {
+		String memberId = (String) session.getAttribute("memberId");
+		return memberId;
 	}
 	
 	//로그아웃
