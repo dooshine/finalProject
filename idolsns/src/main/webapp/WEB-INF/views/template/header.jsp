@@ -866,7 +866,7 @@
 					<button><a href="/dev/login?memberId=testuser3">testuser3</a></button>
 					<button><a href="/dev/login?memberId=adminuser1">adminuser3</a></button>
 				</div>
-				<!-- <div class="offset-5 col-3">
+				<div class="offset-5 col-3">
 					<c:if test="${memberId == null}">
 						<a href="${pageContext.request.contextPath}/member/login">로그인</a>
 						<a href="${pageContext.request.contextPath}/member/join">회원가입</a>
@@ -878,7 +878,7 @@
 					<c:if test="${memberLevel == '관리자'}">
 						<a href="${pageContext.request.contextPath}/admin/">관리자 페이지</a>
 					</c:if>
-				</div> -->
+				</div>
             </div>
         </header>
           <!-- <hr> -->
