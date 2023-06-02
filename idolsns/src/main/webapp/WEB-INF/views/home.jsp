@@ -52,14 +52,33 @@
     	}
     	.reply-text{
     	font-size: 5px;
-    	}
+    	}	
+		.post-modal{
+			z-index: 9999;
+			position: absolute;			
+		}
+		.post-modal-content {
+		  box-shadow: 0px 3px 4px rgba(3, 21, 17, 0.1);
+		  background-color: white;
+		  padding: 24px;
+		  border-radius: 0.5rem;
+		  border-width: 1px;
+/* 		  border-color: black; /* 테두리 색상 지정 */ */
+		  border-style: solid;
+		}
+		
+
     </style>
+
+   
+
+   
    
 <!-- 	<div class="container-fluid" id="app" test> -->
 	<div class="container-fluid" id="app">
 		
 		<!----------- 글쓰기 버튼 ------------>
-	    <div class="bg-white mb-2 p-4 rounded-4">
+	    <div class="bg-white mb-4 p-4 rounded-4">
 	        <div class="row mt-1">
 	            <div class="col-1 col-md-1 col-lg-1 d-flex align-items-center justify-content-center">
 	               <img class="rounded-circle img-fluid" src="static/image/profileDummy.png">
@@ -216,10 +235,10 @@
                     <div class="modal-body">
                         <p class="text-center">글에 적용할 고정 태그를 입력해주세요</p>
                         <div class="row text-center">
-                     	    <div class="col-1"></div>
-                        	<input type="text" class="col-7" placeholder="태그를 입력하세요"
+                     	    <div class="col-2"></div>
+                        	<input type="text" class="col-8" placeholder="태그를 입력하세요"
                         	@input="findFixedTagName = $event.target.value" v-model="findFixedTagName">
-                        	
+                        	<div class="col-2"></div>
 <!--                         	<div class="col-1"></div> -->
 <!--                         	<button class="col-2 tag-btn">입력</button> -->
                         </div>
@@ -272,7 +291,7 @@
                      	    <div class="col-1"></div>
                         	<input type="text" class="tag-input col-7" placeholder="태그를 입력하세요">
                         	<div class="col-1"></div>
-                        	<button class="col-2 tag-btn">입력</button>
+                        	<button class="col-2 btn btn-primary tag-btn">입력</button>
                         </div>
                         <div class="row">
                         	<h6 class="all-tag text text-primary"></h6>
@@ -442,7 +461,7 @@
 	    <div v-for="(post, index) in posts" :key="index">
 	    
 	    		<!-- 글 박스 루프 1개-->
-                <div class="bg-white mb-2 px-3 py-1 rounded-4">
+                <div class="custom-container mb-4 post">
                 
                 	<!-- 프로필 사진과 아이디 -->
                 	<div class="row mt-1">
@@ -459,8 +478,25 @@
 								</div>
 			            </div>
 			            <div class="col-1 col-md-1 col-lg-1 d-flex align-items-start justify-content-end">
-			               <i class="fs-3 text-secondary ti ti-dots-vertical" data-toggle="dropdown"></i>
-			               <i class="ti ti-x" @click="deletePost(post.postNo)"></i>
+			               <i class="fs-3 text-secondary ti ti-dots-vertical" @click="setPostModalIndex(index)" data-toggle="dropdown"></i>
+<!-- 			               <i class="ti ti-x" @click="deletePost(post.postNo)"></i> -->
+							   <div v-if="index === getPostModalIndex()" class="post-modal">
+							   		<div class="mt-5 mr-4"></div>
+							   		<div class="post-modal-content">
+							   			<div v-if="post.memberId === memberId">
+							   				<h6>게시물 삭제 하기</h6>
+							   				<div class="custom-hr my-3"></div>
+							   				<h6>게시물 수정 하기</h6>
+							   			</div>							   										   			
+							   			<div v-else>
+							   				<h6>해당 유저 팔로우</h6>
+							   				<div class="custom-hr my-1"></div>
+							   				<h6>게시물 신고하기</h6>
+							   			</div>
+							   		</div>
+							   		
+							   </div>
+
 			            </div>
 							
 	       			</div>	
@@ -1023,6 +1059,9 @@
                 	page:1, 
                 	finish:false,
                 	
+                	// 게시글 모달 버튼 클릭 시, 보여줄 모달 번호
+                	postModalIndex: null,
+                	
                 	// 안전장치
                 	loading:false,
                 	
@@ -1244,6 +1283,17 @@
                 // 댓글 창 관련 클릭 함수 -------------------------------
              	
                 
+                
+                // 게시글 모달창 --------------------------------------
+                setPostModalIndex(index){
+                	this.postModalIndex = index;
+                },
+                
+                getPostModalIndex(){
+                	return this.postModalIndex;
+                },
+             	// 게시글 모달창 --------------------------------------
+                
              	
             	// 모달창 클릭 시 지도 정보 불러오기-------------------------
             	showMap(keyword){
@@ -1381,6 +1431,7 @@
         }).mount("#app");
     </script>
     
+
     <!-- 이미지 스와이핑 창 -->
     <script src="${pageContext.request.contextPath}/static/js/swiping-image.js"></script>
     <!-- 게시글 작성 ajax -->
