@@ -740,7 +740,17 @@
 					if(thisMsg.memberId != nextMsg.memberId) return true;
 					if(this.timeFormat(thisMsg.chatMessageTime) != this.timeFormat(nextMsg.chatMessageTime)) return true;
 					return false;
-				}
+				},
+				//유저버튼 - 로그인 or 마이페이지로 이동
+				async goToLoginPage() {
+					const response = await axios.get("/member/goToLoginPage");
+					if(response.data == "") {
+						window.location.href = `${pageContext.request.contextPath}/member/login`;
+					}
+					else {
+						window.location.href = `${pageContext.request.contextPath}/member/mypage`;
+					}
+				},
 			},
 			computed: {
 				memberCount() {
