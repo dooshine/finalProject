@@ -42,17 +42,16 @@
 	        
 	    }
 	
-	    .tab_list.active {
-	    	color: #6A53FB;
-	       font-weight:bold;
-	      	
-	        
-	    }
-	
-	    .tab_list a {
+	    .tab_list:not(.active) a {
 	        text-decoration: none;
 	        color: #333;
 	        
+	    }
+	    
+	     .tab_list.active a {
+	      color: #6A53FB;
+	       font-weight:bold;
+		   text-decoration: none;
 	    }
 	
 	    .tab_list:hover {
@@ -84,6 +83,29 @@
 	   	.title {
 	   		font-weight:bold;
 	   	}
+		.custom-table-tr {
+			/* background-color: #f8f7fc; */
+			border-bottom: 1.8px solid #a294f9;
+			/* border: 1.5px solid #6A53FB; */
+			
+		}
+		.custom-table-tr > th {
+			padding-top: 12px;
+			padding-bottom: 12px;
+			/* border: 1.5px solid #6A53FB; */
+			
+		}
+
+		.pagination a {
+			color: #6a53fb;
+		}
+		.pagination .active > a{
+			background-color: #6a53fb;
+			border-color: #6a53fb;
+		}
+		.pagination {
+			--bs-pagination-focus-box-shadow: 0px;
+		}
 	    
 	</style>
 
@@ -106,10 +128,10 @@
 	            <p class="container rounded p-3 border">내 포인트: <span class="amount" style="color:#6A53FB; font-weight:bold" >{{ formattedAmount }}</span>원</p>
 	        </div>
         
-				<div class="modal-body" style="padding-left: 0.5em; padding-right: 0.5em;">
+				<div class="modal-body mt-4" style="padding-left: 0.5em; padding-right: 0.5em;">
 				  <table class="table">
 			        <thead>
-			          <tr>
+			          <tr class="custom-table-tr">
 			            <th>충전일</th>
 			            <th>구분</th>
 						<th>충전 금액</th>
@@ -183,7 +205,7 @@
 	                return this.amount.toLocaleString();
 	            },
 	            
-                <!--페이지네이션-->
+                // <!--페이지네이션-->
 	            
 	            totalPages() {
 	                return Math.ceil(this.items.length / this.itemsPerPage);
@@ -226,7 +248,7 @@
 	        		  }
 	        		},
 	        	
-	        	<!--페이지네이션-->
+	        	// <!--페이지네이션-->
 	        	 previousPage() {
 	        	      if (this.currentPage > 1) {
 	        	        this.currentPage--;

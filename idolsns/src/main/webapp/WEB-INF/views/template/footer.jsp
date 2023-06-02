@@ -5,7 +5,7 @@
 
             </div>
 
-	<div class="col-3">
+	<div class="col-3 py-4">
 		<!-- 캘린더 영역 -->
 	     <jsp:include page="/WEB-INF/views/template/calendar.jsp"></jsp:include>
 
