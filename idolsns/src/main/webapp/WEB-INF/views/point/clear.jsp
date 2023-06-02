@@ -51,7 +51,9 @@
 				</div>
 				
 				<!-- <hr style="background-color: black; height: 2px"> -->
+				<!-- <div class="custom-hr" style="background-color: #7f7f7f;"></div> -->
 				<div class="custom-hr-big" style="background-color: #7f7f7f;"></div>
+				<!-- <div class="custom-hr-big"></div> -->
 			
 				<table class="table">
 					<tr>
