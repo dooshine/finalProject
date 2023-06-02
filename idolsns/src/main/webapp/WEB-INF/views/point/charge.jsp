@@ -11,11 +11,7 @@
 		  }
     	}
 
-		   	section {
-			  font-family: "Noto Sans KR", sans-serif;
-			}
-			   	
-		   
+	
 	    
 	    .point_select {
 	    	width: 100%;
@@ -25,38 +21,8 @@
 	    .radio_label {
 			white-space: nowrap;
 		}
-	    
-    	.custom-title {
-   			font-weight:bold;
-			padding-left: 12px;
-	   	}
-	    .custom-border-box {
-			margin-top: 16px;
-			margin-bottom: 16px;
-			border: 0.3px solid #dee2e6;
-			padding: 16px;
-			border-radius: 0.5rem;
-		}
-		.custom-hr {
-			margin-top: 16px;
-			margin-bottom: 16px;
-			background-color: #dee2e6;
-			height: 0.3px;
-		}
-		.custom-container {
-			box-shadow: 0px 3px 4px rgba(3, 21, 17, 0.1);
-			background-color: white;
-			padding: 24px;
-			border-radius: 0.5rem;
-		}
-		.btn-primary {
-			background-color: #6a53fb;
-			border-color: #6A53FB;
-		}
-		.btn-primary:hover{
-			background-color: #6a53fb;
-			border-color: #6A53FB;
-		}
+
+
 		input[type="radio"] {
 			accent-color: #6A53FB;
 		}
@@ -114,7 +80,7 @@
                 </label>        
 				
 				
-				<div class="mt-3">
+				<div class="mt-3 mb-3">
 				    <p class="my-3">충전 후 내 포인트: 
 				    <span class="amount">{{ (amount+parseInt(selectedAmount || 0)).toLocaleString() }}
 				    </span>원
@@ -138,8 +104,8 @@
 					<input style="display: none" name="quantity" value="1">
 				</div>
 
-	            <div class="justify-content-center d-flex mt-3">
-	                <button type="submit" class="btn btn-lg btn-primary mb-4" @click="charge">충전하기</button>
+	            <div class="justify-content-center d-flex mt-5">
+	                <button type="submit" class="custom-btn btn-purple1 mb-4" @click="charge">충전하기</button>
 	            </div>
 
 	       	 </form>
