@@ -61,6 +61,7 @@
 					followProfileList: [],
 					selectedMemberList: [],
 					selectedMemberIdList: [],
+					selectedMemberNickList: [],
 					chatRoomIdList: [],
 					chatRoomProfileList: [],
 					
@@ -444,7 +445,11 @@
 							profileSrc: member.profileSrc
 						}
 					}
-					else return null;
+					else return {
+						memberNick: '(알수없음)',
+						memberId: '(알수없음)',
+						profileSrc: '/static/image/profileDummy.png'
+					}
 				},
 				findMemberByIdInInvite(index) {
 					const memberId = this.filteredFollowList[index].memberId;
@@ -458,7 +463,37 @@
 							profileSrc: member.profileSrc
 						}
 					}
-					else return null;
+					else return {
+						memberNick: '(알수없음)',
+						memberId: '(알수없음)',
+						profileSrc: '/static/image/profileDummy.png'
+					}
+				},
+				findMemberByIdInRoom() {
+					let findId = "";
+					console.log("findMemberByIdInRoom memberId: " + findId);
+					console.log("this.roomInfo.chatRoomName1: " + this.roomInfo.chatRoomName1);
+					if(this.roomInfo.chatRoomName1 != this.memberId) {
+						findId = this.roomInfo.chatRoomName1;
+					}
+					else if(this.roomInfo.chatRoomName2 != this.memberId) {
+						findId = this.roomInfo.chatRoomName2;
+					}
+					const member = this.chatMemberList.find(function(member) {
+						return member.memberId === findId;
+					})
+					if(member) {						
+						return {
+							memberNick: member.memberNick,
+							memberId: member.memberId,
+							profileSrc: member.profileSrc
+						}
+					}
+					else return {
+						memberNick: '(알수없음)',
+						memberId: '(알수없음)',
+						profileSrc: '/static/image/profileDummy.png'
+					}
 				},
 				findMemberByIdInMain(index) {
 					//const findId = this.chatRoomList[index].chatRoomName1;
@@ -482,7 +517,11 @@
 							profileSrc: member.profileSrc
 						}
 					}
-					else return null;
+					else return {
+						memberNick: '(알수없음)',
+						memberId: '(알수없음)',
+						profileSrc: '/static/image/profileDummy.png'
+					}
 				},
 				// 메세지 불러오기
 				async loadMessage() {
@@ -600,11 +639,14 @@
 				async leaveRoom() {
 					const memberId = this.memberId;
 					const chatRoomNo = this.chatRoomNo;
+					const member = this.chatMemberList.find(function(member) {
+						return member.memberId === memberId;
+					})
 					const data1 = {
 						type: 5,
 						memberId: memberId,
 						chatRoomNo: chatRoomNo,
-						chatMessageContent: this.memberId + " 님이 위즈를 떠났습니다."
+						chatMessageContent: member.memberNick + " 님이 위즈를 떠났습니다."
 					};
 					this.socket.send(JSON.stringify(data1));
 					const data2 = {
@@ -649,6 +691,9 @@
 					for(let i=0; i<this.selectedMemberList.length; i++) {
 						this.selectedMemberIdList[i] = this.selectedMemberList[i].memberId;
 					}
+					for(let j=0; j<this.selectedMemberList.length; j++) {
+						this.selectedMemberNickList[j] = this.selectedMemberList[j].memberNick;
+					}
 					const url = "${pageContext.request.contextPath}/chat/chatRoom/invite";
 					//console.log("roomInfo: " + this.roomInfo);
 					const data1 = {
@@ -656,11 +701,11 @@
 							memberList: this.selectedMemberIdList
 					};
 					const resp = await axios.post(url, data1);
-					const memberIds = this.selectedMemberIdList.join(", ");
+					const memberNicks = this.selectedMemberNickList.join(", ");
 					const data2 = {
 							type: 6,
 							chatRoomNo: chatRoomNo,
-							chatMessageContent: memberIds + " 님에게 인사해주세요🖐"
+							chatMessageContent: memberNicks + " 님에게 인사해주세요🖐"
 					};
 					this.socket.send(JSON.stringify(data2));
 					this.chatMemberList.splice(0);
