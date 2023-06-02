@@ -68,6 +68,11 @@
     <style>
     
     	
+    	i {
+    		font-family:  "Font Awesome 6 Free"  !important;
+    	}
+    	
+    	
     	@media screen and (max-width:767px) {
 		  	.hide-part {
 		    	display:none; 
