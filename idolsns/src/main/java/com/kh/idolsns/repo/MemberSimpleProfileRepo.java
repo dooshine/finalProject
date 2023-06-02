@@ -6,4 +6,5 @@ import com.kh.idolsns.dto.MemberSimpleProfileDto;
 public interface MemberSimpleProfileRepo {
 
 	List<MemberSimpleProfileDto> profile(List<String> memberIdList);
+	MemberSimpleProfileDto selectProfileById(String memberId);
 }

@@ -16,19 +16,19 @@
 			}
 			   	
 		   
-		    ul.point_header_tab {
+		    ul.custom-tab-header {
 		      padding: 0;
 		      margin: 0;
 		    }
 		   
 	    /* 탭 메뉴 스타일 */
-	    .point_header_tab {
+	    .custom-tab-header {
 	        overflow: hidden;
 			width:100%;
 	
 	    }
 	
-	    .tab_list {
+	    .custom-tab-list {
 	        background-color: inherit;
 	        float: left;
 	        border-bottom: 0.5px solid #f5f5f5;
@@ -42,25 +42,24 @@
 	        
 	    }
 	
-	    .tab_list.active {
-	    	color: #6A53FB;
-	       font-weight:bold;
-	      	
-	        
-	    }
-	
-	    .tab_list a {
+	    .custom-tab-list:not(.active) a {
 	        text-decoration: none;
 	        color: #333;
 	        
 	    }
+	    
+	     .custom-tab-list.active a {
+	      color: #6A53FB;
+	       font-weight:bold;
+		   text-decoration: none;
+	    }
 	
-	    .tab_list:hover {
+	    .custom-tab-list:hover {
 	    
 	    }
 	
 	    /* 하위 요소에 적용할 스타일 */
-	    .tab_list.active::after {
+	    .custom-tab-list.active::after {
 	        content: '';
 	        position: absolute;
 	        bottom: 0;
@@ -84,6 +83,20 @@
 	   	.title {
 	   		font-weight:bold;
 	   	}
+		.custom-table-tr {
+			/* background-color: #f8f7fc; */
+			border-bottom: 1.8px solid #a294f9;
+			/* border: 1.5px solid #6A53FB; */
+			
+		}
+		.custom-table-tr > th {
+			padding-top: 12px;
+			padding-bottom: 12px;
+			/* border: 1.5px solid #6A53FB; */
+			
+		}
+
+		
 	    
 	</style>
 
@@ -93,10 +106,10 @@
 
 		 <div class="container rounded p-3" style="background-color:white">
         		 
-		        <ul class="point_header_tab">
-		            <li class="tab_list"><a href="charge">포인트 충전</a></li>
-		            <li class="tab_list active"><a href="#">충전 내역</a></li>
-		            <li class="tab_list"><a href="order">사용 내역</a></li>
+		        <ul class="custom-tab-header">
+		            <li class="custom-tab-list"><a href="charge">포인트 충전</a></li>
+		            <li class="custom-tab-list active"><a href="#">충전 내역</a></li>
+		            <li class="custom-tab-list"><a href="order">사용 내역</a></li>
 		        </ul>
 		        
 		        
@@ -106,10 +119,10 @@
 	            <p class="container rounded p-3 border">내 포인트: <span class="amount" style="color:#6A53FB; font-weight:bold" >{{ formattedAmount }}</span>원</p>
 	        </div>
         
-				<div class="modal-body" style="padding-left: 0.5em; padding-right: 0.5em;">
+				<div class="modal-body mt-4" style="padding-left: 0.5em; padding-right: 0.5em;">
 				  <table class="table">
 			        <thead>
-			          <tr>
+			          <tr class="custom-table-tr">
 			            <th>충전일</th>
 			            <th>구분</th>
 						<th>충전 금액</th>
@@ -183,7 +196,7 @@
 	                return this.amount.toLocaleString();
 	            },
 	            
-                <!--페이지네이션-->
+                // <!--페이지네이션-->
 	            
 	            totalPages() {
 	                return Math.ceil(this.items.length / this.itemsPerPage);
@@ -226,7 +239,7 @@
 	        		  }
 	        		},
 	        	
-	        	<!--페이지네이션-->
+	        	// <!--페이지네이션-->
 	        	 previousPage() {
 	        	      if (this.currentPage > 1) {
 	        	        this.currentPage--;

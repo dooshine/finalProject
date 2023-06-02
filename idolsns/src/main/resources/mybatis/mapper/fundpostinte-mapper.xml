@@ -41,8 +41,8 @@
 	</resultMap>
 	
 	<select id="fundPostByPostNo" resultMap="fdvo" parameterType="Long">
-		select * from fundpostimage_detail 
-		where post_no=#{postNo} 
+		select * from fundpostimage_detail
+		where post_no=#{postNo}
 	</select>
 	
 	<select id="tagByPostNo" resultType="TagDto" parameterType="Long">
@@ -56,7 +56,7 @@
 	</select>
 	
 	<select id="attachByPostNo" resultType="PostImageDto" parameterType="Long">
-		select * from post_image 
+		select * from post_image
 		where post_no=#{postNo}
 	</select>
 	
@@ -86,7 +86,7 @@
 		<include refid="topNheader"/>	 		
 			select * from fundpostimage_view
 		  	where instr(fund_title, #{searchKeyword}) > 0
-		  	order by post_time desc	 	 	
+		  	order by post_time desc
 		<include refid="topNfooter"/>
 	 </select>
 	 
@@ -94,7 +94,7 @@
 	 <select id="infinite" resultType="FundPostImageDto">
 		<include refid="topNheader"/>	 		
 			select * from fundpostimage_view
-		  	order by post_time desc	 	 	
+		  	order by post_time desc
 		<include refid="topNfooter"/>
 	 </select>
 	 
