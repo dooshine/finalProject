@@ -66,7 +66,7 @@
         <!-- 후원 취소 버튼: 잔여 금액이 존재하고 펀딩 종료 1일 전이 아닌 경우 -->
         <template v-if="fundDto.fundRemain > 0 && !isCancellationDisabled">
           <a :href="'cancelOrder?fundNo=' + fundDto.fundNo" style="padding-left: 0.5em">
-            <button class="btn btn-sm btn-danger">
+            <button class="custom-btn-sm btn-danger">
               후원 취소
             </button>
           </a>
