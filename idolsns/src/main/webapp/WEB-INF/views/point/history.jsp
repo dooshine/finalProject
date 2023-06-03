@@ -74,11 +74,7 @@
 		}
 	   
 	   
-	   	.title {
-	   		font-weight:bold;
-	   	}
-	   
-	   
+	
 	   
 	   	.custom-table-tr {
 			/* background-color: #f8f7fc; */
@@ -104,16 +100,16 @@
 
 		 <div class="container custom-container">
 		        <ul class="custom-tab-header">
-		            <li class="custom-tab-list"><a href="charge">포인트 충전</a></li>
+		            <li class="custom-tab-list"><a href="charge">스타 충전</a></li>
 		            <li class="custom-tab-list active"><a href="#">충전 내역</a></li>
 		            <li class="custom-tab-list"><a href="order">사용 내역</a></li>
 		        </ul>
 		        
 		        
-		        <h3 class="title mt-5 mb-3" style="padding-left: 0.5em">충전 내역</h3>
+		        <h3 class="font-bold mt-5 mb-3" style="padding-left: 0.5em">충전 내역</h3>
 		
 		   <div style="padding-left: 0.5em; padding-right: 0.5em;">
-	            <div class="container my-3 custom-border-box">내 포인트: <span class="amount" style="color:#6A53FB; font-weight:bold" >{{ formattedAmount }}</span>원</div>
+	            <div class="container my-3 custom-border-box">내 포인트: <span class="amount font-bold font-purple1" >{{ formattedAmount }}</span>원</div>
 	        </div>
         
 				<div class="modal-body" style="padding-left: 0.5em; padding-right: 0.5em;">
@@ -122,7 +118,7 @@
 			          <tr class="custom-table-tr">
 			            <th>충전일</th>
 			            <th>구분</th>
-						<th>충전 금액</th>
+						<th>충전 스타</th>
 			            <th>상태</th>
 			            <th>더보기</th>
 			          </tr>
@@ -132,15 +128,18 @@
 				        <td>{{ paymentDto.paymentTime }}</td>
 				        <td>{{ paymentDto.paymentName }}</td>
 				        <td>
-				        	<span :style="paymentDto.paymentStatus === '취소' ? 'text-decoration: line-through; color: grey;' : ''">{{ paymentDto.paymentTotal }}</span>
+				        	<span :style="paymentDto.paymentStatus === '취소' ? 'text-decoration: line-through; color: grey;' : ''">
+				        	{{ formatCurrency(paymentDto.paymentTotal) }}</span>
 				        </td>
 				      
 				        <td>
-					      <span :style="paymentDto.paymentStatus === '취소' ? 'text-decoration: line-through; color: grey;' : ''">{{ paymentDto.paymentStatus }}</span>
+						    <span :style="paymentDto.paymentStatus === '취소' ? 'text-decoration: line-through; color: grey;' : ''">
+						    {{ formatCurrency(paymentDto.paymentStatus) }}</span>
 					    </td>
 				        <td>
 				          <a :href="'detail?paymentNo=' + paymentDto.paymentNo">
-				            <button class="custom-btn-sm btn-purple1">
+
+				            <button class="btn-sm btn-purple1">
 				              더보기
 				            </button>
 				          </a>
@@ -212,7 +211,9 @@
 	              },
 	        },
 	        methods: {
-	   
+	        	  formatCurrency(value) {
+	        	        return value.toLocaleString();
+	        	      },
 			
 	           	 async loadMemberPoint() {
 	                     const url = "/rest/member/"+memberId;

@@ -16,18 +16,15 @@
 		  }
           
     	}
-    
-    
-    	section {
-		  font-family: "Noto Sans KR", sans-serif;
+   		.table th {
+			background-color: #f8f7fc;
+			padding-left: 12px;
 		}
-		   	
-    
-    
-    	.title {
-    		font-weight: bold; 
-    		
-    		}
+		.table td {
+			padding-left: 12px;
+		}	   
+
+			
     
 
 
@@ -36,51 +33,60 @@
 
 		
 	<div id="app">
-	  <div class="container rounded p-3" style="background-color:white">
+	  <div class="custom-container">
     	<div style="padding-left:0.5em; padding-right:0.5em;">
     		
     		
-    		00번째 후원자입니다 ㅊㅋㅊㅋ
+    		<div class="my-5 mb-5">
+    			<h2 class="font-bold" style="text-align: center;">00번째 후원자입니다 ㅊㅋㅊㅋ</h2>
+    		</div>
+    		
+			<div class="p-4">
 			
+				<div>
+					<h4 class="font-bold">후원정보</h4>
+				</div>
+			
+			
+			<div class="custom-hr-big" style="background-color: #7f7f7f;"></div>
 			<table class="table">
 			
-				<tr>
-					<th>펀딩 프로젝트</th>
+				<tr class="col-12">
+					<th class="col-3">참여 펀딩</th>
 					<td>{{ fundDetail.fundTitle }}</td>
 				</tr>
 			
+				<tr>
+			         <th>후원 스타</th>
+			         <td>{{ formatCurrency(fundDto.fundPrice) }}스타</td>
+		        </tr>
 			
-			
 				<tr>
-					<th>펀딩 상태</th>
-					<td>{{ fundDetail.fundState }}</td>
-				</tr>
-				
-				<tr>
-					<th>후원 번호</th>
-					<td>{{ fundDto.fundNo }}</td>
-				</tr>
-				
-				<tr>
-					<th>후원 날짜</th>
+					<th>후원일</th>
 					<td>{{ fundDto.fundTime }}</td>
 				</tr>
-				
-		
-			  	<tr>
-			         <th>후원 금액</th>
-			         <td>{{ formatCurrency(fundDto.fundPrice) }}</td>
-		        </tr>
 				
 				<tr>
 					<th>펀딩 마감일</th>
 					<td>{{ fundDetail.postEnd }}</td>
-					
 				</tr>
+			  	
+				<tr>
+					<th>펀딩 진행 상황</th>
+					<td>{{ fundDetail.fundState }}</td>
+				</tr>
+				
+				<tr>
+		          <th>후원 상태</th>
+		          <td>{{ fundDto.fundStatus }}</td>
+		        </tr>
+			
+				
 				
 				
 			</table>
 			
+			</div>
 			
 		</div>
 	  </div>

@@ -23,6 +23,7 @@
 	<select id="selectAll" resultType="PaymentDto">
 		select * from payment order by payment_no desc
 	</select>
+	
 	<select id="selectByMember" resultType="PaymentDto">
 		select * from payment 
 		where member_id = #{memberId}
