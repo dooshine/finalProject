@@ -8,8 +8,19 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   
+    <!-- favicon -->
+	<link rel="icon" href="/static/image/favicon.ico">
     <title>스타링크</title>
+    
+    
+    <!-- 폰트css -->
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/static/css/load.css" />
+    
+    <!-- pretendard -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" />
+    
+  
     <!-- 폰트어썸 cdn -->
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css">
     <!-- tabler 아이콘 -->
@@ -30,23 +41,19 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css">
 	<!-- sock.js cdn -->
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.6.1/sockjs.min.js"></script>
-	<!-- full calendar css -->
-	<link href='https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css' rel='stylesheet'>
-	<link href='https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css' rel='stylesheet'>
 	
 	<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/static/css/reset.css">
 
     <!-- custom 테스트 css -->
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/static/css/test.css">
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/static/css/component.css">
-    
-    
-    
     <!-- doo-css -->
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/static/css/doo.css" />
 
 	
-	
+	<!-- full calendar css -->
+	<link href='https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css' rel='stylesheet'>
+	<link href='https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css' rel='stylesheet'>
 
 
     <script>
@@ -56,6 +63,13 @@
     </script>
     
     <style>
+    
+    	
+    	i {
+    		font-family:  "Font Awesome 6 Free"  !important;
+    	}
+    	
+    	
     	@media screen and (max-width:767px) {
 		  	.hide-part {
 		    	display:none; 
@@ -69,6 +83,7 @@
     		width: 40px;
     		border: 0.3px solid #c7cbca;
     	}
+    	.user-btn,
     	.weez-btn,
     	.noti-btn,
     	.hide-style {
@@ -408,8 +423,8 @@
 		
 		.notiMark {
 			position: absolute;
-			top: 15px;
-			right: 20px;
+			top: 5px;
+			right: 5px;
 			border-radius: 10px;
 			width: 12px;
 			height: 12px;
@@ -459,11 +474,12 @@
     <main>
     	<!----------------------------------------------- 헤더 시작 ----------------------------------------------->
         <header>
+   
         	<div id="header-area">
 				<nav class="navbar navbar-expand-md navbar-light back-white" style="box-shadow: 0px 3px 4px rgba(3, 21, 17, 0.1);">
 				  	<div class="container-fluid">
 				  		<div class="col-3 ps-2">
-					    	<a class="navbar-brand" href="/"><img src="/static/image/logo2.jpg" style="width:130px;"></a>
+					    	<a class="navbar-brand" href="/"><img src="/static/image/logo.png" style="width:130px;"></a>
 					    </div>
 				    	<div class="col-6 d-flex collapse navbar-collapse" id="navbarSupportedContent">
 				      		<form action="/search" class="d-flex w-100">
@@ -474,15 +490,32 @@
 				    	</div>
 				    	<div class="col-3 d-flex justify-content-end collapse navbar-collapse pe-2">
 				    		<!-- 알림버튼 -->
-				    		<button class="noti-btn">
-								<img class="noti me-2 nav-item hide-part" alt="알림" src="/static/image/notificationIcon.png">
+				    		<button class="noti-btn me-2">
+								<img class="noti nav-item hide-part" alt="알림" src="/static/image/notificationIcon.png">
 							</button>
 							<!-- 위즈버튼 -->
-							<button class="weez-btn" @click="showChatMainModal">
+							<button class="weez-btn me-2" @click="showChatMainModal" style="position: relative;">
 								<img class="weez nav-item hide-part" alt="위즈" src="/static/image/dmIcon.png">
 								<!-- 새 채팅이 있는 경우 새 채팅 알림 마크 -->
 								<div v-if="newChatNoti === true" class="notiMark collapse navbar-collapse"></div>
 							</button>
+							<!-- 유저버튼 -->
+							<button class="user-btn" @click="goToLoginPage()">
+								<img class="me-2 weez nav-item hide-part" alt="유저" src="/static/image/profileDummy.png">
+							</button>
+							<!-- <div class="offset-5 col-3">
+					<c:if test="${memberId == null}">
+						<a href="${pageContext.request.contextPath}/member/login">로그인</a>
+						<a href="${pageContext.request.contextPath}/member/join">회원가입</a>
+					</c:if>
+					<c:if test="${memberId != null}">
+						<a href="${pageContext.request.contextPath}/member/logout">로그아웃</a>
+						<a href="${pageContext.request.contextPath}/member/mypage">마이페이지</a>
+					</c:if>
+					<c:if test="${memberLevel == '관리자'}">
+						<a href="${pageContext.request.contextPath}/admin/">관리자 페이지</a>
+					</c:if>
+				</div> -->
 				    	</div>
 				  	</div>
 				</nav>
@@ -850,7 +883,7 @@
 					<button><a href="/dev/login?memberId=testuser3">testuser3</a></button>
 					<button><a href="/dev/login?memberId=adminuser1">adminuser3</a></button>
 				</div>
-				<!-- <div class="offset-5 col-3">
+				<div class="offset-5 col-3">
 					<c:if test="${memberId == null}">
 						<a href="${pageContext.request.contextPath}/member/login">로그인</a>
 						<a href="${pageContext.request.contextPath}/member/join">회원가입</a>
@@ -862,15 +895,33 @@
 					<c:if test="${memberLevel == '관리자'}">
 						<a href="${pageContext.request.contextPath}/admin/">관리자 페이지</a>
 					</c:if>
-				</div> -->
+				</div>
             </div>
         </header>
           <!-- <hr> -->
 
         <section class="container-fluid">
             <div class="row">
+				<!-- aside -->
                 <div class="col-3 d-flex left-aside">
-                    <jsp:include page="/WEB-INF/views/template/sidebar.jsp"></jsp:include>
+					<c:choose>
+						<%-- 일반페이지 aside --%>
+						<c:when test="${!requestScope['javax.servlet.forward.servlet_path'].startsWith('/admin')}">
+							<jsp:include page="/WEB-INF/views/template/sidebar.jsp"></jsp:include>
+						</c:when>
+						<%-- 관리자페이지 aside --%>
+						<c:otherwise>
+							<jsp:include page="/WEB-INF/views/admin/adminAside.jsp"></jsp:include>
+						</c:otherwise>
+					</c:choose>
                 </div>
-                <div class="col-6 article container-fluid py-4" style="padding:0px;">
+				<!-- 본문 -->
+				<c:choose>
+					<c:when test="${!requestScope['javax.servlet.forward.servlet_path'].startsWith('/admin')}">
+						<div class="col-6 article container-fluid py-4" style="padding:0px;">
+					</c:when>
+					<c:otherwise>
+						<div class="col-9 article container-fluid py-4">
+					</c:otherwise>
+				</c:choose>
                 

@@ -20,12 +20,6 @@
 	
 	     
     <style>
-		@media screen and (max-width:992px) {
-		  	.col-6 {
-		    width: 100%; 
-		  }
-    	}
-
 		/*   이미지 스와이핑 창 스타일 */
     	.swiper { 
 		width: 600px;
@@ -67,7 +61,7 @@
 		<!----------- 글쓰기 버튼 ------------>
 	    <div class="bg-white mb-2 p-4 rounded-4">
 	        <div class="row mt-1">
-	            <div class="col-1 col-md-1 col-lg-1 d-flex align-items-center justify-content-center p-0">
+	            <div class="col-1 col-md-1 col-lg-1 d-flex align-items-center justify-content-center">
 	               <img class="rounded-circle img-fluid" src="static/image/profileDummy.png">
 	            </div>
 	            <div class="col-11 col-md-11 col-lg-11 d-flex align-items-center justify-content-center">
@@ -448,7 +442,7 @@
 	    <div v-for="(post, index) in posts" :key="index">
 	    
 	    		<!-- 글 박스 루프 1개-->
-                <div class="mb-2 custom-container">
+                <div class="bg-white mb-2 px-3 py-1 rounded-4">
                 
                 	<!-- 프로필 사진과 아이디 -->
                 	<div class="row mt-1">

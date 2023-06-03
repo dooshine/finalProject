@@ -5,12 +5,14 @@
 
             </div>
 
-	<div class="col-3 py-4">
-		<!-- 캘린더 영역 -->
-	     <jsp:include page="/WEB-INF/views/template/calendar.jsp"></jsp:include>
-
-	 
-	</div>
+	<!-- 일반페이지 일때 -->
+	<c:if test="${!requestScope['javax.servlet.forward.servlet_path'].startsWith('/admin')}">
+		<div class="col-3 py-4">
+			<!-- 캘린더 영역 -->
+			 <jsp:include page="/WEB-INF/views/template/calendar.jsp"></jsp:include>
+		</div>
+	</c:if>
+	
 
 
 
@@ -740,7 +742,17 @@
 					if(thisMsg.memberId != nextMsg.memberId) return true;
 					if(this.timeFormat(thisMsg.chatMessageTime) != this.timeFormat(nextMsg.chatMessageTime)) return true;
 					return false;
-				}
+				},
+				//유저버튼 - 로그인 or 마이페이지로 이동
+				async goToLoginPage() {
+					const response = await axios.get("/member/goToLoginPage");
+					if(response.data == "") {
+						window.location.href = `${pageContext.request.contextPath}/member/login`;
+					}
+					else {
+						window.location.href = `${pageContext.request.contextPath}/member/mypage`;
+					}
+				},
 			},
 			computed: {
 				memberCount() {
