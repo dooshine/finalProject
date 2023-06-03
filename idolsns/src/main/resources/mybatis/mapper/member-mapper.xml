@@ -274,6 +274,36 @@
 		select count(*) from member_exit where member_id = #{memberId}
 	</select>
 	
+	<!-- 팔로우 리스트 멤버별 프로필 조회 -->
+	<select id="followListProfile" resultType="FollowDto">
+		SELECT f.FOLLOW_TARGET_PRIMARY_KEY, mpi.ATTACHMENT_NO, f.follow_no
+		FROM FOLLOW f
+		LEFT JOIN MEMBER_PROFILE_IMAGE mpi ON f.FOLLOW_TARGET_PRIMARY_KEY = mpi.MEMBER_ID
+		WHERE f.MEMBER_ID = #{memberId} and f.follow_target_type='회원'
+	</select>
+	
+	<!-- 팔로워 리스트 멤버별 프로필 조회 -->
+	<select id="followerListProfile" resultType="FollowDto">
+		SELECT f.member_id, mpi.ATTACHMENT_NO, f.follow_no
+		FROM FOLLOW f
+		LEFT JOIN MEMBER_PROFILE_IMAGE mpi ON f.member_id = mpi.MEMBER_ID
+		WHERE f.follow_target_primary_key=#{followTargetPrimaryKey} AND f.follow_target_type = '회원'
+	</select>
+	
+	<!-- 페이지 리스트 멤버별 프로필 조회 -->
+	<select id="PageListProfile" resultType="FollowDto">
+		SELECT  f.*,a.ARTIST_NO, a.ARTIST_NAME, a.ARTIST_ENG_NAME, a.ARTIST_ENG_NAME_LOWER, p.ATTACHMENT_NO
+FROM follow f
+JOIN artist a ON f.follow_target_primary_key = a.ARTIST_ENG_NAME_LOWER
+JOIN artist_profile p ON a.ARTIST_NO = p.ARTIST_NO
+WHERE f.follow_target_type = '대표페이지' AND f.member_id = #{memberId}
+	</select>
+	
+	<!-- 팔로우 리스트 삭제 -->
+	<delete id="deleteFollow">
+		DELETE FROM follow WHERE FOLLOW_NO = #{followNo}
+	</delete>
+	
 	 <!-- 프로필 생성 -->
     <insert id="insertProfile">
         insert into member_profile_image (member_id, attachment_no) values (#{memberId}, #{attachmentNo})
