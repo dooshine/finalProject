@@ -132,7 +132,7 @@
 		             <td>{{ fundDto.fundStatus }}</td>
 		             <td>
 		               <a :href="'detailOrder?fundNo=' + fundDto.fundNo">
-		              	<button class="btn btn-sm btn-purple1">
+		              	<button class="custom-btn-sm btn-purple1">
 		              	더보기
 		              	</button>
 		               </a>

@@ -23,6 +23,8 @@
 
 	
 	</style>
+	
+	
 <div id="app">
   <div class="custom-container">
     <h3 class="font-bold mt-5 mb-3" style="padding-left: 0.5em">결제 상세 정보</h3>
@@ -61,28 +63,35 @@
       </table>
      
       
-      
-     <div class="d-flex justify-content-end">
+	<div class="d-flex justify-content-end">
+		<a :href="'history'">
+	      <button class="custom-btn-sm btn-purple1">
+			결제 내역
+	      </button>
+      	</a>
+	
       <!-- 결제 취소 버튼: 잔여 금액이 존재하고 7일 이내인 경우에만 표시 -->
       <template v-if="paymentDto.paymentRemain > 0 && !isCancellationDisabled">
-        <a :href="'cancel?paymentNo=' + paymentDto.paymentNo" style="padding-left: 0.5em">
-          <button class="btn btn-sm btn-danger">
+        <a :href="'cancel?paymentNo=' + paymentDto.paymentNo">
+          <button class="custom-btn-sm btn-danger" style="margin-left:0.5em">
             결제 취소
           </button>
         </a>
       </template>
       <!-- 7일 경과 후 충전 취소 안내 문구 -->
       <template v-if="isCancellationDisabled && paymentDto.paymentRemain > 0">
-        <p style="padding-left: 0.5em; color: red; font-size: 15px">
+        <p class="font-bold start" style="color: red; font-size: 15px">
           결제 7일 경과 후 충전 취소가 불가합니다.
         </p>
       </template>
+      </div>
+
+ 
     </div>
-    
      </div>
     
   </div>
-  </div>
+
 
 
 

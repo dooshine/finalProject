@@ -54,6 +54,15 @@
         </tr>
       </table>
       <div class="d-flex justify-content-end">
+      
+      
+      	<a :href="'order'">
+	      <button class="custom-btn-sm btn-purple1">
+			사용 내역
+	      </button>
+      	</a>
+      
+      
         <!-- 후원 취소 버튼: 잔여 금액이 존재하고 펀딩 종료 1일 전이 아닌 경우 -->
         <template v-if="fundDto.fundRemain > 0 && !isCancellationDisabled">
           <a :href="'cancelOrder?fundNo=' + fundDto.fundNo" style="padding-left: 0.5em">
