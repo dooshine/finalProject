@@ -11,7 +11,7 @@
    
     <!-- favicon -->
 	<link rel="icon" href="/static/image/favicon.ico">
-            <title>스타링크</title>
+    <title>스타링크</title>
     
     
     <!-- 폰트css -->
@@ -41,22 +41,19 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css">
 	<!-- sock.js cdn -->
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.6.1/sockjs.min.js"></script>
-
-
 	
-
-
+	<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/static/css/reset.css">
 
     <!-- custom 테스트 css -->
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/static/css/test.css">
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/static/css/component.css">
-    
- 
     <!-- doo-css -->
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/static/css/doo.css" />
 
 	
-	
+	<!-- full calendar css -->
+	<link href='https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css' rel='stylesheet'>
+	<link href='https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css' rel='stylesheet'>
 
 
     <script>
