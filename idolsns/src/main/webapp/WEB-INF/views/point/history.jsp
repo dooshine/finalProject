@@ -140,7 +140,7 @@
 					    </td>
 				        <td>
 				          <a :href="'detail?paymentNo=' + paymentDto.paymentNo">
-				            <button class="btn btn-sm btn-primary">
+				            <button class="custom-btn-sm btn-purple1">
 				              더보기
 				            </button>
 				          </a>

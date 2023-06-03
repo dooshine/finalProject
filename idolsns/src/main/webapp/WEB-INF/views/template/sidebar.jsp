@@ -31,7 +31,7 @@
   <aside class ="col-12 py-4" id="aside-bar">
 	<div class= "nav flex-column">
         <a href="${pageContext.request.contextPath}/">
-        	<i class="fa-solid fa-house" :class="{selected: asideTab === '홈'}"></i><span class="ps-2"> 홈</span></a>
+        	<i class="fa-solid fa-house" :class="{selected: asideTab === '홈'}"><span class="ps-2"> 홈</span></i></a>
         <a href="#" @click="toggleMyArtist">
         	<i class="ti ti-star-filled" :class="{selected: asideTab === '대표페이지'}"><span class="ps-2"> 내 아이돌</span></i></a>
 		<div v-if="toggleFollowPageList">
