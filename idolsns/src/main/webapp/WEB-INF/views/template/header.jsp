@@ -905,8 +905,26 @@
 
         <section class="container-fluid">
             <div class="row">
+				<!-- aside -->
                 <div class="col-3 d-flex left-aside">
-                    <jsp:include page="/WEB-INF/views/template/sidebar.jsp"></jsp:include>
+					<c:choose>
+						<%-- 일반페이지 aside --%>
+						<c:when test="${!requestScope['javax.servlet.forward.servlet_path'].startsWith('/admin')}">
+							<jsp:include page="/WEB-INF/views/template/sidebar.jsp"></jsp:include>
+						</c:when>
+						<%-- 관리자페이지 aside --%>
+						<c:otherwise>
+							<jsp:include page="/WEB-INF/views/admin/adminAside.jsp"></jsp:include>
+						</c:otherwise>
+					</c:choose>
                 </div>
-                <div class="col-6 article container-fluid py-4" style="padding:0px;">
+				<!-- 본문 -->
+				<c:choose>
+					<c:when test="${!requestScope['javax.servlet.forward.servlet_path'].startsWith('/admin')}">
+						<div class="col-6 article container-fluid py-4" style="padding:0px;">
+					</c:when>
+					<c:otherwise>
+						<div class="col-9 article container-fluid py-4">
+					</c:otherwise>
+				</c:choose>
                 
