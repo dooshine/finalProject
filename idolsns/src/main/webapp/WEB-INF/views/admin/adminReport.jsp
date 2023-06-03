@@ -5,7 +5,7 @@
 <jsp:include page="/WEB-INF/views/template/header.jsp"></jsp:include>
 
 <!-- 제어영역 설정 -->
-<div class="container mt-5" id="app">
+<div class="container custom-container" id="app">
     <!-- # 신고조회 타이틀 -->
     <div class="row">
         <div class="col">

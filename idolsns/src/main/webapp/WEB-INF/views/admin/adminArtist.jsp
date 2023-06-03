@@ -4,7 +4,7 @@
 <jsp:include page="/WEB-INF/views/template/header.jsp"></jsp:include>
 
 <!-- 제어영역 설정 -->
-<div class="container" id="app">
+<div class="container custom-container" id="app">
     <!-- # 아티스트 -->
     <!-- 아티스트 생성 -->
     <div class="row mt-3">

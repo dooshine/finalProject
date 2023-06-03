@@ -31,7 +31,7 @@
 <aside class ="col-12 py-4" id="aside-bar">
 	<div class= "nav flex-column">
 		<a href="${pageContext.request.contextPath}/admin/">
-			<i class="fa-solid fa-house" :class="{selected: asideTab === '홈'}">
+			<i class="fa-solid fa-house" :class="{selected: asideTab === '관리자홈'}">
 				<span class="ps-2"> 관리자 홈</span>
 			</i>
 		</a>
@@ -51,7 +51,7 @@
 			</i>
 		</a>
 	  	<a href="${pageContext.request.contextPath}/admin/tag">
-		  	<i class="fa-sharp fa-solid fa-tags" :class="{selected: asideTab === '태그목록조회'}">
+		  	<i class="fa-sharp fa-solid fa-tags" :class="{selected: asideTab === '태그관리'}">
 				<span class="ps-2"> 태그 관리</span>
 			</i>
 		</a>
@@ -114,17 +114,25 @@
 	  },
 
 	  loadAsideTab(){
-		  console.log(window.location.pathname);
-		  if(window.location.pathname.includes("point")){
-			  this.asideTab = "충전";
-		  } else if(window.location.pathname.includes("fund")){
-			  this.asideTab = "펀딩";
-		  } else if(window.location.pathname==="/"){
-			  this.asideTab = "홈";
-		  } else if(window.location.pathname.includes("artist")){
-			  this.asideTab = "대표페이지";
-			  this.toggleFollowPageList = true;
-		  }
+		console.log(window.location.pathname);
+		const pathName = window.location.pathname;
+		if(pathName === "/admin/"){
+			this.asideTab = "관리자홈";
+		} else if(pathName.includes("member")){
+			this.asideTab = "회원관리";
+		} else if(pathName.includes("report")){
+			this.asideTab = "신고관리";
+		} else if(pathName.includes("sanction")){
+			this.asideTab = "제재관리";
+		} else if(pathName.includes("tagCnt")){
+			this.asideTab = "태그별사용량조회";
+		} else if(pathName.includes("fixedTag")){
+			this.asideTab = "고정태그관리";
+		} else if(pathName.includes("tag")){
+			this.asideTab = "태그관리";
+		} else if(pathName.includes("artist")){
+			this.asideTab = "아티스트관리";
+		} 
 	  },
 	  // 풀네임
 	  fullName(name, engName){

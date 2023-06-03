@@ -48,7 +48,6 @@
 
 <div class="container custom-container" id="app">
     <!-- # 회원조회 타이틀 -->
-    <input type="checkbox" class="form-check-input">
     <div class="row mt-3">
         <div class="col">
             <h1>회원 목록</h1>
@@ -298,7 +297,7 @@
           // 페이지네이션 Obj
           pageObj: {
             page: 1,
-            size: 1,
+            size: 10,
             blocksize: 5,
             total: 0, 
 
