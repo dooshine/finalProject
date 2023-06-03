@@ -18,7 +18,7 @@ public class CalendarRestController {
 	@Autowired
 	private CalendarRepo calendarRepo;
 	
-	@PostMapping("/")
+	@PostMapping("/add")
 	public void insertCalendar(@RequestBody CalendarDto dto) {
 		dto.setCalendarNo(calendarRepo.sequence());
 		calendarRepo.insert(dto);
@@ -29,7 +29,7 @@ public class CalendarRestController {
 		return calendarRepo.selectList(memberId);
 	}
 	
-	@GetMapping("/{calendarNo}")
+	@GetMapping("/detail/{calendarNo}")
 	public CalendarDto calendarOne(@PathVariable int calendarNo) {
 		return calendarRepo.selectOne(calendarNo);
 	}

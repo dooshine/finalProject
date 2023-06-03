@@ -6,7 +6,7 @@
 <mapper namespace="calendar">
 
 	<select id="sequence" resultType="int">
-		calendar_seq.nextval from dual
+		select calendar_seq.nextval from dual
 	</select>
 
     <insert id="insert">

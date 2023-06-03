@@ -28,8 +28,8 @@
 			  --fc-button-active-bg-color: none;
 			  --fc-button-active-border-color: none;
 			
-			  --fc-event-bg-color: #3788d8;
-			  --fc-event-border-color: #3788d8;
+			  --fc-event-bg-color: #6a53fb;
+			  --fc-event-border-color: #6a53fb;
 			  --fc-event-text-color: #fff;
 			  --fc-event-selected-overlay-color: rgba(0, 0, 0, 0.25);
 			
@@ -43,7 +43,7 @@
 			  --fc-non-business-color: rgba(215, 215, 215, 0.3);
 			  --fc-bg-event-color: rgb(143, 223, 130);
 			  --fc-bg-event-opacity: 0.3;
-			  /*--fc-highlight-color: rgba(188, 232, 241, 0.3);*/
+			  --fc-highlight-color: #f8f7fc;
 			  --fc-today-bg-color: #f8f7fc;
 			  --fc-now-indicator-color: red;
 			}
@@ -98,117 +98,284 @@
 			.fc-daygrid-day-frame {
 				padding: 3px;
 			}
+			
+			/* 이전, 다음 버튼 */
+			.fc-button {
+				border: 0px !important;
+				box-shadow: none !important;
+			}
+			
+			/* 달력 제목 */
+			.fc-toolbar-title {
+				font-size: 1.3em !important;
+				font-weight: bold !important;
+			}
+			
+			/* 캘린더 외 요소 디자인 */
+			.custom-btn {
+				padding-top: 0.3em;
+				padding-bottom: 0.3em;
+			}
+			.ti-alert-triangle {
+				color: #6a53fb;
+				font-size: 3em;
+			}
+			.custom-modal {
+				z-index: 99999;
+			}
+			#deleteAlertModal {
+				position: fixed;
+				top: 20%; 
+				left: 50%;
+				transform: translate(-50%, -20%);
+			}
 		</style>    
     
     
 		<script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js'></script>
- 		<!-- <script src='fullcalendar/core/locales/ko.js'></script> -->
+     
+     	<!-- 일정 등록 모달 -->
+     	<div class="modal" tabindex="-1" role="dialog" id="addCalendarModal">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">일정 등록</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                    	<div class="form-floating mb-3">
+							<input type="text" readonly class="form-control-plaintext" id="scheduleDate" placeholder="dd">
+							<label for="scheduleDate" class="startDate">날짜</label>
+						</div>
+                   		<div class="form-floating mb-3">
+							<input type="text" class="form-control" id="calendarTitle" placeholder="dd">
+							<label for="calendarTitle">일정 이름 (최대 30자)</label>
+						</div>
+                   		<div class="form-floating">
+							<textarea class="form-control" placeholder="Leave a comment here" id="calendarMemo" style="height: 100px; resize: none;"></textarea>
+							<label for="calendarMemo">메모 (최대 100자)</label>
+						</div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="addSchedule-btn custom-btn btn-purple1">
+                            등록
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- 일정 상세 모달 -->
+     	<div class="modal" tabindex="-1" role="dialog" id="detailCalendarModal">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">일정 상세정보</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                   		<div class="form-floating mb-3">
+							<input type="text" readonly class="form-control-plaintext" id="detailCalendarDate" placeholder="dd">
+							<label for="detailScheduleDate" class="startDate">날짜</label>
+						</div>
+						<div class="form-floating mb-3">
+							<input type="text" readonly class="form-control-plaintext" id="detailCalendarTitle" placeholder="dd">
+							<label for="detailScheduleTitle" class="startDate">일정 이름</label>
+						</div>
+						<div class="form-floating">
+							<textarea class="form-control-plaintext" placeholder="Leave a comment here" id="detailCalendarMemo" style="resize: none;"></textarea>
+							<label for="calendarMemo">메모</label>
+						</div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="delete-schedule-btn custom-btn btn-purple1-secondary">
+                            삭제
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 일정 삭제 경고 모달 -->
+	        <div class="custom-modal" style="display:none;" id="deleteAlertModal">
+		        <div class="custom-modal-body">
+		        	<div class="text-center mb-3">
+		        		<i class="ti ti-alert-triangle"></i>
+		        	</div>
+		        	<div class="text-center">삭제한 일정은 복구할 수 없습니다.</div>
+		        	<div class="text-center">일정을 정말 삭제하시겠습니까?</div>
+		        	<div class="d-flex justify-content-center mt-4">
+		        		<button class="custom-btn btn-round btn-purple1-secondary me-2 w-100" id="delete-schedule">삭제</button>
+		        		<button class="custom-btn btn-round btn-purple1 w-100" id="delete-cancel">취소</button>
+		        	</div>
+		        </div>
+		    </div>
+        </div>
      
 		<div id='calendar' class="custom-shadow">
 		</div>
      
-    <script type="text/javascript">
-   		var currentTime=new Date();
-		 document.addEventListener('DOMContentLoaded', function() {
-			const calendarEl = document.getElementById('calendar');
-			var calendar = new FullCalendar.Calendar(calendarEl, {
-				//locale: 'ko',
-				headerToolbar: {
-		            left: 'title',
-		            right: 'prev,next'
-		        },
-				initialView: 'dayGridMonth',
-			 	views:{
-		        	dayGridMonth:{
-		            	titleFormat:function(obj){
-		                	return "✏ " + obj.date.year+"년 " + (obj.date.month+1)+"월";
-		            	},
-		            	dayHeaderFormat:function(obj){
-		            		//console.log(obj.date.day);
-		            		switch(obj.date.day) {
-		            			case 4: return "일";
-		            			case 5: return "월";
-		            			case 6: return "화";
-		            			case 7: return "수";
-		            			case 8: return "목";
-		            			case 9: return "금";
-		            			case 10: return "토";
-		            		}
-		            	},
-		         	},
-		        },
-				editable : true,
-				fixedWeekCount: false,
-				droppable: false,
-				//navLinks: true, // can click day/week names to navigate views
-			    selectable: true,
-			    selectMirror: true,
+
+		<script type="text/javascript">
+			let currentTime = new Date();
+			let calendar;
+			document.addEventListener('DOMContentLoaded', function() {
+				const calendarEl = document.getElementById('calendar');
+				calendar = new FullCalendar.Calendar(calendarEl, {
+					//locale: 'ko',
+					headerToolbar: {
+						left: 'title',
+						right: 'prev,next'
+					},
+					initialView: 'dayGridMonth',
+					views:{
+						dayGridMonth:{
+							titleFormat:function(obj){
+								return "✨ " + obj.date.year+"년 " + (obj.date.month+1)+"월";
+							},
+							dayHeaderFormat:function(obj){
+								//console.log(obj.date.day);
+								switch(obj.date.day) {
+									case 4: return "일";
+									case 5: return "월";
+									case 6: return "화";
+									case 7: return "수";
+									case 8: return "목";
+									case 9: return "금";
+									case 10: return "토";
+								}
+							},
+						},
+					},
+					fixedWeekCount: false,
+					droppable: false,
+					selectable: true,
+					displayEventTime: false,
+					//navLinks: true,
+					//unselectAuto: true,
 				
-				select: function(arg) {
-				   	  console.log(arg);
-				   	  var result=moment(arg.start).isAfter(currentTime);
-				   	  console.log(result);
-				   	  if(result==false){
-				   		  confirm("지나간 날짜에는 일정을 등록할 수 없습니다");
-				   		  return false;
-				   	  }
-				       var title = prompt('입력할 일정:');
-				       var dto={
-				     		"memberId": memberId,
-				      		"calendarTitle": calendarTitle,
-				      		"calendarStart": moment(arg.start).format('YYYY-MM-DD HH:mm:ss'),
-				      		"calendarEnd": moment(arg.end).format('YYYY-MM-DD HH:mm:ss'),
-				      		"calendarMemo": "이부분 나중에 수정"
-				   	  };
-				      console.log(dto);
-				   
-				   // title 값이 있을때, 화면에 calendar.addEvent() json형식으로 일정을 추가
-				       if(title) {
-				       	   calendar.addEvent({
-					           title: title,
-					           start: arg.start,
-					           end: arg.end,
-				           }),
-				      	
-				         //화면에 addEvent 추가후 통신
-				        axios({
-				       	 	url:"${pageContext.request.contextPath}/calendar/",
-				       	 	method:"post",
-				       	 	data:JSON.stringify(dto),
-				        }).then(function(resp){
-							console.log(resp);
-							alert("일정이 입력되었습니다");
-							location.reload();
-				        });
-				       }
-				       calendar.unselect()
-				},
-				// 로그인한 회원의 일정 불러오기
-				events: [
-			    	$.ajax({
-		    			url:"${pageContext.request.contextPath}/calendar/load/" + memberId,
-			    		method:"get",
-			    		success:function(resp){
-			    			console.log(resp);
-			    			if(resp.length != 0){
-			    				for(var i=0;i<resp.length;i++){
-			    					calendar.addEvent({
-			    						title: resp[i]['calendarTitle'],
-			    					 	start: resp[i]['calendarStart'],
-			    						end: resp[i]['calendarEnd'],
-			    						id: resp[i]['calendarNo'],
-			    						extendedProps: {
-			    				        	"memberId": resp[i]['memberId']
-			    				        }
-			    					 })
-			    				  }
-			    			  }
-			    		  },
-			    	  })
-			      ]
-			});
-			calendar.render();
-			//console.log(calendar.currentData.calendarOptions);
-		}); 
-    </script>
+					select: function(arg) {
+						$("#addCalendarModal").modal("show");
+						const startDate = arg.start;
+						const endDate = arg.end;
+						$("#scheduleDate").val(
+							moment(startDate).format('YYYY년 MM월 DD일')
+							+ " - " + 
+							moment(endDate - 1).format('YYYY년 MM월 DD일')
+						);
+						
+						function addSchedule() {
+							const calendarTitle = $("#calendarTitle").val();
+							const calendarMemo = $("#calendarMemo").val();
+							
+							if(calendarTitle) {
+								var dto={
+									"memberId": memberId,
+									"calendarTitle": calendarTitle,
+									"calendarStart": moment(startDate).format('YYYY-MM-DD'),
+									"calendarEnd": moment(endDate).format('YYYY-MM-DD'),
+									"calendarMemo": calendarMemo
+								};
+								//console.log(dto);
+								axios({
+									url:"${pageContext.request.contextPath}/calendar/add",
+									method:"post",
+									data:JSON.stringify(dto),
+									headers: { 'Content-Type': 'application/json' }
+								}).then(function(resp){
+									//console.log(resp);
+									//location.reload(); // unselect 작동 안하면 강제 새고...
+									//calendar.unselect(); //작동 안하는데 이유를 모르겠음
+									$("#calendarTitle").val("");
+            						$("#calendarMemo").val("");
+									loadMemberCalendar();
+								});
+							}
+							//calendar.unselect();
+							// 일정 등록 모달 닫기
+		                    $("#addCalendarModal").modal("hide");
+						}
+						// 등록 버튼 클릭 시 이벤트 함수 실행
+		                $(".addSchedule-btn").on("click", addSchedule);
+		                //calendar.unselect();
+					},
+					// 일정 상세 조회
+					eventClick: function(arg) {
+					    $("#detailCalendarModal").modal("show");
+					    const calendarNo = arg.event.id;
+					    $.ajax({
+					        url: "${pageContext.request.contextPath}/calendar/detail/" + calendarNo,
+					        method: "get",
+					        success: function(resp) {
+					            /*console.log(resp);
+					            console.log("calendarStart: " + resp.calendarStart);
+					            console.log("calendarEnd: " + resp.calendarEnd);
+					            console.log("calendarTitle: " + resp.calendarTitle);
+					            console.log("calendarMemo: " + resp.calendarMemo);*/
+					            if (resp.length != 0) {
+					                $("#detailCalendarDate").val(
+					                    moment(resp.calendarStart).format('YYYY년 MM월 DD일') +
+					                    " - " +
+					                    moment(resp.calendarEnd).subtract(1, 'day').format('YYYY년 MM월 DD일')
+					                );
+					                $("#detailCalendarTitle").val(resp.calendarTitle);
+					                $("#detailCalendarMemo").val(resp.calendarMemo);
+					            }
+					            // 일정 삭제 경고 알림 모달 띄우기
+					            $(".delete-schedule-btn").on("click", function() {
+					            	$("#deleteAlertModal").show();
+					            });
+					            $("#delete-schedule").on("click", function() {
+					                $.ajax({
+					                    url: "${pageContext.request.contextPath}/calendar/" + calendarNo,
+					                    method: "delete",
+					                    success: function() {
+					                    	$("#deleteAlertModal").hide();
+					                        $("#detailCalendarModal").modal("hide");
+					                        loadMemberCalendar(); // 전체일정 재로드
+					                    }
+					                });
+					            });
+					            // 삭제 취소 시 경고 모달 닫기
+					            $("#delete-cancel").on("click", function() {
+					            	$("#deleteAlertModal").hide();
+					            });
+					         	// 일정 상세 모달 닫을 때 삭제 경고 모달 닫기
+					            $("#detailCalendarModal").on("hidden.bs.modal", function() {
+					            	$("#deleteAlertModal").hide();
+					            });
+					        },
+					    });
+					},
+
+					// 페이지 켜지자 마자 로그인한 회원의 일정 불러오기
+					events: [
+						loadMemberCalendar()
+					]
+				});
+				calendar.render();
+			}); 
+			
+			// 로그인한 회원의 일정 불러오는 함수
+			function loadMemberCalendar() {
+				return $.ajax({
+					url:"${pageContext.request.contextPath}/calendar/load/" + memberId,
+					success:function(resp){
+						console.log(resp);
+						calendar.removeAllEvents();
+						if(resp.length != 0){
+							for(var i=0;i<resp.length;i++){
+								calendar.addEvent({
+									title: resp[i]['calendarTitle'],
+									start: resp[i]['calendarStart'],
+									end: resp[i]['calendarEnd'],
+									id: resp[i]['calendarNo'],
+									extendedProps: {
+										"memberId": resp[i]['memberId']
+									}
+								})
+							}
+						}
+					},
+				});
+			}
+		</script>
    
