@@ -6,29 +6,26 @@
 <jsp:include page="/WEB-INF/views/template/header.jsp"></jsp:include> 
 
 
-    
+  
   <style>
-   
-   			
-   
-		   	section {
-			  font-family: "Noto Sans KR", sans-serif;
-			}
-			   	
-		   
-		    ul.point_header_tab {
+   @media screen and (max-width:992px) {
+		  	.col-6 {
+		    width: 100%; 
+		  }
+    	}
+		    ul.custom-tab-header {
 		      padding: 0;
 		      margin: 0;
 		    }
 		   
 	    /* 탭 메뉴 스타일 */
-	    .point_header_tab {
+	    .custom-tab-header {
 	        overflow: hidden;
 			width:100%;
 	
 	    }
 	
-	    .tab_list {
+	    .custom-tab-list {
 	        background-color: inherit;
 	        float: left;
 	        border-bottom: 0.5px solid #f5f5f5;
@@ -42,32 +39,28 @@
 	        
 	    }
 	
-	    .tab_list.active {
-	    	color: #77E9CC;
-	       font-weight:bold;
-	      	
-	        
-	    }
-	
-	    .tab_list a {
+	    .custom-tab-list:not(.active) a {
 	        text-decoration: none;
 	        color: #333;
 	        
 	    }
-	
-	    .tab_list:hover {
 	    
+	     .custom-tab-list.active a {
+	      color: #6A53FB;
+	       font-weight:bold;
+		   text-decoration: none;
 	    }
 	
+	
 	    /* 하위 요소에 적용할 스타일 */
-	    .tab_list.active::after {
+	    .custom-tab-list.active::after {
 	        content: '';
 	        position: absolute;
 	        bottom: 0;
 	        left: 0;
 	        width: 100%;
 	        height: 4px;
-	        background-color: #77E9CC;
+	        background-color: #6A53FB;
 	        
 	    }
 	    
@@ -84,6 +77,24 @@
 	   	.title {
 	   		font-weight:bold;
 	   	}
+	   
+	   
+	   
+	   	.custom-table-tr {
+			/* background-color: #f8f7fc; */
+			border-bottom: 1.8px solid #a294f9;
+			/* border: 1.5px solid #6A53FB; */
+			
+		}
+		.custom-table-tr > th {
+			padding-top: 12px;
+			padding-bottom: 12px;
+			/* border: 1.5px solid #6A53FB; */
+			
+		}
+	   
+
+		
 	    
 	</style>
 
@@ -91,25 +102,24 @@
 		
 		<div id="app">
 
-		 <div class="container rounded p-3" style="background-color:white">
-        		 
-		        <ul class="point_header_tab">
-		            <li class="tab_list"><a href="charge">포인트 충전</a></li>
-		            <li class="tab_list active"><a href="#">충전 내역</a></li>
-		            <li class="tab_list"><a href="order">사용 내역</a></li>
+		 <div class="container custom-container">
+		        <ul class="custom-tab-header">
+		            <li class="custom-tab-list"><a href="charge">포인트 충전</a></li>
+		            <li class="custom-tab-list active"><a href="#">충전 내역</a></li>
+		            <li class="custom-tab-list"><a href="order">사용 내역</a></li>
 		        </ul>
 		        
 		        
 		        <h3 class="title mt-5 mb-3" style="padding-left: 0.5em">충전 내역</h3>
 		
 		   <div style="padding-left: 0.5em; padding-right: 0.5em;">
-	            <p class="container rounded p-3 border">내 포인트: <span class="amount" style="color:#77E9CC; font-weight:bold" >{{ formattedAmount }}</span>원</p>
+	            <div class="container my-3 custom-border-box">내 포인트: <span class="amount" style="color:#6A53FB; font-weight:bold" >{{ formattedAmount }}</span>원</div>
 	        </div>
         
 				<div class="modal-body" style="padding-left: 0.5em; padding-right: 0.5em;">
 				  <table class="table">
 			        <thead>
-			          <tr>
+			          <tr class="custom-table-tr">
 			            <th>충전일</th>
 			            <th>구분</th>
 						<th>충전 금액</th>
@@ -141,7 +151,7 @@
 				</div>
 			
 			    <!-- 이전/다음 페이지로 이동하는 버튼 -->
-	  <div class="pagination justify-content-center mt-5">
+	  <div class="pagination justify-content-center mt-5 mb-3">
       <ul class="pagination">
         <li class="page-item" :class="{ disabled: currentPage === 1 }">
           <a class="page-link" href="#" @click="previousPage">&lt;</a>
@@ -183,7 +193,7 @@
 	                return this.amount.toLocaleString();
 	            },
 	            
-                <!--페이지네이션-->
+                // <!--페이지네이션-->
 	            
 	            totalPages() {
 	                return Math.ceil(this.items.length / this.itemsPerPage);
@@ -226,7 +236,7 @@
 	        		  }
 	        		},
 	        	
-	        	<!--페이지네이션-->
+	        	// <!--페이지네이션-->
 	        	 previousPage() {
 	        	      if (this.currentPage > 1) {
 	        	        this.currentPage--;

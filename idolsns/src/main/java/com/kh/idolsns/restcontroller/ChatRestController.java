@@ -13,24 +13,20 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.NoHandlerFoundException;
 import com.kh.idolsns.dto.ChatJoinDto;
 import com.kh.idolsns.dto.ChatMessageDto;
-import com.kh.idolsns.dto.ChatNotiDto;
 import com.kh.idolsns.dto.ChatReadDto;
 import com.kh.idolsns.dto.ChatRoomDto;
 import com.kh.idolsns.dto.MemberDto;
-import com.kh.idolsns.dto.MemberSimpleProfileTempDto;
+import com.kh.idolsns.dto.MemberSimpleProfileDto;
 import com.kh.idolsns.repo.ChatJoinRepo;
 import com.kh.idolsns.repo.ChatMessageRepo;
-import com.kh.idolsns.repo.ChatNotiRepo;
 import com.kh.idolsns.repo.ChatReadRepo;
 import com.kh.idolsns.repo.ChatRoomRepo;
 import com.kh.idolsns.repo.MemberRepo;
-import com.kh.idolsns.repo.MemberSimpleProfileTempRepo;
+import com.kh.idolsns.repo.MemberSimpleProfileRepo;
 import com.kh.idolsns.service.ChatRoomService;
 import com.kh.idolsns.vo.ChatMemberJoinVO;
 import com.kh.idolsns.vo.ChatMessageVO;
 import com.kh.idolsns.vo.ChatRoomProcessVO;
-
-import io.swagger.v3.oas.models.security.SecurityScheme.In;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -51,9 +47,7 @@ public class ChatRestController {
 	@Autowired
 	private ChatReadRepo chatReadRepo;
 	@Autowired
-	private MemberSimpleProfileTempRepo profileRepo;
-	@Autowired
-	private ChatNotiRepo chatNotiRepo;
+	private MemberSimpleProfileRepo memberSimpleProfileRepo;
 	
 	// 채팅방 목록 불러오기
 	@GetMapping("/chatRoom/{memberId}")
@@ -131,13 +125,13 @@ public class ChatRestController {
 	
 	// 채팅방 참여자 목록 조회 - 수정
 	@GetMapping("/chatRoom/chatMember/{chatRoomNo}")
-	public List<MemberSimpleProfileTempDto> loadChatMember(@PathVariable int chatRoomNo) {
+	public List<MemberSimpleProfileDto> loadChatMember(@PathVariable int chatRoomNo) {
 		List<ChatJoinDto> memberList = chatJoinRepo.findMembersByRoomNo(chatRoomNo);
 		List<String> memberIdList = new ArrayList<>();
 		for(int i=0; i<memberList.size(); i++) {
 			memberIdList.add(memberList.get(i).getMemberId());
 		}
-		return profileRepo.profile(memberIdList);
+		return memberSimpleProfileRepo.profile(memberIdList);
 	}
 	
 	// 메세지 읽음 처리

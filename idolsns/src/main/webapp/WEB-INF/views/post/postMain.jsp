@@ -2,8 +2,7 @@
     pageEncoding="UTF-8"%>
 <jsp:include page="/WEB-INF/views/template/header.jsp"></jsp:include>
 
-	<!-- 게시글 작성 코드 async-post.js -->
-	<script src="${pageContext.request.contextPath}/static/js/async-post.js"></script>
+
 		
 	<!------- 카카오 지도 관련-------->
 	<!-- 카카오 api 키 등록 -->
@@ -15,7 +14,18 @@
     <!-- tabler 아이콘 -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
      
+    <!-- swiper cdn -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css"/>
+	<script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
+	
+	     
     <style>
+		/*   이미지 스와이핑 창 스타일 */
+    	.swiper { 
+		width: 600px;
+		height: 600px;
+		}
+		
     	.address{
     	font-size:10px;
     	}
@@ -72,7 +82,7 @@
                         <p class="text-center">무엇에 대한 글인가요?(카테고리 설정)</p>
                         <div class="row justify-content-center"> 
                         	<button type="button" class="col-3 btn btn-primary btn-sm modal2 rounded-pill"
-	                        	data-bs-target="#modal2" data-bs-toggle="modal">
+	                        	data-bs-target="#modalfixed" data-bs-toggle="modal">
 	                        	자유
 	                        </button>
 	                        &nbsp;&nbsp;
@@ -128,7 +138,7 @@
                     <!-- footer -->
                     <div class="modal-footer">
                         <button type="button" class="btn btn-primary btn-sm"
-	                        	data-bs-target="#modal2" data-bs-toggle="modal">
+	                        	data-bs-target="#modalfixed" data-bs-toggle="modal">
 	                        	다음
 	                    </button>
 <!--                         <button type="button" class="btn btn-secondary btn-sm" -->
@@ -168,7 +178,7 @@
                     <!-- footer -->
                     <div class="modal-footer">
                         <button type="button" class="btn btn-primary btn-sm"
-	                        	data-bs-target="#modal2" data-bs-toggle="modal">
+	                        	data-bs-target="#modalfixed" data-bs-toggle="modal">
 	                        	다음
 	                    </button>
 <!--                         <button type="button" class="btn btn-secondary btn-sm" -->
@@ -178,6 +188,59 @@
                 </div>      
             </div>
         </div>
+        
+        <!-- 2-0.  고정 태그 창 -->
+        <div class="modal" tabindex="-1" role="dialog" id="modalfixed"
+                            data-bs-backdrop="static">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                
+                	<!-- header -->
+                    <div class="modal-header">
+                         <h5 class="modal-title"><i class="fa-solid fa-xmark fa-lg grey" data-bs-dismiss="modal"></i></h5>
+                    </div>
+                    
+                    <!-- body -->
+                    <div class="modal-body">
+                        <p class="text-center">글에 적용할 고정 태그를 입력해주세요</p>
+                        <div class="row text-center">
+                     	    <div class="col-1"></div>
+                        	<input type="text" class="col-7" placeholder="태그를 입력하세요"
+                        	@input="findFixedTagName = $event.target.value" v-model="findFixedTagName">
+                        	
+<!--                         	<div class="col-1"></div> -->
+<!--                         	<button class="col-2 tag-btn">입력</button> -->
+                        </div>
+					    <div class="row">
+					        <div class="mb-1" v-for="(findFixedTag, i) in findFixedTagList" :key="i">
+					            <div class="btn btn-secondary btn-sm rounded-pill mx-2" @click="addNewFixedTag(findFixedTag)">{{ findFixedTag }}</div>
+					        </div>
+					    </div>
+					    <div class="row mt-3">
+					        <div class="col">
+					            <button class="btn btn-primary btn-sm rounded-pill mx-2 fixed-tag" v-for="(newFixedTag, i) in newFixedTagList">{{ newFixedTag }}</button>
+					        </div>
+					    </div>
+                        
+                        <div class="row">
+                        	<h6 class="all-tag text text-primary"></h6>
+                        </div>                         
+                    </div>
+                    
+                    <!-- footer -->
+                    <div class="modal-footer">
+                       	<button type="button" class="btn btn-primary btn-sm fixed-tag-end"
+                            data-bs-target="#modal2" data-bs-toggle="modal">
+                        	자유태그 작성하기
+                        </button>
+<!--                         <button type="button" class="btn btn-secondary btn-sm" -->
+<!--                                 data-bs-dismiss="modal">닫기</button> -->
+                    </div>
+                    
+                </div>      
+            </div>
+         </div>
+        
                                 
 		<!-- 2.  태그 창 (첫번 째 창에서 다음 버튼이 클릭 되었을 때, 비동기로 현존하는 이벤트 태그들을 가져옴)-->
         <div class="modal" tabindex="-1" role="dialog" id="modal2"
@@ -192,7 +255,7 @@
                     
                     <!-- body -->
                     <div class="modal-body">
-                        <p class="text-center">글에 적용할 태그를 입력해주세요</p>
+                        <p class="text-center">글에 적용할 자유 태그를 입력해주세요</p>
                         <div class="row text-center">
                      	    <div class="col-1"></div>
                         	<input type="text" class="tag-input col-7" placeholder="태그를 입력하세요">
@@ -200,7 +263,7 @@
                         	<button class="col-2 tag-btn">입력</button>
                         </div>
                         <div class="row">
-                        	<h6 class="all-tag"></h6>
+                        	<h6 class="all-tag text text-primary"></h6>
                         </div>                         
                     </div>
                     
@@ -218,7 +281,7 @@
             </div>
          </div>
                   
-        <!-- 3. 글 및 업로드 창 (두 번째 창에서 다음 버튼이 클릭 되었을 때, 비동기로 현존하는 아이돌 태그들을 가져옴)-->
+        <!-- 3. 글 및 파일 업로드 창 (두 번째 창에서 다음 버튼이 클릭 되었을 때, 비동기로 현존하는 아이돌 태그들을 가져옴)-->
         <div class="modal" tabindex="-1" role="dialog" id="modal3"
                             data-bs-backdrop="static">
             <div class="modal-dialog" role="document">
@@ -391,7 +454,7 @@
 	       			</div>	
 					<!-- 프로필 사진과 아이디 -->
 					
-					<!-- 태그와 글 태그들 -->
+					<!-- 고정 태그와 글 타입들 -->
 	                <div class="row mb-3 ">
 	                	<div class="col-1 col-md-1 col-lg-1 d-flex align-items-center justify-content-center">			            
 			            </div>
@@ -399,15 +462,15 @@
 							<div class="mx-1 px-2 h-20 bg-primary rounded-4 align-items-center justify-content-center">
 								<p class="fs-7 text-light">{{ post.postType }}</p>										 
 							</div>
-							<div v-for="tag in post.tagList" :key="tag" class="mx-1 px-2 h-20 bg-primary rounded-pill align-items-center justify-content-center">
-								<p class="fs-7 text-light">{{ tag }}</p>
+							<div v-for="fixedTag in post.fixedTagList" :key="fixedTag" class="mx-1 px-2 h-20 bg-primary rounded-pill align-items-center justify-content-center">
+								<p class="fs-7 text-light">{{ fixedTag }}</p>
 							</div>
 														 													    
 			            </div>
 						<div class="col-1 col-md-1 col-lg-1 d-flex align-items-center justify-content-center"> 
 			            </div>	                
 	                </div>
-	                <!-- 태그와 글 태그들 -->	 
+	                <!-- 고정 태그와 글 타입들 -->	 
 	                               
 	                <!-- 지도 맵이 있는 경우에만 지도 정보 표기 -->						
 	                <div class="row my-2" v-if="post.mapPlace !== '' && post.mapPlace !== null && post.mapPlace !== undefined">	                	
@@ -433,26 +496,128 @@
 		                	<!-- 글 -->
 		                	<div class="row">
 		                		<p>{{ post.postContent }}</p>
+		                		<div class="d-flex">
+		                		<p v-for="freeTag in post.freeTagList" :key="freeTag" class="fs-6 text-primary">\#{{ freeTag }} &nbsp;</p>	
+		                		</div>
 		                	</div>
+							
 		                	
 		                	<!-- 이미지 표시 -->
 		                	<div class="row">
 		                		<div v-if="post.attachmentList && post.attachmentList.length > 0"  class="d-flex">
-					                <div v-for="(attachmentNo, attachmentIndex) in post.attachmentList" :key="attachmentIndex">
-					                	<!-- 이미지인 경우 -->
-					                	<div v-if="checkImage(attachmentNo)">
-					                		<img :src="getAttachmentUrl(attachmentNo)" class="mx-1 px-1"style="max-width:100%;max-height:100%" alt="Attachment">
+					                <!-- 단일 이미지인 경우 -->
+					                <div v-if="post.attachmentList.length == 1" class="row text-center" >
+					                	<div v-for="(attachmentNo, attachmentIndex) in post.attachmentList" :key="attachmentIndex" class="col-6">
+					                		<img :src="getAttachmentUrl(attachmentNo)" @click="setModalImageUrl(attachmentNo)" class="img-fluid" style="max-width:100%;aspect-ratio:1/1;" alt="Attachment" data-bs-target="#image-modal" data-bs-toggle="modal">
+					                	</div>                	        	
+					                </div>
+					                <!-- 두 개 이상의 이미지인 경우 -->
+					                <div v-else-if="post.attachmentList.length > 1" class="row text-center">
+					                	<div v-for="(attachmentNo, attachmentIndex) in post.attachmentList" :key="attachmentIndex" class="col-6">
+					                		<img :src="getAttachmentUrl(attachmentNo)"  @click="setModalImageUrl(attachmentNo)" class="img-fluid mb-3" style="max-width:100%;aspect-ratio:1/1;" alt="Attachment" data-bs-target="#image-modal" data-bs-toggle="modal">
 					                	</div>
-					                	<div v-else>
-					                		<video :src="getAttachmentUrl(attachmentNo)" class="mx-1 px-1" style="max-width:100%;max-height:100%"  controls>
-				                		 	</video>
-					                	</div>					                    
+					                </div>
+					                
+					                <!-- 두 개 이상의 이미지인 경우 (이미지 스와이핑 : 나중에하자 ㅅ....) -->
+<!-- 					                <div v-else-if="post.attachmentList.length = -999" class="row text-center"> -->
+<!-- 					                	<div v-for="(attachmentNo, attachmentIndex) in post.attachmentList" :key="attachmentIndex" class="col-6"> -->
+<!-- 					                		첫 번째 이미지는 그냥 모달로 보여줌 -->
+<!-- 					                		<div v-if="attachmentIndex === 0"> -->
+<!-- 					                			<img :src="getAttachmentUrl(attachmentNo)" @click="setModalImageUrl(attachmentNo)" class="img-fluid" style="max-width:100%;aspect-ratio:1/1;" alt="Attachment" data-bs-target="#image-modal" data-bs-toggle="modal"> -->
+<!-- 					                		</div> -->
+<!-- 					                		이후의 이미지는 swiper를 사용하여 보여줌 -->
+<!-- 					                		<div v-else-if="attachmentIndex == 1 "> -->
+<!-- 					                			<img :src="getAttachmentUrl(attachmentNo)" @click="setModalImageUrlList(post.attachmentList)" class="img-fluid" style="max-width:100%;aspect-ratio:1/1;" alt="Attachment" data-bs-target="#imageList-modal" data-bs-toggle="modal"> -->
+<!-- 					                		</div> -->
+<!-- 					                	</div> -->
+<!-- 					                </div> -->
+
+					                <!-- 이미지 출력 모달창 -->
+					                <div class="modal" tabindex="-1" role="dialog" id="image-modal"
+                           					 data-bs-backdrop="true">
+                           					 <div class="modal-dialog modal-lg" role="image">
+                           					 	<div class="modal-content">
+                           					 		<img :src="modalImageUrl">
+                           					 	</div>                           					 	
+                           					 </div>
+                           			</div>
+                           			<!-- 다중 이미지 스와이핑 모달창 나중에 보자...-->
+<!-- 					                <div class="modal" tabindex="-1" role="dialog" id="imageList-modal" -->
+<!--                            					 data-bs-backdrop="true"  test> -->
+<!--                            					 <div class="modal-dialog modal-lg" role="image"> -->
+<!--                            					 	<div class="modal-content"> -->
+<!--                            					 		header -->
+<!-- 										            <div class="modal-header"> -->
+<!-- 										                <h5 class="modal-title"><i class="fa-solid fa-xmark fa-lg grey" data-bs-dismiss="modal"></i></h5> -->
+<!-- 										            </div> -->
+										            
+<!-- 										            body -->
+<!--                            					 		<div class="modal-body"> -->
+<!-- 	                           					 		Slider main container -->
+<!-- 														<div class="swiper-container w-100"> -->
+<!-- 														  Additional required wrapper -->
+<!-- 														  <div class="swiper-wrapper"> -->
+<!-- 														  	<div class="swiper-slide mx-5"> -->
+<!-- 														  		<img class="img-fluid" style="width:200px;height:200px;" src="https://cdn.pixabay.com/photo/2023/05/21/06/05/water-jet-8007873_640.jpg"> -->
+<!-- 														  	</div> -->
+<!-- 														  	<div class="swiper-slide mx-5"> -->
+<!-- 														  		<img class="img-fluid" style="width:200px;height:200px;" src="https://cdn.pixabay.com/photo/2023/05/21/06/05/water-jet-8007873_640.jpg"> -->
+<!-- 														  	</div> -->
+<!-- 														  	<div class="swiper-slide mx-5"> -->
+<!-- 														  		<img class="img-fluid"  style="width:200px;height:200px;" src="https://cdn.pixabay.com/photo/2023/05/21/06/05/water-jet-8007873_640.jpg"> -->
+<!-- 														  	</div> -->
+<!-- 														  	<div v-for="(modalImageUrlitem, urlIdx) in modalImageUrlList" :key="urlIdx"> -->
+<!-- 														  		Slides -->
+<!-- 														  		<div  class="swiper-slide" style="width:80%;height:80%;"> -->
+<!-- 														  			<img v-if="urlIdx>0" :src="getAttachmentUrl(modalImageUrlitem)" class="swiper-slide img-fluid"> -->
+<!-- 														  		</div> -->
+<!-- 														  	</div> -->
+<!-- 														  </div>													   -->
+<!-- 														  If we need pagination -->
+<!-- 														  <div class="swiper-pagination"></div> -->
+														
+														 
+														
+	<!-- 													  If we need scrollbar -->
+	<!-- 													  <div class="swiper-scrollbar"></div> -->
+<!-- 														</div> -->
+<!-- 													</div> -->
+													
+<!-- 													footer -->
+<!-- 										            <div class="modal-footer"> -->
+<!-- 										            If we need navigation buttons -->
+<!-- 														  <div class="swiper-button-prev"></div> -->
+<!-- 														  <div class="swiper-button-next"></div> -->
+<!-- 										            </div> -->
+<!--                            					 	</div>					 	 -->
+<!--                            					 </div> -->
+<!--                            			</div> -->
+                           			
+					               
+					                
+					                <div v-for="(attachmentNo, attachmentIndex) in post.attachmentList" :key="attachmentIndex">
+					                	<!-- 일단 이미지만 -->
+					                	
+					                	
+					                
+<!-- 					                	이미지인 경우 -->
+<!-- 					                	<div v-if="checkFileType(attachmentNo) === 'image' "> -->
+<!-- 					                		<img :src="getAttachmentUrl(attachmentNo)" class="mx-1 px-1"style="max-width:100%;max-height:100%" alt="Attachment"> -->
+<!-- 					                	</div> -->
+<!-- 					                	<div v-else-if="checkFileType(attachmentNo) === 'video'"> -->
+<!-- 					                		<video :src="getAttachmentUrl(attachmentNo)" class="mx-1 px-1" style="max-width:100%;max-height:100%"  controls> -->
+<!-- 				                		 	</video> -->
+<!-- 					                	</div> -->
+<!-- 					                	<div v-else-if="checkFileType(attachmentNo) === 'unknown'"> -->
+<!-- 					                		<h1>언노운</h1> -->
+<!-- 					                	</div>					                     -->
 					                </div>
 					                <br>
 					            </div>
 					            <div v-else>
 					            </div>
 		                	</div>
+		                	
 		                	
 		                	<!-- 구분선 -->
 		                	<div class="row">
@@ -521,7 +686,7 @@
 				                			</div>
 				                			<div class="row d-flex flex-nowrap">
 <!-- 				                				<h6 class="col-1 text-start reply-text" style="white-space: nowrap;">좋아요 </h6> -->
-				                				<h6 class="col-1 text-start reply-text" @click="showRereplyInput(post.postNo,reply.replyNo),hideReplyInput()" style="white-space: nowrap;">댓글 달기</h6>	
+				                				<h6 class="col-1 text-start reply-text text-secondary" @click="showRereplyInput(post.postNo,reply.replyNo),hideReplyInput()" style="white-space: nowrap;">댓글 달기</h6>	
 				                			</div>			                			
 				                		</div>
 				                		<div class="col-1" v-if="memberId === reply.replyId">
@@ -608,18 +773,18 @@
 	                <!-- 글 내용 -->
 	                
 	                <!-- 이미지 -->
-	                <div class="row my-2">
-	                	<div class="col-1 col-md-1 col-lg-1 align-items-center justify-content-center">
+<!-- 	                <div class="row my-2"> -->
+<!-- 	                	<div class="col-1 col-md-1 col-lg-1 align-items-center justify-content-center"> -->
 			               
-			            </div>
-			            <div class="col-10 col-md-10 col-lg-10 align-items-center">							
-		                	<div class="row">
+<!-- 			            </div> -->
+<!-- 			            <div class="col-10 col-md-10 col-lg-10 align-items-center">							 -->
+<!-- 		                	<div class="row"> -->
 
-		                	</div>		                		   
-			            </div>
-						<div class="col-1 col-md-1 col-lg-1 d-flex align-items-center justify-content-center"> 
-			            </div>       
-	                </div>
+<!-- 		                	</div>		                		    -->
+<!-- 			            </div> -->
+<!-- 						<div class="col-1 col-md-1 col-lg-1 d-flex align-items-center justify-content-center">  -->
+<!-- 			            </div>        -->
+<!-- 	                </div> -->
 	                <!-- 글 내용 -->
 
                 </div>
@@ -627,8 +792,11 @@
                 
        	 </div>
        	 <!--------------- 게시물들 반복구간 ------------->
-
 	</div>
+	
+
+	
+	
 
     <!-- Vue.createApp구간 -->
     <script>
@@ -667,29 +835,25 @@
                 	// 안전장치
                 	loading:false,
                 	
+                	// 입력시 고정태그 불러오기
+                	findFixedTagName: "",
+                	findFixedTagList: [],
+                	newFixedTagList: [],                	
+                	
+                	// 세션 맴버아이디
                 	memberId:null,
+                	
+                	// 모달 이미지 URL
+                	modalImageUrl:null,
+                	
+                	modalImageUrlList:[],
+                	
                 };
             },
             computed:{  
             	
             },
             methods:{
-				// 모든 게시글 불러오기 
-//                 async fetchPosts() {
-// 	                await axios.get('http://localhost:8080/rest/post/all')
-// 	                    .then(response => {
-// 	                    	// 전체 게시글 데이터 가져오기
-// 	                        this.posts = response.data;
-// 	                     	// 게시글 인덱스별 좋아요 처리
-// 	                        this.getLikePostIndex(this.posts);
-// 	                     	this.replyFlagList = new Array(this.posts.length).fill(false);
-// 	                    })
-// 	                    .catch(error => {
-// 	                        console.error(error);                           
-// 	                    }) 
-//             	},
-            	
-
             		
             	// 무한 페이징 게시글 불러오기 1페이지당 10개씩 매 페이지 별로 불러옴,
             	async fetchPosts(){
@@ -711,7 +875,7 @@
 	                }
             	},
             	
-            	// 게시글 사겢 
+            	// 게시글 삭제 
             	async deletePost(postNo){
                 	try{
                 		await axios.delete('http://localhost:8080/rest/post/'+postNo);
@@ -722,19 +886,31 @@
                 	}
 			    },
 			    
-            	// 사진 관련 
-                getAttachmentUrl(attachmentNo) {
+				 // 이미지, 비디오 관련 
+			    setModalImageUrl(attachmentNo){
+			    	this.modalImageUrl = this.getAttachmentUrl(attachmentNo)
+			    },
+                getAttachmentUrl(attachmentNo) {		
             		return "http://localhost:8080/rest/attachment/download/"+attachmentNo;
                 },
-                async checkImage(attachmentNo) {
+                async checkFileType(attachmentNo) {
                     try {
-                      const response = await axios.head('http://localhost:8080/rest/attachment/download/' + attachmentNo);
-                      const contentType = response.headers['content-type'];
-                      return contentType.includes('image');
+                        const response = await axios.head('http://localhost:8080/rest/attachment/download/post/' + attachmentNo);
+                        const contentType = response.headers['content-type'];
+                        if (contentType.includes('image')) {
+                            return 'image';
+                        } else if (contentType.includes('video')) {
+                            return 'video';
+                        }
+                        return;
                     } catch (error) {
-                      console.error(error);
-                      return false;
+                        console.error(error);
+                        // 오류 처리
                     }
+                },
+                setModalImageUrlList(attachmentList)
+                {
+                	this.modalImageUrlList = attachmentList;
                 },
                 
              	// 좋아요 관련 비동기 처리-----------------------------------
@@ -932,13 +1108,36 @@
                 		    // 예: 오류 메시지 표시, 다른 로직 실행 등
                 	}            		
             	},
+            	
+            	async loadFindFixedTagList(){
+                    if(this.findFixedTagName.length == 0) return;
+
+                    const resp = await axios.get("http://localhost:8080/rest/fixedTag/"+this.findFixedTagName);
+                    this.findFixedTagList = resp.data;
+					// console.log(this.findFixedTagList);
+                    // console.log("조회 실행");
+                },
+                // 고정태그 추가
+                addNewFixedTag (newFixedTag){
+                	if(!this.newFixedTagList.includes(newFixedTag))
+                	{
+                		this.newFixedTagList.push(newFixedTag);
+                        this.findFixedTagName = "";
+                        this.findFixedTagList = [];                		
+                	}                    
+                },
             },
             watch:{
             	percent(){
             		if(this.percent >= 80){
             			this.fetchPosts();
             		}
-            	}
+            	},
+            	findFixedTagName:_.throttle(function(){
+                    //this == 뷰 인스턴스
+                    this.loadFindFixedTagList();
+        		}, 250),
+            	
             },
             mounted() {
                 //윈도우 전체에 스크롤 이벤트를 설정(Vue가 아닌 JS 사용)
@@ -975,7 +1174,10 @@
         }).mount("#app");
     </script>
     
-    
+    <!-- 이미지 스와이핑 창 -->
+    <script src="${pageContext.request.contextPath}/static/js/swiping-image.js"></script>
+    <!-- 게시글 작성 ajax -->
+	<script src="${pageContext.request.contextPath}/static/js/async-post.js"></script>
 	 <!-- 카카오 API구현 JS -->
 	<script src="${pageContext.request.contextPath}/static/js/post-map.js"></script>
 

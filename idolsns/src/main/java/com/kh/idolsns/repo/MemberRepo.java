@@ -3,7 +3,7 @@ package com.kh.idolsns.repo;
 import java.util.List;
 
 import com.kh.idolsns.dto.MemberDto;
-import com.kh.idolsns.vo.AdminMemberSearchVO;
+import com.kh.idolsns.dto.MemberExitDto;
 
 
 public interface MemberRepo {
@@ -40,6 +40,8 @@ public interface MemberRepo {
 	boolean exitDate(String memberId);
 	boolean cancelExit(String memberId);
 	void clean();
+	void memberExit(String memberId);
+	int memberExitFind(String memberId);
 	
 	//중복 검사
 	int idDuplicatedCheck(String memberId);

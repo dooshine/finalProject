@@ -1,45 +1,16 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<!-- clndr -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/clndr/1.1.0/clndr.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.13.6/underscore-min.js"></script>
-<!-- lodash -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.21/lodash.min.js"></script>
-<!-- <link rel="stylesheet" type="text/css" href="/static/css/clndr.css"> -->
-            </div>
-       
-		
 
-	<div class="col-3">
+
+            </div>
+
+	<div class="col-3 py-4">
 		<!-- 캘린더 영역 -->
-	  	<div id="calendar">
-	  		<div class="clndr-grid">
-				<div class="days-of-the-week clearfix">
-					<c:forEach items="${daysOfTheWeek}" var="day">
-						<div class="header-day">${day}</div>
-					</c:forEach>
-				</div>
-				<div class="days clearfix">
-					<c:forEach items="${days}" var="day">
-						<div class="${day.classes}" id="${day.id}">
-							<span class="day-number">${day.day}</span>
-						</div>
-					</c:forEach>
-				</div>
-			</div>
-			<div class="event-listing">
-				<div class="event-listing-title">EVENTS THIS MONTH</div>
-				<c:forEach items="${eventsThisMonth}" var="event">
-					<div class="event-item">
-						<div class="event-item-name">${event.name}</div>
-						<div class="event-item-location">${event.location}</div>
-					</div>
-				</c:forEach>
-			</div>
-	  	</div>
+	     <jsp:include page="/WEB-INF/views/template/calendar.jsp"></jsp:include>
+
+	 
 	</div>
-	
 
 
 
@@ -56,33 +27,13 @@
     </main>
  
  
- 
+
+
 	<!-- 부트스트랩 js -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
-    
 
-	<!-- cnldr 스크립트 -->
- 	<script>
- 		$(function() {
- 			$("#calendar").clndr({
- 				daysOfTheWeek: ['S', 'M', 'T', 'W', 'T', 'F', 'S'],
- 			numberOfRows: 5,
- 			days: [
- 			  {
- 			    day: '1',
- 			    classes: 'day today event',
- 			    id: 'calendar-day-2013-09-01',
- 			    events: [ ],
- 			    date: moment('2013-09-01')
- 			  },
- 			],
- 			month: 'September',
- 			year: '2013',
- 			eventsThisMonth: [ ],
- 			extras: { }
- 			});
- 		});
-	</script>
+
+<!-- 채팅방 -->
  
  	<script>
 		Vue.createApp({
@@ -95,6 +46,7 @@
 					chatRoomModal: false,
 					chatMenuModal: false,
 					inviteMemberModal: false,
+					memberListModal: false,
 					
 					// main에서 가져옴
 					chatRoom: {
@@ -106,7 +58,12 @@
 					},
 					chatRoomList: [],
 					followList: [],
+					followProfileList: [],
 					selectedMemberList: [],
+					selectedMemberIdList: [],
+					selectedMemberNickList: [],
+					chatRoomIdList: [],
+					chatRoomProfileList: [],
 					
 					// chatRoomNo에서 가져옴
 					text: "",
@@ -173,6 +130,7 @@
 				},
 				messageHandler(e) {
 					const parsedData = JSON.parse(e.data);
+					//console.log(parsedData);
 					// 타입이 3인(삭제인) 메세지는 리스트에 추가하지 않음
 					if(parsedData.type == 3) {
 						this.messageList.splice(0);
@@ -190,7 +148,10 @@
 						this.chatRoomList.splice(0);
 						this.loadRoomList(); return;
 					}
-					this.messageList.push(parsedData);
+					// 현재 방에 해당하는 메세지만 불러오기
+					if(parsedData.chatRoomNo === this.chatRoomNo) {						
+						this.messageList.push(parsedData);
+					}
 					// 사용자가 페이지를 보고있는 경우 메세지 읽음 처리
 					if(this.isVisible && this.isFocused && parsedData.memberId != this.memberId &&
 							this.chatRoomNo == parsedData.chatRoomNo && this.chatRoomModal === true) {
@@ -198,7 +159,9 @@
 					}
 					this.loadRoomList();
 					this.loadChatNoti();
-					this.scrollBottom();
+					if(parsedData.chatMessageType === 1 || parsedData.chatMessageType === 4 || parsedData.chatMessageType === 5 || parsedData.chatMessageType === 6) {						
+						this.scrollBottom();
+					}
 				},
 				// 참여중인 방 정보 가져오기
 				loadJoinRooms() {
@@ -209,37 +172,41 @@
 				},
 				// 새 채팅 알림 있는지 확인
 				async loadChatNoti() {
-					const memberId = this.memberId;
-					const url = "${pageContext.request.contextPath}/chat/message/noti/" + memberId;
-					const resp = await axios.get(url);
-					//console.log(resp.data);
-					if(resp.data === true) this.newChatNoti = true;
-					else this.newChatNoti = false;
+					console.log("memberId: " + this.memberId);
+					if(this.memberId.length > 0 && this.chatRoomList.length > 0) {
+						const url = "${pageContext.request.contextPath}/chat/message/noti/" + this.memberId;
+						const resp = await axios.get(url);
+						//console.log(resp.data);
+						if(resp.data === true) this.newChatNoti = true;
+						else this.newChatNoti = false;
+					}
 				},
 				// 방별로 새 알림 있는지 확인
 				async loadChatRoomNoti() {
-					this.chatRoomNoList = [];
-					//console.log("chatRoomNo: " + this.chatRoomList[0].chatRoomNo);
-					for(let i=0; i<this.chatRoomList.length; i++) {
-						this.chatRoomNoList[i] = this.chatRoomList[i].chatRoomNo;
+					if(this.chatRoomList.length > 0) {
+						this.chatRoomNoList = [];
+						//console.log("chatRoomNo: " + this.chatRoomList[0].chatRoomNo);
+						for(let i=0; i<this.chatRoomList.length; i++) {
+							this.chatRoomNoList[i] = this.chatRoomList[i].chatRoomNo;
+						}
+						//console.log("chatRoomNoList: " + this.chatRoomNoList);
+						const url = "${pageContext.request.contextPath}/chat/message/noti";
+						const data = {
+								chatRoomNoList: this.chatRoomNoList,
+								memberId: this.memberId
+						};
+						const resp = await axios.post(url, data);
+						const numbers = resp.data.map(obj=>obj.chatRoomNo);
+						//console.log(numbers);
+						const filterArray = this.chatRoomList.filter(
+							room=>numbers.some(number=>number == room.chatRoomNo)
+						);
+						//console.log(filterArray);
+						if(filterArray.length > 0) {
+							filterArray.forEach(room=>{room.newChat=true});
+						}
+						this.loadChatNoti();
 					}
-					//console.log("chatRoomNoList: " + this.chatRoomNoList);
-					const url = "${pageContext.request.contextPath}/chat/message/noti";
-					const data = {
-							chatRoomNoList: this.chatRoomNoList,
-							memberId: this.memberId
-					};
-					const resp = await axios.post(url, data);
-					const numbers = resp.data.map(obj=>obj.chatRoomNo);
-					//console.log(numbers);
-					const filterArray = this.chatRoomList.filter(
-						room=>numbers.some(number=>number == room.chatRoomNo)
-					);
-					//console.log(filterArray);
-					if(filterArray.length > 0) {
-						filterArray.forEach(room=>{room.newChat=true});
-					}
-					this.loadChatNoti();
 				},
 				// 메세지 읽음
 				async readMessage() {
@@ -306,6 +273,8 @@
 					    this.text = "";
 					    this.$refs.messageInput.focus();
 					});
+					this.memberListModal = false;
+					this.inviteMemberModal = false;
 				},
 				// 채팅방 모달 닫기
 				hideChatRoomModal() {
@@ -319,6 +288,7 @@
 					this.chatMemberList.splice(0);
 					this.messageList.splice(0);
 					this.chatJoin = "";
+					this.memberListModal = false;
 					this.chatMenuModal = false;
 					this.chatRoomModal = false;
 				},
@@ -331,6 +301,16 @@
 				hideChatMenuModal() {
 					this.chatMenuModal = false;
 				},
+				// 단체채팅방 참여자 모달 열기
+				showMemberListModal() {
+					if(this.chatRoomModal == false) return;
+					this.hideChatMenuModal();
+					this.memberListModal = true;
+				},
+				// 단체채팅방 참여자 모달 닫기
+				hideMemberListModal() {
+					this.memberListModal = false;
+				},
 				// 초대 모달 열기
 				showInviteMemberModal() {
 					this.chatMenuModal = false;
@@ -339,16 +319,42 @@
 				// 초대 모달 닫기
 				hideInviteMemberModal() {
 					this.selectedMemberList = [];
+					this.selectedMemberIdList = [];
 					this.inviteMemberModal = false;
 				},
 				// 로그인한 회원이 속해있는 채팅방 목록
 				async loadRoomList() {
 					const memberId = this.memberId;
-					const url = "${pageContext.request.contextPath}/chat/chatRoom/" + memberId;
-					const resp = await axios.get(url);
-					this.chatRoomList.splice(0);
-					this.chatRoomList.push(...resp.data);
-					this.loadChatRoomNoti();
+					if(memberId.length > 0) {
+						const url = "${pageContext.request.contextPath}/chat/chatRoom/" + memberId;
+						const resp = await axios.get(url);
+						this.chatRoomList.splice(0);
+						this.chatRoomList.push(...resp.data);
+						this.loadChatRoomNoti();
+						
+						console.log("resp.data.length: " + resp.data.length);
+						// 갠톡인 경우 상대방 아이디 따로 빼두기
+						for (let i = 0; i < resp.data.length; i++) {
+							if (resp.data[i].chatRoomType === 'P') {
+							    if (resp.data[i].chatRoomName1 !== this.memberId && !this.chatRoomIdList.includes(resp.data[i].chatRoomName1)) {
+							      	this.chatRoomIdList.push(resp.data[i].chatRoomName1);
+							    }
+							    if (resp.data[i].chatRoomName2 !== this.memberId && !this.chatRoomIdList.includes(resp.data[i].chatRoomName2)) {
+							      this.chatRoomIdList.push(resp.data[i].chatRoomName2);
+							    }
+							}
+						}
+						const url2 = "${pageContext.request.contextPath}/rest/member/getMemberProfile";
+						const resp2 = await axios.get(url2, {
+							params: {
+								memberIdList: this.chatRoomIdList
+							},
+							paramsSerializer: params => {
+								return new URLSearchParams(params).toString();
+							}
+						})
+						this.chatRoomProfileList = resp2.data;
+					}
 				},
 				// 팔로우 목록 불러오기
 				async loadFollowList() {
@@ -357,6 +363,18 @@
 					//console.log("data: " + resp.data);
 					this.followList.push(...resp.data);
 					//console.log("followList: " + this.followList);
+					if(this.followList.length > 0) {
+						const url2 = "${pageContext.request.contextPath}/rest/member/getMemberProfile";
+						const resp2 = await axios.get(url2, {
+							params: {
+								memberIdList: this.followList
+							},
+							paramsSerializer: params => {
+								return new URLSearchParams(params).toString();
+							}
+						})
+						this.followProfileList = resp2.data;
+					}
 				},
 				// 채팅방 만들기
 				createChatRoom() {
@@ -366,20 +384,24 @@
 					else {
 						this.chatRoom.chatRoomType = 'P';
 					}
+					for(let i=0; i<this.selectedMemberList.length; i++) {
+						this.selectedMemberIdList[i] = this.selectedMemberList[i].memberId;
+					}
+					console.log("selectedMemberIdList: " + this.selectedMemberIdList);
 					const data = {
 							type: 11,
 							memberId: this.memberId,
 							chatRoomDto: this.chatRoom,
-							memberList: this.selectedMemberList
+							memberList: this.selectedMemberIdList
 					}
 					const app = this;
 					this.socket.onmessage = (e) => {
 						app.messageHandler(e);
-						app.chatRoomList.splice(0);
 						app.chatRoom.chatRoomName1 = "";
 					}
 					this.socket.send(JSON.stringify(data));
 					this.selectedMemberList.splice(0);
+					this.selectedMemberIdList.splice(0);
 					this.createRoomModal = false;
 					this.chatMainModal = true;
 					setTimeout(() => {
@@ -410,17 +432,96 @@
 				},
 				// 참여자 정보로 닉네임 가져오기
 				findMemberById(index) {
+					//console.log("실행");
 					const memberId = this.messageList[index].memberId;
+					const member = this.chatMemberList.find(function(member) {
+						return member.memberId === memberId;
+					})
+					//console.log("member: " + member.memberId);
+					if(member) {						
+						return {
+							memberNick: member.memberNick,
+							memberId: member.memberId,
+							profileSrc: member.profileSrc
+						}
+					}
+					else return {
+						memberNick: '(알수없음)',
+						memberId: '(알수없음)',
+						profileSrc: '/static/image/profileDummy.png'
+					}
+				},
+				findMemberByIdInInvite(index) {
+					const memberId = this.filteredFollowList[index].memberId;
 					const member = this.chatMemberList.find(function(member) {
 						return member.memberId === memberId;
 					})
 					if(member) {						
 						return {
 							memberNick: member.memberNick,
-							memberId: member.memberId
+							memberId: member.memberId,
+							profileSrc: member.profileSrc
 						}
 					}
-					else return null;
+					else return {
+						memberNick: '(알수없음)',
+						memberId: '(알수없음)',
+						profileSrc: '/static/image/profileDummy.png'
+					}
+				},
+				findMemberByIdInRoom() {
+					let findId = "";
+					console.log("findMemberByIdInRoom memberId: " + findId);
+					console.log("this.roomInfo.chatRoomName1: " + this.roomInfo.chatRoomName1);
+					if(this.roomInfo.chatRoomName1 != this.memberId) {
+						findId = this.roomInfo.chatRoomName1;
+					}
+					else if(this.roomInfo.chatRoomName2 != this.memberId) {
+						findId = this.roomInfo.chatRoomName2;
+					}
+					const member = this.chatMemberList.find(function(member) {
+						return member.memberId === findId;
+					})
+					if(member) {						
+						return {
+							memberNick: member.memberNick,
+							memberId: member.memberId,
+							profileSrc: member.profileSrc
+						}
+					}
+					else return {
+						memberNick: '(알수없음)',
+						memberId: '(알수없음)',
+						profileSrc: '/static/image/profileDummy.png'
+					}
+				},
+				findMemberByIdInMain(index) {
+					//const findId = this.chatRoomList[index].chatRoomName1;
+					let findId;
+					if(this.chatRoomList[index].chatRoomType == 'P') {
+						if(this.chatRoomList[index].chatRoomName1 != this.memberId) {
+							findId = this.chatRoomList[index].chatRoomName1;
+						}
+						else if(this.chatRoomList[index].chatRoomName2 != this.memberId) {
+							findId = this.chatRoomList[index].chatRoomName2;
+						}
+					}
+					//console.log("findId: " + findId);
+					const member = this.chatRoomProfileList.find(function(member) {
+						return member.memberId === findId;
+					})
+					if(member) {
+						return {
+							memberNick: member.memberNick,
+							memberId: member.memberId,
+							profileSrc: member.profileSrc
+						}
+					}
+					else return {
+						memberNick: '(알수없음)',
+						memberId: '(알수없음)',
+						profileSrc: '/static/image/profileDummy.png'
+					}
 				},
 				// 메세지 불러오기
 				async loadMessage() {
@@ -430,31 +531,10 @@
 					const resp = await axios.get(url);
 					for(let i=0; i<resp.data.length; i++) {
 						if(resp.data[i].chatMessageTime >= this.chatJoin)
+							console.log(resp.data[i].chatRoomNo)
 							this.messageList.push(resp.data[i]);
 					}
 					this.scrollBottom();
-				},
-				// 메세지 보내기
-				sendMessage() {
-					if(this.textCount < 1) return;
-					if(this.textCount > 300) return;
-					this.firstMsg();
-					const data = {
-							type: 1,
-							chatRoomNo: this.chatRoomNo,
-							chatMessageContent: this.text
-					};
-					this.socket.send(JSON.stringify(data));
-					this.clear();
-					/*const noti = {
-							type: 12,
-							memberId: this.memberId,
-							chatRoomNo: this.chatRoomNo,
-							receiverList: this.chatMemberList
-					};
-					this.socket.send(JSON.stringify(noti));
-					this.scrollBottom();*/
-					this.loadRoomList();
 				},
 				// 보내는 메세지가 오늘의 첫 메세지인지 확인
 				firstMsg() {
@@ -479,32 +559,38 @@
 						this.socket.send(JSON.stringify(data));
 					}
 				},
-				// 사진 보내기
+				// 메세지 보내기(실시간 알림 전송 포함)
+				sendMessage() {
+					if(this.textCount < 1) return;
+					if(this.textCount > 300) return;
+					this.firstMsg();
+					const data = {
+						type: 1,
+						chatRoomNo: this.chatRoomNo,
+						chatMessageContent: this.text
+					};
+					this.socket.send(JSON.stringify(data));
+					this.clear();
+					this.loadRoomList();
+				},
+				// 사진 보내기(실시간 알림 전송 포함)
 				async sendPic() {
 					const fileInput = document.querySelector('.picInput');
 					const file = fileInput.files[0];
+					console.log("전송")
 					const formData = new FormData();
 					formData.append("attach", file);
 					const url = "${pageContext.request.contextPath}/rest/attachment/upload";
 					const resp = await axios.post(url, formData);
 					if(resp.data) {
 						const data = {
-								type: 4, 
-								chatRoomNo: this.chatRoomNo,
-								attachmentNo: resp.data.attachmentNo,
-								chatMessageContent: "사진 " + resp.data.attachmentNo
+							type: 4,
+							chatRoomNo: this.chatRoomNo,
+							attachmentNo: resp.data.attachmentNo,
+							chatMessageContent: "사진 " + resp.data.attachmentNo
 						}
 						this.socket.send(JSON.stringify(data));
-						const noti = {
-								type: 12,
-								memberId: this.memberId,
-								chatRoomNo: this.chatRoomNo,
-								receiverList: this.chatMemberList
-						};
-						this.socket.send(JSON.stringify(noti));
-						/*this.clear();*/
-						/*fileInput = [];*/
-						this.scrollBottom();
+						this.loadRoomList();
 					}
 				},
 				// 시간 포멧 설정
@@ -515,7 +601,7 @@
 					return moment(chatMessageTime).format("YYYY년 M월 D일 dddd");
 				},
 				timeFormatDetailed2(chatRoomLast) {
-					return moment(chatRoomLast).format("YYYY년 M월 D일 dddd");
+					return moment(chatRoomLast).format("YYYY년 M월 D일");
 				},
 				// 메세지 삭제버튼 보이기
 				showDeleteButton(index) {
@@ -553,11 +639,14 @@
 				async leaveRoom() {
 					const memberId = this.memberId;
 					const chatRoomNo = this.chatRoomNo;
+					const member = this.chatMemberList.find(function(member) {
+						return member.memberId === memberId;
+					})
 					const data1 = {
 						type: 5,
 						memberId: memberId,
 						chatRoomNo: chatRoomNo,
-						chatMessageContent: this.memberId + " 님이 위즈를 떠났습니다."
+						chatMessageContent: member.memberNick + " 님이 위즈를 떠났습니다."
 					};
 					this.socket.send(JSON.stringify(data1));
 					const data2 = {
@@ -582,7 +671,8 @@
 				},
 				// 채팅방 이름 변경
 				async saveRoomName() {
-					if(this.roomInfo.chatRoomName1.length > 10) return;
+					if(this.roomInfo.chatRoomName1.length < 1) return;
+					if(this.roomInfo.chatRoomName1.length > 20) return;
 					const chatRoomNo = this.chatRoomNo;
 					const url = "${pageContext.request.contextPath}/chat/chatRoom/changeName";
 					const data = this.roomInfo;
@@ -598,21 +688,29 @@
 				// 사용자 초대
 				async inviteMember() {
 					const chatRoomNo = this.chatRoomNo;
+					for(let i=0; i<this.selectedMemberList.length; i++) {
+						this.selectedMemberIdList[i] = this.selectedMemberList[i].memberId;
+					}
+					for(let j=0; j<this.selectedMemberList.length; j++) {
+						this.selectedMemberNickList[j] = this.selectedMemberList[j].memberNick;
+					}
 					const url = "${pageContext.request.contextPath}/chat/chatRoom/invite";
 					//console.log("roomInfo: " + this.roomInfo);
 					const data1 = {
 							chatRoomNo: chatRoomNo,
-							memberList: this.selectedMemberList
+							memberList: this.selectedMemberIdList
 					};
 					const resp = await axios.post(url, data1);
-					const memberIds = this.selectedMemberList.join(", ");
+					const memberNicks = this.selectedMemberNickList.join(", ");
 					const data2 = {
 							type: 6,
 							chatRoomNo: chatRoomNo,
-							chatMessageContent: memberIds + " 님에게 인사해주세요🖐"
+							chatMessageContent: memberNicks + " 님에게 인사해주세요🖐"
 					};
 					this.socket.send(JSON.stringify(data2));
 					this.chatMemberList.splice(0);
+					this.selectedMemberList.splice(0);
+					this.selectedMemberIdList.splice(0);
 					this.loadChatMember();
 					this.hideInviteMemberModal();
 				},
@@ -642,7 +740,17 @@
 					if(thisMsg.memberId != nextMsg.memberId) return true;
 					if(this.timeFormat(thisMsg.chatMessageTime) != this.timeFormat(nextMsg.chatMessageTime)) return true;
 					return false;
-				}
+				},
+				//유저버튼 - 로그인 or 마이페이지로 이동
+				async goToLoginPage() {
+					const response = await axios.get("/member/goToLoginPage");
+					if(response.data == "") {
+						window.location.href = `${pageContext.request.contextPath}/member/login`;
+					}
+					else {
+						window.location.href = `${pageContext.request.contextPath}/member/mypage`;
+					}
+				},
 			},
 			computed: {
 				memberCount() {
@@ -652,9 +760,9 @@
 					return this.chatRoom.chatRoomName1.length;
 				},
 				filteredFollowList() {
-					return this.followList.filter(follow => 
+					return this.followProfileList.filter(follow => 
 								!this.chatMemberList.some(member => 
-									member.memberId === follow));
+									member.memberId === follow.memberId));
 				},
 				textCount() {
 					return this.text.trim().length;
@@ -703,6 +811,7 @@
 					handler: function(newValue) {
 						if(newValue && this.isFocused) {
 							this.readMessage();
+							this.loadRoomList();
 						}
 					},
 					immediate: true
@@ -711,6 +820,7 @@
 					handler: function(newValue) {
 						if(this.isVisible && newValue) {
 							this.readMessage();
+							this.loadRoomList();
 						}
 					},
 					immediate: true

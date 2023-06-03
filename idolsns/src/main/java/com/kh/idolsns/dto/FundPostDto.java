@@ -19,4 +19,7 @@ public class FundPostDto {
 	private int sponsorCount;
 	private int priceTotal;
 
+	
+	
+	
 }

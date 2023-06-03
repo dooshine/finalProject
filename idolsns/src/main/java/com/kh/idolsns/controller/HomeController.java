@@ -11,7 +11,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
-import com.kh.idolsns.dto.MemberSimpleProfileTempDto;
+import com.kh.idolsns.dto.MemberSimpleProfileDto;
 import com.kh.idolsns.repo.MemberRepo;
 import com.kh.idolsns.service.PostShowService;
 import com.kh.idolsns.vo.PostShowVO;
@@ -24,7 +24,7 @@ public class HomeController {
 	
     @GetMapping("")
     public String home(HttpServletRequest request, Model model,
-    		@ModelAttribute MemberSimpleProfileTempDto profileDto){
+    		@ModelAttribute MemberSimpleProfileDto profileDto){
         return "home";
     }
 

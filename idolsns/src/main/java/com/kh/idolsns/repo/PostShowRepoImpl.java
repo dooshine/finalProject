@@ -42,4 +42,57 @@ public class PostShowRepoImpl implements PostShowRepo{
 		return sqlSession.selectList("postShow.infinite",param);
 		
 	}
+
+	@Override
+	public List<PostShowVO> selectLikedPostListByPagingReload(int page, String memberId) {
+		int end = page * 10; 
+		int begin = 1;
+		
+		Map<String, Object> param = Map.of("begin", begin, "end", end,"memberId",memberId);
+		return sqlSession.selectList("postShow.likeInfinite",param);
+	}
+
+	@Override
+	public List<PostShowVO> selectWritedPostListByPagingReload(int page, String memberId) {
+		int end = page * 10; 
+		int begin = 1;
+		
+		Map<String, Object> param = Map.of("begin", begin, "end", end,"memberId",memberId);
+		return sqlSession.selectList("postShow.writeInfinite",param);
+	}
+
+	@Override
+	public List<PostShowVO> selectFixedTagPostListByPagingReload(int page, String tagName) {
+		int end = page * 10; 
+		int begin = 1;
+		
+		Map<String, Object> param = Map.of("begin", begin, "end", end,"tagName",tagName);
+		return sqlSession.selectList("postShow.fixedTagInfinite",param);
+	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

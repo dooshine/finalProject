@@ -11,67 +11,7 @@
 		  }
     	}
 
-		   	section {
-			  font-family: "Noto Sans KR", sans-serif;
-			}
-			   	
-		   
-		    ul.point_header_tab {
-		      padding: 0;
-		      margin: 0;
-		    }
-		   
-	    /* 탭 메뉴 스타일 */
-	    .point_header_tab {
-	        overflow: hidden;
-			width:100%;
 	
-	    }
-	
-	    .tab_list {
-	        background-color: inherit;
-	        float: left;
-	      	border-bottom: 0.5px solid #f5f5f5;
-	        outline: none;
-	        cursor: pointer;
-	        padding: 15px 15px;
-	        transition: 0.3s;
-	        font-size: 17px;
-	        list-style: none; /* 불렛포인트 없애기 */
-	        position: relative; /* 하위 요소에 적용할 수 있는 유사 클래스(자식 셀렉터)를 사용하기 위해 position을 추가 */
-	        
-	    }
-	
-	   
-	    .tab_list a {
-	        text-decoration: none;
-	        color: #333;
-	        
-	    }
-	    
-	     .tab_list.active {
-	      color: #77E9CC;
-	       font-weight:bold;
-	        
-	    }
-	
-	
-	    .tab_list:hover {
-	    
-	    
-	    }
-	
-	    /* 하위 요소에 적용할 스타일 */
-	    .tab_list.active::after {
-	        content: '';
-	        position: absolute;
-	        bottom: 0;
-	        left: 0;
-	        width: 100%;
-	        height: 4px;
-	        background-color: #77E9CC;
-	        
-	    }
 	    
 	    .point_select {
 	    	width: 100%;
@@ -81,13 +21,11 @@
 	    .radio_label {
 			white-space: nowrap;
 		}
-	   
-	    
-    	.title {
-   		font-weight:bold;
-	   	}
-	    
-	    
+
+
+		input[type="radio"] {
+			accent-color: #6A53FB;
+		}
 	</style>
 
 
@@ -96,21 +34,21 @@
 	  <div id="app">
   
         	
-        	<div class="container rounded p-3" style="background-color:white">
-        		 
-		        <ul class="point_header_tab">
-		            <li class="tab_list active"><a href="#">포인트 충전</a></li>
-		            <li class="tab_list"><a href="history">충전 내역</a></li>
-		            <li class="tab_list"><a href="order">사용 내역</a></li>
+        	<!-- <div class="container rounded-3 p-4 shadow-sm" style="background-color:white;"> -->
+        	<div class="container custom-container">
+		        <ul class="custom-tab-header">
+		            <li class="custom-tab-list active"><a href="#">포인트 충전</a></li>
+		            <li class="custom-tab-list"><a href="history">충전 내역</a></li>
+		            <li class="custom-tab-list"><a href="order">사용 내역</a></li>
 		        </ul>
 		      
 		        
 		        
-		        <h3 class="title mt-5 mb-3" style="padding-left: 0.5em">포인트 충전</h3>
-
+		        <h3 class="title mt-5 mb-3" style="padding-left: 12px;">포인트 충전</h3>
+				
         <div style="padding-left: 0.5em; padding-right: 0.5em;">
-            <p class="container rounded p-3 border">내 포인트: 
-            <span class="amount" style="color:#77E9CC; font-weight:bold">{{ formattedAmount }}</span>원</p>
+            <div class="container my-3 custom-border-box">내 포인트: 
+				<span class="amount" style="color:#6A53FB; font-weight:bold">{{ formattedAmount }}</span>원</div>
         </div>
 
         <form id="chargeForm" method="post" style="padding-left: 0.7em; padding-right: 0.7em;">
@@ -142,8 +80,8 @@
                 </label>        
 				
 				
-				<div class="mt-3">
-				    <p>충전 후 내 포인트: 
+				<div class="mt-3 mb-3">
+				    <p class="my-3">충전 후 내 포인트: 
 				    <span class="amount">{{ (amount+parseInt(selectedAmount || 0)).toLocaleString() }}
 				    </span>원
 				    
@@ -166,9 +104,10 @@
 					<input style="display: none" name="quantity" value="1">
 				</div>
 
-	            <div class="justify-content-center d-flex mt-3">
-	                <button type="submit" class="btn btn-lg btn-primary mb-5" @click="charge">충전하기</button>
+	            <div class="justify-content-center d-flex mt-5">
+	                <button type="submit" class="custom-btn btn-purple1 mb-4" @click="charge">충전하기</button>
 	            </div>
+
 	       	 </form>
 	       	 
 	       	 </div>

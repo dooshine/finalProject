@@ -120,11 +120,26 @@
 			<div class="row mt-3" style="padding-left: 1em">
 				<div v-html="fundDetail.postContent"></div>
 			</div>
-					
-		</div>
-		</div>             
-		<hr>
 	
+		<hr>
+			<!-- 태그 출력 -->
+			<div class="row mt-3">
+				<div class="col">
+					<button class="btn btn-primary" v-for="(tag, i) in fundDetail.tagNames"
+								@click="tagLink(i)">
+					{{ tag }}
+					</button>
+				</div>
+			</div>
+		</div>
+		
+		<hr>
+		
+	<!-- ------------------------ 댓글 ------------------------------- -->
+
+>>>>>>> refs/remotes/origin/main
+	
+	<!-- 댓글창 -->
 	  <h3>댓글</h3>
 	  <div v-if="replies.length == 0">댓글이 없습니다.</div>
 	  <div v-else>
@@ -132,7 +147,7 @@
 	         
 	        <!-- 최상위 댓글이면 -->
 	        <div v-if="reply.replyNo == reply.replyGroupNo">
-	        	<div>{{ reply.replyId }}:</div>
+	        	<div>{{ reply.replyId }}</div>
 		        	
 	        	<!-- 수정 폼 -->
 	        	<div v-if="updateReplyObj.index == i">
@@ -143,8 +158,6 @@
 				</div>
 	        	<div v-else>
 	        		{{ reply.replyContent }}
-	        		replyNo : {{ reply.replyNo }}
-	        		groupNo: {{ reply.replyGroupNo }}	
 	        		<!-- 대댓글 버튼 -->
 		        	<button v-if="reply.replyNo == reply.replyGroupNo" 
 		        			@click="showRereplyForm(i)">
@@ -169,31 +182,36 @@
 	        
 	        	<!-- 수정 폼 -->
 	        	<div v-if="updateReplyObj.index == i">
-	        		→ {{reply.replyId}} :<br>
-			    	<textarea @blur="setUpdateReplyObj($event, i)" 
-			    	placeholder="수정 내용">{{ reply.replyContent }}</textarea>
-				    <button @click="saveUpdate(i)">저장</button>
-				    <button @click="cancelUpdate()">취소</button>
+	        		<div style="border: 0.3px solid #dee2e6;">
+		        		{{reply.replyId}} :<br>
+				    	<textarea @blur="setUpdateReplyObj($event, i)" 
+				    	placeholder="수정 내용">{{ reply.replyContent }}</textarea>
+					    <button @click="saveUpdate(i)">저장</button>
+					    <button @click="cancelUpdate()">취소</button>
+	        		</div>
 				</div>
 				<div v-else>
-					→ {{reply.replyId}} : {{ reply.replyContent }}
-					replyNo : {{ reply.replyNo }}
-					groupNo: {{ reply.replyGroupNo }}
-	        		<!-- 대댓글 버튼 -->
-		        	<button v-if="reply.replyNo == reply.replyGroupNo" 
-		        			@click="showRereplyForm(i)">
-		        		<i class="fa-solid fa-reply"></i>
-					</button>
-					<!-- 수정 버튼 -->
-		        	<button v-if="reply.replyId == replyObj.replyId"
-							@click="showUpdateForm(i)">
-		        		<i class="fa-solid fa-edit"></i>
-		        	</button>
-		        	<!-- 삭제 버튼 -->
-		        	<button v-if="reply.replyId == replyObj.replyId"
-							@click="deleteReply(i)">
-						<i class="fa-solid fa-trash-alt"></i>
-					</button>	
+					<div>
+						{{reply.replyId}}
+					</div>
+					<div style="background-color: #6d6d6d;">
+						 {{ reply.replyContent }}
+		        		<!-- 대댓글 버튼 -->
+			        	<button v-if="reply.replyNo == reply.replyGroupNo" 
+			        			@click="showRereplyForm(i)">
+			        		<i class="fa-solid fa-reply"></i>
+						</button>
+						<!-- 수정 버튼 -->
+			        	<button v-if="reply.replyId == replyObj.replyId"
+								@click="showUpdateForm(i)">
+			        		<i class="fa-solid fa-edit"></i>
+			        	</button>
+			        	<!-- 삭제 버튼 -->
+			        	<button v-if="reply.replyId == replyObj.replyId"
+								@click="deleteReply(i)">
+							<i class="fa-solid fa-trash-alt"></i>
+						</button>	
+					</div>
 				</div>
 	        </div>
 	        
@@ -206,6 +224,8 @@
 	        
 	      </div>
  	 </div>
+	</div>             
+		
  	 
  	 <hr>
  	 
@@ -260,6 +280,7 @@
 		          postContent: "",
 		          imageURL: "",
 		          fundTotal: "",
+		          tagNames: [],
 		        },
 		        replies: [],
 		        // 댓글창 보여주기
@@ -323,6 +344,11 @@
         			const postNo = this.fundDetail.postNo;
 					const resp = await axios.get("http://localhost:8080/rest/fund/attaches/"+postNo)	  
 					this.fundDetail.attachmentNos.push(...resp.data);
+        		},
+        		async loadTagNames() {
+        			const postNo = this.fundDetail.postNo;
+        			const resp = await axios.get("/rest/fund/tag/"+postNo);
+        			this.fundDetail.tagNames.push(...resp.data);
         		},
 		       // fundTotal & fundSponsorCount 불러오기
         		async loadFundVO(){
@@ -425,6 +451,12 @@
 				showUpdateForm(i) {
 					this.updateReplyObj.index = i
 					this.reReplies[i] = false;
+				},
+				// 태그 클릭시 
+				tagLink(i){
+					console.log(this.fundDetail.tagNames[i]);
+					const url = ""
+					window.location.href = url;
 				}
 		      	
 		    },
@@ -434,6 +466,7 @@
 		    	  this.loadAttachNos();
 		    	  this.loadFundVO();
 		    	  this.loadReplies();
+		    	  this.loadTagNames();
 		    	},
 		    mounted() {
 		    	}

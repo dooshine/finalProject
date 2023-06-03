@@ -31,6 +31,7 @@
 			Left OUTER JOIN member mb ON p.member_id = mb.member_id
 			Left OUTER JOIN member_profile_image mpi ON p.member_id = mpi.member_id
 			WHERE p.post_type != '펀딩'
+			ORDER BY p.post_no ASC;
 	</select>
 
     <!-- 통합 게시물 무한 스크롤 구현 -->
@@ -58,8 +59,71 @@
 			Left OUTER JOIN member mb ON p.member_id = mb.member_id
 			Left OUTER JOIN member_profile_image mpi ON p.member_id = mpi.member_id
 			WHERE p.post_type != '펀딩'
+			ORDER BY p.post_no desc
 		<include refid="topNfooter"></include>
+		
 	</select>
-    <!-- 통합 게시물 무한 스크롤 구현 -->
+    <!-- 무한스크롤 페이징 목록 -->
 
+	<!-- 특정 유저가 좋아요한 게시글 무한스크롤 페이징 목록 -->
+	<select id="likeInfinite" resultType="PostShowVO">
+		<include refid="topNheader"></include>
+    	SELECT testuserP.*,sp.schedule_start, sp.schedule_end,
+                    tp.together_start, tp.together_end,
+                    m.map_place, mb.member_nick , mpi.attachment_no
+         FROM (
+                SELECT p.*
+                FROM post p
+                full outer JOIN post_like pl ON p.post_no = pl.post_no
+                WHERE pl.member_id = #{memberId} AND p.post_type != '펀딩'
+         ) testuserP
+        full outer join schedule_post sp on testuserP.post_no = sp.post_no
+        Left outer join together_post tp on testuserP.post_no = tp.post_no
+        Left outer join map m on testuserP.post_no = m.post_no
+        Left OUTER JOIN member mb ON testuserP.member_id = mb.member_id
+        Left OUTER JOIN member_profile_image mpi ON testuserP.member_id = mpi.member_id
+        ORDER BY testuserP.post_no desc
+        <include refid="topNfooter"></include>
+	</select>
+	
+	<!-- 특정 유저가 작성한 게시글 무한스크롤 페이징 목록 -->
+	<select id="writeInfinite" resultType="PostShowVO">
+		<include refid="topNheader"></include>
+	    SELECT testuserP.*,sp.schedule_start, sp.schedule_end,
+                    tp.together_start, tp.together_end,
+                    m.map_place, mb.member_nick , mpi.attachment_no
+         FROM (
+                select * 
+                from post 
+                where member_id = #{memberId} AND post_type != '펀딩'
+         ) testuserP
+        full outer join schedule_post sp on testuserP.post_no = sp.post_no
+        Left outer join together_post tp on testuserP.post_no = tp.post_no
+        Left outer join map m on testuserP.post_no = m.post_no
+        Left OUTER JOIN member mb ON testuserP.member_id = mb.member_id
+        Left OUTER JOIN member_profile_image mpi ON testuserP.member_id = mpi.member_id
+        ORDER BY testuserP.post_no desc
+        <include refid="topNfooter"></include>
+	</select>
+	
+	<!-- 특정 유저가 작성한 게시글 무한스크롤 페이징 목록 -->
+	<select id="fixedTagInfinite" resultType="PostShowVO">
+		<include refid="topNheader"></include>
+		SELECT testuserP.*,sp.schedule_start, sp.schedule_end,
+                    tp.together_start, tp.together_end,
+                    m.map_place, mb.member_nick , mpi.attachment_no
+         FROM (
+                SELECT p.*
+                FROM post p
+                full outer JOIN tag t ON p.post_no = t.post_no
+                WHERE t.tag_name = #{tagName} AND p.post_type != '펀딩' AND t.tag_type='고정'
+         ) testuserP
+        full outer join schedule_post sp on testuserP.post_no = sp.post_no
+        Left outer join together_post tp on testuserP.post_no = tp.post_no
+        Left outer join map m on testuserP.post_no = m.post_no
+        Left OUTER JOIN member mb ON testuserP.member_id = mb.member_id
+        Left OUTER JOIN member_profile_image mpi ON testuserP.member_id = mpi.member_id
+        ORDER BY testuserP.post_no desc
+        <include refid="topNfooter"></include>
+	</select>
 </mapper> 

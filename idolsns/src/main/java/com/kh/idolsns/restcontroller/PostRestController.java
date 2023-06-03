@@ -11,6 +11,7 @@ import java.util.Set;
 
 import javax.servlet.http.HttpSession;
 
+import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -52,6 +53,10 @@ import com.kh.idolsns.repo.SchedulePostRepo;
 @RequestMapping("/rest/post")
 public class PostRestController {
     
+	// 고정 태그는 repo가 없어서 sqlsession으로 대체 
+	@Autowired
+	private SqlSession sqlSession;
+	
 	// 게시글 
     @Autowired
     private PostRepo postRepo;
@@ -126,6 +131,28 @@ public class PostRestController {
 		 // 사진 정보를 해당 테이블의 정규화 테이블 추가할 떄 사용한다.
 		 return postDto.getPostNo();
     }
+    // -------------------- 고정태그정보 등록
+    @PostMapping("/fixed")
+    public void fixedTaging(@RequestBody Map<String,Object> fixedTagData) {
+    	List<String> fixedTagList = (List<String>) fixedTagData.get("fixedTag");
+    	Integer postNoI = (Integer) fixedTagData.get("postNo");
+    	Long postNo = (Long) postNoI.longValue();
+    	
+    	Long tempNo;
+    	TagDto tempDto = new TagDto();
+    	
+    	for(String fixedTag: fixedTagList)
+    	{
+    		tempNo = tagRepo.sequence();
+    		tempDto.setTagNo(tempNo);
+    		tempDto.setPostNo(postNo);
+    		tempDto.setTagType("고정");
+    		tempDto.setTagName(fixedTag);
+    		tagRepo.insert(tempDto);
+    	}
+    	
+    }
+    
     
     // -------------------- 태그정보 등록 
     @PostMapping("/tag")
@@ -143,15 +170,14 @@ public class PostRestController {
 			tempDto.setPostNo(postNo);
 			tempDto.setTagType("자유"); // 자유, 고정 둘 중 하나
 			tempDto.setTagName(tag);
-			tagRepo.insert(tempDto);    		
+			tagRepo.insert(tempDto);
     	}
-    }	
+    }
     //--------------------- 태그정보 불러오기
     @GetMapping("/tag/{postNo}")
     public List<String> getTag(@PathVariable("postNo") Long postNo){
     	System.out.println("postNo는 : "+postNo);
     	return tagRepo.selectAll(postNo);
-    	
     }
     
     // ---------------------- 지도정보 등록
@@ -253,10 +279,39 @@ public class PostRestController {
     	return posts;
     }
     
-    // 게시물 페이징 목록 처음 부터 현재 페이지까지 조회
+    // 게시물 페이징 목록 처음 부터 현재 페이지까지 조회 <-- 지금 쓰는거 
     @GetMapping("/pageReload/{page}")
     public List<PostShowVO> infiniteListReload(@PathVariable int page){
     	List<PostShowVO> posts = postShowService.postShowByPagingReload(page);
+    	return posts;
+    }
+    
+    // 특정맴버가 좋아요한 게시물
+    @PostMapping("/pageReload/memberLikePost")
+    public List<PostShowVO> likedPostListReload(@RequestBody Map<String,Object> likedPostData)
+    {	
+    	Integer page = (Integer) likedPostData.get("page"); 
+    	String likedMemberId = (String) likedPostData.get("likedMemberId");
+    	List<PostShowVO> posts = postShowService.likedPostShowByPagingReload(page, likedMemberId);
+    	return posts; 
+    }
+    
+    // 특정맴버가 작성한 게시물
+    @PostMapping("/pageReload/memberWritePost")
+    public List<PostShowVO> writePostListReload(@RequestBody Map<String,Object> writePostData){
+    	Integer page = (Integer) writePostData.get("page"); 
+    	String writeMemberId = (String) writePostData.get("writeMemberId");
+    	List<PostShowVO> posts = postShowService.writedPostShowByPagingReload(page, writeMemberId);
+    	return posts;
+    }
+    
+    // 특정 고정태그 게시물
+    @PostMapping("/pageReload/fixedTagPost")
+    public List<PostShowVO> fixedTagPostListReload(@RequestBody Map<String,Object> fixedTagPostData){
+    	Integer page = (Integer) fixedTagPostData.get("page"); 
+    	String tagName = (String) fixedTagPostData.get("fixedTagName");
+    	List<PostShowVO> posts = postShowService.fixedTagPostShowByPagingReload(page, tagName);
+    	System.out.println(posts);
     	return posts;
     }
     
@@ -269,7 +324,6 @@ public class PostRestController {
     // 통합게시물 삭제
     @DeleteMapping("/{postNo}")
     public boolean delete(@PathVariable Long postNo){
-    	System.out.println("ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ");
     	// 지도 설정 삭제,
     	mapRepo.delete(postNo); 
 
@@ -294,11 +348,8 @@ public class PostRestController {
     	
     	// 게시물 좋아요 모두 삭제
     	postLikeRepo.deleteByPostNo(postNo);
-    	System.out.println("ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ");
     	// 타입 게시물 삭제
     	String postType = postRepo.selectOne(postNo).getPostType(); 
-    	System.out.println("postType은 "+postType);
-    	System.out.println("ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ");
     	if(postType.equals("자유"))
     	{
     		freePostRepo.delete(postNo);

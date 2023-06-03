@@ -10,6 +10,7 @@ import javax.annotation.PostConstruct;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -26,7 +27,7 @@ import com.kh.idolsns.dto.ArtistDto;
 import com.kh.idolsns.dto.ArtistProfileDto;
 import com.kh.idolsns.dto.ArtistViewDto;
 import com.kh.idolsns.dto.AttachmentDto;
-import com.kh.idolsns.dto.MemberDto;
+import com.kh.idolsns.dto.MemberProfileFollowDto;
 import com.kh.idolsns.dto.TagCntDto;
 import com.kh.idolsns.dto.TagDto;
 import com.kh.idolsns.repo.AttachmentRepo;
@@ -35,6 +36,7 @@ import com.kh.idolsns.vo.AdminMemberSearchVO;
 import com.kh.idolsns.vo.TagCntSearchVO;
 
 // 관리자 Rest Controller
+@CrossOrigin
 @RestController
 @RequestMapping("/rest/admin/")
 public class AdminRestController {
@@ -89,8 +91,10 @@ public class AdminRestController {
 
 	// 멤버 목록 불러오기
     @PostMapping("/member")
-    public List<MemberDto> selectMemberList(@RequestBody AdminMemberSearchVO adminMemberSearchVO){
+    public List<MemberProfileFollowDto> selectMemberList(@RequestBody AdminMemberSearchVO adminMemberSearchVO){
         return adminService.adminSelectMemberList(adminMemberSearchVO);
+        // System.out.println(adminMemberSearchVO.toString());
+        // return null;
     }
 
 
