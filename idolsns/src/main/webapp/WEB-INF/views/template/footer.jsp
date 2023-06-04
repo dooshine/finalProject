@@ -136,6 +136,14 @@
 				messageHandler(e) {
 					const parsedData = JSON.parse(e.data);
 					//console.log(parsedData);
+					// 방 생성 메세지인 경우 chatRoomNo 변수에 저장
+					if(parsedData.type == 11) {
+						//console.log("newRoomNo: " + parsedData.chatRoomDto.chatRoomNo);
+						//this.chatRoomNo = parsedData.chatRoomDto.chatRoomNo;
+						console.log("newRoomNo: " + parsedData.chatRoomNo);
+						this.chatRoomNo = parsedData.chatRoomNo;
+						this.showNewChatRoomModal();
+					}
 					// 타입이 3인(삭제인) 메세지는 리스트에 추가하지 않음
 					if(parsedData.type == 3) {
 						this.messageList.splice(0);
@@ -299,6 +307,39 @@
 					this.hideLeaveRoomAlert();
 					this.hideDeleteMsgAlert();
 				},
+				// 새 채팅방 모달 열기
+				showNewChatRoomModal() {
+					const chatRoomNo = this.chatRoomNo;
+					console.log("showNewChatRoomModal: " + chatRoomNo);
+					const data = {
+							type: 2,
+							chatRoomNo: chatRoomNo
+					};
+					this.socket.send(JSON.stringify(data));
+					this.roomInfo.chatRoomNo = "";
+					this.roomInfo.chatRoomName1 = "";
+					this.roomInfo.chatRoomName2 = "";
+					this.roomInfo.chatRoomStart = "";
+					this.roomInfo.chatRoomType = "";
+					this.roomInfoCopy.chatRoomName1 = "";
+					this.chatMemberList.splice(0);
+					this.messageList.splice(0);
+					this.chatJoin = "";
+					this.loadRoomInfo();
+					this.loadChatMember();
+					this.getChatJoin();
+					// 메세지 읽기
+					//this.readMessage();
+					this.loadRoomList();
+					this.chatRoomModal = true;
+					this.loadMessage();
+					this.$nextTick(() => {
+					    this.text = "";
+					    this.$refs.messageInput.focus();
+					});
+					//this.memberListModal = false;
+					//this.inviteMemberModal = false;
+				},
 				// 채팅방 메뉴 모달 열기
 				showChatMenuModal() {
 					if(this.chatRoomModal == false) return;
@@ -431,6 +472,10 @@
 					this.selectedMemberIdList.splice(0);
 					this.createRoomModal = false;
 					this.chatMainModal = true;
+					setTimeout(() => {
+						this.chatRoomList.splice(0);
+						this.loadRoomList();
+					}, 30);
 					setTimeout(() => {
 						this.chatRoomList.splice(0);
 						this.loadRoomList();

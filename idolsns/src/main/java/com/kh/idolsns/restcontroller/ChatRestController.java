@@ -90,10 +90,10 @@ public class ChatRestController {
 	}
 	
 	// 채팅방 생성
-	@PostMapping("/chatRoom")
+	/*@PostMapping("/chatRoom")
 	public void createRoom(@RequestBody ChatRoomProcessVO vo) {
 		chatRoomService.createChatRoom(vo);
-	}
+	}*/
 	
 	// 채팅방에 참여한 시간 내보내기
 	@PostMapping("/chatRoom/join")
