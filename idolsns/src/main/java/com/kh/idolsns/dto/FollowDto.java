@@ -18,4 +18,7 @@ public class FollowDto {
     private String followTargetType;
     private String followTargetPrimaryKey;
     private Date followTime;
+    
+    //join
+    private int attachmentNo;
 }
