@@ -269,7 +269,7 @@
 							chatRoomNo: chatRoomNo
 					};
 					this.socket.send(JSON.stringify(data));
-					this.roomInfo.chatRoomNo = "";
+					/*this.roomInfo.chatRoomNo = "";
 					this.roomInfo.chatRoomName1 = "";
 					this.roomInfo.chatRoomName2 = "";
 					this.roomInfo.chatRoomStart = "";
@@ -277,11 +277,11 @@
 					this.roomInfoCopy.chatRoomName1 = "";
 					this.chatMemberList.splice(0);
 					this.messageList.splice(0);
-					this.chatJoin = "";
+					this.chatJoin = "";*/
 					this.chatRoomNo = chatRoomNo;
 					this.loadRoomInfo();
 					this.loadChatMember();
-					this.getChatJoin();
+					//this.getChatJoin();
 					// 메세지 읽기
 					this.readMessage();
 					this.loadRoomList();
@@ -610,11 +610,14 @@
 				async loadMessage() {
 					const chatRoomNo = this.chatRoomNo;
 					this.messageList.splice(0);
+					this.getChatJoin();
 					const url = "${pageContext.request.contextPath}/chat/message/" + chatRoomNo;
 					const resp = await axios.get(url);
+					console.log("chatMessageTime: " + resp.data[0].chatMessageTime)
+					console.log("chatJoin: " + this.chatJoin)
 					for(let i=0; i<resp.data.length; i++) {
 						if(resp.data[i].chatMessageTime >= this.chatJoin)
-							console.log(resp.data[i].chatRoomNo)
+							//console.log(resp.data[i].chatRoomNo)
 							this.messageList.push(resp.data[i]);
 					}
 					this.scrollBottom();

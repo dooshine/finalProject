@@ -601,7 +601,7 @@
 																{{ findMemberByIdInMain(index).memberNick }}
 															</h6>
 														</div>
-														<div class="sysMsgContent">
+														<div class="sysMsgContent" :title="findMemberByIdInMain(index).memberId">
 															@{{ findMemberByIdInMain(index).memberId }}
 														</div>
 													</div>
@@ -631,7 +631,7 @@
 																{{ findMemberByIdInMain(index).memberNick }}
 															</h6>
 														</div>
-														<div class="sysMsgContent">
+														<div class="sysMsgContent" :title="findMemberByIdInMain(index).memberId">
 															@{{ findMemberByIdInMain(index).memberId }}
 														</div>
 													</div>
@@ -658,7 +658,9 @@
 						<h5>새 위즈 만들기</h5>
 						<div class="d-flex justify-content-end">
 							<button type="button" class="hide-style pe-3 confirmNewChatRoomBtn" @click="createChatRoom"
-								:disabled="(selectedMemberList.length === 0 && nameCount < 1) || (selectedMemberList.length >= 2 && (nameCount < 1 || nameCount > 20))">
+								:disabled="(selectedMemberList.length === 0 && nameCount < 1) || 
+											(selectedMemberList.length >= 2 && (nameCount < 1 || nameCount > 20)) || 
+											selectedMemberList.length > 49">
 								<i class="ti ti-message-circle-check"></i>
 							</button>
 							<button type="button" class="btn-close" @click="hideCreateRoomModal"></button>
@@ -832,7 +834,10 @@
 						<!-- 참여자 리스트 모달 -->
 						<div v-if="chatRoomModal == true && memberListModal == true" class="customModal chatRoomModal">
 							<div class="customModalHeader d-flex justify-content-between">
-								<h5>참여자 목록</h5>
+								<div class="d-flex align-items-end">
+									<h5>참여자</h5>
+									<span class="sysMsgContent ms-2">{{ chatMemberList.length }}명</span>
+								</div>
 								<button type="button" class="btn-close" @click="hideMemberListModal"></button>
 							</div>
 							<!-- 참여자 목록 -->
@@ -856,7 +861,8 @@
 					        	<div class="text-center mb-3">
 					        		<i class="ti ti-alert-triangle"></i>
 					        	</div>
-					        	<div class="text-center">채팅방을 나가면 메세지가 모두 삭제됩니다.</div>
+					        	<div class="text-center">채팅방을 나가면</div>
+					        	<div class="text-center">메세지가 모두 삭제됩니다.</div>
 					        	<div class="text-center">채팅방을 나가시겠습니까?</div>
 					        	<div class="d-flex justify-content-center mt-4">
 					        		<button class="custom-btn btn-round btn-purple1-secondary me-2 w-100" @click="leaveRoom">나가기</button>
@@ -870,7 +876,8 @@
 					        	<div class="text-center mb-3">
 					        		<i class="ti ti-alert-triangle"></i>
 					        	</div>
-					        	<div class="text-center">위즈의 모든 참여자에게 메세지가 삭제됩니다.</div>
+					        	<div class="text-center">위즈의 모든 참여자에게</div>
+					        	<div class="text-center">메세지가 삭제됩니다.</div>
 					        	<div class="d-flex justify-content-center mt-4">
 					        		<button class="custom-btn btn-round btn-purple1-secondary me-2 w-100" @click="deleteMessage(index)">삭제</button>
 					        		<button class="custom-btn btn-round btn-purple1 w-100" @click="hideDeleteMsgAlert">취소</button>
@@ -921,7 +928,7 @@
 						<h5>새 친구 추가</h5>
 						<div class="d-flex justify-content-end">
 							<button type="button" class="hide-style pe-3 confirmNewChatRoomBtn" @click="inviteMember"
-								:disabled="selectedMemberList.length === 0">
+								:disabled="selectedMemberList.length === 0 || selectedMemberList.length + chatMemberList.length > 50">
 								<i class="ti ti-message-circle-check"></i>
 							</button>
 							<button type="button" class="btn-close" @click="hideInviteMemberModal"></button>
