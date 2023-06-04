@@ -50,7 +50,7 @@ public class ChatRoomServiceImpl implements ChatRoomService {
 			ChatRoomPrivDto existRoom2 = chatRoomPrivRepo.findRoom(chatRoomPrivDto2);
 			boolean isChatRoomExist2 = existRoom2 != null;
 			// 1, 2 둘 다 있으면 -> 둘 다 참여 중인 갠톡방이 있으므로 방 생성 중지
-			if(isChatRoomExist1 && isChatRoomExist2) return 0;
+			if(isChatRoomExist1 && isChatRoomExist2) return existRoom1.getChatRoomNo();
 			
 			// 2만 있으면 -> 나는 나갔지만 1대1 채팅 이력이 있으면(상대방에게는 나와의 채팅방이 남아있으면)
 			if(isChatRoomExist2) {

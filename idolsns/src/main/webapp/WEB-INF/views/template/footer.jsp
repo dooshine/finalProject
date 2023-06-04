@@ -49,6 +49,8 @@
 					chatMenuModal: false,
 					inviteMemberModal: false,
 					memberListModal: false,
+					leaveRoomAlert: false,
+					deleteMsgAlert: false,
 					
 					// main에서 가져옴
 					chatRoom: {
@@ -88,6 +90,7 @@
 					clear() {
 						this.text = ""
 					},
+					msgIndex: "",
 					
 					// 활성화 여부 저장
 					isVisible: true,
@@ -133,6 +136,10 @@
 				messageHandler(e) {
 					const parsedData = JSON.parse(e.data);
 					//console.log(parsedData);
+					// 방 생성 메세지인 경우 chatRoomNo에 생성된 방(이미 있는 채팅방인 경우 해당 채팅방 번호) 번호 셋팅
+					if(parsedData.chatNessageType === 11) {
+						this.chatRoomNo = parsedData.chatRoomNo;
+					}
 					// 타입이 3인(삭제인) 메세지는 리스트에 추가하지 않음
 					if(parsedData.type == 3) {
 						this.messageList.splice(0);
@@ -293,6 +300,8 @@
 					this.memberListModal = false;
 					this.chatMenuModal = false;
 					this.chatRoomModal = false;
+					this.hideLeaveRoomAlert();
+					this.hideDeleteMsgAlert();
 				},
 				// 채팅방 메뉴 모달 열기
 				showChatMenuModal() {
@@ -324,6 +333,26 @@
 					this.selectedMemberIdList = [];
 					this.inviteMemberModal = false;
 				},
+				// 채팅방 나가기 경고 모달 열기
+				showLeaveRoomAlert() {
+					this.leaveRoomAlert = true;
+					this.hideChatMenuModal();
+				},
+				// 채팅방 나가기 경고 모달 닫기
+				hideLeaveRoomAlert() {
+					this.leaveRoomAlert = false;
+				},
+				// 메세지 삭제 경고 모달 열기
+				showDeleteMsgAlert(index) {
+					this.deleteMsgAlert = true;
+					this.msgIndex = index;
+				},
+				// 메세지 삭제 경고 모달 닫기
+				hideDeleteMsgAlert() {
+					this.msgIndex = "";
+					this.deleteMsgAlert = false;
+				},
+				
 				// 로그인한 회원이 속해있는 채팅방 목록
 				async loadRoomList() {
 					const memberId = this.memberId;
@@ -400,6 +429,7 @@
 					this.socket.onmessage = (e) => {
 						app.messageHandler(e);
 						app.chatRoom.chatRoomName1 = "";
+						//app.chatRoomNo = e.chatRoomNo;
 					}
 					this.socket.send(JSON.stringify(data));
 					this.selectedMemberList.splice(0);
@@ -618,12 +648,13 @@
 					const chatRoomNo = this.chatRoomNo;
 					const data = {
 						type: 3, 
-						chatMessageNo: this.messageList[index].chatMessageNo, 
+						chatMessageNo: this.messageList[this.msgIndex].chatMessageNo, 
 						chatRoomNo: chatRoomNo,
-						attachmentNo: this.messageList[index].attachmentNo
+						attachmentNo: this.messageList[this.msgIndex].attachmentNo
 					};
 					this.socket.send(JSON.stringify(data));
 					this.messageList.splice(index, -1);
+					this.hideDeleteMsgAlert();
 				},
 				// 해당 채팅방에 참여한 날짜와 시간 가져오기
 				async getChatJoin() {

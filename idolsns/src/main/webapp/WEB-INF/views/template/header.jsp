@@ -120,6 +120,14 @@
     		box-shadow: 0px 3px 4px rgba(3, 21, 17, 0.08);
     		padding: 16px;
     	}
+    	.leaveRoomAlert,
+    	.deleteMsgAlert {
+    		position: absolute;
+    		width: 250px;
+    		bottom: 40%;
+    		right: 8%;
+    		font-size: 0.9em;
+    	}
     	.customModalSmall2 {
     		position: absolute;
     		bottom: 395px;
@@ -741,7 +749,7 @@
 									<div class="d-flex align-items-end justify-content-end myMessage" 
 											@mouseover="showDeleteButton(index)" @mouseleave="hideDeleteButton(index)">
 										<!-- 메세지 삭제버튼 -->
-										<button v-if="showDeleteButtonIndex === index" @click="deleteMessage(index)" 
+										<button v-if="showDeleteButtonIndex === index" @click="showDeleteMsgAlert(index)" 
 											class="hide-style d-flex align-items-end deleteMessageBtn" style="padding-bottom: 1px; margin-right: 5px;">
 											<i class="ti ti-x"></i>
 										</button>
@@ -779,14 +787,14 @@
 									<i class="ti ti-edit-circle ti-edit-circle-small pe-2"></i>
 									이름변경
 								</button>
-								<button type="button" @click="leaveRoom" class="hide-style exitBtn d-flex align-items-center w-100">
+								<button type="button" @click="showLeaveRoomAlert" class="hide-style exitBtn d-flex align-items-center w-100">
 									<i class="ti ti-message-circle-off pe-2"></i>
 									나가기
 								</button>
 							</div>
 							<!-- 갠톡일 때 -->
 							<div v-if="roomInfo.chatRoomType == 'P'" class="customModalSmall2">
-								<button type="button" @click="leaveRoom" class="hide-style exitBtn d-flex align-items-center w-100">
+								<button type="button" @click="showLeaveRoomAlert" class="hide-style exitBtn d-flex align-items-center w-100">
 									<i class="ti ti-message-circle-off pe-2"></i>
 									나가기
 								</button>
@@ -813,6 +821,33 @@
 								</div>
 							</div>
 						</div>
+						<!-- 채팅방 나가기 경고 모달 -->
+				        <div v-if="chatRoomModal == true && leaveRoomAlert == true" class="custom-modal leaveRoomAlert">
+					        <div class="custom-modal-body">
+					        	<div class="text-center mb-3">
+					        		<i class="ti ti-alert-triangle"></i>
+					        	</div>
+					        	<div class="text-center">채팅방을 나가면 메세지가 모두 삭제됩니다.</div>
+					        	<div class="text-center">채팅방을 나가시겠습니까?</div>
+					        	<div class="d-flex justify-content-center mt-4">
+					        		<button class="custom-btn btn-round btn-purple1-secondary me-2 w-100" @click="leaveRoom">나가기</button>
+					        		<button class="custom-btn btn-round btn-purple1 w-100"  @click="hideLeaveRoomAlert">취소</button>
+					        	</div>
+					        </div>
+					    </div>
+					    <!-- 메세지 삭제 경고 모달 -->
+				        <div v-if="chatRoomModal == true && deleteMsgAlert == true" class="custom-modal deleteMsgAlert">
+					        <div class="custom-modal-body">
+					        	<div class="text-center mb-3">
+					        		<i class="ti ti-alert-triangle"></i>
+					        	</div>
+					        	<div class="text-center">위즈의 모든 참여자에게 메세지가 삭제됩니다.</div>
+					        	<div class="d-flex justify-content-center mt-4">
+					        		<button class="custom-btn btn-round btn-purple1-secondary me-2 w-100" @click="deleteMessage(index)">삭제</button>
+					        		<button class="custom-btn btn-round btn-purple1 w-100"  @click="hideDeleteMsgAlert">취소</button>
+					        	</div>
+					        </div>
+					    </div>
 					</div>
 					<!-- 푸터 -->
 					<div class="customModalFooter">
