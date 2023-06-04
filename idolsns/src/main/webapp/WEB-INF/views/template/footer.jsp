@@ -136,10 +136,6 @@
 				messageHandler(e) {
 					const parsedData = JSON.parse(e.data);
 					//console.log(parsedData);
-					// 방 생성 메세지인 경우 chatRoomNo에 생성된 방(이미 있는 채팅방인 경우 해당 채팅방 번호) 번호 셋팅
-					if(parsedData.chatNessageType === 11) {
-						this.chatRoomNo = parsedData.chatRoomNo;
-					}
 					// 타입이 3인(삭제인) 메세지는 리스트에 추가하지 않음
 					if(parsedData.type == 3) {
 						this.messageList.splice(0);
@@ -429,7 +425,6 @@
 					this.socket.onmessage = (e) => {
 						app.messageHandler(e);
 						app.chatRoom.chatRoomName1 = "";
-						//app.chatRoomNo = e.chatRoomNo;
 					}
 					this.socket.send(JSON.stringify(data));
 					this.selectedMemberList.splice(0);

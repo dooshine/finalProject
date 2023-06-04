@@ -89,10 +89,10 @@ public class ChatRestController {
 		return memberRepo.selectAll();
 	}
 	
-	// 채팅방 생성 - 수정
+	// 채팅방 생성
 	@PostMapping("/chatRoom")
-	public int createRoom(@RequestBody ChatRoomProcessVO vo) {
-		return chatRoomService.createChatRoom(vo);
+	public void createRoom(@RequestBody ChatRoomProcessVO vo) {
+		chatRoomService.createChatRoom(vo);
 	}
 	
 	// 채팅방에 참여한 시간 내보내기
