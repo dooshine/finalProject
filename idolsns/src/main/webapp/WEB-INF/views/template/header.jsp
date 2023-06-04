@@ -540,7 +540,14 @@
 						</div>
 					</div>
 					<div class="customModalBody">
-						<div class="chatRooms mb-2" v-for="(room, index) in chatRoomList" :key="index">
+						<div v-if="chatRoomList.length < 1" class="d-flex align-items-center justify-content-center" style="height: 408px;">
+							<div>
+								<h5 class="text-center mb-2">🙌</h5>
+								<h5 class="text-center mb-2">새 위즈를 만들고</h5>
+								<h5 class="text-center">친구들과 대화를 시작해보세요!</h5>
+							</div>
+						</div>
+						<div class="chatRooms mb-2" v-if="chatRoomList.length > 0" v-for="(room, index) in chatRoomList" :key="index">
 							<!-- 채팅방 이름(단톡일 때: 지정한 이름 표시) -->
 							<div v-if="chatRoomList[index].chatRoomType == 'G'">
 								<button @click="showChatRoomModal(index)" class="hide-style w-100 mb-3">
@@ -646,28 +653,37 @@
 						</div>
 					</div>
 					<div class="customModalBody">
-						<div class="form-floating mb-3" v-if="memberCount > 1">
-	  						<input type="text" class="form-control form-control-sm" id="chatRoomNameInput" placeholder="채팅방이름" 
-	  											v-model="chatRoom.chatRoomName1" @input="chatRoom.chatRoomName1 = $event.target.value">
-						  	<label for="chatRoomNameInput">채팅방 이름</label>
+						<div v-if="followList.length < 1" class="d-flex align-items-center justify-content-center" style="height: 408px;">
+							<div>
+								<h5 class="text-center mb-2">👋<h5>
+								<h5 class="text-center mb-2">새 친구를 팔로우하고</h5>
+								<h5 class="text-center">대화를 시작해보세요!</h5>
+							</div>
 						</div>
-						<!-- 팔로우 목록 -->
-						<label v-for="(follow, index) in followProfileList" class="w-100 mb-3">
-							<div class="d-flex w-100">
-								<div class="d-flex align-items-center col-9">
-									<div class="me-3">
-										<img :src="follow.profileSrc" class="profileImg" style="height: 45px; width: 45px;">
+						<div v-if="followList.length > 0">
+							<div class="form-floating mb-3" v-if="memberCount > 1">
+		  						<input type="text" class="form-control form-control-sm" id="chatRoomNameInput" placeholder="채팅방이름" 
+		  											v-model="chatRoom.chatRoomName1" @input="chatRoom.chatRoomName1 = $event.target.value">
+							  	<label for="chatRoomNameInput">채팅방 이름</label>
+							</div>
+							<!-- 팔로우 목록 -->
+							<label v-for="(follow, index) in followProfileList" class="w-100 mb-3">
+								<div class="d-flex w-100">
+									<div class="d-flex align-items-center col-9">
+										<div class="me-3">
+											<img :src="follow.profileSrc" class="profileImg" style="height: 45px; width: 45px;">
+										</div>
+										<div>
+											<div style="font-size: 0.95em;">{{ follow.memberNick }}</div>
+											<div style="font-size: 0.9em; color: #7f7f7f;">@{{ follow.memberId }}</div>
+										</div>
 									</div>
-									<div>
-										<div style="font-size: 0.95em;">{{ follow.memberNick }}</div>
-										<div style="font-size: 0.9em; color: #7f7f7f;">@{{ follow.memberId }}</div>
-									</div>
-								</div>
-								<div class="col-3 d-flex justify-content-end">
-			    					<input type="checkbox" v-model="selectedMemberList" :value="follow">
-			    				</div>
-			    			</div>
-						</label>
+									<div class="col-3 d-flex justify-content-end">
+				    					<input type="checkbox" v-model="selectedMemberList" :value="follow">
+				    				</div>
+				    			</div>
+							</label>
+						</div>
 					</div>
 				</div>
 				<!--------------------------------------- 채팅방 생성 모달 ---------------------------------------->
