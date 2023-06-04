@@ -3,6 +3,7 @@ package com.kh.idolsns.controller;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.annotation.PostConstruct;
@@ -12,7 +13,6 @@ import javax.servlet.http.HttpSession;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -29,8 +29,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.kh.idolsns.configuration.CustomEmailProperties;
 import com.kh.idolsns.configuration.CustomFileuploadProperties;
 import com.kh.idolsns.dto.AttachmentDto;
+import com.kh.idolsns.dto.FollowDto;
 import com.kh.idolsns.dto.MemberDto;
-import com.kh.idolsns.dto.MemberExitDto;
 import com.kh.idolsns.dto.MemberFollowCntDto;
 import com.kh.idolsns.dto.MemberFollowInfoDto;
 import com.kh.idolsns.dto.MemberProfileImageDto;
@@ -140,7 +140,15 @@ public class MemberController {
 		    return "redirect:login";
 		}
 		
-		return "redirect:" + prevPage;
+		return "redirect:/";
+	}
+	
+	//로그인 상태인지 아닌지 구분
+	@GetMapping("/goToLoginPage")
+	@ResponseBody
+	public String goToLoginPage(HttpSession session) {
+		String memberId = (String) session.getAttribute("memberId");
+		return memberId;
 	}
 	
 	//로그아웃
@@ -459,6 +467,34 @@ public class MemberController {
 		emailService.sendEmailPassword(memberEmail, newPassword);
 		memberRepo.editPassword(memberEmail, newPassword);
 		return newPassword;
-		
+	}
+	
+	//팔로우 리스트 멤버별 프로필 조회
+	@GetMapping("/followListProfile")
+	@ResponseBody
+	public List<FollowDto> followListProfile(@RequestParam String memberId) {
+		return memberRepo.followListProfile(memberId);
+	}
+	
+	//팔로워 리스트 멤버별 프로필 조회
+	@GetMapping("/followerListProfile")
+	@ResponseBody
+	public List<FollowDto> followerListProfile(@RequestParam String followTargetPrimaryKey) {
+		return memberRepo.followerListProfile(followTargetPrimaryKey);
+	}
+	
+	//페이지 리스트 멤버별 프로필 조회
+	@GetMapping("/pageListProfile")
+	@ResponseBody
+	public List<FollowDto> pageListProfile(@RequestParam String memberId) {
+		return memberRepo.pageListProfile(memberId);
+	}
+	
+	//프로필 리스트 팔로우 취소
+	@GetMapping("/deleteFollow")
+	@ResponseBody
+	public String deleteFollow(@RequestParam long followNo) {
+		memberRepo.deleteFollow(followNo);
+		return null;
 	}
 }

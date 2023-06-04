@@ -12,24 +12,16 @@
 		    width: 100%; 
 		  }
     	}
-		   	section {
-			  font-family: "Noto Sans KR", sans-serif;
-			}
-			   	
-		
-	   
-	   	.title {
-	   		font-weight:bold;
-	   	}
-.table th {
-	/* background-color: #f8f7fc; */
-	background-color: #f0f2f4;
-}
-.table td {
-	padding-left: 12px;
-}	   
-	 
-	   
+	
+		.table th {
+			background-color: #f8f7fc;
+			padding-left: 12px;
+		}
+		.table td {
+			padding-left: 12px;
+		}	   
+			 
+			   
 	    
 </style>
  
@@ -37,25 +29,25 @@
  
  
 	<div id="app">
-	  <div class="custom-container">
-    	<div style="padding-left:0.5em; padding-right:0.5em;">
-    		
-    		<div class="my-5 mb-5 ">
-    			<h2 class="title" style="text-align: center;">${paymentDto.memberId}님의 충전이 완료되었습니다.</h2>
+	  <div class="custom-container" style="padding-left:0.5em; padding-right:0.5em;">
+    		<div class="my-5 mb-5">
+    			<h2 class="font-bold" style="text-align: center;">${paymentDto.memberId}님의 충전이 완료되었습니다.</h2>
     		</div>
     	
-			<div class="custom-border-box-angle p-4">
+			<div class="p-4">
 
 				<div>
-					<h4 class="title">결제정보</h4>
+					<h4 class="font-bold">결제정보</h4>
 				</div>
 				
 				<!-- <hr style="background-color: black; height: 2px"> -->
+				<!-- <div class="custom-hr" style="background-color: #7f7f7f;"></div> -->
 				<div class="custom-hr-big" style="background-color: #7f7f7f;"></div>
+				<!-- <div class="custom-hr-big"></div> -->
 			
 				<table class="table">
-					<tr>
-						<th>주문번호</th>
+					<tr class="col-12">
+						<th class="col-3">주문번호</th>
 						<td>${response.partner_order_id}</td>
 					</tr>
 					
@@ -67,7 +59,7 @@
 					<tr>
 						<th>주문금액</th>
 						<td> 
-							${response.amount.total}원
+							${response.amount.total}스타
 						</td>
 					</tr>
 					
@@ -85,10 +77,9 @@
 					
 				</table>
 			</div>
-    		
 		</div>
 	  </div>
-	</div>
+
 
 	
 

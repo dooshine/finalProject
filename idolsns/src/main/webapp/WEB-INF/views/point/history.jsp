@@ -6,16 +6,13 @@
 <jsp:include page="/WEB-INF/views/template/header.jsp"></jsp:include> 
 
 
-    
+  
   <style>
-   
-   			
-   
-		   	section {
-			  font-family: "Noto Sans KR", sans-serif;
-			}
-			   	
-		   
+   @media screen and (max-width:992px) {
+		  	.col-6 {
+		    width: 100%; 
+		  }
+    	}
 		    ul.custom-tab-header {
 		      padding: 0;
 		      margin: 0;
@@ -54,9 +51,6 @@
 		   text-decoration: none;
 	    }
 	
-	    .custom-tab-list:hover {
-	    
-	    }
 	
 	    /* 하위 요소에 적용할 스타일 */
 	    .custom-tab-list.active::after {
@@ -80,10 +74,9 @@
 		}
 	   
 	   
-	   	.title {
-	   		font-weight:bold;
-	   	}
-		.custom-table-tr {
+	
+	   
+	   	.custom-table-tr {
 			/* background-color: #f8f7fc; */
 			border-bottom: 1.8px solid #a294f9;
 			/* border: 1.5px solid #6A53FB; */
@@ -95,6 +88,7 @@
 			/* border: 1.5px solid #6A53FB; */
 			
 		}
+	   
 
 		
 	    
@@ -104,28 +98,27 @@
 		
 		<div id="app">
 
-		 <div class="container rounded p-3" style="background-color:white">
-        		 
+		 <div class="container custom-container">
 		        <ul class="custom-tab-header">
-		            <li class="custom-tab-list"><a href="charge">포인트 충전</a></li>
+		            <li class="custom-tab-list"><a href="charge">스타 충전</a></li>
 		            <li class="custom-tab-list active"><a href="#">충전 내역</a></li>
 		            <li class="custom-tab-list"><a href="order">사용 내역</a></li>
 		        </ul>
 		        
 		        
-		        <h3 class="title mt-5 mb-3" style="padding-left: 0.5em">충전 내역</h3>
+		        <h3 class="font-bold mt-5 mb-3" style="padding-left: 0.5em">충전 내역</h3>
 		
 		   <div style="padding-left: 0.5em; padding-right: 0.5em;">
-	            <p class="container rounded p-3 border">내 포인트: <span class="amount" style="color:#6A53FB; font-weight:bold" >{{ formattedAmount }}</span>원</p>
+	            <div class="container my-3 custom-border-box">내 포인트: <span class="amount font-bold font-purple1" >{{ formattedAmount }}</span>원</div>
 	        </div>
         
-				<div class="modal-body mt-4" style="padding-left: 0.5em; padding-right: 0.5em;">
+				<div class="modal-body" style="padding-left: 0.5em; padding-right: 0.5em;">
 				  <table class="table">
 			        <thead>
 			          <tr class="custom-table-tr">
 			            <th>충전일</th>
 			            <th>구분</th>
-						<th>충전 금액</th>
+						<th>충전 스타</th>
 			            <th>상태</th>
 			            <th>더보기</th>
 			          </tr>
@@ -135,15 +128,18 @@
 				        <td>{{ paymentDto.paymentTime }}</td>
 				        <td>{{ paymentDto.paymentName }}</td>
 				        <td>
-				        	<span :style="paymentDto.paymentStatus === '취소' ? 'text-decoration: line-through; color: grey;' : ''">{{ paymentDto.paymentTotal }}</span>
+				        	<span :style="paymentDto.paymentStatus === '취소' ? 'text-decoration: line-through; color: grey;' : ''">
+				        	{{ formatCurrency(paymentDto.paymentTotal) }}</span>
 				        </td>
 				      
 				        <td>
-					      <span :style="paymentDto.paymentStatus === '취소' ? 'text-decoration: line-through; color: grey;' : ''">{{ paymentDto.paymentStatus }}</span>
+						    <span :style="paymentDto.paymentStatus === '취소' ? 'text-decoration: line-through; color: grey;' : ''">
+						    {{ formatCurrency(paymentDto.paymentStatus) }}</span>
 					    </td>
 				        <td>
 				          <a :href="'detail?paymentNo=' + paymentDto.paymentNo">
-				            <button class="btn btn-sm btn-primary">
+
+				            <button class="btn-sm btn-purple1">
 				              더보기
 				            </button>
 				          </a>
@@ -154,7 +150,7 @@
 				</div>
 			
 			    <!-- 이전/다음 페이지로 이동하는 버튼 -->
-	  <div class="pagination justify-content-center mt-5">
+	  <div class="pagination justify-content-center mt-5 mb-3">
       <ul class="pagination">
         <li class="page-item" :class="{ disabled: currentPage === 1 }">
           <a class="page-link" href="#" @click="previousPage">&lt;</a>
@@ -215,7 +211,9 @@
 	              },
 	        },
 	        methods: {
-	   
+	        	  formatCurrency(value) {
+	        	        return value.toLocaleString();
+	        	      },
 			
 	           	 async loadMemberPoint() {
 	                     const url = "/rest/member/"+memberId;

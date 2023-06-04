@@ -88,6 +88,7 @@
          <div class="row">
             <a href="${pageContext.request.contextPath}/member/exit">회원탈퇴</a>
             <a href="${pageContext.request.contextPath}/member/password">비밀번호 변경</a>
+            <a href="${pageContext.request.contextPath}/member/logout">로그아웃</a>
          </div>
          
          <div class="row">
@@ -154,14 +155,19 @@
                   <div class="modal-header">
                      <i class="fa-solid fa-xmark" style="color: #bcc0c8;" data-bs-dismiss="modal" aria-label="Close"></i>
                   </div>
-                  <div class="modal-body text-center">
-                     <div v-for="board in FollowMemberList">
-                     {{board}}
+                  <div class="modal-body text-left">
+                     <div v-for="(board,index) in FollowListProfile"  :key="index">
+                     <img :src="getAttachmentUrl(board.attachmentNo)" class="profile-image" style="width:54px; height:54px;">
+                     <a href="">
+                    <span> {{board.followTargetPrimaryKey}}</span>
+                     </a>
+                    <button @click="deleteFollow(board.followNo)">팔로잉</button>
                      </div>
                   </div>
                </div>
             </div>
-         </div>
+         </div>	
+        
          
          <div class="modal" tabindex = "-1" role="dialog" id="followerModal" data-bs-backdrop="static" ref="followerModal">
             <div class="modal-dialog" role="document">
@@ -169,9 +175,11 @@
                   <div class="modal-header">
                      <i class="fa-solid fa-xmark" style="color: #bcc0c8;" dat   a-bs-dismiss="modal" aria-label="Close"></i>
                   </div>
-                  <div class="modal-body text-center">
-                     <div v-for="board in FollowerMemberList">
-                        {{board}}
+                  <div class="modal-body text-left">
+                     <div v-for="(board,index) in FollowerListProfile"  :key="index">
+                     <img :src="getAttachmentUrl(board.attachmentNo)" class="profile-image" style="width:54px; height:54px;">
+                    <span> {{board.memberId}}</span>
+                    <button @click="deleteFollow(board.followNo)">팔로잉</button>
                      </div>
                   </div>
                </div>
@@ -184,9 +192,11 @@
                   <div class="modal-header">
                      <i class="fa-solid fa-xmark" style="color: #bcc0c8;" data-bs-dismiss="modal" aria-label="Close"></i>
                   </div>
-                  <div class="modal-body text-center">
-                     <div v-for="board in FollowPageList">
-                        {{board}}   
+                  <div class="modal-body text-left">
+                     <div v-for="(board,index) in PageListProfile"  :key="index">
+                    <img :src="getAttachmentUrl(board.attachmentNo)" class="profile-image" style="width:54px; height:54px;">
+                    <span> {{board.followTargetPrimaryKey}}</span>
+                    <button @click="deleteFollow(board.followNo)">팔로잉</button>
                      </div>
                   </div>
                </div>
@@ -1058,6 +1068,12 @@
                   previewURLList:[], 
                   artistViewList:[],
                   previewURL: "",
+                  //팔로우 리스트 멤버별 프로필
+                  FollowListProfile : [],
+                  //팔로워 리스트 멤버별 프로필
+                  FollowerListProfile : [],
+                  //페이지 리스트 멤버별 프로필
+                  PageListProfile:[],
                   
                   targetMemberFollowObj: {},
                   
@@ -1099,7 +1115,7 @@
               	newFixedTagList: [],                	
               	
               	// 세션 맴버아이디
-              	memberId:null,
+              	memberId:"${memberId}",
               	
               	// 좋아요한 맴버의 아이디
               	likedMemberId: null,
@@ -1137,12 +1153,13 @@
                },
                
                async followList() {
-                  const response = await axios.get("/member/followList");
+                  const response = await axios.get("/member/followList/"+this.memberId);
                   const{FollowMemberList, FollowerMemberList, FollowPageList} = response.data;
                   
                   this.FollowMemberList = FollowMemberList;
                   this.FollowerMemberList = FollowerMemberList;
                   this.FollowPageList = FollowPageList;
+                  console.log("팔로우리스트 : "+this.FollowMemberList);
                },
                
                showModal(){
@@ -1281,6 +1298,52 @@
                       
                       alert("대표페이지 프로필사진 설정완료!");
                   },
+                  
+                  //팔로우 리스트 멤버별 프로필 조회
+                  async followListProfile() {
+                	  const response =await axios.get("/member/followListProfile",{
+                		  params :{
+                			  memberId : this.memberId
+                		  }
+                	  });
+                	  this.FollowListProfile.push(...response.data);
+                	  
+                	  console.log(response.data);
+                  },
+                  
+                  //팔로워 리스트 멤버별 프로필 조회
+                  async followerListProfile() {
+					  const response = await axios.get("/member/followerListProfile", {
+					    params: {
+					    	followTargetPrimaryKey: this.memberId
+					    }
+					  });
+					  this.FollowerListProfile = response.data;
+					},
+					
+					//페이지 리스트 멤버별 프로필 조회
+	                  async pageListProfile() {
+						const response = await axios.get("/member/pageListProfile",{
+							params : {
+								memberId : this.memberId
+							}
+						});
+
+						  this.PageListProfile.push(...response.data);
+						  console.log(" this.PageListProfile : "+ this.PageListProfile);
+						},
+                  
+                  //프로필 리스트 팔로우 취소
+				async deleteFollow(followNo) {
+					const response = await axios.get("/member/deleteFollow",{
+						params : {followNo:followNo}
+					});
+					if (response.data.success) {
+					    // 삭제 성공 시, FollowListProfile에서 해당 항목을 제거합니다.
+					    this.FollowListProfile = this.FollowListProfile.filter(item => item.followNo !== followNo);
+					  }
+				},
+                  
 
 
 
@@ -1694,6 +1757,7 @@
             },
             created(){
                this.profileImage();
+       		this.pageListProfile();
                
             // 게시글 불러오기
            	this.setId();
@@ -1703,8 +1767,11 @@
             
             mounted() {
                this.profile();
-               this.followCnt();
                this.followList();
+               this.followListProfile();
+           		this.followerListProfile();
+           
+               this.followCnt();
                this.modal = new bootstrap.Modal(this.$refs.modal);
                this.followModal = new bootstrap.Modal(this.$refs.followModal);
                this.followerModal = new bootstrap.Modal(this.$refs.followerModal);

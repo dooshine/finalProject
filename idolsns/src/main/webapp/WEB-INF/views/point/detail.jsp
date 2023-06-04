@@ -13,68 +13,91 @@
 		    width: 100%; 
 		  }
     	}
+		.table th {
+			background-color: #f8f7fc;
+			padding-left: 12px;
+		}
+		.table td {
+			padding-left: 12px;
+		}	   
 
-		   	section {
-			  font-family: "Noto Sans KR", sans-serif;
-			}
-			 
-			.title {
-	   			font-weight:bold;
-		   	}
 	
 	</style>
-		<div id="app">
-  <div class="container rounded p-3" style="background-color:white">
-    <h3 class="title mt-5 mb-3" style="padding-left: 0.5em">결제 상세 정보</h3>
-    <div style="padding-left:0.5em; padding-right:0.5em;">
+	
+	
+<div id="app">
+  <div class="custom-container">
+    <h3 class="font-bold mt-5 mb-3" style="padding-left: 0.5em">결제 상세 정보</h3>
+      
+      <div style="padding-left:0.5em; padding-right:0.5em;">
+      
+      <div class="custom-hr-big" style="background-color: #7f7f7f;"></div>
+      
+      
+      
       <table class="table">
-        <tr>
-          <th>주문번호</th>
+        <tr class="col-12">
+          <th class="col-3">주문번호</th>
 			<td>{{ response.partner_order_id }}</td>
         </tr>
         <tr>
           <th>구분</th>
-          <td>{{ paymentDto.paymentName }}</td>
+          	<td>{{ paymentDto.paymentName }}</td>
         </tr>
         <tr>
           <th>주문금액</th>
-			 <td>{{ response.amount.total }}원</td>
+			<td>{{ formatCurrency(response.amount.total) }}스타</td>
         </tr>
         <tr>
           <th>결제일</th>
-          <td>{{ paymentDto.paymentTime }}</td>
+          	<td>{{ paymentDto.paymentTime }}</td>
         </tr>
         <tr>
           <th>결제 수단</th>
-          <td>카카오페이</td>
+          	<td>카카오페이</td>
         </tr>
         <tr>
           <th>결제 상태</th>
-          <td>{{ paymentDto.paymentStatus }}</td>
+          	<td>{{ paymentDto.paymentStatus }}</td>
         </tr>
       </table>
-    </div>
-    <div class="d-flex justify-content-end">
+     
+      
+	<div class="d-flex justify-content-end">
+		<a :href="'history'">
+	      <button class="custom-btn-sm btn-purple1">
+			결제 내역
+	      </button>
+      	</a>
+	
       <!-- 결제 취소 버튼: 잔여 금액이 존재하고 7일 이내인 경우에만 표시 -->
       <template v-if="paymentDto.paymentRemain > 0 && !isCancellationDisabled">
-        <a :href="'cancel?paymentNo=' + paymentDto.paymentNo" style="padding-left: 0.5em">
-          <button class="btn btn-sm btn-danger">
+        <a :href="'cancel?paymentNo=' + paymentDto.paymentNo">
+          <button class="custom-btn-sm btn-danger" style="margin-left:0.5em">
             결제 취소
           </button>
         </a>
       </template>
       <!-- 7일 경과 후 충전 취소 안내 문구 -->
-     <template>
-        <p v-if="isCancellationDisabled" style="padding-left: 0.5em; color: red; font-size: 15px">
+      <template v-if="isCancellationDisabled && paymentDto.paymentRemain > 0">
+        <p class="font-bold start" style="color: red; font-size: 15px">
           결제 7일 경과 후 충전 취소가 불가합니다.
         </p>
       </template>
+      </div>
+
+ 
     </div>
+     </div>
+    
   </div>
-</div>
+
+
+
+
 
 <script>
-  const app = Vue.createApp({
+Vue.createApp({
     data() {
       return {
         paymentDto: {},
@@ -83,16 +106,19 @@
       }
     },
     computed: {
-      isCancellationDisabled() {
-        if (this.paymentDto && this.paymentDto.paymentTime) {
-          const currentDate = new Date();
-          const differenceInDays = Math.floor((currentDate - new Date(this.paymentDto.paymentTime)) / (24 * 60 * 60 * 1000));
-          return differenceInDays > 7;
+        isCancellationDisabled() {
+          if (this.paymentDto && this.paymentDto.paymentTime) {
+            const currentDate = new Date();
+            const differenceInDays = Math.floor((currentDate - new Date(this.paymentDto.paymentTime)) / (24 * 60 * 60 * 1000));
+            return differenceInDays > 7;
+          }
+          return false;
         }
-        return false;
-      }
-    },
+      },
     methods: {
+    	formatCurrency(value) {
+	        return value.toLocaleString();
+	      },
       async loadPaymentDetail() {
         try {
           const url = "http://localhost:8080/rest/point/" + this.paymentNo;
@@ -115,9 +141,7 @@
     	this.paymentNo = window.location.search.split("=")[1]; 
       	this.loadPaymentDetail();
     }
-  });
-
-  app.mount("#app");
+  }).mount("#app");
 </script>
 
 

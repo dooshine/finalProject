@@ -11,11 +11,7 @@
 		  }
     	}
 
-		   	section {
-			  font-family: "Noto Sans KR", sans-serif;
-			}
-			   	
-		   
+	
 	    
 	    .point_select {
 	    	width: 100%;
@@ -25,38 +21,8 @@
 	    .radio_label {
 			white-space: nowrap;
 		}
-	    
-    	.custom-title {
-   			font-weight:bold;
-			padding-left: 12px;
-	   	}
-	    .custom-border-box {
-			margin-top: 16px;
-			margin-bottom: 16px;
-			border: 0.3px solid #dee2e6;
-			padding: 16px;
-			border-radius: 0.5rem;
-		}
-		.custom-hr {
-			margin-top: 16px;
-			margin-bottom: 16px;
-			background-color: #dee2e6;
-			height: 0.3px;
-		}
-		.custom-container {
-			box-shadow: 0px 3px 4px rgba(3, 21, 17, 0.1);
-			background-color: white;
-			padding: 24px;
-			border-radius: 0.5rem;
-		}
-		.btn-primary {
-			background-color: #6a53fb;
-			border-color: #6A53FB;
-		}
-		.btn-primary:hover{
-			background-color: #6a53fb;
-			border-color: #6A53FB;
-		}
+
+
 		input[type="radio"] {
 			accent-color: #6A53FB;
 		}
@@ -71,14 +37,14 @@
         	<!-- <div class="container rounded-3 p-4 shadow-sm" style="background-color:white;"> -->
         	<div class="container custom-container">
 		        <ul class="custom-tab-header">
-		            <li class="custom-tab-list active"><a href="#">포인트 충전</a></li>
+		            <li class="custom-tab-list active"><a href="#">스타 충전</a></li>
 		            <li class="custom-tab-list"><a href="history">충전 내역</a></li>
 		            <li class="custom-tab-list"><a href="order">사용 내역</a></li>
 		        </ul>
 		      
 		        
 		        
-		        <h3 class="title mt-5 mb-3" style="padding-left: 12px;">포인트 충전</h3>
+		        <h3 class="font-bold mt-5 mb-3" style="padding-left: 12px;">스타 충전</h3>
 				
         <div style="padding-left: 0.5em; padding-right: 0.5em;">
             <div class="container my-3 custom-border-box">내 포인트: 
@@ -90,34 +56,49 @@
             
                 <label class="point_select">
                     <input type="radio" name="total_amount" v-model="selectedAmount" value="1000"> 
-                    <span class="amount"> 1,000</span>원
+                    <span class="amount"> 1,000</span>스타
                 </label>        
 
                 <label class="point_select">
                     <input type="radio" name="total_amount" v-model="selectedAmount" value="5000"> 
-                   <span class="amount"> 5,000</span>원
+                   <span class="amount"> 5,000</span>스타
                 </label>        
 
                 <label class="point_select">
                     <input type="radio" name="total_amount" v-model="selectedAmount" value="10000"> 
-                    <span class="amount"> 10,000</span>원
+                    <span class="amount"> 10,000</span>스타
                 </label>        
 
                 <label class="point_select">
                     <input type="radio" name="total_amount" v-model="selectedAmount" value="20000"> 
-                    <span class="amount"> 20,000</span>원
+                    <span class="amount"> 20,000</span>스타
                 </label>        
 
                 <label class="point_select">
                     <input type="radio" name="total_amount" v-model="selectedAmount" value="50000"> 
-                    <span class="amount"> 50,000</span>원
+                    <span class="amount"> 50,000</span>스타
                 </label>        
-				
-				
-				<div class="mt-3">
-				    <p class="my-3">충전 후 내 포인트: 
+                
+                
+                
+                
+                
+                <label class="point_select d-flex">
+				  
+				    <p class="amount">직접 입력</span>
+				    <div class="input-form" style="width:20%">
+				        <input type="number" value="custom" name="total_amount" v-model="selectedAmount" class="custom-input p-0" 
+							placeholder="금액 입력" min="1000">    
+				    </div>스타
+				    
+				    
+				</label>
+												
+								
+				<div class="mt-3 mb-3">
+				    <p class="my-3">충전 후 내 스타: 
 				    <span class="amount">{{ (amount+parseInt(selectedAmount || 0)).toLocaleString() }}
-				    </span>원
+				    </span>스타
 				    
 				    </p>
 				</div>
@@ -138,8 +119,8 @@
 					<input style="display: none" name="quantity" value="1">
 				</div>
 
-	            <div class="justify-content-center d-flex mt-3">
-	                <button type="submit" class="btn btn-lg btn-primary mb-4" @click="charge">충전하기</button>
+	            <div class="justify-content-center d-flex mt-5">
+	                <button type="submit" class="custom-btn btn-purple1 mb-4" @click="charge">충전하기</button>
 	            </div>
 
 	       	 </form>
@@ -159,17 +140,24 @@
 	        //데이터 설정 영역
 	        data() {
 	            return {
-	                item_name: '포인트충전',
-	                amount: '',
-	                selectedAmount: null,
-	                memberId: ''
+	            	  item_name: '스타 충전',
+	                  amount: '',
+	                  selectedAmount: null,
+	                  customAmount: ''
 	            }
 	        },
 	        computed: {
 	       
-	            formattedAmount() {
-	                return this.amount.toLocaleString();
-	            },
+	        	formattedAmount() {
+	        	    if (this.selectedAmount === 'custom') {
+	        	        const customAmount = parseInt(this.customAmount);
+	        	        if (!isNaN(customAmount)) {
+	        	            return (this.amount + customAmount).toLocaleString();
+	        	        }
+	        	        return this.amount.toLocaleString();
+	        	    }
+	        	    return this.amount.toLocaleString();
+	        	},
 	            
                 
 	        },
@@ -180,7 +168,12 @@
 	                    alert("충전할 금액을 선택해주세요.");
 	                    return;
 	                }
-	          
+	          		
+	                if (this.selectedAmount === 'custom' && (!this.customAmount || this.customAmount < 1000)) {
+	                    event.preventDefault();
+	                    alert("최소 1000스타 이상 입력해야 합니다.");
+	                    return;
+	                }
 
 	              
 	                var chargeForm = document.getElementById("chargeForm");

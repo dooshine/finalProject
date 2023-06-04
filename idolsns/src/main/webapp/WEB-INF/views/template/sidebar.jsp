@@ -14,40 +14,38 @@
 		border-radius: 10px / 10px;
 	}
 	#aside-bar i {
-		color: black;
 		font-weight: bold;
 	}
 	#aside-bar a {
 		text-decoration: none;
-		color: black;
+		color: #333;
 		font-weight: bold;
+		font-size: 20px;
 	}
 	.selected {
 		color: #6A53FB !important;
 	}
-
 </style>
     
   <!-- aside -->
   <aside class ="col-12 py-4" id="aside-bar">
 	<div class= "nav flex-column">
         <a href="${pageContext.request.contextPath}/">
-        	<i class="fa-solid fa-house" :class="{selected: asideTab === '홈'}"> 홈</i></a>
+        	<i class="fa-solid fa-house" :class="{selected: asideTab === '홈'}"><span class="ps-2"> 홈</span></i></a>
         <a href="#" @click="toggleMyArtist">
-        	<i class="ti ti-star-filled" :class="{selected: asideTab === '대표페이지'}"> 내 아이돌</i></a>
-			<div v-if="toggleFollowPageList">
-				<a class="d-flex" :href="'/artist/'+followPage.artistEngNameLower" v-for="(followPage, i) in memberFollowObj.followPageList" :key="i">
-					<img class="ms-3 rounded-circle" :src="followPage.profileSrc" style="height: 30px; width: 30px;">
-					<div class="ms-2" :class="{selected: isPage(followPage.artistEngNameLower) }">{{fullName(followPage.artistName, followPage.artistEngName)}}</div>
-				</a>
-			</div>
+        	<i class="ti ti-star-filled" :class="{selected: asideTab === '대표페이지'}"><span class="ps-2"> 내 아이돌</span></i></a>
+		<div v-if="toggleFollowPageList">
+			<a class="d-flex" :href="'/artist/'+followPage.artistEngNameLower" v-for="(followPage, i) in memberFollowObj.followPageList" :key="i">
+				<img class="ms-3 rounded-circle" :src="followPage.profileSrc" style="height: 30px; width: 30px;">
+				<div class="ms-2" :class="{selected: isPage(followPage.artistEngNameLower) }">{{fullName(followPage.artistName, followPage.artistEngName)}}</div>
+			</a>
+		</div>
         <a href="${pageContext.request.contextPath}/fund/list">
         	<!-- <i class="fa-solid fa-comments-dollar" :class="{selected: asideTab === '펀딩'}"> 펀딩</i></a> -->
-			<i class="fa-solid fa-piggy-bank" :class="{selected: asideTab === '펀딩'}"> 펀딩</i></a>
+			<i class="fa-solid fa-piggy-bank" :class="{selected: asideTab === '펀딩'}"><span class="ps-2"> 펀딩</span></i></a>
         <a href="${pageContext.request.contextPath}/point/charge">
-        	<i class="fa-solid fa-wallet" :class="{selected: asideTab === '충전'}"> 충전</i></a>
+        	<i class="fa-solid fa-wallet" :class="{selected: asideTab === '충전'}"><span class="ps-2"> 충전</span></i></a>
   	</div>
-	<h1></h1>
   </aside>
 
 
