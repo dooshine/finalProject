@@ -121,7 +121,8 @@
     		padding: 16px;
     	}
     	.leaveRoomAlert,
-    	.deleteMsgAlert {
+    	.deleteMsgAlert,
+    	.fileSizeAlert {
     		position: absolute;
     		width: 250px;
     		bottom: 40%;
@@ -844,7 +845,19 @@
 					        	<div class="text-center">위즈의 모든 참여자에게 메세지가 삭제됩니다.</div>
 					        	<div class="d-flex justify-content-center mt-4">
 					        		<button class="custom-btn btn-round btn-purple1-secondary me-2 w-100" @click="deleteMessage(index)">삭제</button>
-					        		<button class="custom-btn btn-round btn-purple1 w-100"  @click="hideDeleteMsgAlert">취소</button>
+					        		<button class="custom-btn btn-round btn-purple1 w-100" @click="hideDeleteMsgAlert">취소</button>
+					        	</div>
+					        </div>
+					    </div>
+					    <!-- 20메가 이상인 이미지 업로드 금지 모달 -->
+				        <div v-if="chatRoomModal == true && fileSizeAlert == true" class="custom-modal fileSizeAlert">
+					        <div class="custom-modal-body">
+					        	<div class="text-center mb-3">
+					        		<i class="ti ti-alert-triangle"></i>
+					        	</div>
+					        	<div class="text-center">20MB 미만의 사진만 전송할 수 있습니다.</div>
+					        	<div class="d-flex justify-content-center mt-4">
+					        		<button class="custom-btn btn-round btn-purple1 w-100" @click="hideFileSizeAlert">확인</button>
 					        	</div>
 					        </div>
 					    </div>

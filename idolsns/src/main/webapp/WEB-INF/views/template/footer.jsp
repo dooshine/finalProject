@@ -51,6 +51,7 @@
 					memberListModal: false,
 					leaveRoomAlert: false,
 					deleteMsgAlert: false,
+					fileSizeAlert: false,
 					
 					// main에서 가져옴
 					chatRoom: {
@@ -288,6 +289,7 @@
 					});
 					this.memberListModal = false;
 					this.inviteMemberModal = false;
+					this.fileSizeAlert = false;
 				},
 				// 채팅방 모달 닫기
 				hideChatRoomModal() {
@@ -306,6 +308,7 @@
 					this.chatRoomModal = false;
 					this.hideLeaveRoomAlert();
 					this.hideDeleteMsgAlert();
+					this.fileSizeAlert = false;
 				},
 				// 새 채팅방 모달 열기
 				showNewChatRoomModal() {
@@ -388,6 +391,10 @@
 				hideDeleteMsgAlert() {
 					this.msgIndex = "";
 					this.deleteMsgAlert = false;
+				},
+				// 파일 사이즈 경고 모달 닫기(열기는 20메가 이상인 파일 올릴 때 자동으로 열림)
+				hideFileSizeAlert() {
+					this.fileSizeAlert = false;
 				},
 				
 				// 로그인한 회원이 속해있는 채팅방 목록
@@ -649,6 +656,28 @@
 				async sendPic() {
 					const fileInput = document.querySelector('.picInput');
 					const file = fileInput.files[0];
+					let reader = new FileReader();
+					const isValid = await new Promise((resolve, reject) => {
+						reader.onload = function(e) {
+							const fileSize = e.target.result.length;
+							const isValidSize = fileSize <= 20961034;
+							resolve(isValidSize);
+						};
+						reader.onerror = function(error) {
+							reject(error);
+						};
+						reader.readAsDataURL(file);
+					})
+					/*let isValid;
+					reader.onload = function(e) {
+						let fileSize = e.target.result.length;
+						isValid = fileSize <= 20961034;
+						
+					}*/
+					if(!isValid) {
+						this.fileSizeAlert = true;
+						return;
+					}
 					console.log("전송")
 					const formData = new FormData();
 					formData.append("attach", file);
