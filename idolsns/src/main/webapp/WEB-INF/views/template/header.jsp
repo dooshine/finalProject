@@ -533,108 +533,120 @@
 					<div class="customModalHeader d-flex align-items-center justify-content-between">
 						<h5>내 위즈</h5>
 						<div class="d-flex justify-content-end">
-							<button type="button" class="hide-style pe-3 newChatRoomBtn" @click="showCreateRoomModal">
+							<button v-if="memberId.length > 0" type="button" class="hide-style pe-3 newChatRoomBtn" @click="showCreateRoomModal">
 								<i class="ti ti-message-circle-plus"></i>
 							</button>
 							<button type="button" class="btn-close" @click="hideChatMainModal"></button>
 						</div>
 					</div>
 					<div class="customModalBody">
-						<div v-if="chatRoomList.length < 1" class="d-flex align-items-center justify-content-center" style="height: 408px;">
+						<div v-if="memberId.length < 1" class="d-flex align-items-center justify-content-center" style="height: 408px;">
 							<div>
 								<h5 class="text-center mb-2">🙌</h5>
-								<h5 class="text-center mb-2">새 위즈를 만들고</h5>
+								<h5 class="text-center mb-2">로그인하고</h5>
 								<h5 class="text-center">친구들과 대화를 시작해보세요!</h5>
+								<button type="button" class="custom-btn btn-purple1 btn-round w-100 mt-3" @click="login">
+									로그인하러 가기
+								</button>
 							</div>
 						</div>
-						<div class="chatRooms mb-2" v-if="chatRoomList.length > 0" v-for="(room, index) in chatRoomList" :key="index">
-							<!-- 채팅방 이름(단톡일 때: 지정한 이름 표시) -->
-							<div v-if="chatRoomList[index].chatRoomType == 'G'">
-								<button @click="showChatRoomModal(index)" class="hide-style w-100 mb-3">
-									<div class="d-flex align-items-center w-100">
-										<div class="col-3 d-flex justify-content-center align-items-center" 
-											style="height: 45px; width: 45px; background-color: #a294f9; border-radius: 100px; color: white; font-size: 1.3em;">
-											{{ chatRoomList[index].chatRoomName1[0] }}
-										</div>
-										<div class="col-9 ms-3">
-											<div class="d-flex align-items-center mb-2">
-												<div class="text-start" :title="chatRoomList[index].chatRoomName1">
-													<h6>{{ chatRoomList[index].chatRoomName1 }}</h6>
-												</div>
-												<!-- 새 메세지 알림 표시 -->
-												<div v-if="chatRoomList[index].newChat === true" class="notiMarkChat ms-2"></div>
-											</div>
-											<div class="sysMsgContent d-flex justify-content-between">
-												<div>마지막 메세지</div>
-												<div>·</div>
-												<div>{{ timeFormatDetailed2(chatRoomList[index].chatRoomLast) }}</div>
-											</div>
-										</div>
-									</div>
-								</button>
+						<div v-else>
+							<div v-if="chatRoomList.length < 1" class="d-flex align-items-center justify-content-center" style="height: 408px;">
+								<div>
+									<h5 class="text-center mb-2">🙌</h5>
+									<h5 class="text-center mb-2">새 위즈를 만들고</h5>
+									<h5 class="text-center">친구들과 대화를 시작해보세요!</h5>
+								</div>
 							</div>
-							<!-- 채팅방 이름(갠톡일 때: 상대방 이름 표시) -->
-							<div v-if="chatRoomList[index].chatRoomType == 'P'">
-								<!-- 갠톡 채팅방 이름 1 -->
-								<button v-if="chatRoomList[index].chatRoomName1 != memberId" 
-											@click="showChatRoomModal(index)" class="hide-style w-100 mb-3">
-									<div class="d-flex align-items-center mb-2">
-										<div class="col-3 d-flex justify-content-center align-items-center" style="height: 45px; width: 45px;">
-											<img :src="findMemberByIdInMain(index).profileSrc" class="profileImg" style="height: 45px; width: 45px;">
-										</div>
-										<div class="col-9 ms-3">
-											<div class="d-flex align-items-center mb-2">
-												<div class="text-start d-flex align-items-baseline">
-													<div class="me-2 w-100" style="max-width: 120px">
-														<h6 class="chatRoomName" style="max-width: 120px" :title="findMemberByIdInMain(index).memberNick">
-															{{ findMemberByIdInMain(index).memberNick }}
-														</h6>
+							<div class="chatRooms mb-2" v-if="chatRoomList.length > 0" v-for="(room, index) in chatRoomList" :key="index">
+								<!-- 채팅방 이름(단톡일 때: 지정한 이름 표시) -->
+								<div v-if="chatRoomList[index].chatRoomType == 'G'">
+									<button @click="showChatRoomModal(index)" class="hide-style w-100 mb-3">
+										<div class="d-flex align-items-center w-100">
+											<div class="col-3 d-flex justify-content-center align-items-center" 
+												style="height: 45px; width: 45px; background-color: #a294f9; border-radius: 100px; color: white; font-size: 1.3em;">
+												{{ chatRoomList[index].chatRoomName1[0] }}
+											</div>
+											<div class="col-9 ms-3">
+												<div class="d-flex align-items-center mb-2">
+													<div class="text-start" :title="chatRoomList[index].chatRoomName1">
+														<h6>{{ chatRoomList[index].chatRoomName1 }}</h6>
 													</div>
-													<div class="sysMsgContent">
-														@{{ findMemberByIdInMain(index).memberId }}
-													</div>
+													<!-- 새 메세지 알림 표시 -->
+													<div v-if="chatRoomList[index].newChat === true" class="notiMarkChat ms-2"></div>
 												</div>
-												<!-- 새 메세지 알림 표시 -->
-												<div v-if="chatRoomList[index].newChat === true" class="notiMarkChat ms-2"></div>
-											</div>
-											<div class="sysMsgContent d-flex justify-content-between">
-												<div>마지막 메세지</div>
-												<div>·</div>
-												<div>{{ timeFormatDetailed2(chatRoomList[index].chatRoomLast) }}</div>
-											</div>
-										</div>
-									</div>
-								</button>
-								<!-- 갠톡 채팅방 이름 2 -->
-								<button v-if="chatRoomList[index].chatRoomName2 != memberId" 
-											@click="showChatRoomModal(index)" class="hide-style w-100 mb-3">
-									<div class="d-flex align-items-center mb-2 chatRoomName">
-										<div class="col-3 d-flex justify-content-center align-items-center" style="height: 45px; width: 45px;">
-											<img :src="findMemberByIdInMain(index).profileSrc" class="profileImg" style="height: 45px; width: 45px;">
-										</div>
-										<div class="col-9 ms-3">
-											<div class="d-flex align-items-center mb-2">
-												<div class="text-start d-flex align-items-baseline">
-													<div class="me-2 w-100" style="max-width: 120px">
-														<h6 class="chatRoomName" style="max-width: 120px" :title="findMemberByIdInMain(index).memberNick">
-															{{ findMemberByIdInMain(index).memberNick }}
-														</h6>
-													</div>
-													<div class="sysMsgContent">
-														@{{ findMemberByIdInMain(index).memberId }}
-													</div>
+												<div class="sysMsgContent d-flex justify-content-between">
+													<div>마지막 메세지</div>
+													<div>·</div>
+													<div>{{ timeFormatDetailed2(chatRoomList[index].chatRoomLast) }}</div>
 												</div>
-												<!-- 새 메세지 알림 표시 -->
-												<div v-if="chatRoomList[index].newChat === true" class="notiMarkChat ms-2"></div>
-											</div>
-											<div class="sysMsgContent d-flex justify-content-between">
-												<div>마지막 메세지</div>
-												<div>·</div>
-												<div>{{ timeFormatDetailed2(chatRoomList[index].chatRoomLast) }}</div>
 											</div>
 										</div>
-									</div>
-								</button>
+									</button>
+								</div>
+								<!-- 채팅방 이름(갠톡일 때: 상대방 이름 표시) -->
+								<div v-if="chatRoomList[index].chatRoomType == 'P'">
+									<!-- 갠톡 채팅방 이름 1 -->
+									<button v-if="chatRoomList[index].chatRoomName1 != memberId" 
+												@click="showChatRoomModal(index)" class="hide-style w-100 mb-3">
+										<div class="d-flex align-items-center mb-2">
+											<div class="col-3 d-flex justify-content-center align-items-center" style="height: 45px; width: 45px;">
+												<img :src="findMemberByIdInMain(index).profileSrc" class="profileImg" style="height: 45px; width: 45px;">
+											</div>
+											<div class="col-9 ms-3">
+												<div class="d-flex align-items-center mb-2">
+													<div class="text-start d-flex align-items-baseline">
+														<div class="me-2 w-100" style="max-width: 120px">
+															<h6 class="chatRoomName" style="max-width: 120px" :title="findMemberByIdInMain(index).memberNick">
+																{{ findMemberByIdInMain(index).memberNick }}
+															</h6>
+														</div>
+														<div class="sysMsgContent">
+															@{{ findMemberByIdInMain(index).memberId }}
+														</div>
+													</div>
+													<!-- 새 메세지 알림 표시 -->
+													<div v-if="chatRoomList[index].newChat === true" class="notiMarkChat ms-2"></div>
+												</div>
+												<div class="sysMsgContent d-flex justify-content-between">
+													<div>마지막 메세지</div>
+													<div>·</div>
+													<div>{{ timeFormatDetailed2(chatRoomList[index].chatRoomLast) }}</div>
+												</div>
+											</div>
+										</div>
+									</button>
+									<!-- 갠톡 채팅방 이름 2 -->
+									<button v-if="chatRoomList[index].chatRoomName2 != memberId" 
+												@click="showChatRoomModal(index)" class="hide-style w-100 mb-3">
+										<div class="d-flex align-items-center mb-2 chatRoomName">
+											<div class="col-3 d-flex justify-content-center align-items-center" style="height: 45px; width: 45px;">
+												<img :src="findMemberByIdInMain(index).profileSrc" class="profileImg" style="height: 45px; width: 45px;">
+											</div>
+											<div class="col-9 ms-3">
+												<div class="d-flex align-items-center mb-2">
+													<div class="text-start d-flex align-items-baseline">
+														<div class="me-2 w-100" style="max-width: 120px">
+															<h6 class="chatRoomName" style="max-width: 120px" :title="findMemberByIdInMain(index).memberNick">
+																{{ findMemberByIdInMain(index).memberNick }}
+															</h6>
+														</div>
+														<div class="sysMsgContent">
+															@{{ findMemberByIdInMain(index).memberId }}
+														</div>
+													</div>
+													<!-- 새 메세지 알림 표시 -->
+													<div v-if="chatRoomList[index].newChat === true" class="notiMarkChat ms-2"></div>
+												</div>
+												<div class="sysMsgContent d-flex justify-content-between">
+													<div>마지막 메세지</div>
+													<div>·</div>
+													<div>{{ timeFormatDetailed2(chatRoomList[index].chatRoomLast) }}</div>
+												</div>
+											</div>
+										</div>
+									</button>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -916,8 +928,15 @@
 						</div>
 					</div>
 					<div class="customModalBody">
+						<!-- 더 초대할 수 있는 팔로워가 없을 때 -->
+						<div v-if="filteredFollowList.length < 1" class="d-flex align-items-center justify-content-center" style="height: 408px;">
+							<div>
+								<h5 class="text-center mb-2">👀</h5>
+								<h5 class="text-center mb-2">더 초대할 수 있는 친구가 없어요.</h5>
+							</div>
+						</div>
 						<!-- 팔로우 목록 -->
-						<label v-for="(follow, index) in filteredFollowList" class="w-100 mb-3">
+						<label v-if="filteredFollowList.length > 0" v-for="(follow, index) in filteredFollowList" class="w-100 mb-3">
 							<div class="d-flex w-100">
 								<div class="d-flex align-items-center col-9">
 									<div class="me-3">

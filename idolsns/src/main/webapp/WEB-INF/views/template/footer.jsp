@@ -108,6 +108,10 @@
 				};
 			},
 			methods: {
+				// 로그인 안한 경우 로그인으로 이동
+				login() {
+					window.location.href = "${pageContext.request.contextPath}/member/login";
+				},
 				connect() {
 					const url = "${pageContext.request.contextPath}/ws/server";
 					this.socket = new SockJS(url);
