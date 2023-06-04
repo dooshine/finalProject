@@ -462,6 +462,116 @@
          </div>
 
 	     
+	     <!-- 게시물 삭제 확인 모달  -->
+	     <div class="modal" tabindex="-1" role="dialog" id="deleteConfirm"
+                            data-bs-backdrop="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                
+                	<!-- header -->
+                    <div class="modal-header">
+<!--                         <h5 class="modal-title">해당 게시글을 삭제하시겠습니까?</h5> -->
+                    </div>
+                    
+                    <!-- body -->
+                    <div class="modal-body my-3">
+                    	<div class="row">
+	                        <div class="text-center">
+	                        	<h6>해당 게시글을 삭제 하시겠습니까?</h6>
+	                        </div>
+	                    </div>
+                        <br>
+        				<div class="row ">
+        					<div class="text-center ">
+        						<button class="btn btn-primary col-3 mx-3"
+        							data-bs-target="#deleteEnd" data-bs-toggle="modal" @click="deletePost(get)">네</button>
+        						<button class="btn btn-secondary col-3"
+        							data-bs-dismiss="modal">아니오</button>
+        					</div>
+        				</div>
+                    </div>
+                    
+                    <!-- footer -->
+                    <div class="modal-footer">
+                    	
+                    </div>
+                    
+                </div>      
+            </div>
+         </div>
+         
+         <!-- 게시물 삭제 종료 모달 -->
+	     <div class="modal" tabindex="-1" role="dialog" id="deleteEnd"
+                            data-bs-backdrop="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                
+                	<!-- header -->
+                    <div class="modal-header">
+<!--                         <h5 class="modal-title">해당 게시글을 삭제하시겠습니까?</h5> -->
+                    </div>
+                    
+                    <!-- body -->
+                    <div class="modal-body my-3">
+                    	<div class="row">
+	                        <div class="text-center">
+	                        	<h6>게시물이 삭제 되었습니다. </h6>
+	                        </div>
+	                    </div>
+                        <br>
+        				<div class="row ">
+        					<div class="text-center ">
+        						<button class="btn btn-primary col-3 mx-3"
+        							data-bs-dismiss="modal">확인</button>
+        					</div>
+        				</div>
+                    </div>
+                    
+                    <!-- footer -->
+                    <div class="modal-footer">
+                    	
+                    </div>
+                    
+                </div>      
+            </div>
+         </div>
+	     
+	     <!-- 게시글 수정 모달 -->
+	      <div class="modal" tabindex="-1" role="dialog" id="editPost"
+                            data-bs-backdrop="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                
+                	<!-- header -->
+                    <div class="modal-header text-center">
+                        <h5 class="modal-title">글을 수정하세요</h5>
+                    </div>
+                    
+                    <!-- body -->
+                    <div class="modal-body my-3">
+                    	<div class="row">
+	                        <div class="text-center">
+	                        	<textarea class="col-12 post border border-secondary rounded-2" style="height: 200px;" v-if="editPost != null" v-model="editPost.postContent"></textarea>
+	                        </div>
+	                    </div>
+                        <br>
+        				<div class="row ">
+        					<div class="text-center ">
+        						<button class="btn btn-primary col-3 mx-3"
+        							data-bs-dismiss="modal">확인</button>
+        					</div>
+        				</div>
+                    </div>
+                    
+                    <!-- footer -->
+                    <div class="modal-footer">
+                    	
+                    </div>
+                    
+                </div>      
+            </div>
+         </div>
+	     
 <!-- 	    <button type="button" onclick="relayout();" class="btn btn-white btn-outline-dark rounded-pill col-12 " data-bs-target="#modalmap" data-bs-toggle="modal">지도 테스트 모달</button> -->
 	    <!--------------- 게시물들 반복구간 ------------->
 	    <div v-for="(post, index) in posts" :key="index">
@@ -486,24 +596,64 @@
 			               <i class="fs-3 text-secondary ti ti-dots-vertical" @click="setPostModalIndex(index)" data-toggle="dropdown"></i>
 <!-- 			               <i class="ti ti-x" @click="deletePost(post.postNo)"></i> -->
 							   <div v-if="index === getPostModalIndex()" class="post-modal">
-							   		<div class="mt-5 mr-4"></div>
+							   		<div class="mt-3 mr-4"></div>
 							   		<div class="post-modal-content">
-							   			<div v-if="post.memberId === memberId">
-							   				<i class="ti ti-x"></i>
-							   				
-							   				<h6>게시물 삭제 하기</h6>
-							   				<div class="custom-hr my-3"></div>
-							   				<h6>게시물 수정 하기</h6>
-							   			</div>							   										   			
-							   			<div v-else>
-							   				<h6>해당 유저 팔로우</h6>
-							   				<div class="custom-hr my-1"></div>
-							   				<h6>게시물 신고하기</h6>
-							   			</div>
+								   			<div v-if="post.memberId === memberId">
+								   				<div class="row">
+									   				<div class="text-start col-1 mb-2">
+									   					<i class="ti ti-x" @click="hidePostModal"></i>
+									   				</div>
+									   			</div>
+									   			<div class="row">
+										   			<div class="col-1"></div>
+									   				<div class="col-11 ms-2">
+									   					<h6 data-bs-target="#deleteConfirm" data-bs-toggle="modal" @click="setDeletePostNo(post.postNo)">내 게시물 삭제 하기</h6>
+									   				</div>
+									   			</div>
+									   			<div class="row">
+									   				<div class="col-1"></div>
+									   				<div class="col-11 ms-2">
+										   				<div class="custom-hr my-2 me-4"></div>
+										   				<h6 data-bs-target="#editPost" data-bs-toggle="modal" @click="setEditPost(post)">내 게시물 수정 하기</h6>
+								   					</div>
+									   			</div>								   				
+								   				
+								   				
+									   				
+								   			</div>							   										   			
+								   			<div v-else>
+								   				<div class="row">
+									   				<div class="text-start col-1 mb-2">
+									   					<i class="ti ti-x" @click="hidePostModal"></i>
+									   				</div>
+									   			</div>
+									   			<div class="row">
+										   			<div class="col-1"></div>
+									   				<div class="col-11 ms-2 ">
+<!-- 									   					<h6 @click="userFollow">글쓴이 팔로우</h6> -->
+									   					<h6>유저 팔로우</h6>
+									   				</div>
+									   			</div>
+									   			<div class="row">
+									   				<div class="col-1"></div>
+									   				<div class="col-11 ms-2">
+										   				<div class="custom-hr my-2 me-4"></div>
+										   				<h6>유저 신고 하기</h6>
+								   					</div>
+									   			</div>		
+									   			<div class="row">
+									   				<div class="col-1"></div>
+									   				<div class="col-11 ms-2">
+										   				<div class="custom-hr my-2 me-4"></div>
+										   				<h6>게시물 신고 하기</h6>
+								   					</div>
+									   			</div>
+								   				
+								   			</div>
 							   		</div>
-							   		
 							   </div>
-
+							   
+							  
 			            </div>
 							
 	       			</div>	
@@ -1082,9 +1232,13 @@
                 	
                 	// 모달 이미지 URL
                 	modalImageUrl:null,
-                	
                 	modalImageUrlList:[],
                 	
+                	// 게시글 삭제 시 확인 용모달
+                	deletePostNo: null,
+                	
+                	// 게시글 수정 용 post
+                	editPost: null,
                 };
             },
             computed:{  
@@ -1114,7 +1268,8 @@
             	},
             	
             	// 게시글 삭제 
-            	async deletePost(postNo){
+            	async deletePost(){
+            		var postNo = this.deletePostNo;
                 	try{
                 		await axios.delete('http://localhost:8080/rest/post/'+postNo);
                 		this.fetchPosts();
@@ -1296,11 +1451,32 @@
                 	this.postModalIndex = index;
                 },
                 
+                hidePostModal(){
+                	this.postModalIndex = null;
+                },
+                
+                
                 getPostModalIndex(){
                 	return this.postModalIndex;
                 },
              	// 게시글 모달창 --------------------------------------
                 
+             	// 게시글 삭제 ----------------------------------
+             	setDeletePostNo(postNo){
+  					this.deletePostNo = postNo;
+  					this.hidePostModal();
+             	},
+             	             	
+             	
+             	// 게시글 삭제 -----------------------------------
+             	
+             	// 게시글 수정
+             	setEditPost(post){
+             		this.editPost = post;
+             		this.hidePostModal();
+             	},
+             	// 게시글 수정
+             	
              	
             	// 모달창 클릭 시 지도 정보 불러오기-------------------------
             	showMap(keyword){
