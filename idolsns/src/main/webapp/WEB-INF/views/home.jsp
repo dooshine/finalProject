@@ -489,6 +489,8 @@
 							   		<div class="mt-5 mr-4"></div>
 							   		<div class="post-modal-content">
 							   			<div v-if="post.memberId === memberId">
+							   				<i class="ti ti-x"></i>
+							   				
 							   				<h6>게시물 삭제 하기</h6>
 							   				<div class="custom-hr my-3"></div>
 							   				<h6>게시물 수정 하기</h6>
