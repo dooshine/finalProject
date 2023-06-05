@@ -18,4 +18,7 @@ public class MemberDto {
 	private String memberLevel;
 	private Date memberLogin;
 	private Date memberExitDate;
+	
+	// 조인할 컬럼
+	private int attachmentNO;
 }

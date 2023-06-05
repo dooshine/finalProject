@@ -36,32 +36,58 @@
 </head>
 <body>
 	<!-- 회원탈퇴 -->
-     <div class="container" id="app">
-	 <div class="custom-container col-8" style="background-color:white ;">
-		<form class="w-100" action="exit" method="post" autocomplete="off">
-		
+     <div class="container"  id="app">
+     <br>
+	<div class="row mt-5">
+		<div class="col-2"></div>
+		<div class="custom-container col-8" style="background-color:white ;">
+			<form class="w-80" action="exit" method="post" autocomplete="off">
 				
-				<div class="row">
-				    <label for="agreement">
-				        <input type="checkbox" id="agreement"  v-model="agreementChecked" >
-				        회원탈퇴동의
-				    </label>
+				<!-- 제목 -->
+				<br>
+				<div class="text-center">
+					 <img src="/static/image/logo2.jpg" style="width:180px;">
+					<br><br>
+					<h3 class="font-gray2 font-bold">탈퇴하실 아이디의 비밀번호를 입력하세요.</h3>
 				</div>
-				<div class="row">
-					<input type="password" name="memberPw"  placeholder="비밀번호" >
+				<br>
+				
+				<!-- 비밀번호입력 -->
+				<div class="row mx-5 mb-1">
+					<input type="password"  class="custom-input-rounded-container" name="memberPw" placeholder="비밀번호"  >
 				</div>
+				
+				<!-- 비밀번호 불일치시 메세지 -->
 				<c:if test="${param.mode == 'error' }">
 					<div class="row">
-						<p style='color: red;'>잘못된 비밀번호 입니다. 다시 입력하세요.</p>
+						<h6 class="font-purple1 text-center" >잘못된 비밀번호 입니다. 다시 입력하세요.</h6>
 					</div>
 				</c:if>
-				<div class="row">
-					<button type="submit"  :disabled="!agreementChecked">탈퇴</button>
+				<br>
+				
+				<!-- 약관동의 -->
+				<div class="row mx-5 ">
+					<label for="agreement">
+						<input type="checkbox" id="agreement" v-model="agreementChecked">
+						회원탈퇴동의
+						<i class="ti ti-chevron-down"></i>
+						<input type="text">숨김
+					</label>
 				</div>
-			</div>
-		
-		</form>
+				
+				
+				<div class="custom-hr"></div>
+				
+				<!-- 탈퇴 버튼 -->
+				<div class="row my-3 mx-5">
+					<button type="submit" :disabled="!agreementChecked" class="custom-btn btn-round btn-purple1" >탈퇴</button>
+				</div>
+				
+			</form>
+		</div>
+		<div class="col-2"></div>
 	</div>
+</div>
 
 	<script>
 		Vue.createApp({
