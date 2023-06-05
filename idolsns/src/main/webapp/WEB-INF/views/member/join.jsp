@@ -46,18 +46,17 @@
 	<div class="container" id = app>
 			<div class="col-6 custom-container" style="background-color:white; margin-left: 300px;">
 			
-			<div class="row">
-			
-			</div>
-			
 			<div class="row page">
             <form action="join" method="post" autocomplete="off">
+            
+            <!-- 약관동의 페이지 -->
             <div v-show="page==1">
             	<h2 class="font-purple1">약관 동의</h2>
+            	<div class="custom-hr"></div>
             	<input type="checkbox" v-model="agree"> 이용약관에 동의합니다.
             	<br>
             	<div style="text-align: center;">
-            	<textarea class="textarea " readonly style="margin: 0 auto; min-width:400px;  min-height:400px; text-align: left; overflow: hidden;" disabled>
+            	<textarea class="textarea " readonly style="margin: 0 auto; min-width:400px;  min-height:400px; text-align: left; overflow: auto;" disabled>
 개인정보처리방침
 1. 개인정보처리방침의 의의
 스타링크는 본 개인정보처리방침은 개인정보보호법을 기준으로 작성하되, 스타링크 내에서의 이용자 개인정보 처리 현황을 최대한 알기 쉽고 상세하게 설명하기 위해 노력하였습니다.
@@ -113,70 +112,86 @@
 법령에서 보존의무를 부과한 정보에 대해서도 해당 기간 경과 후 지체없이 재생이 불가능한 방법으로 파기합니다."
             	</textarea>
             	</div>
-            	<br><br>
+            	<div class="custom-hr"></div>
+            	<br>
             <div style="text-align: center;">
-			    <button type="button" class="custom-btn btn-round btn-purple1" @click="pagePlus()" :disabled="!agree" style="width: 450px;">동의합니다.</button>
+			    <button type="button" class="custom-btn btn-round btn-purple1" @click="pagePlus()" :disabled="!agree" style="width: 500px;">동의합니다.</button>
 			</div>
-
+				<br>
             </div>
             
+            <!-- 회원정보입력 페이지 -->
 			<div v-show="page==2">
-            <div class="row mb-5">
-                    <h1 style="text-align:center;">회원가입</h1>
-            </div>
-            <div class="row mb-3">
-                    <input type="text" v-model="memberId" class="form-control" 
+                    <h2 class="font-purple1">회원정보입력</h2>
+            <div class="custom-hr"></div>
+            <div class="row mb-3 mx-2">
+                    <input type="text" v-model="memberId" class="custom-input-rounded-container width: 100%;" 
                     	:class="{ 'is-valid': memberIdValid && !idDuplicated && !idDuplicated2, 'is-invalid': memberId !== '' && (!memberIdValid || idDuplicated || idDuplicated2)}" placeholder="아이디" 
                     	@blur="idDuplicatedCheck(memberId) &&  idDuplicatedCheck2(memberId)" name="memberId" id="memberId">
                     <div class="valid-feedback">{{memberIdMessage}}</div>
   					<div class="invalid-feedback">{{memberIdMessage}}</div>
             </div>
 
-            <div class="row mb-3">
-                    <input type="password" v-model="memberPw" class="form-control" 
+            <div class="row mb-3 mx-2">
+                    <input type="password" v-model="memberPw" class="custom-input-rounded-container width: 100%;" 
                     	:class="{'is-valid' : memberPwValid, 'is-invalid' : memberPw !== '' && !memberPwValid}" placeholder="비밀번호" name="memberPw">
                     <div class="valid-feedback">{{memberPwMessage}}</div>
                     <div class="invalid-feedback">{{memberPwMessage}}</div>
             </div>
 
-            <div class="row mb-3">
-                    <input type="password" v-model="memberPwRe" class="form-control" 
+            <div class="row mb-3 mx-2">
+                    <input type="password" v-model="memberPwRe" class="custom-input-rounded-container width: 100%;" 
                     	:class="{'is-valid':memberPwReValid, 'is-invalid':memberPwRe !== '' && (!memberPwReValid || memberPw.length==0)}" placeholder="비밀번호 확인" name="memberPwRe">
                     <div class="valid-feedback">{{memberPwReMessage}}</div>
                     <div class="invalid-feedback">{{memberPwReMessage}}</div>
             </div>
 
-            <div class="row mb-3">
-                    <input type="text" v-model="memberNick" class="form-control" placeholder="닉네임" 
+            <div class="row mb-3 mx-2">
+                    <input type="text" v-model="memberNick" class="custom-input-rounded-container width: 100%;" placeholder="닉네임" 
                     	:class="{'is-valid':memberNickValid && !nickDuplicated, 'is-invalid':memberNick !== '' && (!memberNickValid || nickDuplicated)}" 
                     	@blur="nickDuplicatedCheck(memberNick)" name="memberNick">
                     <div class="valid-feedback">{{memberNickMessage}}</div>
                     <div class="invalid-feedback">{{memberNickMessage}}</div>
             </div>
 
-            <div class="row mb-3">
-                    <input type="email" v-model="memberEmail" class="form-control" placeholder="이메일" 
+            <div class="row mb-3 mx-2">
+                    <input type="email" v-model="memberEmail" class="custom-input-rounded-container width: 100%;" placeholder="이메일" 
                     	:class="{'is-valid':memberEmailValid && !emailDuplicated, 'is-invalid':memberEmail !== '' && (!memberEmailValid || emailDuplicated)}" 
                     	@blur="emailDuplicatedCheck(memberEmail)" name="memberEmail">
                     <div class="valid-feedback">{{memberEmailMessage}}</div>
                     <div class="invalid-feedback">{{memberEmailMessage}}</div>
             </div>
-
-            <div class="row mb-3">
-                    <button type="button" class="btn btn-info w-100" v-bind:disabled="!allValid" @click="pagePlus()">다음단계</button>
+            <br>
+            
+			
+			 <div class="row mb-3 mx-2" >
+                    <button type="button" class="custom-btn btn-round btn-purple1-secondary" @click="pageMinus()">이전단계</button>
+            </div>
+            <div class="row mb-3 mx-2" >
+                    <button type="button" class="custom-btn btn-round btn-purple1" v-bind:disabled="!allValid" @click="pagePlus()">다음단계</button>
             </div>
             </div>
             
+            <!-- 이메일 인증 페이지 -->
             <div v-show="page==3">
-            	<div class="row mt-3">
-            		<h1>이메일 인증</h1>
-            		<h3>입력하신 이메일주소로 인증번호를 발송하였습니다.</h3>
-            		<h4>{{memberEmail}}</h4>
-            		<button type="button" @click="sendEmail()">전송</button>
+            		<h2 class="font-purple1">본인 인증</h2>
+            		<h4 class="font-gray2">입력하신 이메일주소로 본인인증을 완료해주세요.</h4>
+            	<div class="custom-hr"></div>
+            	<div class="row mb-3 mx-1 ">
+				    <input type="text" v-model="memberEmail" readonly class="custom-input-rounded-container" style="width: 73%; margin-left: 8px;" disabled >
+				    <button type="button" class="custom-btn btn-round btn-purple1-secondary"  @click="sendEmail()" style="width: 23%; margin-left: 6px;" >전송</button>
+				</div>
+
+            	<div class="row mb-3 mx-2">
+            		<input type="text" v-model.number="code" placeholder="인증번호입력" @blur="isKeyValid" class="custom-input-rounded-container width: 100%;" >
             	</div>
-            	<div class="row">
-            		<input type="text" v-model.number="code" placeholder="인증번호입력" @blur="isKeyValid">
-            		<button type="submit" :disabled="!keyValid">회원가입</button>
+            	
+            	<BR>
+            	<div class="row mb-3 mx-2" >
+            		<button type="button" class="custom-btn btn-round btn-purple1-secondary" @click = "pageMinus()">이전단계</button>
+            	</div>
+            	<div class="row mb-3 mx-2" >	
+            		<button type="submit" :disabled="!keyValid" class="custom-btn btn-round btn-purple1">회원가입</button>
             	</div>
             </div>
             </form>
@@ -297,6 +312,9 @@
                   },
                   pagePlus(){
                 	  this.page++;
+                  },
+                  pageMinus() {
+                	 this.page--; 
                   },
 
             },
