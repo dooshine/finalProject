@@ -178,6 +178,7 @@
                   <div class="modal-body text-left">
                      <div v-for="(board,index) in FollowerListProfile"  :key="index">
                      <img :src="getAttachmentUrl(board.attachmentNo)" class="profile-image" style="width:54px; height:54px;">
+                     <a :href="'member/mypage/' + board.memberId"></a>
                     <span> {{board.memberId}}</span>
                     <button @click="deleteFollow(board.followNo)">팔로잉</button>
                      </div>

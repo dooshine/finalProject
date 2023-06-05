@@ -15,9 +15,9 @@
 	</insert>
 
 	<select id="selectOne" resultType="MemberDto">
-		SELECT m.*, p.ATTACHMENT_NO
+SELECT m.*, msp.attachment_no
 FROM member m
-LEFT JOIN member_profile_image p ON m.MEMBER_ID = p.MEMBER_ID where p.member_id = #{memberId};
+JOIN member_simple_profile msp ON m.member_id = msp.member_id where m.member_id = #{memberId}
 	</select>
 
 	<!-- 관리자 회원 목록 조회 -->
