@@ -156,4 +156,9 @@ color: #6A53FB;
 input[type="radio"], input[type="checkbox"] {
     accent-color: #6A53FB;
 }
+
+.row {
+    margin-left: 0px;
+    margin-right: 0px;
+}
 /* ########################  버튼 끝 ######################## */

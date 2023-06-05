@@ -1,10 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 
-<jsp:include page="/WEB-INF/views/admin/adminHeader.jsp"></jsp:include>
+<jsp:include page="/WEB-INF/views/template/header.jsp"></jsp:include>
 
 <!-- 제어영역 설정 -->
-<div class="container" id="app">
+<div class="container custom-container" id="app">
     <!-- # 아티스트 -->
     <!-- 아티스트 생성 -->
     <div class="row mt-3">
@@ -411,4 +411,4 @@
 </script>
 
 
-<jsp:include page="/WEB-INF/views/admin/adminFooter.jsp"></jsp:include>
+<jsp:include page="/WEB-INF/views/template/footer.jsp"></jsp:include>

@@ -67,7 +67,7 @@ public class PointController {
 		//정보추가(주문자번호, 주문번호)
 		vo.setPartner_order_id(UUID.randomUUID().toString());
 		vo.setPartner_user_id((String) session.getAttribute("memberId"));
-		vo.setItem_name("포인트충전");
+		vo.setItem_name("스타 충전");
 		
 		
 		//준비요청
