@@ -91,7 +91,7 @@
 					clear() {
 						this.text = ""
 					},
-					msgIndex: "",
+					modalImgURL: "",
 					
 					// 활성화 여부 저장
 					isVisible: true,
@@ -860,6 +860,10 @@
 						window.location.href = `${pageContext.request.contextPath}/member/mypage/${memberId}`	;
 					}
 				},
+				// 이미지 메세지 모달로 크게 보기위한 url 셋팅
+				setModalImgURL(index) {
+					this.modalImgURL = "${pageContext.request.contextPath}/download?attachmentNo=" + this.messageList[index].attachmentNo;
+				}
 			},
 			computed: {
 				memberCount() {

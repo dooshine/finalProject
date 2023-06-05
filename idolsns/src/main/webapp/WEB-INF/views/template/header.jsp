@@ -481,6 +481,9 @@
 			outline: none;
   			box-shadow: none;
 		}
+		/*.image-modal {
+			z-index: 99999;
+		}*/
     </style>
 </head>
 
@@ -707,7 +710,7 @@
 						</div>
 					</div>
 				</div>
-				<!--------------------------------------- 채팅방 생성 모달 ---------------------------------------->
+				<!------------------------------------- 채팅방 생성 모달 -------------------------------------->
 				<!--------------------------------------- 채팅방 모달 ---------------------------------------->
 				<div class="customModal chatRoomModal" v-if="chatRoomModal == true">
 					<!-- 헤더 -->
@@ -768,17 +771,20 @@
 							<div v-if="message.chatMessageType === 1 || message.chatMessageType === 4">
 								<!-- 상대방이 보낸 메세지일 때 -->
 								<div v-if="message.memberId != memberId">
+									<!-- 프로필 영역 -->
 									<div class="d-flex align-items-center">
 										<img :src="findMemberById(index).profileSrc" v-if="!sameTime(index)" 
 											class="profileImg me-2" style="height: 30px; width: 30px;">
 										<span style="font-size: 0.8em;" v-if="!sameTime(index)" style="margin: 0;">{{ findMemberById(index).memberNick }}</span>
 									</div>
+									<!-- 메세지 영역 -->
 									<div class="d-flex align-items-end" style="margin-left: 36.5px;">
 										<!-- 텍스트 메세지일 때 -->
 										<div v-if="message.attachmentNo === 0" class="messageBox">{{ message.chatMessageContent }}</div>
 										<!-- 이미지 메세지일 때 -->
-										<img class="photoMessage" v-if="message.attachmentNo != 0" @load="scrollBottom"
-												:src="'${pageContext.request.contextPath}/download?attachmentNo=' + message.attachmentNo">
+										<img class="photoMessage" v-if="message.attachmentNo != 0" @load="scrollBottom" @click="setModalImgURL(index)"
+												data-bs-target="#image-modal" data-bs-toggle="modal"
+												:src="'${pageContext.request.contextPath}/download?attachmentNo=' + message.attachmentNo" >
 										<div class="messageTime" v-if="displayTime(index)">{{ timeFormat(message.chatMessageTime) }}</div>
 									</div>
 								</div>
@@ -795,7 +801,8 @@
 										<!-- 텍스트 메세지일 때 -->
 										<div v-if="message.attachmentNo === 0" class="messageBox">{{ message.chatMessageContent }}</div>
 										<!-- 이미지 메세지일 때 -->
-										<img class="photoMessage myMessage" v-if="message.attachmentNo != 0" @load="scrollBottom"
+										<img class="photoMessage myMessage" v-if="message.attachmentNo != 0" @load="scrollBottom"  @click="setModalImgURL(index)"
+												data-bs-target="#image-modal" data-bs-toggle="modal"
 												:src="'${pageContext.request.contextPath}/download?attachmentNo=' + message.attachmentNo">
 									</div>
 								</div>
@@ -808,7 +815,6 @@
 							<!-- 날짜 구분 메세지일 때 -->
 							<div v-if="message.chatMessageType === 10" class="sysMessageDate text-center">{{ timeFormatDetailed(message.chatMessageTime) }}</div>
 						</div>
-						
 						<!-- 메뉴 모달 -->
 						<div v-if="chatRoomModal == true && chatMenuModal == true">
 							<!-- 단톡일 때 -->
@@ -969,6 +975,14 @@
 					</div>
 				</div>
 				<!---------------------------------------- 초대 모달 ---------------------------------------->
+				<!-- 이미지 확대 모달 -->
+				<div class="modal" tabindex="-1" role="dialog" id="image-modal">
+	     			<div class="modal-dialog modal-lg" role="image">
+   						<div class="modal-content">
+ 					 		<img :src="modalImgURL">
+	     			 	</div>                           					 	
+					</div>
+	           	</div>
 			</div>
         	<!----------------------------------------------- 헤더 끝 ----------------------------------------------->
             
