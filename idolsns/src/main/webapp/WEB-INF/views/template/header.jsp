@@ -474,6 +474,13 @@
 			text-overflow: ellipsis;
 			word-break: break-all;
 		}
+		/*.focus-ring {
+			display: none !important;
+		}*/
+		.btn-close:focus {
+			outline: none;
+  			box-shadow: none;
+		}
     </style>
 </head>
 
