@@ -4,9 +4,8 @@ import com.kh.idolsns.vo.ChatRoomProcessVO;
 
 public interface ChatRoomService {
 
-	int createChatRoom(ChatRoomProcessVO vo);
+	int createChatRoom(ChatMessageReceiveVO vo);
 	void leaveChatRoom(ChatRoomProcessVO vo);
 	void inviteMember(ChatRoomProcessVO vo);
-	//int createChatRoom(ChatMessageReceiveVO vo);
 	
 }
