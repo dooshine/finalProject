@@ -43,8 +43,8 @@ public class FundPostImageRepoImpl implements FundPostImageRepo{
 
 	@Override
 	public List<FundPostImageDto> selectListByPaging(int page, String searchKeyword) {
-		int end = page * 10;
-		int begin = end - 9;
+		int end = page * 12;
+		int begin = end - 11;
 		Map<String, Object> param = Map.of("begin", begin, "end", end,
 													"searchKeyword", searchKeyword);
 		return sqlSession.selectList("fundpostinte.infiniteWithKeyword", param);
@@ -52,8 +52,8 @@ public class FundPostImageRepoImpl implements FundPostImageRepo{
 
 	@Override
 	public List<FundPostImageDto> selectListByPaging(int page) {
-		int end = page * 10;
-		int begin = end - 9;
+		int end = page * 12;
+		int begin = end - 11;
 		Map<String, Object> param = Map.of("begin", begin, "end", end);
 		return sqlSession.selectList("fundpostinte.infinite", param);
 	}
@@ -65,8 +65,9 @@ public class FundPostImageRepoImpl implements FundPostImageRepo{
 
 	@Override
 	public List<FundListWithTagDto> selectListWithTag(int page, String searchKeyword) {
-		int end = page * 10;
-		int begin = end - 9;
+		// 12개씩 보여주기
+		int end = page * 12;
+		int begin = end - 11;
 		Map<String, Object> param = Map.of("begin", begin, "end", end,
 													"searchKeyword", searchKeyword);
 		return sqlSession.selectList("fundpostinte.selectListWithTag", param);
