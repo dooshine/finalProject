@@ -15,7 +15,9 @@
 	</insert>
 
 	<select id="selectOne" resultType="MemberDto">
-		select * from member where member_id = #{memberId}
+SELECT m.*, msp.attachment_no
+FROM member m
+JOIN member_simple_profile msp ON m.member_id = msp.member_id where m.member_id = #{memberId}
 	</select>
 
 	<!-- 관리자 회원 목록 조회 -->

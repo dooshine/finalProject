@@ -857,7 +857,7 @@
 						window.location.href = `${pageContext.request.contextPath}/member/login`;
 					}
 					else {
-						window.location.href = `${pageContext.request.contextPath}/member/mypage`;
+						window.location.href = `${pageContext.request.contextPath}/member/mypage/${memberId}`	;
 					}
 				},
 			},
