@@ -158,9 +158,9 @@
                   <div class="modal-body text-left">
                      <div v-for="(board,index) in FollowListProfile"  :key="index">
                      <img :src="getAttachmentUrl(board.attachmentNo)" class="profile-image" style="width:54px; height:54px;">
-                     <a href="">
-                    <span> {{board.followTargetPrimaryKey}}</span>
-                     </a>
+                     <a :href="'/member/mypage/' + board.followTargetPrimaryKey">
+					    <span>{{board.followTargetPrimaryKey}}</span>
+					</a>
                     <button @click="deleteFollow(board.followNo)">팔로잉</button>
                      </div>
                   </div>
@@ -1115,7 +1115,7 @@
               	newFixedTagList: [],                	
               	
               	// 세션 맴버아이디
-              	memberId:"${memberId}",
+              	memberId:"${memberDto.memberId}",
               	
               	// 좋아요한 맴버의 아이디
               	likedMemberId: null,
@@ -1135,16 +1135,25 @@
                      this.$refs.fileInput.click();
                    },
                async profile() {
-                  const response = await axios.get("/member/profile");
+                  const response = await axios.get("/member/profile",{
+                	  params : {
+                		  memberId : this.memberId
+                	  }
+                  });
                   const {memberId, memberNick} = response.data;
                   
                   this.memberId = memberId;
                   this.memberNick=memberNick;
-                  
+                  console.log("아이디 : "+this.memberId);
+                  console.log("닉네임 : "+this.memberNick);
                },
                
                async followCnt() {
-                  const response = await axios.get("/member/followCnt");
+                  const response = await axios.get("/member/followCnt",{
+                	  params : {
+                		  memberId : this.memberId
+                	  }
+                  });
                   const{MemberFollowCnt, MemberFollowerCnt, MemberPageCnt} = response.data;
                   
                   this.MemberFollowCnt = MemberFollowCnt;
@@ -1199,12 +1208,16 @@
                },
                
                async profileImage() {
-                   const response = await axios.get("/member/profileImage");
+                   const response = await axios.get("/member/profileImage",{
+                	   params : {
+                		   memberId : this.memberId
+                	   }
+                   });
                    
                    this.memberProfileImageObj = response.data;
-                   
+                   console.log("this.memberProfileImageObj : "+this.memberProfileImageObj);
                    const attachmentNo = this.memberProfileImageObj.attachmentNo;   
-                      console.log(attachmentNo);
+                      console.log("attachmentNo : " +attachmentNo);
                       const url = "/rest/attachment/download/"+attachmentNo;
                    this.previewURL = url;                   
                 },
@@ -1308,7 +1321,7 @@
                 	  });
                 	  this.FollowListProfile.push(...response.data);
                 	  
-                	  console.log(response.data);
+                	  console.log("로그인 :  " +this.memberId);
                   },
                   
                   //팔로워 리스트 멤버별 프로필 조회

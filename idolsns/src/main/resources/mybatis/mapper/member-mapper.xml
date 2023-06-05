@@ -15,7 +15,9 @@
 	</insert>
 
 	<select id="selectOne" resultType="MemberDto">
-		select * from member where member_id = #{memberId}
+		SELECT m.*, p.ATTACHMENT_NO
+FROM member m
+LEFT JOIN member_profile_image p ON m.MEMBER_ID = p.MEMBER_ID where p.member_id = #{memberId};
 	</select>
 
 	<!-- 관리자 회원 목록 조회 -->
