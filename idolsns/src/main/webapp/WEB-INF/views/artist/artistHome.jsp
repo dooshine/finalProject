@@ -314,7 +314,7 @@
     		const postNo = this.tagDto.postNo;
             
     		this.loadPosts();
-    	}
+    	},
   		
 	    // 불러오기
 	    async loadPosts(){

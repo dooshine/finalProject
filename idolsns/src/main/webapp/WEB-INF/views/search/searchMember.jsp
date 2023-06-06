@@ -1,0 +1,916 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+
+  
+<jsp:include page="/WEB-INF/views/template/header.jsp"></jsp:include>
+<link href='https://cdn.jsdelivr.net/npm/@mdi/font@7.2.96/css/materialdesignicons.min.css' rel='stylesheet'>
+
+<style>
+  * {
+    box-sizing: border-box !important;
+  }
+  .search-table-col {
+    height: 50px; 
+    width: 100%; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center;
+  }
+  .cursor-pointer:hover {
+    cursor: pointer;
+  }
+  .border-bottom {
+    border-bottom: 1px solid gray;
+  }
+  .select {
+    border-bottom: 2px solid black;
+  }
+  .custom-tab-list:not(.active) * {
+  text-decoration: none;
+  font-weight: normal;
+  color: #333;
+  }
+  .custom-tab-list {
+    padding: 12px 20px;
+  }
+</style>
+
+
+<div class="container custom-container" id="search-body">
+  <div>
+    <div class="col">
+      <!-- 선택창 -->
+      <jsp:include page="/WEB-INF/views/search/searchNav.jsp"></jsp:include>
+    
+    
+      <%-- ######################## 대표페이지 검색결과 ######################## --%>
+      <div v-if="mode === 'artist'">
+        <div class="row mt-5">
+          <div class="col">
+            <table class="table">
+              <thead>
+                <tr class="text-center">
+                  <th scope="col">프로필 사진</th>
+                  <th scope="col">대표페이지 이름</th>
+                  <th scope="col">팔로우수</th>
+                  <th scope="col">팔로우하기</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="(artistSearch, i) in artistSearchList" :key="i">
+                  <td class="cursor-pointer" @click="goArtistPage(artistSearch)">
+                    <div class="search-table-col">
+                      <img :src="artistSearch.attachmentNo === 0 ? '/static/image/profileDummy.png' : '/download/?attachmentNo=' + artistSearch.attachmentNo" style="width: 50px; height: 50px;">
+                    </div>
+                  </td>
+                  <td class="cursor-pointer" @click="goArtistPage(artistSearch)">
+                    <div class="search-table-col">
+                      {{fullName(artistSearch.artistName, artistSearch.artistEngName)}}
+                    </div>
+                  </td>
+                  <td class="cursor-pointer" @click="goArtistPage(artistSearch)">
+                    <div class="search-table-col">
+                      {{artistSearch.followCnt ?? 0}}
+                    </div>
+                  </td>
+                  <td>
+                    <div class="search-table-col">
+                      <button class="btn rounded-pill" :class="{'btn-primary':!artistSearch.isFollowPage, 'btn-secondary': artistSearch.isFollowPage}"  v-text="artistSearch.isFollowPage?'팔로우취소':'팔로우하기'" @click="followPage(artistSearch)">팔로우하기</button>
+                    </div>
+                  </td>
+                </tr>
+                <tr v-if="artistSearchList.length === 0">
+                  <td colspan="4">
+                    <h3 class="m-3">검색 결과가 없습니다</h3>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <%-- ######################## 대표페이지 검색결과 끝 ######################## --%>
+    
+      
+  
+  
+      <%-- ######################## 회원 검색결과 ######################## --%>
+      <div v-if="mode==='member'">
+        <div class="row mt-5">
+          <div class="col">
+            <table class="table">
+              <thead>
+                <tr class="text-center">
+                  <th scope="col">프로필 사진</th>
+                  <th scope="col">회원 아이디</th>
+                  <th scope="col">팔로우하기</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="(memberSearch, i) in memberSearchList" :key="i">
+                  <td class="cursor-pointer">
+                    <div class="search-table-col">
+                      <img :src="memberSearch.attachmentNo === 0 ? '/static/image/profileDummy.png' : '/download/?attachmentNo=' + memberSearch.attachmentNo" style="height: 50px; width: 50px;">
+                    </div>
+                  </td>
+                  <td class="cursor-pointer">
+                    <div class="search-table-col">
+                      {{fullName(memberSearch.memberId, memberSearch.memberNick)}}
+                    </div>
+                  </td>
+                  <td>
+                    <div class="search-table-col">
+                      <button class="btn rounded-pill" :class="{'btn-primary':!memberSearch.isFollowMember, 'btn-secondary': memberSearch.isFollowMember}"  v-text="memberSearch.isFollowMember?'팔로우취소':'팔로우하기'" @click="followMember(memberSearch)">팔로우하기</button>
+                    </div>
+                  </td>
+                </tr>
+                <tr v-if="memberSearchList.length === 0">
+                  <td colspan="3">
+                    <h3 class="m-3">검색 결과가 없습니다</h3>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <%-- ######################## 회원 검색결과 끝 ######################## --%>
+    
+  
+  
+  
+      <%-- ######################## 고정태그 검색결과 ######################## --%>
+      <div v-if="mode==='tag'">
+        <div class="row mt-5">
+          <div class="col">
+            <div v-for="(post, index) in fixedTagSearchList" :key="index">
+        
+              <!-- 글 박스 루프 1개-->
+              <div class="mb-2 custom-container">
+                <!-- 프로필 사진과 아이디 -->
+                <div class="row mt-1">
+                <div class="col-1 col-md-1 col-lg-1 d-flex align-items-center justify-content-center">
+                    <img class="rounded-circle img-fluid" src="static/image/profileDummy.png">
+                </div>
+                <div class="col-10 col-md-10 col-lg-10 align-items-center justify-content-start">
+                          
+              <div class="row">
+              <h4>{{ post.memberId }}</h4>   
+              </div>
+              <div class="row">
+              <p class="text-secondary">@{{post.memberNick }} </p>
+              </div>
+                </div>
+                <div class="col-1 col-md-1 col-lg-1 d-flex align-items-start justify-content-end">
+                    <i class="fs-3 text-secondary ti ti-dots-vertical" data-toggle="dropdown"></i>
+                    <i class="ti ti-x" @click="deletePost(post.postNo)"></i>
+                </div>
+            
+              </div>	
+              <!-- 프로필 사진과 아이디 -->
+              
+              <!-- 고정 태그와 글 타입들 -->
+                      <div class="row mb-3 ">
+                        <div class="col-1 col-md-1 col-lg-1 d-flex align-items-center justify-content-center">			            
+                      </div>
+                      <div class="col-10 col-md-10 col-lg-10 d-flex align-items-center justify-content-start">
+                  <div class="mx-1 px-2 h-20 bg-primary rounded-4 align-items-center justify-content-center">
+                    <p class="fs-7 text-light">{{ post.postType }}</p>										 
+                  </div>
+                  <div v-for="fixedTag in post.fixedTagList" :key="fixedTag" class="mx-1 px-2 h-20 bg-primary rounded-pill align-items-center justify-content-center">
+                    <p class="fs-7 text-light">{{ fixedTag }}</p>
+                  </div>
+                                                               
+                      </div>
+                <div class="col-1 col-md-1 col-lg-1 d-flex align-items-center justify-content-center"> 
+                      </div>	                
+                      </div>
+                      <!-- 고정 태그와 글 타입들 -->	 
+                                     
+                      <!-- 지도 맵이 있는 경우에만 지도 정보 표기 -->						
+                      <div class="row my-2" v-if="post.mapPlace !== '' && post.mapPlace !== null && post.mapPlace !== undefined">	                	
+                        <div class="col-1 col-md-1 col-lg-1 d-flex align-items-center justify-content-center">			            
+                      </div>
+                      <div class="col-10 col-md-10 col-lg-10 d-flex align-items-center justify-content-start fs-6 text-secondary " @click="showMap(post.mapPlace)" data-bs-target="#showMap" data-bs-toggle="modal">
+                   <i class="fa-solid fa-location-dot"></i>&nbsp;{{ post.mapPlace}}								
+                      </div>
+                <div class="col-1 col-md-1 col-lg-1 d-flex align-items-center justify-content-center"> 
+                      </div>            
+                      </div>
+                      <!-- 지도 맵이 있는 경우에만 지도 정보 표기 -->	
+                      
+                      
+                      <!-- 글 내용 -->
+                      <div class="row my-2">
+                        <div class="col-1 col-md-1 col-lg-1 align-items-center justify-content-center">
+                         
+                      </div>
+                      <div class="col-10 col-md-10 col-lg-10 align-items-center">							
+                          
+                          
+                          <!-- 글 -->
+                          <div class="row">
+                            <p>{{ post.postContent }}</p>
+                            <div class="d-flex">
+                            <p v-for="freeTag in post.freeTagList" :key="freeTag" class="fs-6 text-primary">\#{{ freeTag }} &nbsp;</p>	
+                            </div>
+                          </div>
+                  
+                          
+                          <!-- 이미지 표시 -->
+                          <div class="row">
+                            <div v-if="post.attachmentList && post.attachmentList.length > 0"  class="d-flex">
+                              <!-- 단일 이미지인 경우 -->
+                              <div v-if="post.attachmentList.length == 1" class="row text-center" >
+                                <div v-for="(attachmentNo, attachmentIndex) in post.attachmentList" :key="attachmentIndex" class="col-6">
+                                  <img :src="getAttachmentUrl(attachmentNo)" @click="setModalImageUrl(attachmentNo)" class="img-fluid" style="max-width:100%;aspect-ratio:1/1;" alt="Attachment" data-bs-target="#image-modal" data-bs-toggle="modal">
+                                </div>                	        	
+                              </div>
+                              <!-- 두 개 이상의 이미지인 경우 -->
+                              <div v-else-if="post.attachmentList.length > 1" class="row text-center">
+                                <div v-for="(attachmentNo, attachmentIndex) in post.attachmentList" :key="attachmentIndex" class="col-6">
+                                  <img :src="getAttachmentUrl(attachmentNo)"  @click="setModalImageUrl(attachmentNo)" class="img-fluid mb-3" style="max-width:100%;aspect-ratio:1/1;" alt="Attachment" data-bs-target="#image-modal" data-bs-toggle="modal">
+                                </div>
+                              </div>
+                              <!-- 이미지 출력 모달창 -->
+                              <div class="modal" tabindex="-1" role="dialog" id="image-modal"
+                                          data-bs-backdrop="true">
+                                          <div class="modal-dialog modal-lg" role="image">
+                                            <div class="modal-content">
+                                              <img :src="modalImageUrl">
+                                            </div>                           					 	
+                                          </div>
+                                     </div>
+                              <div v-for="(attachmentNo, attachmentIndex) in post.attachmentList" :key="attachmentIndex">
+                              </div>
+                              <br>
+                          </div>
+                          <div v-else>
+                          </div>
+                          </div>
+                          
+                          
+                          <!-- 구분선 -->
+                          <div class="row">
+                            <hr style="width:100%;">
+                          </div>
+                          
+                          <!-- 좋아요, 댓글, 공유하기 -->
+                          <div class="row">
+                          
+                            <!-- 좋아요 -->		                		
+                            <div class="col-4 text-start text-primary">
+                              <div class="row" v-if="postLikeIndexList.includes(index)">
+                                <div class="col-2">
+                                  <i class="fs-4 ti ti-heart-filled" @click="checkLike(post.postNo,index)"></i>
+                                </div>
+                                <div class="col-4 ">
+                                  <h6 class="postlikeCount">{{post.likeCount}}</h6>
+                                </div>		                						                				
+                              </div>
+                              <div class="row" v-else>
+                                <div class="col-2">
+                                  <i class="fs-4 ti ti-heart" @click="checkLike(post.postNo,index)"></i>
+                                </div>
+                                <div class="col-4 ">
+                                  <h6 class="postlikeCount">{{post.likeCount}}</h6>
+                                </div>
+                              </div>
+                            </div>
+                            <!-- 좋아요 -->
+                            
+                            <!-- 댓글 작성버튼 -->
+                      <div class="col-4 text-center text-secondary">				
+                        <i class="fs-4 ti ti-message" @click="showReplyInput(index)"></i>					    
+                      </div>
+                      <!-- 댓글 작성버튼 -->
+                      
+                      <!-- 공유하기 버튼 -->
+                      <div class="col-4 text-end text-secondary"><i class="fs-4 ti ti-share"></i></div>
+                      <!-- 공유하기 버튼 -->
+                       
+                          </div>
+                          
+                          <!-- 구분선 -->
+                          <div class="row">
+                            <hr class="mt-2" style="width:100%;">		                
+                          </div>
+                          
+                          <!-- 댓글, 대댓글 보여주는 창 -->
+                          <div v-if="post.replyList.length >= 1">
+                    <div v-for="(reply,replyIdx) in post.replyList" :key="replyIdx">
+                      <div class="row" v-if="reply.replyNo == reply.replyGroupNo">
+                        <!-- 프로필 이미지 -->
+                                <div class="col-1">
+                                  <div class="row mt-2 text-center">
+                                    <img class="img-fluid rounded-circle " src="static/image/profileDummy.png">
+                                  </div>
+                                </div>
+                                
+                                <!-- 댓글 상자 -->
+                                <div class="col-10 align-items-center">
+                                  <div class="mt-1"></div>
+                                  <div class="mx-2"></div>
+                                  <div v-if="reply.replyContent.length < reply.replyId.length" class="row grey-f5f5f5 rounded-3 text-left" :style="{ width: reply.replyId.length * 11 + 'px' }">
+                                    <div class="row mt-2"></div>
+                                    <h6 class="mr-1 fs-12px fw-bold">{{reply.replyId}}</h6>
+                                    <h6 class="mr-1 fs-11px lh-lg" >{{reply.replyContent}}</h6>
+                                    <div class="row mb-1"></div>
+                                  </div>
+                                  <div v-else class="row grey-f5f5f5 rounded-3 text-left" :style="{ width: reply.replyContent.length * 11 + 'px' }">
+                                    <div class="row mt-2"></div>
+                                    <h6 class="mr-1 fs-12px fw-bold">{{reply.replyId}}</h6>
+                                    <h6 class="mr-1 fs-11px lh-lg" >{{reply.replyContent}}</h6>
+                                    <div class="row mb-1"></div>
+                                  </div>
+                                  <div class="row d-flex flex-nowrap">
+    <!-- 				                				<h6 class="col-1 text-start reply-text" style="white-space: nowrap;">좋아요 </h6> -->
+                                    <h6 class="col-1 mt-1 text-start reply-text text-secondary" @click="showRereplyInput(post.postNo,reply.replyNo),hideReplyInput()" style="white-space: nowrap;">댓글 달기</h6>	
+                                  </div>
+                                  <div class="mb-1"></div>			                			
+                                </div>
+                                 <!-- 댓글 상자 -->
+                                 
+                                 
+                                <!--  -->
+                                <div class="col-1" v-if="memberId === reply.replyId">
+                                  <i class="ti ti-x" @click="deleteReply(reply.replyNo)"></i>
+                                </div>
+                              </div>
+                              <!-- 댓글 표시 -->
+                              
+                              <!-- 대댓글 표시 -->
+                              <div v-for="(rereply,rereplyIdx) in post.replyList.slice(replyIdx+1)" :key='rereplyIdx'>			                							                				             				
+                                  <!-- 대댓글이 들어갈 조건 -->
+                                  <div v-if="reply.replyNo === rereply.replyGroupNo"><!-- 특정 댓글의 그룹번호가 특정 댓글번호와 일치할 때, -->				                				
+                                    <!-- 대댓글 들 -->
+                                    <div class="row ">
+                                      <div class="col-2">
+                                      </div>
+                                      <div class="col-2 text-center">
+                                        <div class="row w-50 h-50 text-center m-auto">
+                                          <img class="img-fluid rounded-circle " src="static/image/profileDummy.png">
+                                        </div>
+                                        <div class="row w-50 h-50 text-center m-auto">
+                                          <h6 class="fs-7">{{rereply.replyId}}</h6>
+                                        </div>
+                                      </div>
+                                      <div class="col-6">
+                                        <h6>{{rereply.replyContent}}</h6>
+                                      </div>
+                                      <div class="col-1">				                						
+                                        <i class="ti ti-x" @click="deleteRereply(rereply.replyNo)" v-if="rereply.replyId == memberId"></i>
+                                      </div>
+                                    </div>
+                                    <!-- 대댓글 들 -->
+                                  </div>
+                                  <!-- 대댓글이 들어갈 조건 -->
+                              </div>
+                              
+                              <!-- 대댓글 작성 창 -->
+                              <div v-if=" post.postNo === tempPostNo && reply.replyNo === tempReplyNo">
+                                <div class="row">
+                                  <div class="col-2">
+                                  </div>
+                                  <div class="col-2 text-center">
+                                    <div class="row w-50 h-50 text-center m-auto">
+                                      <img class="img-fluid rounded-circle " src="static/image/profileDummy.png">
+                                    </div>
+                                    <div class="row w-50 h-50 text-center m-auto">
+                                      <h6 class="fs-7">${memberId }</h6>
+                                    </div>
+                                  </div>
+                                  <div class="col-7">
+                                    <input type="text" v-model="rereplyContent" class="w-100 rounded-4 border border-secondary ">
+                                  </div>
+                                  <div class="col-1">
+                                    <i class="fs-2 text-primary ti ti-arrow-badge-right-filled" @click="rereplySending(post.postNo,reply.replyNo,index)"></i>
+                                  </div>
+                                </div>
+                              </div>
+                              <!-- 대댓글 작성 창 -->
+                              
+                              <!-- 대댓글 표시 -->
+                      </div> 								             		
+                          </div>
+                          <!-- 댓글, 대댓글 보여주는 창 -->
+                          
+                          <!-- 댓글 작성창  -->
+                  <!-- 댓글 작성버튼 눌렸을 때만 나오게됨 -->
+                          <div class="row" v-if="replyFlagList[index]"> 
+                            <div class="col-1">
+                              <img class="rounded-circle img-fluid" src="static/image/profileDummy.png">
+                            </div>
+                            <div class="col-10 mt-1">
+                              <input type="text" placeholder=" 댓글을 입력하세요." v-model="replyContent" class="w-100 rounded-4 border border-secondary "> 
+                            </div>
+                            <div class="col-1">
+                              <i class="fs-2 text-primary ti ti-arrow-badge-right-filled" @click="replySending(post.postNo,index)"></i>
+                            </div>		                		
+                          </div>
+                          
+                      </div>
+                <div class="col-1 col-md-1 col-lg-1 d-flex align-items-center justify-content-center"> 
+                      </div>       
+                      </div>
+  
+    
+                    </div>
+                    
+              </div>
+    
+            <!-- <table class="table">
+              <thead>
+                <tr class="text-center">
+                  <th scope="col">항목1</th>
+                  <th scope="col">항목2</th>
+                  <th scope="col">항목3</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="(tag, i) in fixedTagSearchList" :key="i">
+                  <td class="cursor-pointer">
+                    <div class="search-table-col">
+                      사진
+                    </div>
+                  </td>
+                  <td class="cursor-pointer">
+                    <div class="search-table-col">
+                      이름
+                    </div>
+                  </td>
+                  <td>
+                    <div class="search-table-col">
+                      <button>팔로우하기</button>
+                    </div>
+                  </td>
+                </tr>
+                <tr v-if="fixedTagSearchList.length === 0">
+                  <td colspan="3">
+                    <h3 class="m-3">검색 결과가 없습니다</h3>
+                  </td>
+                </tr>
+              </tbody>
+            </table> -->
+          </div>
+        </div>
+      </div>
+      <%-- ######################## 고정태그 검색결과 끝 ######################## --%>
+  
+      
+      
+      
+      <%-- ######################## 게시물 검색결과 ######################## --%>
+      <div v-if="mode==='postContent'">
+        <div class="row mt-5">
+          <div class="col">
+            <table class="table">
+              <thead>
+                <tr class="text-center">
+                  <th scope="col">항목1</th>
+                  <th scope="col">항목2</th>
+                  <th scope="col">항목3</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="(tag, i) in fixedTagSearchList" :key="i">
+                  <td class="cursor-pointer">
+                    <div class="search-table-col">
+                      사진
+                    </div>
+                  </td>
+                  <td class="cursor-pointer">
+                    <div class="search-table-col">
+                      이름
+                    </div>
+                  </td>
+                  <td>
+                    <div class="search-table-col">
+                      <button>팔로우하기</button>
+                    </div>
+                  </td>
+                </tr>
+                <tr v-if="postSearchList.length === 0">
+                  <td colspan="3">
+                    <h3 class="m-3">검색 결과가 없습니다</h3>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <%-- ######################## 게시물 검색결과 끝 ######################## --%>
+</div>
+
+
+<script>
+    Vue.createApp({
+      data() {
+        return {
+
+          // 모드
+          mode: "artist",
+
+          // 로그인 회원 팔로우 목록 조회
+          memberFollowObj: {
+            memberId: "",
+            followMemberList: [],
+            followPageList: [],
+          },
+          // 대표페이지 검색목록
+          artistSearchList: [],
+          artistSearchVO: {
+            artistPage: 1,
+            size: 15,
+          },
+          // 회원 검색목록
+          memberSearchList: [],
+          memberPage: 1,
+          search: true,
+
+          // 태그 검색목록
+          fixedTagSearchList: [],
+          postSearchList: [],
+          postPage: 1,
+
+          // ######################## 게시물 ########################
+          // 좋아요 게시글 인덱스 배열
+          postLikeIndexList: [],
+          // 댓글 작성 여부 체크용 배열
+          replyFlagList: [],
+          // 댓글 작성 글자 
+          replyContent: '',
+          // 대댓글 위치 특정용 임시 postNo, replyNo
+          tempPostNo:null ,
+          tempReplyNo:null ,
+          // 대댓글 작성 글자
+          rereplyContent: '',
+          // 무한 페이징 영역
+          percent:0,
+          finish:false,
+          loading:false,
+          // 모달 이미지 URL
+          modalImageUrl:null,
+          // ######################## 게시물 끝 ########################
+
+          followObj: {
+            memberId: memberId,
+            followTargetType: "",
+            followTargetPrimaryKey: "",
+          },
+        };
+      },
+      computed: {
+        
+      },
+      methods: {
+        // 좋아요 관련 비동기 처리-----------------------------------
+        // 아이디 접속해 있고, 좋아요 클릭시에 실행
+        checkLike(postNo,index){
+          axios.get('http://localhost:8080/rest/post/like/'+postNo)
+            .then(response => {
+              console.log(response.data);
+              // 응답이 좋아요면 좋아요 +1
+              if(response.data== 'Like'){
+                this.posts[index].likeCount = this.posts[index].likeCount + 1; 
+                this.postLikeIndexList.push(index);                			
+              }
+              // 응답이 좋아요 취소면 좋아요 -1
+              else if(response.data=='disLike'){
+                this.posts[index].likeCount = this.posts[index].likeCount - 1;
+                this.postLikeIndexList.splice(this.postLikeIndexList.indexOf(index),1);
+              }
+              
+                
+            })
+            .catch(error => {
+              console.error(error);
+            })
+        },
+
+        // postNo를 List로 송신하고 좋아요 되있는 index 번호를 수신
+        getLikePostIndex(posts){
+          postNoList = [];
+          posts.forEach(function(post){
+            postNoList.push(post.postNo); 
+          })
+          
+          axios.get('http://localhost:8080/rest/post/like/index/'+postNoList)
+            .then(response => {               			
+            this.postLikeIndexList = response.data;                			
+          })
+          .catch(error => {
+            console.error(error);
+          })
+                            
+        },
+
+        // 댓글 창 관련 클릭 함수 -------------------------------              
+        // 전송 버튼 클릭 시
+        async replySending(postNo,index){
+          try{
+            const replyDto = {postNo: postNo, replyContent:this.replyContent};
+              const response = await axios.post('http://localhost:8080/rest/post/reply/',replyDto);
+              this.fetchPosts();
+            }
+          catch (error){
+            console.error(error);
+          }
+          
+          this.hideReplyInput(index)
+        },
+        // 댓글 쓰기 창 띄우기 (다른 창들은 모두 닫음) 
+        showReplyInput(index){
+          this.replyContent = '';                 	
+          this.replyFlagList = this.replyFlagList.map(() => false); 
+          this.replyFlagList[index] = true;
+        },
+        // 댓글 쓰기 창 숨기기
+        hideReplyInput(index){
+          this.replyFlagList[index] = false;
+        },
+
+        // 대댓글 전송 버튼 클릭 시 
+        async rereplySending(postNo,replyNo,index){
+          try{
+            const replyDto = {postNo: postNo, replyContent:this.rereplyContent, replyGroupNo: replyNo};
+              const response = await axios.post('http://localhost:8080/rest/post/rereply/',replyDto);
+              this.fetchPosts();
+            }
+          catch (error){
+            console.error(error);
+          }
+          this.hideRereplyInput();
+        },
+              
+        // 대댓글 쓰기 창 띄우기 (다른 창들은 모두 닫음)
+        showRereplyInput(postNo,replyNo){
+          this.rereplyContent = ''; 
+          this.tempPostNo = postNo;
+          this.tempReplyNo = replyNo;
+          console.log(postNo);
+          console.log(replyNo);
+        },
+              
+        hideRereplyInput(){
+          this.rereplyContent = '';
+          this.tempPostNo = null;
+          this.tempReplyNo = null;
+        },
+        // 댓글 삭제
+        async deleteReply(replyNo){
+          try{
+            await axios.delete('http://localhost:8080/rest/post/reply/delete/'+replyNo);
+            this.fetchPosts();
+          }
+          catch (error){
+            console.error(error);
+          }
+        
+        },
+        // 대댓글 삭제
+        async deleteRereply(replyNo){
+          try{
+            await axios.delete('http://localhost:8080/rest/post/reply/reDelete/'+replyNo);
+            this.fetchPosts();
+          }
+          catch(error){
+            console.error(error);
+          }
+        },
+
+
+
+
+        // [전처리] 로그인 회원 팔로우 정보 로드
+        async loadMemberFollowInfo(){
+          // 로그인X → 실행 X
+          if(memberId==="") return;
+          // url
+          const url = "http://localhost:8080/rest/follow/memberFollowInfo/"
+          // 팔로우 목록 load
+          const resp = await axios.get(url, {params:{memberId: memberId}});
+          // 로그인 팔로우 정보 로드
+          this.memberFollowObj = resp.data;
+        },
+
+
+
+
+        // [search] 대표페이지 검색목록 조회
+        async loadArtistSearchList(){
+          // q
+          const params = new URLSearchParams(window.location.search);
+          const q = params.get("q")
+
+          // url
+          const url = "http://localhost:8080/rest/artist/search";
+
+          // 조회
+          const resp = await axios.get(url, { params: {q: q, page: this.artistPage++}});
+
+          this.artistSearchList = resp.data;
+
+          // 팔로우 여부 저장
+          for(let i = 0; i<this.artistSearchList.length; i++){
+            const artistName = this.artistSearchList[i].artistEngNameLower;
+            this.artistSearchList[i].isFollowPage = this.memberFollowObj.followPageList.includes(artistName);
+          }
+        },
+
+        // 대표페이지 팔로우확인
+        checkFollow(){
+            // 로그인 안했으면 return false
+            if(memberId === "") return false;
+            
+            // 팔로우 대표페이지 목록
+            const followPageList = this.memberFollowObj.followPageList;
+
+            if(this.memberFollowObj.followPageList!==undefined){
+                if(followPageList===null) {
+                    return false;
+                } else {
+                    const isFollowing = followPageList.includes(this.artistObj.artistEngNameLower);
+                    return isFollowing;
+                }
+            }
+        },
+
+
+        // 페이지 팔로우 버튼
+        async followPage(artistSearch){
+            // 1. 회원 로그인 확인
+            if(memberId === ""){
+                if(confirm("로그인 한 회원만 사용할 수 있는 기능입니다. 로그인 하시겠습니까?")) {
+                    window.location.href = contextPath + "/member/login";
+                }
+            }
+
+            // artistEngNameLower
+            // 2. toggle 팔로우 삭제, 팔로우 생성
+            const isFollowingArtist = artistSearch.isFollowPage;
+            if(isFollowingArtist){
+                if(!confirm(this.fullName(artistSearch.artistName, artistSearch.artistEngName) + "님 팔로우를 취소하시겠습니까?")) return;
+                this.setFollowPageObj(artistSearch.artistEngNameLower);
+                await this.deleteFollow();
+            } else {
+                this.setFollowPageObj(artistSearch.artistEngNameLower);
+                await this.createFollow();
+            }
+
+            await this.loadMemberFollowInfo();
+            this.loadArtistSearchList();
+        },
+        // 회원 팔로우 버튼
+        async followMember(memberSearch){
+            // 1. 회원 로그인 확인
+            if(memberId === ""){
+                if(confirm("로그인 한 회원만 사용할 수 있는 기능입니다. 로그인 하시겠습니까?")) {
+                    window.location.href = contextPath + "/member/login";
+                }
+            }
+
+            // artistEngNameLower
+            // 2. toggle 팔로우 삭제, 팔로우 생성
+            const isFollowingMember = memberSearch.isFollowMember;
+            if(isFollowingMember){
+                if(!confirm(this.fullName(memberSearch.memberId, memberSearch.memberNick) + "님 팔로우를 취소하시겠습니까?")) return;
+                this.setFollowMemberObj(memberSearch.memberId);
+                await this.deleteFollow();
+            } else {
+                this.setFollowMemberObj(memberSearch.memberId);
+                await this.createFollow();
+            }
+
+            await this.loadMemberFollowInfo();
+            this.loadMemberSearchList();
+        },
+
+        // 대표페이지 팔로우 대상 설정
+        setFollowPageObj (artistName){
+            // 팔로우 대상 유형
+            this.followObj.followTargetType = "대표페이지";
+            // 팔로우 대상 PK
+            this.followObj.followTargetPrimaryKey = artistName;
+        },
+        // 회원 팔로우 대상 설정
+        setFollowMemberObj (followMemberId){
+            // 팔로우 대상 유형
+            this.followObj.followTargetType = "회원";
+            // 팔로우 대상 PK
+            this.followObj.followTargetPrimaryKey = followMemberId;
+        },
+        // 회원 팔로우 대상 설정
+        setFollowMemberObj (followMemberId){
+            // 팔로우 대상 유형
+            this.followObj.followTargetType = "회원";
+            // 팔로우 대상 PK
+            this.followObj.followTargetPrimaryKey = followMemberId;
+        },
+
+        // 대표페이지 팔로우 생성
+        async createFollow(){
+            // 팔로우 생성 url
+            const url = "http://localhost:8080/rest/follow/";
+            await axios.post(url, this.followObj);
+            // [develope] 
+        },
+        // 대표페이지 팔로우 취소
+        async deleteFollow(){
+            // 팔로우 생성 url
+            const url = "http://localhost:8080/rest/follow/";
+            await axios.delete(url, {
+                data: this.followObj,
+            });
+            // [develope]
+        },
+
+
+        // (search) 회원 검색목록 조회
+        async loadMemberSearchList(){
+          // q
+          const params = new URLSearchParams(window.location.search);
+          const q = params.get("q")
+
+          // url
+          const url = "http://localhost:8080/rest/search/member";
+          // 조회
+          const resp = await axios.get(url, { params: {memberId: q}});
+        
+          // 데이터 반영
+          this.memberSearchList = resp.data;
+
+
+          // 회원팔로우 여부 저장
+          for(let i = 0; i<this.memberSearchList.length; i++){
+            const followMemberId = this.memberSearchList[i].memberId;
+            this.memberSearchList[i].isFollowMember = this.memberFollowObj.followMemberList.includes(followMemberId);
+          }
+        },
+
+        // (search) 고정태그 검색목록 조회
+        async loadFixedTagsSearchList(){
+          // q
+          const params = new URLSearchParams(window.location.search);
+          const q = params.get("q");
+
+          // url
+          const url = "http://localhost:8080/rest/post/pageReload/fixedTagPost";
+
+          // 조회
+          const resp = await axios.post(url, { page: this.postPage, fixedTagName: q } );
+
+          this.postPage++;
+          this.fixedTagSearchList = resp.data;
+          this.getLikePostIndex(this.fixedTagSearchList);
+
+          console.log("this.fixedTagSearchList: ");
+          console.log(this.fixedTagSearchList);
+        },
+        getAttachmentUrl(attachmentNo) {		
+          return "http://localhost:8080/rest/attachment/download/"+attachmentNo;
+        },
+
+        
+        
+
+        changeMode(mode){
+          this.mode = mode;
+        },
+
+        // 풀네임 생성
+        fullName(name, engName){
+          return name + "(" + engName + ")";
+        },
+
+
+        goArtistPage(artistSearch){
+          window.location.href="/artist/" + artistSearch.artistEngNameLower;
+        },
+
+      },
+      watch: {
+  
+      },
+      async created(){
+        // 1. 로그인 회원 팔로우 정보 로드
+        await this.loadMemberFollowInfo();
+        // (search) 대표페이지 검색목록 조회
+        this.loadArtistSearchList();
+        // (search) 회원 검색목록 조회
+        this.loadMemberSearchList();
+        // (search) 고정태그 검색목록 조회
+        this.loadFixedTagsSearchList();
+      },
+    }).mount('#search-body')
+</script>
+
+
+
+<jsp:include page="/WEB-INF/views/template/footer.jsp"></jsp:include>
+
+
+	

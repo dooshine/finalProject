@@ -498,7 +498,7 @@
 					    	<a class="navbar-brand" href="/"><img src="/static/image/logo.png" style="width:130px;"></a>
 					    </div>
 				    	<div class="col-6 d-flex collapse navbar-collapse" id="navbarSupportedContent">
-				      		<form action="/search" class="d-flex w-100">
+				      		<form action="/search/post" class="d-flex w-100" method="get">
 				      			<div class="search-box w-100">
 					        		<input name="q" class="search-input me-2 w-100" placeholder="STARLINK 검색" type="text" value="${param.q}">
 					        	</div>
@@ -974,6 +974,7 @@
             
 			<div class="row">
 				<!-- (개발)로그인 버튼 -->
+				<!-- <%-- -->
 				<div class="col-4">
 					<button><a href="/dev/login?memberId=testuser1">testuser1</a></button>
 					<button><a href="/dev/login?memberId=testuser2">testuser2</a></button>
@@ -993,6 +994,7 @@
 						<a href="${pageContext.request.contextPath}/admin/">관리자 페이지</a>
 					</c:if>
 				</div>
+				<!-- --%> -->
             </div>
         </header>
           <!-- <hr> -->
@@ -1014,9 +1016,11 @@
                 </div>
 				<!-- 본문 -->
 				<c:choose>
+					<%-- 일반페이지 본문 --%>
 					<c:when test="${!requestScope['javax.servlet.forward.servlet_path'].startsWith('/admin')}">
 						<div class="col-6 article container-fluid py-4" style="padding:0px;">
 					</c:when>
+					<%-- 관리자페이지페이지 본문 --%>
 					<c:otherwise>
 						<div class="col-9 article container-fluid py-4">
 					</c:otherwise>
