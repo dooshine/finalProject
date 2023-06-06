@@ -42,7 +42,7 @@
     </div>
   </div>
   <%-- ######################## 게시물 검색결과 ######################## --%>
-  <div class="row">
+  <div class="row mt-5">
     <div class="col">
       <!-- <div class="p-4" v-for="(post, index) in fixedTagSearchList" :key="index"> -->
       <div class="p-4 custom-border-box-angle m-0" v-for="(post, index) in fixedTagSearchList" :key="index">
@@ -300,6 +300,9 @@
         </div>
       </div>
     </div>
+    <div v-if="fixedTagSearchList.length === 0">
+      <h3 class="pb-5 px-4">검색 결과가 없습니다</h3>
+    </div>
   <%-- ######################## 게시물 검색결과 끝 ######################## --%>
 </div>
 
@@ -311,25 +314,12 @@
       data() {
         return {
 
-          // 모드
-          mode: "artist",
-
           // 로그인 회원 팔로우 목록 조회
           memberFollowObj: {
             memberId: "",
             followMemberList: [],
             followPageList: [],
           },
-          // 대표페이지 검색목록
-          artistSearchList: [],
-          artistSearchVO: {
-            artistPage: 1,
-            size: 15,
-          },
-          // 회원 검색목록
-          memberSearchList: [],
-          memberPage: 1,
-          search: true,
 
           // 태그 검색목록
           fixedTagSearchList: [],
@@ -498,48 +488,6 @@
         },
 
 
-
-
-        // [search] 대표페이지 검색목록 조회
-        async loadArtistSearchList(){
-          // q
-          const params = new URLSearchParams(window.location.search);
-          const q = params.get("q")
-
-          // url
-          const url = "http://localhost:8080/rest/artist/search";
-
-          // 조회
-          const resp = await axios.get(url, { params: {q: q, page: this.artistPage++}});
-
-          this.artistSearchList = resp.data;
-
-          // 팔로우 여부 저장
-          for(let i = 0; i<this.artistSearchList.length; i++){
-            const artistName = this.artistSearchList[i].artistEngNameLower;
-            this.artistSearchList[i].isFollowPage = this.memberFollowObj.followPageList.includes(artistName);
-          }
-        },
-
-        // 대표페이지 팔로우확인
-        checkFollow(){
-            // 로그인 안했으면 return false
-            if(memberId === "") return false;
-            
-            // 팔로우 대표페이지 목록
-            const followPageList = this.memberFollowObj.followPageList;
-
-            if(this.memberFollowObj.followPageList!==undefined){
-                if(followPageList===null) {
-                    return false;
-                } else {
-                    const isFollowing = followPageList.includes(this.artistObj.artistEngNameLower);
-                    return isFollowing;
-                }
-            }
-        },
-
-
         // 페이지 팔로우 버튼
         async followPage(artistSearch){
             // 1. 회원 로그인 확인
@@ -589,13 +537,6 @@
             this.loadMemberSearchList();
         },
 
-        // 대표페이지 팔로우 대상 설정
-        setFollowPageObj (artistName){
-            // 팔로우 대상 유형
-            this.followObj.followTargetType = "대표페이지";
-            // 팔로우 대상 PK
-            this.followObj.followTargetPrimaryKey = artistName;
-        },
         // 회원 팔로우 대상 설정
         setFollowMemberObj (followMemberId){
             // 팔로우 대상 유형
@@ -629,28 +570,6 @@
         },
 
 
-        // (search) 회원 검색목록 조회
-        async loadMemberSearchList(){
-          // q
-          const params = new URLSearchParams(window.location.search);
-          const q = params.get("q")
-
-          // url
-          const url = "http://localhost:8080/rest/search/member";
-          // 조회
-          const resp = await axios.get(url, { params: {memberId: q}});
-        
-          // 데이터 반영
-          this.memberSearchList = resp.data;
-
-
-          // 회원팔로우 여부 저장
-          for(let i = 0; i<this.memberSearchList.length; i++){
-            const followMemberId = this.memberSearchList[i].memberId;
-            this.memberSearchList[i].isFollowMember = this.memberFollowObj.followMemberList.includes(followMemberId);
-          }
-        },
-
         // (search) 고정태그 검색목록 조회
         async loadFixedTagsSearchList(){
           // q
@@ -674,21 +593,9 @@
           return "http://localhost:8080/rest/attachment/download/"+attachmentNo;
         },
 
-        
-        
-
-        changeMode(mode){
-          this.mode = mode;
-        },
-
         // 풀네임 생성
         fullName(name, engName){
           return name + "(" + engName + ")";
-        },
-
-
-        goArtistPage(artistSearch){
-          window.location.href="/artist/" + artistSearch.artistEngNameLower;
         },
 
       },
@@ -698,10 +605,6 @@
       async created(){
         // 1. 로그인 회원 팔로우 정보 로드
         await this.loadMemberFollowInfo();
-        // (search) 대표페이지 검색목록 조회
-        this.loadArtistSearchList();
-        // (search) 회원 검색목록 조회
-        this.loadMemberSearchList();
         // (search) 고정태그 검색목록 조회
         this.loadFixedTagsSearchList();
       },
