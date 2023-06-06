@@ -481,6 +481,9 @@
 			outline: none;
   			box-shadow: none;
 		}
+		/*.image-modal {
+			z-index: 99999;
+		}*/
     </style>
 </head>
 
@@ -539,8 +542,9 @@
 				<div class="customModal chatMainModal" v-if="chatMainModal == true">
 					<div class="customModalHeader d-flex align-items-center justify-content-between">
 						<h5>내 위즈</h5>
-						<div class="d-flex justify-content-end">
-							<button v-if="memberId.length > 0" type="button" class="hide-style pe-3 newChatRoomBtn" @click="showCreateRoomModal">
+						<div class="d-flex justify-content-end align-items-center">
+							<button v-if="memberId.length > 0" type="button" @click="showCreateRoomModal"
+										class="hide-style pe-3 newChatRoomBtn d-flex align-items-center justify-content-center">
 								<i class="ti ti-message-circle-plus"></i>
 							</button>
 							<button type="button" class="btn-close" @click="hideChatMainModal"></button>
@@ -663,8 +667,9 @@
 				<div class="customModal createRoomModal" v-if="createRoomModal == true">
 					<div class="customModalHeader d-flex align-items-center justify-content-between">
 						<h5>새 위즈 만들기</h5>
-						<div class="d-flex justify-content-end">
-							<button type="button" class="hide-style pe-3 confirmNewChatRoomBtn" @click="createChatRoom"
+						<div class="d-flex justify-content-end align-items-center">
+							<button type="button" class="hide-style pe-3 confirmNewChatRoomBtn d-flex align-items-center justify-content-center"
+								@click="createChatRoom"
 								:disabled="(selectedMemberList.length === 0 && nameCount < 1) || 
 											(selectedMemberList.length >= 2 && (nameCount < 1 || nameCount > 20)) || 
 											selectedMemberList.length > 49">
@@ -707,7 +712,7 @@
 						</div>
 					</div>
 				</div>
-				<!--------------------------------------- 채팅방 생성 모달 ---------------------------------------->
+				<!------------------------------------- 채팅방 생성 모달 -------------------------------------->
 				<!--------------------------------------- 채팅방 모달 ---------------------------------------->
 				<div class="customModal chatRoomModal" v-if="chatRoomModal == true">
 					<!-- 헤더 -->
@@ -728,12 +733,12 @@
 									<!-- 이름 변경 버튼 -->
 									<div class="d-flex justify-content-end">
 										<!-- 이름변경 저장 버튼 -->
-										<button type="button" @click="saveRoomName" class="hide-style confirmNameBtn me-2" 
+										<button type="button" @click="saveRoomName" class="hide-style confirmNameBtn me-2 d-flex align-items-center justify-content-center" 
 											:disabled="(roomInfo.chatRoomName1.length < 1 || roomInfo.chatRoomName1.length > 20) || roomInfo.chatRoomName1 == roomInfoCopy.chatRoomName1">
 											<i class="ti ti-edit-circle ti-edit-circle-large"></i>
 										</button>
 										<!-- 이름 변경 취소 버튼 -->
-										<button type="button" @click="cancelChange" class="hide-style cancelRenameBtn me-2">
+										<button type="button" @click="cancelChange" class="hide-style cancelRenameBtn me-2 d-flex align-items-center justify-content-center">
 											<i class="ti ti-edit-circle-off"></i>
 										</button>
 									</div>
@@ -745,15 +750,15 @@
 									</h5>
 								</div>
 							</div>
-							<div class="d-flex justify-content-end">
+							<div class="d-flex justify-content-end align-items-center">
 								<!-- 메뉴 열기 버튼 -->
 								<button type="button" @click="showChatMenuModal" v-if="chatMenuModal == false && roomInfo.edit == false"
-										class="hide-style changeRoomNameBtn d-flex align-items-end pe-2">
+										class="hide-style changeRoomNameBtn d-flex align-items-end pe-2 d-flex align-items-center justify-content-center">
 									<i class="ti ti-dots-vertical"></i>
 								</button>
 								<!-- 메뉴 닫기 버튼 -->
 								<button type="button" @click="hideChatMenuModal" v-if="chatMenuModal == true && roomInfo.edit == false"
-										class="hide-style changeRoomNameBtn d-flex align-items-end pe-2">
+										class="hide-style changeRoomNameBtn d-flex align-items-end pe-2" style="padding-top: 2px;">
 									<i class="ti ti-dots"></i>
 								</button>
 								<!-- 닫기 버튼 -->
@@ -768,17 +773,20 @@
 							<div v-if="message.chatMessageType === 1 || message.chatMessageType === 4">
 								<!-- 상대방이 보낸 메세지일 때 -->
 								<div v-if="message.memberId != memberId">
+									<!-- 프로필 영역 -->
 									<div class="d-flex align-items-center">
 										<img :src="findMemberById(index).profileSrc" v-if="!sameTime(index)" 
 											class="profileImg me-2" style="height: 30px; width: 30px;">
 										<span style="font-size: 0.8em;" v-if="!sameTime(index)" style="margin: 0;">{{ findMemberById(index).memberNick }}</span>
 									</div>
+									<!-- 메세지 영역 -->
 									<div class="d-flex align-items-end" style="margin-left: 36.5px;">
 										<!-- 텍스트 메세지일 때 -->
 										<div v-if="message.attachmentNo === 0" class="messageBox">{{ message.chatMessageContent }}</div>
 										<!-- 이미지 메세지일 때 -->
-										<img class="photoMessage" v-if="message.attachmentNo != 0" @load="scrollBottom"
-												:src="'${pageContext.request.contextPath}/download?attachmentNo=' + message.attachmentNo">
+										<img class="photoMessage" v-if="message.attachmentNo != 0" @load="scrollBottom" @click="setModalImgURL(index)"
+												data-bs-target="#image-modal" data-bs-toggle="modal"
+												:src="'${pageContext.request.contextPath}/download?attachmentNo=' + message.attachmentNo" >
 										<div class="messageTime" v-if="displayTime(index)">{{ timeFormat(message.chatMessageTime) }}</div>
 									</div>
 								</div>
@@ -795,7 +803,8 @@
 										<!-- 텍스트 메세지일 때 -->
 										<div v-if="message.attachmentNo === 0" class="messageBox">{{ message.chatMessageContent }}</div>
 										<!-- 이미지 메세지일 때 -->
-										<img class="photoMessage myMessage" v-if="message.attachmentNo != 0" @load="scrollBottom"
+										<img class="photoMessage myMessage" v-if="message.attachmentNo != 0" @load="scrollBottom"  @click="setModalImgURL(index)"
+												data-bs-target="#image-modal" data-bs-toggle="modal"
 												:src="'${pageContext.request.contextPath}/download?attachmentNo=' + message.attachmentNo">
 									</div>
 								</div>
@@ -808,7 +817,6 @@
 							<!-- 날짜 구분 메세지일 때 -->
 							<div v-if="message.chatMessageType === 10" class="sysMessageDate text-center">{{ timeFormatDetailed(message.chatMessageTime) }}</div>
 						</div>
-						
 						<!-- 메뉴 모달 -->
 						<div v-if="chatRoomModal == true && chatMenuModal == true">
 							<!-- 단톡일 때 -->
@@ -933,9 +941,9 @@
 				<div class="customModal inviteMemberModal" v-if="inviteMemberModal == true">
 					<div class="customModalHeader d-flex align-items-center justify-content-between">
 						<h5>새 친구 추가</h5>
-						<div class="d-flex justify-content-end">
-							<button type="button" class="hide-style pe-3 confirmNewChatRoomBtn" @click="inviteMember"
-								:disabled="selectedMemberList.length === 0 || selectedMemberList.length + chatMemberList.length > 50">
+						<div class="d-flex justify-content-end align-items-center">
+							<button type="button" class="hide-style pe-3 confirmNewChatRoomBtn d-flex align-items-center" @click="inviteMember"
+										:disabled="selectedMemberList.length === 0 || selectedMemberList.length + chatMemberList.length > 50">
 								<i class="ti ti-message-circle-check"></i>
 							</button>
 							<button type="button" class="btn-close" @click="hideInviteMemberModal"></button>
@@ -969,6 +977,14 @@
 					</div>
 				</div>
 				<!---------------------------------------- 초대 모달 ---------------------------------------->
+				<!-- 이미지 확대 모달 -->
+				<div class="modal" tabindex="-1" role="dialog" id="image-modal">
+	     			<div class="modal-dialog modal-lg" role="image">
+   						<div class="modal-content">
+ 					 		<img :src="modalImgURL">
+	     			 	</div>                           					 	
+					</div>
+	           	</div>
 			</div>
         	<!----------------------------------------------- 헤더 끝 ----------------------------------------------->
             

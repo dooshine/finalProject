@@ -2,16 +2,6 @@
     pageEncoding="UTF-8"%>
 
 		<style>
-			/*
-			for css vars only.
-			these values are automatically known in all stylesheets.
-			the :root statement itself is only included in the common stylesheet.
-			this file is not processed by postcss when imported into the postcss-custom-properties plugin,
-			so only write standard css!
-			
-			NOTE: for old browsers, will need to restart watcher after changing a variable
-			*/
-			
 			:root {
 			  --fc-small-font-size: .85em;
 			  --fc-page-bg-color: #fff;
@@ -298,6 +288,9 @@
 		<script type="text/javascript">
 			let currentTime = new Date();
 			let calendar;
+			let startDate;
+			let endDate;
+			let calendarNo;
 			document.addEventListener('DOMContentLoaded', function() {
 				const calendarEl = document.getElementById('calendar');
 				calendar = new FullCalendar.Calendar(calendarEl, {
@@ -335,50 +328,25 @@
 					//unselectAuto: true,
 				
 					select: function(arg) {
+						startDate = arg.start;
+						endDate = arg.end;
+						//console.log("arg : " + arg.start);
 						$("#addCalendarModal").modal("show");
 						// 모달 열리자마자 제목으로 focus
 						$("#calendarTitle").focus();
-						const startDate = arg.start;
-						const endDate = arg.end;
+						//if(arg.start.length > 0) arg.start = "";
+						//if(arg.end.length > 0) arg.end = "";
+						/*const startDate = arg.start;
+						const endDate = arg.end;*/
+						console.log("startDate : " + startDate);
+						console.log("endDate : " + endDate);
 						$("#scheduleDate").val(
 							moment(startDate).format('YYYY년 MM월 DD일')
 							+ " - " + 
 							moment(endDate - 1).format('YYYY년 MM월 DD일')
 						);
-						
-						function addSchedule() {
-							const calendarTitle = $("#calendarTitle").val();
-							const calendarMemo = $("#calendarMemo").val();
-							if(calendarTitle) {
-								const dto={
-									"memberId": memberId,
-									"calendarTitle": calendarTitle,
-									"calendarStart": moment(startDate).format('YYYY-MM-DD'),
-									"calendarEnd": moment(endDate).format('YYYY-MM-DD'),
-									"calendarMemo": calendarMemo
-								};
-								//console.log(dto);
-								axios({
-									url:"${pageContext.request.contextPath}/calendar/add",
-									method:"post",
-									data:JSON.stringify(dto),
-									headers: { 'Content-Type': 'application/json' }
-								}).then(function(resp){
-									//console.log(resp);
-									//location.reload(); // unselect 작동 안하면 강제 새고...
-									//calendar.unselect(); //작동 안하는데 이유를 모르겠음
-									$("#calendarTitle").val("");
-            						$("#calendarMemo").val("");
-									loadMemberCalendar();
-								});
-							}
-							//calendar.unselect();
-							// 일정 등록 모달 닫기
-		                    $("#addCalendarModal").modal("hide");
-						}
 						// 등록 버튼 클릭 시 이벤트 함수 실행
 		                $(".addSchedule-btn").on("click", addSchedule);
-		                //calendar.unselect();
 		                // 제목에서 엔터치면 메모로 focus
 		                $("#calendarTitle").on("keypress", function(e) {
 					        if (e.which === 13) {
@@ -392,8 +360,8 @@
 					    $("#detailCalendarModal").modal("show");
 					    // 상세조회이므로 수정 영역은 숨기기
 					    $(".calendarEditModal").hide();
-					    const calendarNo = arg.event.id;
-					    console.log("click calendarNo: " + calendarNo);
+					    calendarNo = arg.event.id;
+					    //console.log("click calendarNo: " + calendarNo);
 					    $.ajax({
 					        url: "${pageContext.request.contextPath}/calendar/detail/" + calendarNo,
 					        method: "get",
@@ -461,29 +429,8 @@
 					                $("#calendarTitleEdit").val(resp.calendarTitle);
 					                $("#calendarMemoEdit").val(resp.calendarMemo);
 								})
-								// 수정하기
-								$(".edit-confirn-btn").on("click", function() {
-									const calendarTitle = $("#calendarTitleEdit").val();
-									const calendarMemo = $("#calendarMemoEdit").val();
-									const data = JSON.stringify({
-								        calendarNo: calendarNo,
-								        calendarTitle: calendarTitle,
-										calendarMemo: calendarMemo
-								    });
-									console.log("calendarNo: " + calendarNo);
-									$.ajax({
-								        url: "${pageContext.request.contextPath}/calendar/content",
-								        method: "put",
-								        contentType: 'application/json',
-								        data: data,
-								        success: function(resp2) {
-								        	loadMemberCalendar();
-								        	//calendar.unselect(); //안먹음
-								        	//const calendarNo = ""; //안먹음
-								        	$("#detailCalendarModal").modal("hide");
-								        }
-								    });
-								})
+								// 수정 버튼 클릭하면 수정 함수 실행
+								$(".edit-confirn-btn").on("click", editSchedule);
 					        },
 					    });
 					},
@@ -533,7 +480,7 @@
 				return $.ajax({
 					url:"${pageContext.request.contextPath}/calendar/load/" + memberId,
 					success:function(resp){
-						console.log(resp);
+						//console.log(resp);
 						calendar.removeAllEvents();
 						if(resp.length != 0){
 							for(var i=0;i<resp.length;i++){
@@ -550,6 +497,58 @@
 						}
 					},
 				});
+			}
+			
+			// 일정 등록
+			function addSchedule() {
+				const calendarTitle = $("#calendarTitle").val();
+				const calendarMemo = $("#calendarMemo").val();
+				if(calendarTitle) {
+					const dto={
+						"memberId": memberId,
+						"calendarTitle": calendarTitle,
+						"calendarStart": moment(startDate).format('YYYY-MM-DD'),
+						"calendarEnd": moment(endDate).format('YYYY-MM-DD'),
+						"calendarMemo": calendarMemo
+					};
+					axios({
+						url:"${pageContext.request.contextPath}/calendar/add",
+						method:"post",
+						data:JSON.stringify(dto),
+						headers: { 'Content-Type': 'application/json' }
+					}).then(function(resp){
+						$("#calendarTitle").val("");
+         						$("#calendarMemo").val("");
+						loadMemberCalendar();
+					});
+				}
+				// 일정 등록 모달 닫기
+                $("#addCalendarModal").modal("hide");
+			}
+			
+			// 일정 수정 - 내용
+			function editSchedule() {
+				const calendarTitle = $("#calendarTitleEdit").val();
+				const calendarMemo = $("#calendarMemoEdit").val();
+				console.log("calendarNo: " + calendarNo);
+				console.log("calendarTitle: " + calendarTitle);
+				console.log("calendarMemo: " + calendarMemo);
+				const data = JSON.stringify({
+			        calendarNo: calendarNo,
+			        calendarTitle: calendarTitle,
+					calendarMemo: calendarMemo
+			    });
+				//console.log("calendarNo: " + calendarNo);
+				$.ajax({
+			        url: "${pageContext.request.contextPath}/calendar/content",
+			        method: "put",
+			        contentType: 'application/json',
+			        data: data,
+			        success: function(resp2) {
+			        	loadMemberCalendar();
+			        	$("#detailCalendarModal").modal("hide");
+			        }
+			    });
 			}
 			
 			// 글자수 체크
@@ -671,6 +670,8 @@
 			$(function() {
 				$("#detailCalendarModal").on("hidden.bs.modal", function() {
 					$(".calendarDetailModal").show();
+					$("#calendarTitleEdit").val("");
+			        $("#calendarMemoEdit").val("");
 					$(".calendarEditModal").hide();
 			    });
 			})

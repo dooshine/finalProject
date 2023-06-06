@@ -128,7 +128,7 @@ public class MemberController {
 			return "redirect:login";
 		}
 		
-		session.setAttribute("	", findDto.getMemberId());
+		session.setAttribute("memberId", findDto.getMemberId());
 		session.setAttribute("memberLevel", findDto.getMemberLevel());
 		
 		String memberId = findDto.getMemberId();
