@@ -9,5 +9,7 @@ public interface CalendarRepo {
 	List<CalendarDto> selectList(String memberId);
 	CalendarDto selectOne(int calendarNo);
 	void delete(int calendarNo);
+	void updateDate(CalendarDto dto);
+	void updateContent(CalendarDto dto);
 	
 }

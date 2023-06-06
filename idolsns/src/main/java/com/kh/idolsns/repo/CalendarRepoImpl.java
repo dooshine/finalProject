@@ -1,10 +1,8 @@
 package com.kh.idolsns.repo;
 import java.util.List;
-
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-
 import com.kh.idolsns.dto.CalendarDto;
 
 @Repository
@@ -32,6 +30,14 @@ public class CalendarRepoImpl implements CalendarRepo {
 	@Override
 	public void delete(int calendarNo) {
 		sql.delete("calendar.delete", calendarNo);
+	}
+	@Override
+	public void updateDate(CalendarDto dto) {
+		sql.update("calendar.updateDate", dto);
+	}
+	@Override
+	public void updateContent(CalendarDto dto) {
+		sql.update("calendar.updateContent", dto);
 	}
 	
 }

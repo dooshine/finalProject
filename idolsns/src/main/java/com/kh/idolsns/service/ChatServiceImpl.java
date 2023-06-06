@@ -64,6 +64,7 @@ public class ChatServiceImpl implements ChatService {
 	public void createRoom(int chatRoomNo) {
 		if(roomExist(chatRoomNo)) return;
 		chatRooms.put(chatRoomNo, new ChatRoomVO());
+		//log.debug("chatrooms after create: " + chatRooms);
 	}
 	
 	// 방 제거 - 확인해보기
@@ -82,10 +83,13 @@ public class ChatServiceImpl implements ChatService {
 	public void join(ChatMemberVO member, int chatRoomNo) {
 		// 방 생성
 		createRoom(chatRoomNo);
+		log.debug("chatrooms after create: " + chatRooms);
 		// 방 선택
 		ChatRoomVO chatRoom = chatRooms.get(chatRoomNo);
 		// 입장
 		chatRoom.enter(member);
+		log.debug("chatRoom after create: " + chatRoom);
+		log.debug("chatrooms after join: " + chatRooms);
 		//log.debug("chatRooms: " + chatRooms);
 	}
 	
@@ -210,6 +214,9 @@ public class ChatServiceImpl implements ChatService {
 	public void broadcastNewRoom(int chatRoomNo, TextMessage jsonMessage) throws IOException {
 		if(!roomExist(chatRoomNo)) return;
 		ChatRoomVO chatRoom = chatRooms.get(chatRoomNo);
+		log.debug("chatRoom: " + chatRoom);
+		log.debug("broadcastNewRoom: " + chatRoomNo);
+		log.debug("jsonMessage: " + jsonMessage);
 		chatRoom.broadcast(jsonMessage);
 	}
 	
@@ -260,6 +267,7 @@ public class ChatServiceImpl implements ChatService {
 		if(!member.isMember()) return;
 		// 메세지 수신 -> type을 분석하고 해당 타입에 맞는 처리
 		ChatMessageReceiveVO receiveVO = mapper.readValue(message.getPayload(), ChatMessageReceiveVO.class);
+		//ChatRoomProcessVO processVO = mapper.readValue(message.getPayload(), ChatRoomProcessVO.class);
 		// 채팅 메세지인 경우
 		if(receiveVO.getType() == WebSocketConstant.CHAT) {
 			// 채팅방 찾기
@@ -346,14 +354,18 @@ public class ChatServiceImpl implements ChatService {
 		}
 		// 새 방 생성인 경우
 		else if(receiveVO.getType() == WebSocketConstant.NEW_ROOM) {
-			ChatRoomProcessVO processVO = mapper.readValue(message.getPayload(), ChatRoomProcessVO.class);
-			int chatRoomNo = chatRoomService.createChatRoom(processVO);
-			//log.debug("new roomNo: " + chatRoomNo);
-			chatRooms.put(chatRoomNo, new ChatRoomVO());
-			ChatRoomVO chatRoom = chatRooms.get(chatRoomNo);
-			chatRoom.enter(member);
-			this.broadcastNewRoom(chatRoomNo, message);
+			int chatRoomNo = chatRoomService.createChatRoom(receiveVO);
+			receiveVO.setChatRoomNo(chatRoomNo);
+			log.debug("new roomNo: " + chatRoomNo);
+			//chatRooms.put(chatRoomNo, new ChatRoomVO());
+			//createRoom(chatRoomNo);
+			join(member, chatRoomNo);
+			//ChatRoomVO chatRoom = chatRooms.get(chatRoomNo);
+			//chatRoom.enter(member);
+			String json = mapper.writeValueAsString(receiveVO);
+			TextMessage jsonMessage = new TextMessage(json);
 			//log.debug("chatRooms after create: " + chatRooms);
+			this.broadcastNewRoom(chatRoomNo, jsonMessage);
 		}
 		// 새 메세지 알림인 경우
 		/*else if(receiveVO.getType() == WebSocketConstant.NEW_MSG) {
