@@ -181,6 +181,10 @@
 						parsedData.chatMessageType === 5 || parsedData.chatMessageType === 6) {						
 						this.scrollBottom();
 					}
+					if(parsedData.chatMessageType === 5) {
+						this.chatMemberList.splice(0);
+						this.loadChatMember();
+					}
 				},
 				// 참여중인 방 정보 가져오기
 				loadJoinRooms() {
@@ -616,8 +620,8 @@
 					this.getChatJoin();
 					const url = "${pageContext.request.contextPath}/chat/message/" + chatRoomNo;
 					const resp = await axios.get(url);
-					console.log("chatMessageTime: " + resp.data[0].chatMessageTime)
-					console.log("chatJoin: " + this.chatJoin)
+					//console.log("chatMessageTime: " + resp.data[0].chatMessageTime)
+					//console.log("chatJoin: " + this.chatJoin)
 					for(let i=0; i<resp.data.length; i++) {
 						if(resp.data[i].chatMessageTime >= this.chatJoin)
 							//console.log(resp.data[i].chatRoomNo)
