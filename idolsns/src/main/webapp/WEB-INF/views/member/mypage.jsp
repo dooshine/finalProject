@@ -83,15 +83,9 @@
 <body>
    <div class="container rounded p-3" style="background-color:white">
    <div id="app">
-      
+      <br><br>
       <div class="container">
-         <div class="row">
-            <a href="${pageContext.request.contextPath}/member/exit">회원탈퇴</a>
-            <a href="${pageContext.request.contextPath}/member/password">비밀번호 변경</a>
-            <a href="${pageContext.request.contextPath}/member/logout">로그아웃</a>
-         </div>
-         
-         <div class="row">
+         <div class="row" style="margin-left:30px">
             <div>
                <img :src="memberProfileImageObj !== ''  && memberProfileImageObj.attachmentNo !== undefined ? '/download/?attachmentNo='+memberProfileImageObj.attachmentNo :  ' /static/image/profileDummy.png' "
                   style="width: 200px; height: 200px; border-radius: 100%;">
@@ -105,6 +99,7 @@
             </div>
             <div class="col-4 text-right">
                <button type = "button" class="btn btn-primary mt-4" v-on:click = "showModal">프로필 수정</button>
+               <i class="fa-solid fa-gear" v-on:click="showSettingsModal"></i>
             </div>
          </div>
          <div class="row">
@@ -124,6 +119,27 @@
                <span>{{ MemberPageCnt }}명</span>
             </div>
          </div>
+         
+          <div class="modal" tabindex = "-1" role="dialog" id="settingsModal" data-bs-backdrop="static" ref="settingsModal">
+            <div class="modal-dialog" role="document">
+               <div class="modal-content   ">
+                  <div class="modal-header">
+                     <i class="fa-solid fa-xmark" style="color: #bcc0c8;" data-bs-dismiss="modal" aria-label="Close"></i>
+                  </div>
+                  <div class="modal-body ">
+                  	<div class="row">
+	                     <i class="fa-solid fa-lock" @click="goToPassword()">비밀번호 변경</i>
+                  	</div>
+                  	<div class="row">
+	                     <i class="fa-solid fa-pen-to-square" @click="goToLogout()">로그아웃</i>
+                  	</div>
+                  	<div class="row">
+	                     <i class="fa-sharp fa-solid fa-circle-minus " @click="goToExit()">회원탈퇴</i>
+                  	</div>
+                  </div>
+               </div>
+            </div>
+         </div>	
          
          <div class="modal" tabindex = "-1" role="dialog" id="modal" data-bs-backdrop="static" ref="modal">
             <div class="modal-dialog" role="document">
@@ -158,9 +174,9 @@
                   <div class="modal-body text-left">
                      <div v-for="(board,index) in FollowListProfile"  :key="index">
                      <img :src="getAttachmentUrl(board.attachmentNo)" class="profile-image" style="width:54px; height:54px;">
-                     <a href="">
-                    <span> {{board.followTargetPrimaryKey}}</span>
-                     </a>
+                     <a :href="'/member/mypage/' + board.followTargetPrimaryKey">
+					    <span>{{board.followTargetPrimaryKey}}</span>
+					</a>
                     <button @click="deleteFollow(board.followNo)">팔로잉</button>
                      </div>
                   </div>
@@ -178,7 +194,9 @@
                   <div class="modal-body text-left">
                      <div v-for="(board,index) in FollowerListProfile"  :key="index">
                      <img :src="getAttachmentUrl(board.attachmentNo)" class="profile-image" style="width:54px; height:54px;">
+                     <a :href="'/member/mypage/' + board.memberId">
                     <span> {{board.memberId}}</span>
+                    </a>
                     <button @click="deleteFollow(board.followNo)">팔로잉</button>
                      </div>
                   </div>
@@ -195,7 +213,9 @@
                   <div class="modal-body text-left">
                      <div v-for="(board,index) in PageListProfile"  :key="index">
                     <img :src="getAttachmentUrl(board.attachmentNo)" class="profile-image" style="width:54px; height:54px;">
+                    <a :href="'/artist/' + board.followTergetPrimarykey">
                     <span> {{board.followTargetPrimaryKey}}</span>
+                    </a>
                     <button @click="deleteFollow(board.followNo)">팔로잉</button>
                      </div>
                   </div>
@@ -1052,6 +1072,7 @@
                   followModal:null,
                   followerModal:null,
                   pageModal:null,
+                  settingsModal:null,
                   memberProfileImageObj: {},
                   editedNickname:"",
                   editingNickname:false,
@@ -1115,7 +1136,7 @@
               	newFixedTagList: [],                	
               	
               	// 세션 맴버아이디
-              	memberId:"${memberId}",
+              	memberId:"${memberDto.memberId}",
               	
               	// 좋아요한 맴버의 아이디
               	likedMemberId: null,
@@ -1135,16 +1156,25 @@
                      this.$refs.fileInput.click();
                    },
                async profile() {
-                  const response = await axios.get("/member/profile");
+                  const response = await axios.get("/member/profile",{
+                	  params : {
+                		  memberId : this.memberId
+                	  }
+                  });
                   const {memberId, memberNick} = response.data;
                   
                   this.memberId = memberId;
                   this.memberNick=memberNick;
-                  
+                  console.log("아이디 : "+this.memberId);
+                  console.log("닉네임 : "+this.memberNick);
                },
                
                async followCnt() {
-                  const response = await axios.get("/member/followCnt");
+                  const response = await axios.get("/member/followCnt",{
+                	  params : {
+                		  memberId : this.memberId
+                	  }
+                  });
                   const{MemberFollowCnt, MemberFollowerCnt, MemberPageCnt} = response.data;
                   
                   this.MemberFollowCnt = MemberFollowCnt;
@@ -1198,13 +1228,26 @@
                   this.pageModal.hide();
                },
                
+               showSettingsModal() {
+            	   if(this.settingsModal == null) return;
+                   this.settingsModal.show();
+               },
+               hideSettingsModal() {
+            	   if(this.settingsModal == null) return;
+                   this.settingsModal.hide();
+               },
+               
                async profileImage() {
-                   const response = await axios.get("/member/profileImage");
+                   const response = await axios.get("/member/profileImage",{
+                	   params : {
+                		   memberId : this.memberId
+                	   }
+                   });
                    
                    this.memberProfileImageObj = response.data;
-                   
+                   console.log("this.memberProfileImageObj : "+this.memberProfileImageObj);
                    const attachmentNo = this.memberProfileImageObj.attachmentNo;   
-                      console.log(attachmentNo);
+                      console.log("attachmentNo : " +attachmentNo);
                       const url = "/rest/attachment/download/"+attachmentNo;
                    this.previewURL = url;                   
                 },
@@ -1308,7 +1351,7 @@
                 	  });
                 	  this.FollowListProfile.push(...response.data);
                 	  
-                	  console.log(response.data);
+                	  console.log("로그인 :  " +this.memberId);
                   },
                   
                   //팔로워 리스트 멤버별 프로필 조회
@@ -1343,6 +1386,21 @@
 					    this.FollowListProfile = this.FollowListProfile.filter(item => item.followNo !== followNo);
 					  }
 				},
+				
+				//비밀번호 변경페이지로 이동
+				goToPassword() {
+			        window.location.href = '/member/password';
+			    },
+			    
+			    //로그아웃
+			    goToLogout() {
+			    	window.location.href = '/member/logout';
+			    },
+			    
+			    //회원탈퇴 페이지로 이동
+			    goToExit() {
+			    	window.location.href = '/member/exit';
+			    },
                   
 
 
@@ -1776,6 +1834,7 @@
                this.followModal = new bootstrap.Modal(this.$refs.followModal);
                this.followerModal = new bootstrap.Modal(this.$refs.followerModal);
                this.pageModal = new bootstrap.Modal(this.$refs.pageModal);
+               this.settingsModal = new bootstrap.Modal(this.$refs.settingsModal);
                
                //윈도우 전체에 스크롤 이벤트를 설정(Vue가 아닌 JS 사용)
                //- 주의할 점은 스크롤 이벤트는 발생빈도가 엄청나다는 것
