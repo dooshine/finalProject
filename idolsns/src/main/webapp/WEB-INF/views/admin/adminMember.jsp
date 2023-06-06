@@ -17,32 +17,12 @@
     .pagination {
         color: #6a53fb;
     }
-    .pagination .page-link{
-        color: #6a53fb;
-    }
-    .pagination .page-link:hover{
-        color: #6a53fb;
-    }
-    .pagination .active span:hover {
-        color: white;
-    }
-    .pagination .active span{
-        color: white;
-        background-color: #6a53fb;
-        border-color: #6a53fb;
-    }
     .pagination {
         --bs-pagination-focus-box-shadow: 0px;
-    }
-    .form-check-input:checked {
     }
     .form-check-input {
         -webkit-appearance: none;
         appearance: none;
-    }
-    .form-check-input:focus {
-    }
-    .form-check-input:focus {
     }
 </style>
 
@@ -242,7 +222,8 @@
                     <span href="#" class="page-link" :class="{'cursor-pointer': pageObj.startBlock + i - 1 !== pageObj.page}" @click="showTargetPage(pageObj.startBlock + i - 1)">{{pageObj.startBlock + i - 1}}</span>
                   </li>
                   <!-- 다음 블럭으로 이동 -->
-                  <li class="page-item" :class="{disabled: !pageObj.hasNext}"><span class="page-link cursor-pointer" @click="showNextBlock">&gt;</span></li>
+                  <li class="page-item disabled"><span class="page-link cursor-pointer" @click="showNextBlock">&gt;</span></li>
+                  <!-- <li class="page-item" :class="{disabled: !pageObj.hasNext}"><span class="page-link cursor-pointer" @click="showNextBlock">&gt;</span></li> -->
                   <!-- 마지막 페이지로 이동 -->
                   <li class="page-item" :class="{disabled: pageObj.isLast}"><span class="page-link cursor-pointer" @click="showLastPage">&raquo;</span></li>
                 </ul>
@@ -297,7 +278,7 @@
           // 페이지네이션 Obj
           pageObj: {
             page: 1,
-            size: 10,
+            size: 1,
             blocksize: 5,
             total: 0, 
 
