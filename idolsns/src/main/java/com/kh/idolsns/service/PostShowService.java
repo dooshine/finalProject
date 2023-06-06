@@ -222,7 +222,7 @@ public class PostShowService {
 	public List<PostShowVO> fixedTagPostShowByPagingReload(int page,String tagName){
 		
 		List<PostShowVO> postShowList = postShowRepo.selectFixedTagPostListByPagingReload(page, tagName);
-		
+
 		Long postNo = 0l;
 		
 		for(PostShowVO postShowVO : postShowList)

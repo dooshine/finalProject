@@ -33,6 +33,14 @@ public class TagRepoImpl implements TagRepo{
 	public Long selectOne(String tagName) {
 		return sqlSession.selectOne("tag.selectOne",tagName); 
 	}
+	
+	@Override
+	public TagDto find(String tagName) {
+		return sqlSession.selectOne("tag.find", tagName);
+	}
+
+	
+	
 
 	@Override
 	public List<String> selectAll(Long postNo) {		
@@ -55,4 +63,5 @@ public class TagRepoImpl implements TagRepo{
 		return sqlSession.selectList("tag.selectFreeTagAll",postNo);
 	}
 
+	
 }
