@@ -2,16 +2,6 @@
     pageEncoding="UTF-8"%>
 
 		<style>
-			/*
-			for css vars only.
-			these values are automatically known in all stylesheets.
-			the :root statement itself is only included in the common stylesheet.
-			this file is not processed by postcss when imported into the postcss-custom-properties plugin,
-			so only write standard css!
-			
-			NOTE: for old browsers, will need to restart watcher after changing a variable
-			*/
-			
 			:root {
 			  --fc-small-font-size: .85em;
 			  --fc-page-bg-color: #fff;
@@ -129,6 +119,31 @@
 				left: 50%;
 				transform: translate(-50%, -20%);
 			}
+			.display-none {
+				display: none;
+			}
+			#calendarMemo,
+			#calendarMemoEdit {
+				/* 파폭 스크롤 커스텀 */
+    			scrollbar-width: thin;
+    			scrollbar-color: #c8c8c8 rgba(0,0,0,0);
+			}
+			/* 스크롤바 설정*/
+			#calendarMemo::-webkit-scrollbar,
+			#calendarMemoEdit::-webkit-scrollbar {
+			    width: 5px;
+			}
+			/* 스크롤바 막대 설정*/
+			#calendarMemo::-webkit-scrollbar-thumb,
+			#calendarMemoEdit::-webkit-scrollbar-thumb {
+			    background-color: #c8c8c8;
+			    border-radius: 10px;    
+			}
+			/* 스크롤바 뒷 배경 설정*/
+			#calendarMemo::-webkit-scrollbar-track,
+			#calendarMemoEdit::-webkit-scrollbar-track {
+			    background-color: rgba(0,0,0,0);
+			}
 		</style>    
     
     
@@ -143,20 +158,35 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                    	<div class="form-floating mb-3">
-							<input type="text" readonly class="form-control-plaintext" id="scheduleDate" placeholder="dd">
-							<label for="scheduleDate" class="startDate">날짜</label>
+                    	<div class="beforeLogin">
+                    		<h5 class="text-center mt-4">🙌</h5>
+	                    	<h5 class="text-center mt-3 mb-4">로그인하고 기억해 둘 일정을 등록해 보세요!</h5>
+	                    	<button type="button" class="custom-btn btn-purple1 btn-round w-100 mb-4 calendar-login-btn">
+								로그인하러 가기
+							</button>
 						</div>
-                   		<div class="form-floating mb-3">
-							<input type="text" class="form-control" id="calendarTitle" placeholder="dd">
-							<label for="calendarTitle">일정 이름 (최대 30자)</label>
-						</div>
-                   		<div class="form-floating">
-							<textarea class="form-control" placeholder="Leave a comment here" id="calendarMemo" style="height: 100px; resize: none;"></textarea>
-							<label for="calendarMemo">메모 (최대 100자)</label>
+                    	<div class="afterLogin">
+	                    	<div class="form-floating mb-3">
+								<input type="text" readonly class="form-control-plaintext" id="scheduleDate" placeholder="dd">
+								<label for="scheduleDate" class="startDate">날짜</label>
+							</div>
+	                   		<div class="form-floating mb-3">
+								<input type="text" class="form-control" id="calendarTitle" placeholder="dd">
+								<label for="calendarTitle">일정 이름</label>
+								<div class="display-none invalidMessage">
+							    	1글자 이상, 30글자 이하로 입력할 수 있습니다.
+							    </div>
+							</div>
+	                   		<div class="form-floating">
+								<textarea class="form-control" placeholder="Leave a comment here" id="calendarMemo" style="height: 100px; resize: none;"></textarea>
+								<label for="calendarMemo">메모</label>
+								<div class="display-none invalidMessage">
+							    	100글자 이하로 입력할 수 있습니다.
+							    </div>
+							</div>
 						</div>
                     </div>
-                    <div class="modal-footer">
+                    <div class="modal-footer addCalendarModalFooter">
                         <button type="button" class="addSchedule-btn custom-btn btn-purple1">
                             등록
                         </button>
@@ -164,32 +194,73 @@
                 </div>
             </div>
         </div>
-        <!-- 일정 상세 모달 -->
+        <!-- 일정 상세, 수정 모달 -->
      	<div class="modal" tabindex="-1" role="dialog" id="detailCalendarModal">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">일정 상세정보</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                	<!-- 상세 -->
+                	<div class="calendarDetailModal">
+	                    <div class="modal-header">
+	                        <h5 class="modal-title">일정 상세정보</h5>
+	                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+	                    </div>
+	                    <div class="modal-body">
+	                   		<div class="form-floating mb-3">
+								<input type="text" readonly class="form-control-plaintext" id="detailCalendarDate" placeholder="dd">
+								<label for="detailScheduleDate" class="startDate">날짜</label>
+							</div>
+							<div class="form-floating mb-3">
+								<input type="text" readonly class="form-control-plaintext" id="detailCalendarTitle" placeholder="dd">
+								<label for="detailScheduleTitle" class="startDate">일정 이름</label>
+							</div>
+							<div class="form-floating" style="height: auto;">
+								<div class="form-control-plaintext" id="detailCalendarMemo" style="white-space:pre; height: auto;"></div>
+								<label for="calendarMemo">메모</label>
+							</div>
+	                    </div>
+	                    <div class="modal-footer">
+	                        <button type="button" class="delete-schedule-btn custom-btn btn-purple1-secondary">
+	                            삭제
+	                        </button>
+	                        <button type="button" class="edit-schedule-btn custom-btn btn-purple1">
+	                            수정
+	                        </button>
+	                    </div>
                     </div>
-                    <div class="modal-body">
-                   		<div class="form-floating mb-3">
-							<input type="text" readonly class="form-control-plaintext" id="detailCalendarDate" placeholder="dd">
-							<label for="detailScheduleDate" class="startDate">날짜</label>
-						</div>
-						<div class="form-floating mb-3">
-							<input type="text" readonly class="form-control-plaintext" id="detailCalendarTitle" placeholder="dd">
-							<label for="detailScheduleTitle" class="startDate">일정 이름</label>
-						</div>
-						<div class="form-floating">
-							<textarea class="form-control-plaintext" placeholder="Leave a comment here" id="detailCalendarMemo" style="resize: none;"></textarea>
-							<label for="calendarMemo">메모</label>
-						</div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="delete-schedule-btn custom-btn btn-purple1-secondary">
-                            삭제
-                        </button>
+                    <!-- 수정 -->
+                	<div class="calendarEditModal">
+	                    <div class="modal-header">
+	                        <h5 class="modal-title">일정 수정</h5>
+	                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+	                    </div>
+	                    <div class="modal-body">
+	                    	<div class="form-floating mb-3">
+								<input type="text" readonly class="form-control-plaintext" id="scheduleDateEdit" placeholder="dd">
+								<label for="scheduleDateEdit" class="startDate">날짜</label>
+							</div>
+	                   		<div class="form-floating mb-3">
+								<input type="text" class="form-control" id="calendarTitleEdit" placeholder="dd">
+								<label for="calendarTitleEdit">일정 이름</label>
+								<div class="display-none invalidMessage">
+							    	1글자 이상, 30글자 이하로 입력할 수 있습니다.
+							    </div>
+							</div>
+	                   		<div class="form-floating">
+								<textarea class="form-control" placeholder="Leave a comment here" id="calendarMemoEdit" style="height: 100px; resize: none;"></textarea>
+								<label for="calendarMemoEdit">메모</label>
+								<div class="display-none invalidMessage">
+							    	100글자 이하로 입력할 수 있습니다.
+							    </div>
+							</div>
+	                    </div>
+	                    <div class="modal-footer">
+	                        <button type="button" class="cancel-edit-btn custom-btn btn-purple1-secondary">
+	                            취소
+	                        </button>
+	                        <button type="button" class="edit-confirn-btn custom-btn btn-purple1">
+	                            수정
+	                        </button>
+	                    </div>
                     </div>
                 </div>
             </div>
@@ -217,6 +288,9 @@
 		<script type="text/javascript">
 			let currentTime = new Date();
 			let calendar;
+			let startDate;
+			let endDate;
+			let calendarNo;
 			document.addEventListener('DOMContentLoaded', function() {
 				const calendarEl = document.getElementById('calendar');
 				calendar = new FullCalendar.Calendar(calendarEl, {
@@ -249,58 +323,45 @@
 					droppable: false,
 					selectable: true,
 					displayEventTime: false,
+					editable: true,
 					//navLinks: true,
 					//unselectAuto: true,
 				
 					select: function(arg) {
+						startDate = arg.start;
+						endDate = arg.end;
+						//console.log("arg : " + arg.start);
 						$("#addCalendarModal").modal("show");
-						const startDate = arg.start;
-						const endDate = arg.end;
+						// 모달 열리자마자 제목으로 focus
+						$("#calendarTitle").focus();
+						//if(arg.start.length > 0) arg.start = "";
+						//if(arg.end.length > 0) arg.end = "";
+						/*const startDate = arg.start;
+						const endDate = arg.end;*/
+						console.log("startDate : " + startDate);
+						console.log("endDate : " + endDate);
 						$("#scheduleDate").val(
 							moment(startDate).format('YYYY년 MM월 DD일')
 							+ " - " + 
 							moment(endDate - 1).format('YYYY년 MM월 DD일')
 						);
-						
-						function addSchedule() {
-							const calendarTitle = $("#calendarTitle").val();
-							const calendarMemo = $("#calendarMemo").val();
-							
-							if(calendarTitle) {
-								var dto={
-									"memberId": memberId,
-									"calendarTitle": calendarTitle,
-									"calendarStart": moment(startDate).format('YYYY-MM-DD'),
-									"calendarEnd": moment(endDate).format('YYYY-MM-DD'),
-									"calendarMemo": calendarMemo
-								};
-								//console.log(dto);
-								axios({
-									url:"${pageContext.request.contextPath}/calendar/add",
-									method:"post",
-									data:JSON.stringify(dto),
-									headers: { 'Content-Type': 'application/json' }
-								}).then(function(resp){
-									//console.log(resp);
-									//location.reload(); // unselect 작동 안하면 강제 새고...
-									//calendar.unselect(); //작동 안하는데 이유를 모르겠음
-									$("#calendarTitle").val("");
-            						$("#calendarMemo").val("");
-									loadMemberCalendar();
-								});
-							}
-							//calendar.unselect();
-							// 일정 등록 모달 닫기
-		                    $("#addCalendarModal").modal("hide");
-						}
 						// 등록 버튼 클릭 시 이벤트 함수 실행
 		                $(".addSchedule-btn").on("click", addSchedule);
-		                //calendar.unselect();
+		                // 제목에서 엔터치면 메모로 focus
+		                $("#calendarTitle").on("keypress", function(e) {
+					        if (e.which === 13) {
+					            e.preventDefault();
+					            $("#calendarMemo").focus();
+					        }
+					    });
 					},
 					// 일정 상세 조회
 					eventClick: function(arg) {
 					    $("#detailCalendarModal").modal("show");
-					    const calendarNo = arg.event.id;
+					    // 상세조회이므로 수정 영역은 숨기기
+					    $(".calendarEditModal").hide();
+					    calendarNo = arg.event.id;
+					    //console.log("click calendarNo: " + calendarNo);
 					    $.ajax({
 					        url: "${pageContext.request.contextPath}/calendar/detail/" + calendarNo,
 					        method: "get",
@@ -317,7 +378,7 @@
 					                    moment(resp.calendarEnd).subtract(1, 'day').format('YYYY년 MM월 DD일')
 					                );
 					                $("#detailCalendarTitle").val(resp.calendarTitle);
-					                $("#detailCalendarMemo").val(resp.calendarMemo);
+					                $("#detailCalendarMemo").text(resp.calendarMemo);
 					            }
 					            // 일정 삭제 경고 알림 모달 띄우기
 					            $(".delete-schedule-btn").on("click", function() {
@@ -342,14 +403,74 @@
 					            $("#detailCalendarModal").on("hidden.bs.modal", function() {
 					            	$("#deleteAlertModal").hide();
 					            });
+					         	
+					         	// 일정 수정 - 내용
+								// 수정 모드
+								$(".edit-schedule-btn").on("click", function() {
+									$(".calendarDetailModal").hide();
+									$(".calendarEditModal").show();
+									$("#scheduleDateEdit").val(
+					                    moment(resp.calendarStart).format('YYYY년 MM월 DD일') +
+					                    " - " +
+					                    moment(resp.calendarEnd).subtract(1, 'day').format('YYYY년 MM월 DD일')
+					                );
+					                $("#calendarTitleEdit").val(resp.calendarTitle);
+					                $("#calendarMemoEdit").val(resp.calendarMemo);
+								})
+								// 수정 취소
+								$(".cancel-edit-btn").on("click", function() {
+									$(".calendarEditModal").hide();
+									$(".calendarDetailModal").show();
+									$("#scheduleDateEdit").val(
+					                    moment(resp.calendarStart).format('YYYY년 MM월 DD일') +
+					                    " - " +
+					                    moment(resp.calendarEnd).subtract(1, 'day').format('YYYY년 MM월 DD일')
+					                );
+					                $("#calendarTitleEdit").val(resp.calendarTitle);
+					                $("#calendarMemoEdit").val(resp.calendarMemo);
+								})
+								// 수정 버튼 클릭하면 수정 함수 실행
+								$(".edit-confirn-btn").on("click", editSchedule);
 					        },
 					    });
 					},
-
+					// 일정 수정 - 날짜
+					eventChange: function(arg) {
+						const calendarNo = arg.event.id;
+						const startDate = arg.event._instance.range.start;
+						const endDate = arg.event._instance.range.end;
+						/*console.log("calendarNo: " + calendarNo);
+						console.log("startDate: " + startDate);
+						console.log("endDate: " + endDate);*/
+						const data = JSON.stringify({
+					        calendarNo: calendarNo,
+					        calendarStart: moment(startDate).format('YYYY-MM-DD'),
+					        calendarEnd: moment(endDate).format('YYYY-MM-DD')
+					    });
+						// ajax
+						$.ajax({
+					        url: "${pageContext.request.contextPath}/calendar/date",
+					        method: "put",
+					        contentType: 'application/json',
+					        data: data,
+					        success: function(resp) {
+					        	loadMemberCalendar();
+					        }
+					    });
+					},
 					// 페이지 켜지자 마자 로그인한 회원의 일정 불러오기
-					events: [
-						loadMemberCalendar()
-					]
+					events: function(fetchInfo, sucessCallback, failureCallback) {
+						if(memberId.length > 0) {
+							loadMemberCalendar()
+								.done(function(resp) {
+									sucessCallback(resp);
+								})
+								.fail(function() {
+									failureCallback();
+								});
+						}
+						else sucessCallback([]);
+					}
 				});
 				calendar.render();
 			}); 
@@ -359,7 +480,7 @@
 				return $.ajax({
 					url:"${pageContext.request.contextPath}/calendar/load/" + memberId,
 					success:function(resp){
-						console.log(resp);
+						//console.log(resp);
 						calendar.removeAllEvents();
 						if(resp.length != 0){
 							for(var i=0;i<resp.length;i++){
@@ -377,5 +498,187 @@
 					},
 				});
 			}
+			
+			// 일정 등록
+			function addSchedule() {
+				const calendarTitle = $("#calendarTitle").val();
+				const calendarMemo = $("#calendarMemo").val();
+				if(calendarTitle) {
+					const dto={
+						"memberId": memberId,
+						"calendarTitle": calendarTitle,
+						"calendarStart": moment(startDate).format('YYYY-MM-DD'),
+						"calendarEnd": moment(endDate).format('YYYY-MM-DD'),
+						"calendarMemo": calendarMemo
+					};
+					axios({
+						url:"${pageContext.request.contextPath}/calendar/add",
+						method:"post",
+						data:JSON.stringify(dto),
+						headers: { 'Content-Type': 'application/json' }
+					}).then(function(resp){
+						$("#calendarTitle").val("");
+         						$("#calendarMemo").val("");
+						loadMemberCalendar();
+					});
+				}
+				// 일정 등록 모달 닫기
+                $("#addCalendarModal").modal("hide");
+			}
+			
+			// 일정 수정 - 내용
+			function editSchedule() {
+				const calendarTitle = $("#calendarTitleEdit").val();
+				const calendarMemo = $("#calendarMemoEdit").val();
+				console.log("calendarNo: " + calendarNo);
+				console.log("calendarTitle: " + calendarTitle);
+				console.log("calendarMemo: " + calendarMemo);
+				const data = JSON.stringify({
+			        calendarNo: calendarNo,
+			        calendarTitle: calendarTitle,
+					calendarMemo: calendarMemo
+			    });
+				//console.log("calendarNo: " + calendarNo);
+				$.ajax({
+			        url: "${pageContext.request.contextPath}/calendar/content",
+			        method: "put",
+			        contentType: 'application/json',
+			        data: data,
+			        success: function(resp2) {
+			        	loadMemberCalendar();
+			        	$("#detailCalendarModal").modal("hide");
+			        }
+			    });
+			}
+			
+			// 글자수 체크
+			$(function() {
+				// 일정 등록
+				let addValid = {
+					titleValid: false,
+					memoValid:true,
+					isAllValid: function() {
+						return this.titleValid && this.memoValid;
+					},
+					disalbeBtn: function() {
+						const addBtn = $(".addSchedule-btn");
+						if(this.isAllValid()) addBtn.removeAttr("disabled");
+						else addBtn.attr("disabled", "disabled");
+					}
+				}
+				// 일정 이름 검사
+				$("#calendarTitle").blur(function() {
+					let isValid = $(this).val().length <= 30 && $(this).val().length > 0;
+					addValid.titleValid = isValid;
+					$(this)
+						.removeClass("is-invalid")
+						.addClass(isValid ? "" : "is-invalid");
+					$(this).nextAll('.invalidMessage:first')
+						.removeClass("display-none invalid-feedback")
+						.addClass(isValid ? "display-none" : "invalid-feedback");
+					addValid.disalbeBtn();
+				});
+				// 메모 검사
+				$("#calendarMemo").blur(function() {
+					let isValid = $(this).val().length <= 100;
+					addValid.memoValid = isValid;
+					$(this)
+						.removeClass("is-invalid")
+						.addClass(isValid ? "" : "is-invalid");
+					$(this).nextAll('.invalidMessage:first')
+						.removeClass("display-none invalid-feedback")
+						.addClass(isValid ? "display-none" : "invalid-feedback");
+					addValid.disalbeBtn();
+				});
+				// 일정 수정
+				let editValid = {
+					titleValid: true,
+					memoValid:true,
+					isAllValid: function() {
+						return this.titleValid && this.memoValid;
+					},
+					disalbeBtn: function() {
+						const confirmBtn = $(".edit-confirn-btn");
+						if(this.isAllValid()) confirmBtn.removeAttr("disabled");
+						else confirmBtn.attr("disabled", "disabled");
+					}
+				}
+				// 일정 이름 검사
+				$("#calendarTitleEdit").blur(function() {
+					let isValid = $(this).val().length <= 30 && $(this).val().length > 0;
+					editValid.titleValid = isValid;
+					$(this)
+						.removeClass("is-invalid")
+						.addClass(isValid ? "" : "is-invalid");
+					$(this).nextAll('.invalidMessage:first')
+						.removeClass("display-none invalid-feedback")
+						.addClass(isValid ? "display-none" : "invalid-feedback");
+					editValid.disalbeBtn();
+				});
+				// 메모 검사
+				$("#calendarMemoEdit").blur(function() {
+					let isValid = $(this).val().length <= 100;
+					editValid.memoValid = isValid;
+					$(this)
+						.removeClass("is-invalid")
+						.addClass(isValid ? "" : "is-invalid");
+					$(this).nextAll('.invalidMessage:first')
+						.removeClass("display-none invalid-feedback")
+						.addClass(isValid ? "display-none" : "invalid-feedback");
+					editValid.disalbeBtn();
+				});
+			})
+			
+			// 일정 등록 모달 닫힐 때 입력창 비우고 유효성 검사 초기화
+			$(function() {
+				$("#addCalendarModal").on("hidden.bs.modal", function() {
+			        // 입력창 값 초기화
+			        $("#calendarTitle").val("");
+			        $("#calendarMemo").val("");
+			        // 유효성 검사 문구 초기화
+			        $("#calendarTitle").removeClass("is-invalid");
+			        $("#calendarMemo").removeClass("is-invalid");
+			        $(".invalidMessage").addClass("display-none");
+			    });
+			})
+			// 로그인 여부에 따라 일정 등록 모달 문구 바꾸기
+			$(function() {
+				if (memberId.length < 1) {
+				    $(".beforeLogin").show();
+				    $(".addCalendarModalFooter").hide();
+				    $(".afterLogin").hide();
+				}
+				else {
+				    $(".beforeLogin").hide();
+				    $(".addCalendarModalFooter").show();
+				    $(".afterLogin").show();
+				}
+			});
+			// 일정 등록 모달 닫힐 때 입력창 비우고 유효성 검사 초기화
+			$(function() {
+				$("#addCalendarModal").on("hidden.bs.modal", function() {
+			        // 입력창 값 초기화
+			        $("#calendarTitle").val("");
+			        $("#calendarMemo").val("");
+			        // 유효성 검사 문구 초기화
+			        $("#calendarTitle").removeClass("is-invalid");
+			        $("#calendarMemo").removeClass("is-invalid");
+			        $(".invalidMessage").addClass("display-none");
+			    });
+			})
+			// 일정 상세 모달 닫힐 때 모달 초기화
+			$(function() {
+				$("#detailCalendarModal").on("hidden.bs.modal", function() {
+					$(".calendarDetailModal").show();
+					$("#calendarTitleEdit").val("");
+			        $("#calendarMemoEdit").val("");
+					$(".calendarEditModal").hide();
+			    });
+			})
+			
+			// 로그인하러 가기 버튼
+			$(".calendar-login-btn").on("click", function() {
+			    window.location.href = "${pageContext.request.contextPath}/member/login";
+			});
 		</script>
    

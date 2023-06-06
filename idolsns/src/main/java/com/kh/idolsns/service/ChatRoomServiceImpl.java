@@ -8,6 +8,7 @@ import com.kh.idolsns.dto.ChatRoomPrivDto;
 import com.kh.idolsns.repo.ChatJoinRepo;
 import com.kh.idolsns.repo.ChatRoomPrivRepo;
 import com.kh.idolsns.repo.ChatRoomRepo;
+import com.kh.idolsns.vo.ChatMessageReceiveVO;
 import com.kh.idolsns.vo.ChatRoomProcessVO;
 
 import lombok.extern.slf4j.Slf4j;
@@ -27,12 +28,12 @@ public class ChatRoomServiceImpl implements ChatRoomService {
 	
 	// 채팅방 만들기 - 채팅방 번호 반환하도록 수정했는데 확인 필요
 	@Override
-	public int createChatRoom(ChatRoomProcessVO vo) {
+	public int createChatRoom(ChatMessageReceiveVO vo) {
 		
 		String memberId = vo.getMemberId();
 		ChatRoomDto chatRoomDto = vo.getChatRoomDto();
 		List<String> memberList = vo.getMemberList();
-		//log.debug("memberList[0] : " + memberList.get(0));
+		
 		// 생성 요청을 받은 채팅방이 1대1 채팅방이면
 		if(memberList.size() == 1) {
 			// 1대1이면 중복방이 있는지 확인(chatRoomPriv)
@@ -49,11 +50,15 @@ public class ChatRoomServiceImpl implements ChatRoomService {
 			chatRoomPrivDto2.setChatRoomPrivU(memberId);
 			ChatRoomPrivDto existRoom2 = chatRoomPrivRepo.findRoom(chatRoomPrivDto2);
 			boolean isChatRoomExist2 = existRoom2 != null;
+			
 			// 1, 2 둘 다 있으면 -> 둘 다 참여 중인 갠톡방이 있으므로 방 생성 중지
-			if(isChatRoomExist1 && isChatRoomExist2) return 0;
+			if(isChatRoomExist1 && isChatRoomExist2) {
+				log.debug("existRoom1.getChatRoomNo(): " + existRoom1.getChatRoomNo());
+				return existRoom1.getChatRoomNo();
+			}
 			
 			// 2만 있으면 -> 나는 나갔지만 1대1 채팅 이력이 있으면(상대방에게는 나와의 채팅방이 남아있으면)
-			if(isChatRoomExist2) {
+			else if(isChatRoomExist2) {
 				// 참여자 테이블에 저장
 				ChatJoinDto joinDto = new ChatJoinDto();
 				joinDto.setChatRoomNo(existRoom2.getChatRoomNo());
@@ -70,37 +75,39 @@ public class ChatRoomServiceImpl implements ChatRoomService {
 			
 			// 중복방이 없으면 채팅방 생성
 			// 채팅방 테이블에 저장
-			int chatRoomNo = chatRoomRepo.sequence();
-			chatRoomDto.setChatRoomNo(chatRoomNo);
-			chatRoomDto.setChatRoomName1(memberId);
-			chatRoomDto.setChatRoomName2(memberList.get(0));
-			chatRoomRepo.createRoom(chatRoomDto);
-			ChatRoomDto roomDto = chatRoomRepo.findRoom(chatRoomNo);
-			// 참여자 테이블에 저장
-			for(String member : memberList) {
+			else {
+				int chatRoomNo = chatRoomRepo.sequence();
+				chatRoomDto.setChatRoomNo(chatRoomNo);
+				chatRoomDto.setChatRoomName1(memberId);
+				chatRoomDto.setChatRoomName2(memberList.get(0));
+				chatRoomRepo.createRoom(chatRoomDto);
+				ChatRoomDto roomDto = chatRoomRepo.findRoom(chatRoomNo);
+				// 참여자 테이블에 저장
+				for(String member : memberList) {
+					ChatJoinDto joinDto = new ChatJoinDto();
+					joinDto.setMemberId(member);
+					joinDto.setChatJoinTime(roomDto.getChatRoomStart());
+					joinDto.setChatRoomNo(chatRoomNo);
+					chatJoinRepo.joinChatRoom(joinDto);
+				}
 				ChatJoinDto joinDto = new ChatJoinDto();
-				joinDto.setMemberId(member);
+				joinDto.setMemberId(memberId);
 				joinDto.setChatJoinTime(roomDto.getChatRoomStart());
 				joinDto.setChatRoomNo(chatRoomNo);
 				chatJoinRepo.joinChatRoom(joinDto);
+				// 1대1 채팅 테이블에 저장
+				ChatRoomPrivDto privDto1 = new ChatRoomPrivDto();
+				privDto1.setChatRoomNo(chatRoomNo);
+				privDto1.setChatRoomPrivI(memberId);
+				privDto1.setChatRoomPrivU(memberList.get(0));
+				chatRoomPrivRepo.createRoom(privDto1);
+				ChatRoomPrivDto privDto2 = new ChatRoomPrivDto();
+				privDto2.setChatRoomNo(chatRoomNo);
+				privDto2.setChatRoomPrivI(memberList.get(0));
+				privDto2.setChatRoomPrivU(memberId);
+				chatRoomPrivRepo.createRoom(privDto2);
+				return chatRoomNo;
 			}
-			ChatJoinDto joinDto = new ChatJoinDto();
-			joinDto.setMemberId(memberId);
-			joinDto.setChatJoinTime(roomDto.getChatRoomStart());
-			joinDto.setChatRoomNo(chatRoomNo);
-			chatJoinRepo.joinChatRoom(joinDto);
-			// 1대1 채팅 테이블에 저장
-			ChatRoomPrivDto privDto1 = new ChatRoomPrivDto();
-			privDto1.setChatRoomNo(chatRoomNo);
-			privDto1.setChatRoomPrivI(memberId);
-			privDto1.setChatRoomPrivU(memberList.get(0));
-			chatRoomPrivRepo.createRoom(privDto1);
-			ChatRoomPrivDto privDto2 = new ChatRoomPrivDto();
-			privDto2.setChatRoomNo(chatRoomNo);
-			privDto2.setChatRoomPrivI(memberList.get(0));
-			privDto2.setChatRoomPrivU(memberId);
-			chatRoomPrivRepo.createRoom(privDto2);
-			return chatRoomNo;
 		}
 		else {
 			// 생성 요청 받은 채팅방이 단체 채팅방이면

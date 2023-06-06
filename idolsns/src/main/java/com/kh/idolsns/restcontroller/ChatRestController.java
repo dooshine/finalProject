@@ -1,7 +1,11 @@
 package com.kh.idolsns.restcontroller;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
+
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -86,10 +90,10 @@ public class ChatRestController {
 	}
 	
 	// 채팅방 생성
-	@PostMapping("/chatRoom")
+	/*@PostMapping("/chatRoom")
 	public void createRoom(@RequestBody ChatRoomProcessVO vo) {
 		chatRoomService.createChatRoom(vo);
-	}
+	}*/
 	
 	// 채팅방에 참여한 시간 내보내기
 	@PostMapping("/chatRoom/join")
@@ -148,20 +152,9 @@ public class ChatRestController {
 	}
 	
 	// 채팅방 각각 새 메세지 알림 있는지 확인
-	/*@PostMapping("/message/noti")
-	public boolean chatNotiByRoom(@RequestBody ChatMemberJoinVO vo) {
-		return chatReadRepo.newChatCount(vo) > 0;
-	}*/
 	@PostMapping("/message/noti")
 	public List<ChatReadDto> chatNotiByRoom(@RequestBody ChatMemberJoinVO vo) {
 		return chatReadRepo.newChatByRoom(vo.getChatRoomNoList(), vo.getMemberId());
-		//return chatNotiRepo.roomNotiList(vo.getChatRoomNoList(), vo.getMemberId());
 	}
-	
-	// 한 채팅방에 대한 알림 번호 목록 찾기
-	/*@PostMapping("/message/roomNoti")
-	public List<Integer> chatNotiNoList(@RequestBody ChatMemberJoinVO vo) {
-		return chatNotiRepo.roomNotiNo(vo.getChatRoomNo(), vo.getMemberId());
-	}*/
 	
 }
