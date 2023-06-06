@@ -537,7 +537,7 @@
          </div>
 	     
 	     <!-- 게시글 수정 모달 -->
-	      <div class="modal" tabindex="-1" role="dialog" id="editPost"
+	      <div class="modal" tabindex="-1" role="dialog" id="updatePost"
                             data-bs-backdrop="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
@@ -551,7 +551,43 @@
                     <div class="modal-body my-3">
                     	<div class="row">
 	                        <div class="text-center">
-	                        	<textarea class="col-12 post border border-secondary rounded-2" style="height: 200px;" v-if="editPost != null" v-model="editPost.postContent"></textarea>
+	                        	<textarea class="col-12 post border border-secondary rounded-2" style="height: 200px;" v-if="updatePost != null" v-model="updatePost.postContent"></textarea>
+	                        </div>
+	                    </div>
+                        <br>
+        				<div class="row ">
+        					<div class="text-center ">
+        						<button class="btn btn-primary col-3 mx-3"
+        							data-bs-toggle="modal" data-bs-target="#editEnd" @click="updatePostFunc(updatePost.postContent)">확인</button>
+        					</div>
+        				</div>
+                    </div>
+                    
+                    <!-- footer -->
+                    <div class="modal-footer">
+                    	
+                    </div>
+                    
+                </div>      
+            </div>
+         </div>
+         
+         <!-- 게시물 수정 종료 모달 -->
+	     <div class="modal" tabindex="-1" role="dialog" id="editEnd"
+                            data-bs-backdrop="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                
+                	<!-- header -->
+                    <div class="modal-header">
+<!--                         <h5 class="modal-title">해당 게시글을 삭제하시겠습니까?</h5> -->
+                    </div>
+                    
+                    <!-- body -->
+                    <div class="modal-body my-3">
+                    	<div class="row">
+	                        <div class="text-center">
+	                        	<h6>게시물이 수정 되었습니다. </h6>
 	                        </div>
 	                    </div>
                         <br>
@@ -589,7 +625,8 @@
 								<h4>{{ post.memberId }}</h4>   
 								</div>
 								<div class="row">
-								<p class="text-secondary">@{{post.memberNick }} </p>
+								<p class="text-secondary">@{{post.memberNick }} · {{getTimeDifference(post.postTime) }} </p>
+								
 								</div>
 			            </div>
 			            <div class="col-1 col-md-1 col-lg-1 d-flex align-items-start justify-content-end">
@@ -607,14 +644,14 @@
 									   			<div class="row">
 										   			<div class="col-1"></div>
 									   				<div class="col-11 ms-2">
-									   					<h6 data-bs-target="#deleteConfirm" data-bs-toggle="modal" @click="setDeletePostNo(post.postNo)">내 게시물 삭제 하기</h6>
+									   					<h6 data-bs-target="#deleteConfirm" data-bs-toggle="modal" @click="setDeletePostNo(post.postNo)">게시물 삭제</h6>
 									   				</div>
 									   			</div>
 									   			<div class="row">
 									   				<div class="col-1"></div>
 									   				<div class="col-11 ms-2">
 										   				<div class="custom-hr my-2 me-4"></div>
-										   				<h6 data-bs-target="#editPost" data-bs-toggle="modal" @click="setEditPost(post)">내 게시물 수정 하기</h6>
+										   				<h6 data-bs-target="#updatePost" data-bs-toggle="modal" @click="setUpdatePost(post)">게시물 글 내용 수정</h6>
 								   					</div>
 									   			</div>								   				
 								   				
@@ -916,6 +953,7 @@
 					                			<!-- 댓글창 아이콘 -->
 					                			<div class="row d-flex flex-nowrap">
 	<!-- 				                				<h6 class="col-1 text-start reply-text" style="white-space: nowrap;">좋아요 </h6> -->
+													<h6 class="col-1 mt-1 text-start reply-text text-secondary" style="white-space: nowrap">{{getTimeDifference(reply.replyTime) }} {{reply}}</h6>
 					                				<h6 class="col-1 mt-1 text-start reply-text text-secondary" @click="showRereplyInput(post.postNo,reply.replyNo),hideReplyInput()" style="white-space: nowrap;cursor:pointer;">댓글 달기</h6>
 					                				<!-- 댓글 삭제  -->
 					                				<h6 v-if="reply.replyId === memberId" class="col-l mt-1 text-start reply-text text-danger" style="cursor:pointer;" @click="deleteReply(reply.replyNo)">댓글 삭제</h6>
@@ -943,7 +981,7 @@
 								                			<div class="mt-1"></div>
 								                			<div class="mx-2"></div>
 								                			<!-- 대댓글 아이디가 내용보다 길면 -->								                			
-								                			<div v-if="rereply.replyContent.length &lt; rereply.replyId.length" style="max-width:100%" class="row grey-f5f5f5 rounded-3 text-left" :style="{ width: (rereply.replyId.length * 12 +30) + 'px' }">
+								                			<div v-if="rereply.replyContent && rereply.replyId && rereply.replyContent.length &lt; rereply.replyId.length" style="max-width:100%" class="row grey-f5f5f5 rounded-3 text-left" :style="{ width: (rereply.replyId.length * 12 +30) + 'px' }">
 								                				<div class="row mt-2"></div>
 								                				<h6 class="mr-1 fs-12px fw-bold">{{rereply.replyId}}</h6>
 								                				<h6 class="mr-1 fs-11px lh-lg" >{{rereply.replyContent}}</h6>
@@ -1184,6 +1222,9 @@
         Vue.createApp({
             data(){
                 return {
+					// 처음 마운트 될때 
+                	firstMountFlag : false,               
+                	 
                 	// 게시글 VO를 저장할 배열
                 	posts: [],
                 	
@@ -1235,20 +1276,51 @@
                 	modalImageUrlList:[],
                 	
                 	// 게시글 삭제 시 확인 용모달
-                	deletePostNo: null,
+                	deletePostNo: null,                	               	
                 	
                 	// 게시글 수정 용 post
-                	editPost: null,
+                	updatePost: null,
+                	
                 };
             },
-            computed:{  
+            computed:{
             	
             },
             methods:{
             		
             	// 무한 페이징 게시글 불러오기 1페이지당 10개씩 매 페이지 별로 불러옴,
             	async fetchPosts(){
+            		
+            		// 페이지가 1페이지고(10개의 게시물만 보이고), 최초 mounted가 실행된 이후에 새로 호출 되었을 경우,
+            		// 아예 페이지 새로 고침
+            		if(this.page == 2 && this.firstMountFlag)
+            		{
+            			location.reload();	
+            		}
+            		
                     if(this.loading == true) return;//로딩중이면
+                    if(this.finish == true) return;//다 불러왔으면
+                    
+                    this.loading = true;
+                    
+                    // 1페이지 부터 현재 페이지 까지 전부 가져옴 
+                    const resp = await axios.get("http://localhost:8080/rest/post/pageReload/"+this.page);
+	                this.posts = resp.data;
+	                this.getLikePostIndex(this.posts);
+	                this.getReplyAllList(this.posts);
+	                this.page++;
+	                
+	                this.loading=false;
+	                
+	                if(resp.data.length < 10){
+	                	this.finish = true;
+	                }
+	                this.firstMountFlag = true;
+            	},
+            	
+            	// 무한 스크롤용 페치 
+            	async fetchScroll(){
+            		if(this.loading == true) return;//로딩중이면
                     if(this.finish == true) return;//다 불러왔으면
                     
                     this.loading = true;
@@ -1279,6 +1351,26 @@
                 	}
 			    },
 			    
+			    
+			    // 게시물 업데이트 (글 내용 만) 
+			    async updatePostFunc(postContent){
+			    	var postNo = this.updatePost.postNo;
+			    				 
+			    	var postDto = { 
+			    			postNo : postNo,
+			    			postContent : postContent
+			    	};
+			    	
+			    	try {
+			    		await axios.put('http://localhost:8080/rest/post/',postDto);
+			    		this.fetchPosts();
+			    	}
+			    	catch(error){
+			    		console.error(error);
+			    	}
+			    	
+			    },
+			    
 				 // 이미지, 비디오 관련 
 			    setModalImageUrl(attachmentNo){
 			    	this.modalImageUrl = this.getAttachmentUrl(attachmentNo)
@@ -1305,6 +1397,34 @@
                 {
                 	this.modalImageUrlList = attachmentList;
                 },
+                
+                
+                // 게시글, 댓글 시간 철리
+                getTimeDifference(time){
+                	const writeTime = new Date(time);
+                	console.log(writeTime);
+                	const currentTime = new Date();
+                	console.log(currentTime );
+                	const timeDifference = writeTime - currentTime;
+
+                	if (timeDifference < 60000) { // 1분 내
+                        const seconds = Math.floor(timeDifference / 1000);
+                        return seconds+'초 전';
+                      } else if (timeDifference < 3600000) { // 1시간 내
+                        const minutes = Math.floor(timeDifference / 60000);
+                        return minutes+'분 전';
+                      } else if (timeDifference < 86400000) { // 24시간 내
+                        const hours = Math.floor(timeDifference / 3600000);
+                        return hours+'시간 전';
+                      } else if (timeDifference < 604800000) { // 1주일 내
+                        const days = Math.floor(timeDifference / 86400000);
+                        return days+'일 전';
+                      } else { // 1주일 이상
+                        const dateOptions = { year: 'numeric', month: 'short', day: 'numeric' };
+                        return postDate.toLocaleDateString('en-US', dateOptions);
+                      }
+                },
+                
                 
              	// 좋아요 관련 비동기 처리-----------------------------------
              	// 아이디 접속해 있고, 좋아요 클릭시에 실행
@@ -1368,9 +1488,19 @@
                 // 댓글 쓰기 창 띄우기 (다른 창들은 모두 닫음, 대댓글창도 닫음) 
                 showReplyInput(index){
 					this.replyContent = '';                 	
-                	this.replyFlagList = this.replyFlagList.map(() => false); 
-                	this.replyFlagList[index] = true;
-                	this.hideRereplyInput();
+					if(this.replyFlagList[index]==true)
+					{
+						this.replyFlagList[index] = !this.replyFlagList[index];
+						this.hideRereplyInput();
+					}
+					else{
+						this.replyFlagList = this.replyFlagList.map(() => false);
+						this.replyFlagList[index] = true;
+						this.hideRereplyInput();
+					}
+                	
+                	
+                	
                 },
                 // 댓글 쓰기 창 숨기기
                 hideReplyInput(index){
@@ -1471,11 +1601,11 @@
              	// 게시글 삭제 -----------------------------------
              	
              	// 게시글 수정
-             	setEditPost(post){
-             		this.editPost = post;
+             	setUpdatePost(post){             		
+             		this.updatePost = post;
              		this.hidePostModal();
              	},
-             	// 게시글 수정
+             	// 게시글 수정----
              	
              	
             	// 모달창 클릭 시 지도 정보 불러오기-------------------------
@@ -1570,7 +1700,7 @@
             watch:{
             	percent(){
             		if(this.percent >= 80){
-            			this.fetchPosts();
+            			this.fetchScroll();
             		}
             	},
             	findFixedTagName:_.throttle(function(){
@@ -1604,7 +1734,7 @@
             	
             },
             created(){
-            	// 게시글 불러오기
+            	// 게시글 불러오기            	
             	this.fetchPosts();
             	this.setId();
             	
