@@ -542,8 +542,9 @@
 				<div class="customModal chatMainModal" v-if="chatMainModal == true">
 					<div class="customModalHeader d-flex align-items-center justify-content-between">
 						<h5>내 위즈</h5>
-						<div class="d-flex justify-content-end">
-							<button v-if="memberId.length > 0" type="button" class="hide-style pe-3 newChatRoomBtn" @click="showCreateRoomModal">
+						<div class="d-flex justify-content-end align-items-center">
+							<button v-if="memberId.length > 0" type="button" @click="showCreateRoomModal"
+										class="hide-style pe-3 newChatRoomBtn d-flex align-items-center justify-content-center">
 								<i class="ti ti-message-circle-plus"></i>
 							</button>
 							<button type="button" class="btn-close" @click="hideChatMainModal"></button>
@@ -666,8 +667,9 @@
 				<div class="customModal createRoomModal" v-if="createRoomModal == true">
 					<div class="customModalHeader d-flex align-items-center justify-content-between">
 						<h5>새 위즈 만들기</h5>
-						<div class="d-flex justify-content-end">
-							<button type="button" class="hide-style pe-3 confirmNewChatRoomBtn" @click="createChatRoom"
+						<div class="d-flex justify-content-end align-items-center">
+							<button type="button" class="hide-style pe-3 confirmNewChatRoomBtn d-flex align-items-center justify-content-center"
+								@click="createChatRoom"
 								:disabled="(selectedMemberList.length === 0 && nameCount < 1) || 
 											(selectedMemberList.length >= 2 && (nameCount < 1 || nameCount > 20)) || 
 											selectedMemberList.length > 49">
@@ -731,12 +733,12 @@
 									<!-- 이름 변경 버튼 -->
 									<div class="d-flex justify-content-end">
 										<!-- 이름변경 저장 버튼 -->
-										<button type="button" @click="saveRoomName" class="hide-style confirmNameBtn me-2" 
+										<button type="button" @click="saveRoomName" class="hide-style confirmNameBtn me-2 d-flex align-items-center justify-content-center" 
 											:disabled="(roomInfo.chatRoomName1.length < 1 || roomInfo.chatRoomName1.length > 20) || roomInfo.chatRoomName1 == roomInfoCopy.chatRoomName1">
 											<i class="ti ti-edit-circle ti-edit-circle-large"></i>
 										</button>
 										<!-- 이름 변경 취소 버튼 -->
-										<button type="button" @click="cancelChange" class="hide-style cancelRenameBtn me-2">
+										<button type="button" @click="cancelChange" class="hide-style cancelRenameBtn me-2 d-flex align-items-center justify-content-center">
 											<i class="ti ti-edit-circle-off"></i>
 										</button>
 									</div>
@@ -748,15 +750,15 @@
 									</h5>
 								</div>
 							</div>
-							<div class="d-flex justify-content-end">
+							<div class="d-flex justify-content-end align-items-center">
 								<!-- 메뉴 열기 버튼 -->
 								<button type="button" @click="showChatMenuModal" v-if="chatMenuModal == false && roomInfo.edit == false"
-										class="hide-style changeRoomNameBtn d-flex align-items-end pe-2">
+										class="hide-style changeRoomNameBtn d-flex align-items-end pe-2 d-flex align-items-center justify-content-center">
 									<i class="ti ti-dots-vertical"></i>
 								</button>
 								<!-- 메뉴 닫기 버튼 -->
 								<button type="button" @click="hideChatMenuModal" v-if="chatMenuModal == true && roomInfo.edit == false"
-										class="hide-style changeRoomNameBtn d-flex align-items-end pe-2">
+										class="hide-style changeRoomNameBtn d-flex align-items-end pe-2" style="padding-top: 2px;">
 									<i class="ti ti-dots"></i>
 								</button>
 								<!-- 닫기 버튼 -->
@@ -939,9 +941,9 @@
 				<div class="customModal inviteMemberModal" v-if="inviteMemberModal == true">
 					<div class="customModalHeader d-flex align-items-center justify-content-between">
 						<h5>새 친구 추가</h5>
-						<div class="d-flex justify-content-end">
-							<button type="button" class="hide-style pe-3 confirmNewChatRoomBtn" @click="inviteMember"
-								:disabled="selectedMemberList.length === 0 || selectedMemberList.length + chatMemberList.length > 50">
+						<div class="d-flex justify-content-end align-items-center">
+							<button type="button" class="hide-style pe-3 confirmNewChatRoomBtn d-flex align-items-center" @click="inviteMember"
+										:disabled="selectedMemberList.length === 0 || selectedMemberList.length + chatMemberList.length > 50">
 								<i class="ti ti-message-circle-check"></i>
 							</button>
 							<button type="button" class="btn-close" @click="hideInviteMemberModal"></button>

@@ -177,7 +177,8 @@
 					}
 					this.loadRoomList();
 					this.loadChatNoti();
-					if(parsedData.chatMessageType === 1 || parsedData.chatMessageType === 4 || parsedData.chatMessageType === 5 || parsedData.chatMessageType === 6) {						
+					if((parsedData.chatMessageType === 1) || parsedData.chatMessageType === 4 || 
+						parsedData.chatMessageType === 5 || parsedData.chatMessageType === 6) {						
 						this.scrollBottom();
 					}
 				},
@@ -263,6 +264,8 @@
 				// 채팅방 모달 열기
 				showChatRoomModal(index) {
 					if(this.chatRoomNo == this.chatRoomList[index].chatRoomNo) return;
+					if(this.chatRoomModal == true) this.hideChatRoomModal();
+					if(this.roomInfo.edit == true) this.cancelChange();
 					const chatRoomNo = this.chatRoomList[index].chatRoomNo;
 					const data = {
 							type: 2,
@@ -650,10 +653,11 @@
 					if(this.textCount < 1) return;
 					if(this.textCount > 300) return;
 					this.firstMsg();
+					const text = this.text.trim();
 					const data = {
 						type: 1,
 						chatRoomNo: this.chatRoomNo,
-						chatMessageContent: this.text
+						chatMessageContent: text
 					};
 					this.socket.send(JSON.stringify(data));
 					this.clear();
@@ -820,6 +824,7 @@
 					this.chatMemberList.splice(0);
 					this.selectedMemberList.splice(0);
 					this.selectedMemberIdList.splice(0);
+					this.selectedMemberNickList.splice(0);
 					this.loadChatMember();
 					this.hideInviteMemberModal();
 				},
