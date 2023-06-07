@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.NoHandlerFoundException;
 
 import com.kh.idolsns.dto.ArtistDto;
 import com.kh.idolsns.dto.ArtistProfileDto;
@@ -43,7 +44,7 @@ public class ArtistRestController {
     // 대표페이지 View 조회
     @GetMapping("/")
     public ArtistViewDto selectArtistView(@RequestParam String artistEngNameLower){
-        return sqlSession.selectOne("artist.selectArtistViewByEngName", artistEngNameLower);
+        return sqlSession.selectOne("artist.selectArtistViewByEngName", artistEngNameLower); 
     }
 
     // 대표페이지 확인(artistEngNameLower)
