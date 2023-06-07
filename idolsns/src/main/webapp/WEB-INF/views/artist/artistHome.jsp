@@ -314,21 +314,16 @@
     	async loadTags(){
     		
     		const tagName = this.artistObj.artistName;
+    		console.log("이름:" +tagName)
     		const url = "/rest/tag/" + tagName;
     		
+    		
     		const resp = await axios.get(url);
-    		this.tagDto = resp.data;
-    		this.postShow.postNo = resp.data.postNo;
-            
-    		this.loadPosts();
+    		this.postShowDto = resp.data;
+
     	},
   		
-	    // 불러오기
-	    async loadPosts(){
-	    	const postNo = this.postShow.postNo;
-			const resp = await axios.get("/rest/post/" + postNo);  
-			this.postShow = { ...this.postShow, ...resp.data };
-		},
+
     		
     	// 모달창 클릭 시 지도 정보 불러오기-------------------------
       	showMap(keyword){
@@ -425,7 +420,7 @@
         
         ///////
         this.loadTags();
-        this.loadPosts();
+        //this.loadPosts();
   	  
   	  
 
