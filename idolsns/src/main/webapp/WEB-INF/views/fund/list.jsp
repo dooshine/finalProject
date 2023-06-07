@@ -303,7 +303,7 @@
                       sortByDate() {
                    	  	const resp = await axios.get("http://localhost:8080/rest/fund/page/sort-by-date");
 
-                   	    // 가져온 데이터로 fundings 배열 업데이트
+//                    	    가져온 데이터로 fundings 배열 업데이트
                    	    this.fundings = resp.data.fundPostImageDtos || resp.data.fundListWithTagDtos;
                    	    
                    	    
