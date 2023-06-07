@@ -56,12 +56,12 @@ public class InterceptorConfiguration implements WebMvcConfigurer{
         		"/rest/attachment/upload2/**",
         		"/rest/post/reply/delete/**",
         		"/rest/post/rereply/**",
-        		"/rest/post/reply/redelete/**",                
+        		"/rest/post/reply/redelete/**",
                 "/chat/**",
                 "/calendar/**",
-                "/rest/point/**",
-                "/rest/fund/**",
-                "/point/**"
+        		"/rest/point/**",
+        		"/rest/fund/**",
+        		"/point/**"
         )
         .excludePathPatterns(
                  "/member/join",

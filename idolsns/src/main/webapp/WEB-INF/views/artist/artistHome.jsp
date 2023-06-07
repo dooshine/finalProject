@@ -15,6 +15,14 @@
 
 <!-- develope-css -->
 <style>
+   @media screen and (max-width:992px) {
+		  	.col-6 {
+		    width: 100%; 
+		  }
+    	}
+		 
+			   	
+
     .develope-back-forestgreen {
         background: forestgreen;
         min-height: 300px;
@@ -96,9 +104,9 @@
 	            <div class="row">
 	                <div class="col container pt-3 px-4">
 	                
-	                <!-- 
-	                   <div><i class="fa-solid fa-location-dot me-1"></i>{{post.mapPlace}}</div>
-	                 -->
+	                
+	                   <div><i class="fa-solid fa-location-dot me-1"></i>{{postShow.mapPlace}}</div>
+	                
 	                
 	                </div>
 	            </div>
@@ -143,6 +151,14 @@
     Vue.createApp({
       data() {
         return {
+        	
+        	postShow: {
+        		postNo:"",
+        		tagName:"",
+        		mapPlace:"",
+        		fundTitle:"",
+        	},
+        	
             artistObj: {},
             followPageObj: {
                 memberId: memberId,
@@ -154,16 +170,7 @@
             memberFollowObj: {},
             isFollowingArtist: false,
             
-            
-            //애연//
-         	// 게시글 VO를 저장할 배열
-        	posts: [],
-            postNo:'',
-            tagName:'',
-        	// 지도에 주소 표시하는 문자열
-        
-            //mapData: [], // 추가
-        };
+            };
       },
       computed: {
         fullName(){
@@ -308,21 +315,16 @@
     	async loadTags(){
     		
     		const tagName = this.artistObj.artistName;
-    		const url = "http://localhost:8080/rest/tag/" + tagName;
+    		console.log("이름:" +tagName)
+    		const url = "/rest/tag/" + tagName;
+    		
     		
     		const resp = await axios.get(url);
-    		this.tagDto = resp.data;
-    		const postNo = this.tagDto.postNo;
-            
-    		this.loadPosts();
+    		this.postShowDto = resp.data;
+
     	},
   		
-	    // 불러오기
-	    async loadPosts(){
-	    	const postNo = this.posts.postNo;
-			const resp = await axios.get("http://localhost:8080/rest/post/" + postNo);  
-			this.posts = { ...this.posts, ...resp.data };
-		},
+
     		
     	// 모달창 클릭 시 지도 정보 불러오기-------------------------
       	showMap(keyword){
@@ -385,16 +387,7 @@
     	  
 	        
         
-        
-        
-        
-        
-        
-        		
 
-        
-      },
-      watch: {
   
       },
       created(){
@@ -428,7 +421,7 @@
         
         ///////
         this.loadTags();
-        this.loadPosts();
+        //this.loadPosts();
   	  
   	  
 

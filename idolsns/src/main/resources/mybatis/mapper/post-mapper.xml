@@ -8,6 +8,30 @@
 
 <!-- mapper -->
 <mapper namespace="post">
+
+	<select id = "sortTag" resultType="PostShowDto">
+
+		 select
+		    p.post_no, 
+		    p.member_id, 
+		    p.post_time, 
+		    p.post_type, 
+		    p.post_content,
+		    f.fund_title,
+		    t.tag_no, 
+		    t.tag_name, 
+		    t.tag_type,
+		    m.map_place
+		from 
+		    post p
+		    left join fund_post f on p.post_no = f.post_no
+		    left join map m on p.post_no = m.post_no
+		    left join tag t on p.post_no = t.post_no
+		WHERE t.tag_name = #{tagName};
+
+	</select>
+
+
     <!-- 통합게시물 시퀀스 생성 -->
     <select id="sequence" resultType="Long">
         select post_seq.nextval from dual
