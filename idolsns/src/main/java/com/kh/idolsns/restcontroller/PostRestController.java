@@ -317,7 +317,7 @@ public class PostRestController {
     
     // 통합게시물 수정
     @PutMapping("/")
-    public boolean update(@ModelAttribute PostDto postDto){
+    public boolean update(@RequestBody PostDto postDto){
         return postRepo.update(postDto);
     }
 
