@@ -48,8 +48,8 @@ public class InterceptorConfiguration implements WebMvcConfigurer{
         
 		registry.addInterceptor(memberInterceptor)
         .addPathPatterns(
-                // "/member/**",
-                // "/admin/**",
+                "/member/**",
+                //"/admin/**",
                 // "/board/**"
                 "/rest/follow/**",
         		"/rest/point/**",
@@ -60,11 +60,16 @@ public class InterceptorConfiguration implements WebMvcConfigurer{
 
         )
         .excludePathPatterns(
-                // "/member/join",
-                // "/member/joinFinish",
-                // "/member/login",
-                // "/member/find",
-                // "/member/exitFinish",
+                 "/member/join",
+                 "/member/joinFinish",
+                 "/member/login",
+                 "/member/find",
+                 "/member/exitFinish",
+                 "/member/findId",
+                 "/member/findIdFinish",
+                 "/member/findPw",
+                 "/member/findPwFinish"
+                 
                 // "/board/list",
                 // "/board/detail"
         );
