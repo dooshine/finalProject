@@ -8,7 +8,7 @@
 	<style>
 		/*.calendar-area {
 			position: sticky;
-			/*position: -webkit-sticky;*/
+			position: -webkit-sticky;
 		}*/
 	</style>
 	<!-- 일반페이지 일때 -->

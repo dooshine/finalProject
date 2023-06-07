@@ -51,7 +51,7 @@ public class InterceptorConfiguration implements WebMvcConfigurer{
                 "/member/**",
                 //"/admin/**",
                 // "/board/**",
-                "/rest/follow/**",               
+                // "/rest/follow/**",               
         		"/rest/post/**", // PostRestController전체 memberInterceptor 처리
         		"/rest/attachment/upload2/**",
         		"/rest/post/reply/delete/**",
@@ -90,6 +90,7 @@ public class InterceptorConfiguration implements WebMvcConfigurer{
                  
                 // "/board/list",
                 // "/board/detail"
+                // "/rest/follow/test",
         		"/rest/post/all/**", // 전체 목록 조회 페이지
         		"/rest/post/page/**", // 게시물 전체 목록 페이지
         		"/rest/post/pageReload/**", // 게시물 목록 페이지 불러오기
