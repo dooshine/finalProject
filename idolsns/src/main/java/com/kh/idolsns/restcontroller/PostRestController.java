@@ -29,6 +29,7 @@ import com.kh.idolsns.dto.TagDto;
 import com.kh.idolsns.dto.TogetherPostDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kh.idolsns.dto.FreePostDto;
+import com.kh.idolsns.dto.FundPostImageDto;
 import com.kh.idolsns.dto.MapDto;
 import com.kh.idolsns.dto.PostDto;
 import com.kh.idolsns.dto.PostImageDto;
@@ -37,6 +38,7 @@ import com.kh.idolsns.dto.SchedulePostDto;
 import com.kh.idolsns.repo.TagRepo;
 import com.kh.idolsns.repo.TogetherPostRepo;
 import com.kh.idolsns.service.PostShowService;
+import com.kh.idolsns.vo.FundDetailVO;
 import com.kh.idolsns.vo.PostShowVO;
 import com.kh.idolsns.repo.AttachmentRepo;
 import com.kh.idolsns.repo.FreePostRepo;
@@ -103,6 +105,11 @@ public class PostRestController {
     // 같기아요
     @Autowired
     private TogetherPostRepo togetherPostRepo;    
+    
+    
+    
+
+    
     
     // 통합게시물 등록
     @PostMapping("/")
