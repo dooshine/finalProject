@@ -29,6 +29,7 @@ import com.kh.idolsns.dto.TagDto;
 import com.kh.idolsns.dto.TogetherPostDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kh.idolsns.dto.FreePostDto;
+import com.kh.idolsns.dto.FundDto;
 import com.kh.idolsns.dto.MapDto;
 import com.kh.idolsns.dto.PostDto;
 import com.kh.idolsns.dto.PostImageDto;
@@ -189,6 +190,20 @@ public class PostRestController {
     	}
     	
     }
+    
+    
+    // 애연 추가 -- 성지순례
+    @GetMapping("/map/{postNo}")
+    public List<String> getMapList(@PathVariable Long postNo) {
+    	return mapRepo.selectAll(postNo);
+    	
+    }
+    
+    
+ 	
+    
+    
+    
     
     // -------------------- 태그정보 등록 
 //    @PostMapping("/tag")

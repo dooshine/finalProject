@@ -24,6 +24,13 @@
  		delete from map where post_no=#{postNo} 		
  	</delete>
  
+ 	
+ 	<select id="selectAll" resultType="String">
+		select * from map order by post_no desc
+	</select>
+ 
+ 
+ 
  
  </mapper>
  

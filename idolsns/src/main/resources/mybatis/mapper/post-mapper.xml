@@ -8,6 +8,60 @@
 
 <!-- mapper -->
 <mapper namespace="post">
+
+
+	   
+    <resultMap type="PostShowVO" id="psvo">
+		<!-- FundPostImageDto (fund_post + post + fund_main_image) -->
+		<association property="postShowDto">
+			<result column="post_no" property="postNo"/>
+			<result column="member_id" property="memberId"/>
+			<result column="post_time" property="postTime"/>
+			<result column="post_type" property="postType"/>
+			<result column="post_content" property="postContent"/>
+			<result column="tag_no" property="tagNo"/>
+			<result column="tag_type" property="tagType"/>
+			<result column="tag_name" property="tagName"/>
+			<result column="map_place" property="mapPlace"/>
+			<result column="fund_title" property="fundTitle"/>
+		</association>
+		
+		
+	
+		<!-- post -->
+		<collection property="postDtos" javaType="java.util.List"
+				ofType="PostDto" select="postByPostNo" column="post_no"/>
+	
+		
+		<!-- post_image -->
+		<collection property="attachmentNos" javaType="java.util.List"
+				ofType="PostImageDto" select="attachByPostNo" column="post_no"/>
+		
+		<!-- tag -->
+		<collection property="tagNames" javaType="java.util.List"
+				ofType="TagDto" select="tagByPostNo" column="post_no"/>
+				
+				
+		
+	
+				
+				
+	</resultMap>
+	
+    
+    
+    
+    
+    
+    
+    
+    
+    
+
+
+
+
+
     <!-- 통합게시물 시퀀스 생성 -->
     <select id="sequence" resultType="Long">
         select post_seq.nextval from dual
@@ -37,4 +91,18 @@
         delete from post 
         where post_no = #{postNo}
     </delete>
+    
+    
+    
+    
+    
+ 
+    
+    
+    
+    
+    
+    
+    
+    
 </mapper>
