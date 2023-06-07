@@ -22,6 +22,9 @@ import com.kh.idolsns.dto.MemberFollowInfoDto;
 import com.kh.idolsns.dto.MemberFollowProfileInfoDto;
 import com.kh.idolsns.service.FollowService;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @CrossOrigin
 @RestController
 @RequestMapping("/rest/follow")
