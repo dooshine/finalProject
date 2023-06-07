@@ -1406,8 +1406,6 @@
                 getTimeDifference(time){
                 	const writeTime = new Date(time);
                 	const currentTime = new Date();
-                	console.log(currentTime);
-                	console.log(time);
                 	const timeDifference = currentTime.getTime() - writeTime.getTime();
 					
                 	if (timeDifference < 20000) { // 20초 내                       

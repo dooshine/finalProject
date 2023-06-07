@@ -121,8 +121,8 @@ public class PostShowService {
 	public List<PostShowVO> postShowByPagingReload(int page){
 		List<PostShowVO> postShowList = postShowRepo.selectListByPagingReload(page);
 		Long postNo = 0l;
-		
-		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//		
+//		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		
 		for(PostShowVO postShowVO : postShowList)
 		{
@@ -135,7 +135,7 @@ public class PostShowService {
 //			Date parsedTime = dateFormat.parse(formattedTime)
 //			postShowVO.setPostTime();
 //			postShowVO.setPostTime((postShowVO.getPostTime()));
-			System.out.println((postShowVO.getPostTime()));
+//			System.out.println((postShowVO.getPostTime()));
 			
 			// 고정 태그 리스트
 			postShowVO.setFixedTagList(tagRepo.selectFixedTagAll(postNo));
