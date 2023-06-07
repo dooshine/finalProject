@@ -15,7 +15,7 @@
 		insert into reply(reply_no, post_no, reply_id, reply_content, 
 							reply_time, reply_group_no)
 		values(#{replyNo}, #{postNo}, #{replyId}, #{replyContent},
-					sysdate, #{replyGroupNo})	
+					systimestamp, #{replyGroupNo})	
 	</insert>
 	
 	<select id="list" resultType="ReplyDto" parameterType="Long">

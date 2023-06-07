@@ -83,7 +83,7 @@ public class ChatRestController {
 		return list;
 	}
 	
-	// 내 팔로워 목록 불러오기 (현재 팔로우 기능 부재로 전체 회원 목록 불러오는 것으로 대체)
+	// 내 팔로우 목록 불러오기
 	@GetMapping("/chatRoom/follow")
 	public List<MemberDto> followList() {
 		return memberRepo.selectAll();
@@ -148,7 +148,6 @@ public class ChatRestController {
 	@GetMapping("/message/noti/{memberId}")
 	public boolean loadChatNoti(@PathVariable String memberId) {
 		return chatReadRepo.newChatCount(memberId) > 0;
-		//return chatNotiRepo.myNotiList(memberId) > 0;
 	}
 	
 	// 채팅방 각각 새 메세지 알림 있는지 확인
