@@ -129,7 +129,7 @@
 					</div>
 	             	<!-- 검색창 -->
 	               	<div class="search-box w-35 ms-auto me-4">
-	                    <input class="search-input" type="text" v-model="searchQuery" placeholder="검색창" @keyup.enter="searchFunding">
+	                    <input class="search-input" type="text" v-model="searchQuery" placeholder="검색창" @keyup.enter="fetchFundingList">
 	                </div>
                	</div>
                	
@@ -197,27 +197,48 @@
                   
                },
                methods: {
-                    // FundPostImageDto 불러오기
-                    async loadFundPostImageList(){
-                       if(this.loading == true) return; // 로딩중이면
-                       if(this.finish == true) return; // 다 불러왔으면
-                       if(this.searchQuery != "") return;
-                          
-                       this.loading = true;
-                          
-	                  const resp = await axios.get("http://localhost:8080/rest/fund/page/"+this.page);     
-	                  console.log(resp.data);
-	                  this.fundings.push(...resp.data);
-	                  this.page ++;
-	                  
-	                  this.loading = false;
-	                  
-	                  // 데이터가 12개 미만이면 더 읽을게 없다
-	                       if(resp.data.length < 12){ 
-	                           this.finish = true;
-	                       }
-	                  
-	                    },
+            	   
+            	   // # 펀딩 리스트 불러오기
+                   async fetchFundingList() {
+                 	  
+		                  // funding 리스트 초기화
+		                  if(!this.initFundings || this.searchQueryTemp != this.searchQuery) {
+		                     this.fundings = [];
+		                     this.initFundings = true; 
+		                     this.finish = false; // 검색어가 다르면 초기화
+		                  }
+	                      // 다 불러왔으면
+	                      if(this.finish == true) return; 
+		                  
+		                  // 다른 검색어로 검색했을때
+		                  if(this.searchQueryTemp != this.searchQuery) {
+		                     this.searchPage = 1;
+		                  }
+		                  
+		                  // searchQueryTemp에 이전 검색어 저장
+		                  this.searchQueryTemp = this.searchQuery;
+		                       
+		                  const resp = await axios.get("http://localhost:8080/rest/fund/page/"+this.searchPage,
+		                        {
+		                	  params: {
+		                		  	// 검색어
+		                        	searchKeyword : this.searchQuery,
+		                        	// 정렬 조건
+		                        	orderList : this.orderList
+		                        },
+		                        paramsSerializer: params => {
+		                    		return new URLSearchParams(params).toString();
+		                    	}
+		                        });     
+		                  console.log(resp.data);
+		                  this.fundings.push(...resp.data);
+		                  this.searchPage ++;
+		                  
+		                  // 데이터가 12개 미만이면 더 읽을게 없다
+		                       if(resp.data.length < 12){
+		                           this.finish = true;
+		                          }
+                   },
                     
                     // 남은 시간 설정
                     getTimeDiff(funding) {
@@ -243,9 +264,6 @@
                         	  return fundState;
                           }
                     },
-                    getProgress(funding) {
-                       
-                    },
                     
                     // 상세페이지로 이동
                     link(funding){
@@ -261,75 +279,47 @@
                         return value.toLocaleString();
                       },
                       
-                      // # 펀딩 검색
-                      async searchFunding() {
-                          if(!this.searchQuery) return; // 빈 칸 입력시
-                          
-                         
-		                  // funding 리스트 초기화
-		                  if(!this.initFundings || this.searchQueryTemp != this.searchQuery) {
-		                     this.fundings = [];
-		                     this.initFundings = true; 
-		                     this.finish = false; // 검색어가 다르면 초기화
-		                  }
-	                      // 다 불러왔으면
-	                      if(this.finish == true) return; 
-		                  
-		                  // 다른 검색어로 검색했을때
-		                  if(this.searchQueryTemp != this.searchQuery) {
-		                     this.searchPage = 1;
-		                  }
-		                  
-		                  // searchQueryTemp에 이전 검색어 저장
-		                  this.searchQueryTemp = this.searchQuery;
-		                       
-		                  const resp = await axios.get("http://localhost:8080/rest/fund/page/"+this.searchPage,
-		                        {
-		                	  params: {
-		                        	searchKeyword : this.searchQuery,
-		                        	orderList : this.orderList
-		                        },
-		                        paramsSerializer: params => {
-		                    		return new URLSearchParams(params).toString();
-		                    	}
-		                        });     
-		                  console.log(resp.data);
-		                  this.fundings.push(...resp.data);
-		                  this.searchPage ++;
-		                  
-		                  // 데이터가 12개 미만이면 더 읽을게 없다
-		                       if(resp.data.length < 12){
-		                           this.finish = true;
-		                          }
-                      },
                       // 펀딩 글쓰기로 이동
                       startFunding() {
                     	  window.location.href = "/fund/write";
                       },
                       
                       // 시간순 정렬
-//                       sortByDate() {
-//                     	// 최신순
-// 						if(this.dateSort) {
-// 	                   	    this.dateSort = false;
-// 	                   	    this.orderList.push("post_time desc");
-// 						}
-//                     	// 오래된순
-// 						else {
-// 							this.dateSort = true;
-// 							this.orderList.push("post_time asc");
-// 						}
-//                       }
-                   	    
+                      sortByDate() {
+                    	  const descOrder = "post_time desc";
+                    	    const ascOrder = "post_time asc";
+
+                    	    // 최신순
+                    	    if (this.dateSort) {
+                    	        this.dateSort = false;
+                    	        if (!this.orderList.includes(descOrder)) {
+                    	            this.orderList = [descOrder];
+                    	            this.fetchFundingList();
+                    	        }
+                    	    }
+                    	    // 오래된순
+                    	    else {
+                    	        this.dateSort = true;
+                    	        if (!this.orderList.includes(ascOrder)) {
+                    	            this.orderList = [ascOrder];
+                    	            this.fetchFundingList();
+                    	        }
+                    	    }
+                    	    console.log(this.orderList);
+                      }
                  },
                  watch: {
                    // percent가 변하면 percent의 값을 읽어와서 80% 이상인지 판정
                    percent(){
                        if(this.percent >= 80) {
                            // console.log("데이터를 불러올 때가 된거 같아");
-                           this.loadFundPostImageList();
-                           this.searchFunding();
+//                            this.loadFundPostImageList();
+                           this.fetchFundingList();
                        }
+                   },
+                   // 정렬하면
+                   orderList() {
+                	   this.fetchFundingList();
                    }
                },
                mounted() {
@@ -347,7 +337,8 @@
                    },250));
                },
                  created() {
-                    this.loadFundPostImageList();
+//                     this.loadFundPostImageList();
+                    this.fetchFundingList();
                  }
            }).mount("#app");
 

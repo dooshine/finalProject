@@ -70,7 +70,7 @@ public class InterceptorConfiguration implements WebMvcConfigurer{
                         "/rest/post/reply/**",
                         "/rest/reply/fund/**"
                 );
-
+        
         // //[4] 작성자 본인 및 관리자 검사 인터셉터
         // registry.addInterceptor(postManageInterceptor)
         //         .addPathPatterns("/board/edit", "/board/delete");

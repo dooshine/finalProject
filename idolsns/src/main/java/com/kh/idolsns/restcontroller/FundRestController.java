@@ -51,11 +51,11 @@ public class FundRestController {
 	@GetMapping("/page/{page}")
 	public List<FundListWithTagDto> paging(@PathVariable int page,
 		@ModelAttribute FundSearchVO vo) {
-//		List<FundListWithTagDto> list = fundPostImageRepo.selectListWithTag(page, vo);
+		List<FundListWithTagDto> list = fundPostImageRepo.selectListWithTag(page, vo);
 		
 		System.out.println("----------------------vo----------------------"+vo);
-//		System.out.println("----------------------list----------------------"+list);
-		return null;
+		System.out.println("----------------------list----------------------"+list);
+		return list;
 		}
 		
 	

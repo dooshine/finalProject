@@ -468,6 +468,7 @@
 	                const postNo = this.fundDetail.postNo; // 게시물 번호
 	                const resp = await axios.get("http://localhost:8080/rest/reply/fund/"+postNo);
 	                this.replies = resp.data; // Vue data에 저장
+	               	console.log(resp.data);
 	              },
 	            // 작성한 comment 서버로 전송
                 async addReply() {
