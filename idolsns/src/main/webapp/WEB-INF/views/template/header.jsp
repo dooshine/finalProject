@@ -990,7 +990,6 @@
             
 			<div class="row">
 				<!-- (개발)로그인 버튼 -->
-				<!-- <%-- -->
 				<div class="col-4">
 					<button><a href="/dev/login?memberId=testuser1">testuser1</a></button>
 					<button><a href="/dev/login?memberId=testuser2">testuser2</a></button>
@@ -1010,7 +1009,6 @@
 						<a href="${pageContext.request.contextPath}/admin/">관리자 페이지</a>
 					</c:if>
 				</div>
-				<!-- --%> -->
             </div>
         </header>
           <!-- <hr> -->
