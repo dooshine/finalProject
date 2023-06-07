@@ -1,5 +1,7 @@
 package com.kh.idolsns.service;
 
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,6 +52,7 @@ public class PostShowService {
 		
 		for(PostShowVO postShowVO : postShowList)
 		{	
+			
 			// 글번호 
 			postNo = postShowVO.getPostNo();
 			
@@ -118,11 +121,21 @@ public class PostShowService {
 	public List<PostShowVO> postShowByPagingReload(int page){
 		List<PostShowVO> postShowList = postShowRepo.selectListByPagingReload(page);
 		Long postNo = 0l;
+//		
+//		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		
 		for(PostShowVO postShowVO : postShowList)
 		{
 			// 글번호 
 			postNo = postShowVO.getPostNo();
+//			Timestamp ts = postShowVO.getPostTime();
+			
+			// 시간 재설정
+//			String formattedTime = dateFormat.format(postShowVO.getPostTime());
+//			Date parsedTime = dateFormat.parse(formattedTime)
+//			postShowVO.setPostTime();
+//			postShowVO.setPostTime((postShowVO.getPostTime()));
+//			System.out.println((postShowVO.getPostTime()));
 			
 			// 고정 태그 리스트
 			postShowVO.setFixedTagList(tagRepo.selectFixedTagAll(postNo));

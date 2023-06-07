@@ -1,6 +1,7 @@
 package com.kh.idolsns.dto;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -12,6 +13,6 @@ public class ReplyDto {
 	private Long postNo;
 	private String replyId;
 	private String replyContent;
-	private Date replyTime;
+	private Timestamp replyTime;
 	private Long replyGroupNo;
 }
