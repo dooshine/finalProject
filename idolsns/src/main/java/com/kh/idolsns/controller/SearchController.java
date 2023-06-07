@@ -10,10 +10,21 @@ import org.springframework.web.bind.annotation.RequestParam;
 @RequestMapping("/search")
 public class SearchController {
     
-    @GetMapping("")
-    public String search(@RequestParam String q, Model model){
+    @GetMapping("/post")
+    public String searchPost(@RequestParam String q, Model model){
         model.addAttribute("query", q);
-        System.out.println(q);
-        return "search/search";
+        return "search/searchPost";
+    }
+
+    @GetMapping("/artist")
+    public String searchArtist(@RequestParam String q, Model model){
+        model.addAttribute("query", q);
+        return "search/searchArtist";
+    }
+
+    @GetMapping("/member")
+    public String searchMember(@RequestParam String q, Model model){
+        model.addAttribute("query", q);
+        return "search/searchMember";
     }
 }

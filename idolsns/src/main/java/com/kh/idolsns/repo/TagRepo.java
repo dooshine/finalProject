@@ -14,6 +14,11 @@ public interface TagRepo {
 	// 업데이트는 필요 x 
 	// 하나의 태그명 조회( 번호가 있는 지를 알려줌)
 	Long selectOne(String tagName); 
+	
+	//애연추가
+	TagDto find(String tagName);
+	
+	
 	// 자유태그 삭제
 	boolean delete(Long tagNo); 
 	// 특정글 태그 전체 불러오기 
