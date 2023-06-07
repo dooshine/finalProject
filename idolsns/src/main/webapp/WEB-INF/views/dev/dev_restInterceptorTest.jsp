@@ -21,11 +21,20 @@
     },
     methods: {
         async restTest(){
-            const url = "http://localhost:8080/rest/follow/test";
+            const url = "http://localhost:8080/dev/restInterceptor";
 
-            const resp = await axios.get(url);
+            // const resp = axios.get(url);
+            // ↓
 
-            console.log(resp);
+            axios.get(url)
+                .then((response)=>{
+                    console.log(response.data);
+                })
+                .catch((error)=>{
+                    if(error.response.status === 401){
+                        console.log("로그인이 안됐심더");
+                    }
+                });
         }
     },
     watch: {

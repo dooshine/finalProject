@@ -2,6 +2,7 @@ package com.kh.idolsns.restcontroller;
 
 import java.util.List;
 
+import javax.security.auth.login.LoginException;
 import javax.servlet.http.HttpSession;
 
 import org.apache.ibatis.session.SqlSession;
@@ -21,6 +22,7 @@ import com.kh.idolsns.dto.FollowDto;
 import com.kh.idolsns.dto.MemberFollowCntDto;
 import com.kh.idolsns.dto.MemberFollowInfoDto;
 import com.kh.idolsns.dto.MemberFollowProfileInfoDto;
+import com.kh.idolsns.dto.TestDto;
 import com.kh.idolsns.service.FollowService;
 
 import lombok.extern.slf4j.Slf4j;
@@ -159,11 +161,5 @@ public class FollowRestController {
     }
 
 
-    // [테스트] 상태코드 전달하기
-    @GetMapping("/test")
-    public ResponseEntity<String> test(){
-        // return ResponseEntity.notFound().build();
-        return ResponseEntity.status(403).build();
-        // return
-    }
+    
 }
