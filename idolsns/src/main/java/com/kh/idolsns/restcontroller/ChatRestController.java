@@ -83,7 +83,7 @@ public class ChatRestController {
 		return list;
 	}
 	
-	// 내 팔로워 목록 불러오기 (현재 팔로우 기능 부재로 전체 회원 목록 불러오는 것으로 대체)
+	// 내 팔로우 목록 불러오기
 	@GetMapping("/chatRoom/follow")
 	public List<MemberDto> followList() {
 		return memberRepo.selectAll();

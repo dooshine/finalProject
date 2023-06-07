@@ -389,5 +389,10 @@ scrollbar-width: none;
 }
 .btn-close:focus {
 	outline: none;
-			box-shadow: none;
+	box-shadow: none;
+}
+.link-to-profile,
+.link-to-profile:hover {
+	text-decoration: none;
+	color: black;
 }
