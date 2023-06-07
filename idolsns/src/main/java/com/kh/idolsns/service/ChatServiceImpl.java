@@ -76,14 +76,10 @@ public class ChatServiceImpl implements ChatService {
 	public void join(ChatMemberVO member, int chatRoomNo) {
 		// 방 생성
 		createRoom(chatRoomNo);
-		//log.debug("chatrooms after create: " + chatRooms);
 		// 방 선택
 		ChatRoomVO chatRoom = chatRooms.get(chatRoomNo);
 		// 입장
 		chatRoom.enter(member);
-		//log.debug("chatRoom after create: " + chatRoom);
-		//log.debug("chatrooms after join: " + chatRooms);
-		//log.debug("chatRooms: " + chatRooms);
 	}
 	
 	// 참여중인 방 퇴장
@@ -207,9 +203,6 @@ public class ChatServiceImpl implements ChatService {
 	public void broadcastNewRoom(int chatRoomNo, TextMessage jsonMessage) throws IOException {
 		if(!roomExist(chatRoomNo)) return;
 		ChatRoomVO chatRoom = chatRooms.get(chatRoomNo);
-		//log.debug("chatRoom: " + chatRoom);
-		//log.debug("broadcastNewRoom: " + chatRoomNo);
-		//log.debug("jsonMessage: " + jsonMessage);
 		chatRoom.broadcast(jsonMessage);
 	}
 	
