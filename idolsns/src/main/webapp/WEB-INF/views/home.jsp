@@ -953,7 +953,7 @@
 					                			<!-- 댓글창 아이콘 -->
 					                			<div class="row d-flex flex-nowrap">
 	<!-- 				                				<h6 class="col-1 text-start reply-text" style="white-space: nowrap;">좋아요 </h6> -->
-													<h6 class="col-1 mt-1 text-start reply-text text-secondary" style="white-space: nowrap">{{getTimeDifference(reply.replyTime) }} {{reply}}</h6>
+													<h6 class="col-1 mt-1 text-start reply-text text-secondary" style="white-space: nowrap">{{getTimeDifference(reply.replyTime) }} </h6>
 					                				<h6 class="col-1 mt-1 text-start reply-text text-secondary" @click="showRereplyInput(post.postNo,reply.replyNo),hideReplyInput()" style="white-space: nowrap;cursor:pointer;">댓글 달기</h6>
 					                				<!-- 댓글 삭제  -->
 					                				<h6 v-if="reply.replyId === memberId" class="col-l mt-1 text-start reply-text text-danger" style="cursor:pointer;" @click="deleteReply(reply.replyNo)">댓글 삭제</h6>
@@ -997,6 +997,7 @@
 								                			
 								                			<!-- 대댓글창 아이콘 -->
 								                			<div class="row d-flex flex-nowrap">
+								                				<h6 class="col-1 mt-1 text-start reply-text text-secondary" >{{getTimeDifference(rereply.replyTime)}}</h6>								                												                				
 								                				<h6 class="col-1 mt-1 text-start reply-text text-secondary" @click="showRereplyInput(post.postNo,reply.replyNo),hideReplyInput()" style="white-space: nowrap;cursor:pointer;">댓글 달기</h6>
 								                				<!-- 대댓글 삭제  -->
 								                				<h6 v-if="rereply.replyId == memberId" class="col-l mt-1 text-start reply-text text-danger" style="cursor:pointer;" @click="deleteRereply(rereply.replyNo)">댓글 삭제</h6>
@@ -1083,6 +1084,7 @@
 						                			<!-- 댓글창 아이콘 -->
 						                			<div class="row d-flex flex-nowrap">
 		<!-- 				                				<h6 class="col-1 text-start reply-text" style="white-space: nowrap;">좋아요 </h6> -->
+														<h6 class="col-1 mt-1 text-start reply-text text-secondary" style="white-space: nowrap">{{getTimeDifference(reply.replyTime) }} </h6>
 						                				<h6 class="col-1 mt-1 text-start reply-text text-secondary" @click="showRereplyInput(post.postNo,reply.replyNo),hideReplyInput()" style="white-space: nowrap;cursor:pointer;">댓글 달기</h6>
 						                				<!-- 댓글 삭제  -->
 						                				<h6 v-if="reply.replyId === memberId" class="col-l mt-1 text-start reply-text text-danger" style="cursor:pointer;" @click="deleteReply(reply.replyNo)">댓글 삭제</h6>
@@ -1126,6 +1128,7 @@
 									                			
 									                			<!-- 대댓글창 아이콘 -->
 									                			<div class="row d-flex flex-nowrap">
+									                				<h6 class="col-1 mt-1 text-start reply-text text-secondary" style="white-space: nowrap">{{getTimeDifference(rereply.replyTime) }} </h6>
 									                				<h6 class="col-1 mt-1 text-start reply-text text-secondary" @click="showRereplyInput(post.postNo,reply.replyNo),hideReplyInput()" style="white-space: nowrap;cursor:pointer;">댓글 달기</h6>
 									                				<!-- 대댓글 삭제  -->
 									                				<h6 v-if="rereply.replyId == memberId" class="col-l mt-1 text-start reply-text text-danger" style="cursor:pointer;" @click="deleteRereply(rereply.replyNo)">댓글 삭제</h6>
@@ -1402,15 +1405,16 @@
                 // 게시글, 댓글 시간 철리
                 getTimeDifference(time){
                 	const writeTime = new Date(time);
-                	console.log(writeTime);
                 	const currentTime = new Date();
-                	console.log(currentTime );
-                	const timeDifference = writeTime - currentTime;
-
-                	if (timeDifference < 60000) { // 1분 내
-                        const seconds = Math.floor(timeDifference / 1000);
+                	const timeDifference = currentTime.getTime() - writeTime.getTime();
+					
+                	if (timeDifference < 20000) { // 20초 내                       
+                        return '방금 전';
+                      } else if (timeDifference < 60000){ // 1분 내 
+                    	const seconds = Math.floor(timeDifference / 1000);
                         return seconds+'초 전';
-                      } else if (timeDifference < 3600000) { // 1시간 내
+                      }
+                		else if (timeDifference < 3600000) { // 1시간 내
                         const minutes = Math.floor(timeDifference / 60000);
                         return minutes+'분 전';
                       } else if (timeDifference < 86400000) { // 24시간 내
@@ -1420,8 +1424,15 @@
                         const days = Math.floor(timeDifference / 86400000);
                         return days+'일 전';
                       } else { // 1주일 이상
-                        const dateOptions = { year: 'numeric', month: 'short', day: 'numeric' };
-                        return postDate.toLocaleDateString('en-US', dateOptions);
+                    	var dateOptions; 
+                    	// 년도 비교  
+                    	if ( writeTime.getFullYear() === currentTime.getFullYear()){ // 년도가 같으면
+                    		dateOptions = {month: 'short', day: 'numeric' };
+                    	} 
+                    	else{
+                    		dateOptions = { year: 'numeric', month: 'short', day: 'numeric' }; // 년도가 다르면 
+                    	}
+                        return writeTime.toLocaleDateString('ko-KO', dateOptions);
                       }
                 },
                 

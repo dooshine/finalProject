@@ -69,6 +69,11 @@ public class PostShowRepoImpl implements PostShowRepo{
 		Map<String, Object> param = Map.of("begin", begin, "end", end,"tagName",tagName);
 		return sqlSession.selectList("postShow.fixedTagInfinite",param);
 	}
+
+	@Override
+	public List<PostShowVO> selectList(String tagName) {
+		return sqlSession.selectList("postShow.sortTag",tagName); 
+	}
 }
 
 

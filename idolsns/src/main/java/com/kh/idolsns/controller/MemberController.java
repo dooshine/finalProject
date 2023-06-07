@@ -400,7 +400,7 @@ public class MemberController {
 	
 	
 	//중복 검사
-	@GetMapping("/idDuplicatedCheck")
+	@GetMapping("/")
 	@ResponseBody
 	public String idDuplicatedCheck(@RequestParam String memberId) {
 		int result = memberRepo.idDuplicatedCheck(memberId);
