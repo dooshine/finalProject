@@ -18,26 +18,13 @@
     	}
     
     
-    	section {
-		  font-family: "Noto Sans KR", sans-serif;
-		}
-		   	
-    
-    
-    	.title {
-    		font-weight: bold; 
-    		
-    		}
-    
-
-
     </style>
     
     
 
 		
 	<div id="app">
-	  <div class="container rounded p-3" style="background-color:white">
+	  <div class="custom-container">
     	<div style="padding-left:0.5em; padding-right:0.5em;">
     		
     		
@@ -116,7 +103,7 @@
 		      </div>
 			
 			
-			  <button type="submit" class="btn btn-lg btn-primary mt-3 mb-5" 
+			  <button type="submit" class="custom-btn btn-purple1 mt-3 mb-5" 
 			  style="width:100%" v-bind:disabled="!isCheckboxChecked">
 			  후원하기</button>
 			  

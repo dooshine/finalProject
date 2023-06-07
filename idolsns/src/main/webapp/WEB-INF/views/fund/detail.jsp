@@ -19,16 +19,7 @@
     	}
     
     
-    	section {
-		  font-family: "Noto Sans KR", sans-serif;
-		}
-		   	
-    
-    
-    	.title {
-    		font-weight: bold; 
-    		
-    		}
+    	
     
         .fund_label {
         	color: gray;
@@ -53,11 +44,64 @@
 		  color: #777;
 		  
 		}
-		
+		.grey-f5f5f5{
+    	background-color: 	#f5f5f5;
+    	}
+    	.author-badge {
+		  display: inline-block;
+		  background-color: #a294f9;
+		  padding: 2px 5px;
+		  border-radius: 10px;
+		  color: white;
+		  font-size: 13px;
+		}
+	    .reply-form {
+        margin-top: 20px;
+        background-color: #f9f9f9;
+        padding: 20px;
+        border-radius: 5px;
+        position: relative;
+	    }
+	
+	    .reply-form textarea {
+	        width: calc(100% - 40px);
+	        height: 100px;
+	        border: none;
+	        border-radius: 5px;
+	        padding: 10px;
+	        resize: none;
+	        font-size: 16px;
+	    }
+	
+	    .reply-form .submit-icon {
+	        position: absolute;
+	        bottom: 10px;
+	        right: 10px;
+	        color: #007bff;
+	        font-size: 24px;
+	        cursor: pointer;
+	    }
+		/* form 안에 버튼의 기본 스타일 제거 */
+	    form button {
+		  border: none;
+		  background: none;
+		  padding: 0;
+		  margin: 0;
+		  font: inherit;
+		  color: inherit;
+		  outline: none;
+		  cursor: pointer;
+		}
+		/* textarea setting */
+		textarea {
+			resize: none;
+			height: 100px;
+		}
+
     </style>
     
    	<div id="app">
-		<div class="container rounded p-3" style="background-color:white">
+		<div class="custom-container">
 			  
 		<div>
 			<h2 class="title text-center mt-5 mb-5">{{ fundDetail.fundTitle }}</h2>
@@ -120,8 +164,7 @@
 			<div class="row mt-3" style="padding-left: 1em">
 				<div v-html="fundDetail.postContent"></div>
 			</div>
-	
-		<hr>
+			
 			<!-- 태그 출력 -->
 			<div class="row mt-3">
 				<div class="col">
@@ -133,117 +176,169 @@
 			</div>
 		</div>
 		
-		<hr>
-		
 	<!-- ------------------------ 댓글 ------------------------------- -->
-
->>>>>>> refs/remotes/origin/main
-	
-	<!-- 댓글창 -->
-	  <h3>댓글</h3>
+	  <hr>
 	  <div v-if="replies.length == 0">댓글이 없습니다.</div>
+	  <!-- 댓글이 있으면 -->
 	  <div v-else>
 	      <div v-for="(reply, i) in replies" :key="reply.replyNo">
 	         
 	        <!-- 최상위 댓글이면 -->
-	        <div v-if="reply.replyNo == reply.replyGroupNo">
-	        	<div>{{ reply.replyId }}</div>
+	        <div v-if="reply.replyNo == reply.replyGroupNo" class="row">
+	        	<!-- 프로필 이미지 -->
+          		<div class="col-1">
+       				<img class="img-fluid rounded-circle" src="/static/image/profileDummy.png">
+          		</div>
+          		
+          		<div class="col-10 align-items-center">
+          			<!-- 작성자면 작성자 표시 -->
+	        		<div v-if="reply.replyId == fundDetail.memberId">
+	        			<div class="d-flex">
+						    <div>{{ reply.replyId }}</div>
+	        				<div class="author-badge font-purple2">
+							    <div class="">작성자</div>
+						  	</div>
+	        			</div>
+	        		</div>
+	        		<!-- 작성자가 아니면 -->
+	        		<div v-else>
+	        			{{ reply.replyId }}
+	        		</div>
+	        		
+	        		<!-- 수정 폼 -->
+		        	<div v-if="updateReplyObj.index == i" class="ms-3">
+				    	<textarea @blur="setUpdateReplyObj($event, i)" class="row grey-f5f5f5 rounded-3 font-gray2 col-10" 
+		       				placeholder="수정 내용">{{ reply.replyContent }}</textarea>
+					    <button class="btn-purple2" @click="saveUpdate(i)">수정</button>
+					    <button class="btn-purple2" @click="cancelUpdate()">취소</button>
+					</div>
+					<!-- 댓글 내용 -->
+		        	<div v-else class="grey-f5f5f5 rounded-3 font-gray2 p-1 ps-3">
+		        		{{ reply.replyContent }}
+		        	</div>
+        		</div>
+        		
+        		<div class="col-1">
+        		
+		        	<!-- 버튼 모달-->
+		        	<div class="d-flex">
+		        		<i class="fs-5 text-secondary ti ti-dots-vertical ms-auto me-3"
+		        				@click="showModal(i)" style="position: relative;">
+		   					<div class="custom-modal" v-if="replies[i].modal" style="position: absolute; top: 0px; right: 0px; width:100px; ">
+						        <div class="custom-modal-header">
+						            <button type="button" @click="hideModal(i)" class="btn-close" style="position: absolute; top: 5px; right: 5px; height: 5px; width: 5px;"></button>
+						        </div>
+						        <div @click="hideModal(i)" class="custom-modal-body p-0" style="font-size: 16px;">
+						        	<!-- 대댓글 버튼 -->
+						        	<div v-if="reply.replyNo == reply.replyGroupNo" class="p-2" style=" border-bottom: 0.3px solid #dee2e6;" @click="showRereplyForm(i)">댓글달기</div>
+						        	<!-- 수정 버튼 -->
+						        	<div v-if="reply.replyId == replyObj.replyId" class="p-2" style=" border-bottom: 0.3px solid #dee2e6;" @click="showUpdateForm(i)">수정</div>
+						        	<!-- 삭제 버튼 -->
+						        	<div v-if="reply.replyId == replyObj.replyId" class="p-2" style=" border-bottom: 0.3px solid #dee2e6;" @click="deleteReply(i)">삭제</div>
+						        </div>
+					    	</div>
+		        		</i>
+	        		</div>
+        		
+        		</div>
 		        	
-	        	<!-- 수정 폼 -->
-	        	<div v-if="updateReplyObj.index == i">
-			    	<textarea @blur="setUpdateReplyObj($event, i)" 
-			    	placeholder="수정 내용">{{ reply.replyContent }}</textarea>
-				    <button @click="saveUpdate(i)">저장</button>
-				    <button @click="cancelUpdate()">취소</button>
-				</div>
-	        	<div v-else>
-	        		{{ reply.replyContent }}
-	        		<!-- 대댓글 버튼 -->
-		        	<button v-if="reply.replyNo == reply.replyGroupNo" 
-		        			@click="showRereplyForm(i)">
-		        		<i class="fa-solid fa-reply"></i>
-					</button>
-					<!-- 수정 버튼 -->
-		        	<button v-if="reply.replyId == replyObj.replyId"
-							@click="showUpdateForm(i)">
-		        		<i class="fa-solid fa-edit"></i>
-		        	</button>
-		        	<!-- 삭제 버튼 -->
-		        	<button v-if="reply.replyId == replyObj.replyId"
-							@click="deleteReply(i)">
-						<i class="fa-solid fa-trash-alt"></i>
-					</button>	
-	        	</div>
+	        	
 	        	
 	        </div>
 	        
 	        <!-- 대댓글이면 -->
-	        <div v-else>
-	        
-	        	<!-- 수정 폼 -->
-	        	<div v-if="updateReplyObj.index == i">
-	        		<div style="border: 0.3px solid #dee2e6;">
-		        		{{reply.replyId}} :<br>
-				    	<textarea @blur="setUpdateReplyObj($event, i)" 
-				    	placeholder="수정 내용">{{ reply.replyContent }}</textarea>
-					    <button @click="saveUpdate(i)">저장</button>
-					    <button @click="cancelUpdate()">취소</button>
+	        <div v-else class="ms-4 row">
+	        	<!-- 프로필 이미지 -->
+          		<div class="col-1">
+       				<img class="img-fluid rounded-circle" src="/static/image/profileDummy.png">
+          		</div>
+          		
+          		<div class="col-10 align-items-center">
+          			
+          			<!-- 작성자면 작성자 표시 -->
+	        		<div v-if="reply.replyId == fundDetail.memberId">
+	        			<div class="d-flex">
+						    <div>{{ reply.replyId }}</div>
+	        				<div class="author-badge font-purple2">
+							    <div class="">작성자</div>
+						  	</div>
+	        			</div>
 	        		</div>
-				</div>
-				<div v-else>
-					<div>
-						{{reply.replyId}}
+	        		<!-- 작성자가 아니면 -->
+	        		<div v-else>
+	        			{{ reply.replyId }}
+	        		</div>
+	        		
+          			<!-- 수정 폼 -->
+		        	<div v-if="updateReplyObj.index == i">
+				    	<textarea @blur="setUpdateReplyObj($event, i)" class="row grey-f5f5f5 rounded-3 font-gray2 mx-0 ps-3 col-10" 
+		       				placeholder="수정 내용">{{ reply.replyContent }}</textarea>
+					    <button class="btn-purple2" @click="saveUpdate(i)">저장</button>
+					    <button class="btn-purple2" @click="cancelUpdate()">취소</button>
 					</div>
-					<div style="background-color: #6d6d6d;">
-						 {{ reply.replyContent }}
-		        		<!-- 대댓글 버튼 -->
-			        	<button v-if="reply.replyNo == reply.replyGroupNo" 
-			        			@click="showRereplyForm(i)">
-			        		<i class="fa-solid fa-reply"></i>
-						</button>
-						<!-- 수정 버튼 -->
-			        	<button v-if="reply.replyId == replyObj.replyId"
-								@click="showUpdateForm(i)">
-			        		<i class="fa-solid fa-edit"></i>
-			        	</button>
-			        	<!-- 삭제 버튼 -->
-			        	<button v-if="reply.replyId == replyObj.replyId"
-								@click="deleteReply(i)">
-							<i class="fa-solid fa-trash-alt"></i>
-						</button>	
+					<!-- 대댓글 내용 -->
+					<div v-else class="col-10 grey-f5f5f5 rounded-3 font-gray2 p-1 ps-3">
+							{{ reply.replyContent }}
 					</div>
-				</div>
+          		</div>
+          		
+          		<div class="col-1">
+          		
+		        	<!-- 버튼 모달 -->
+		        	<div v-if="reply.replyId == replyObj.replyId" class="d-flex">
+	        		<i class="fs-5 text-secondary ti ti-dots-vertical ms-auto me-3"
+	        				@click="showModal(i)" style="position: relative;">
+	   					<div class="custom-modal" v-if="replies[i].modal" style="position: absolute; top: 0px; right: 0px; width:100px; ">
+					        <div class="custom-modal-header">
+					            <button type="button" @click="hideModal(i)" class="btn-close" style="position: absolute; top: 5px; right: 5px; height: 5px; width: 5px;"></button>
+					        </div>
+					        <div @click="hideModal(i)" class="custom-modal-body p-0" style="font-size: 16px;">
+					        	<!-- 대댓글 버튼 -->
+					        	<div v-if="reply.replyNo == reply.replyGroupNo" class="p-2" style=" border-bottom: 0.3px solid #dee2e6;" @click="showRereplyForm(i)">댓글달기</div>
+					        	<!-- 대댓글 수정 버튼 -->
+					        	<div v-if="reply.replyId == replyObj.replyId" class="p-2" style=" border-bottom: 0.3px solid #dee2e6;" @click="showUpdateForm(i)">수정</div>
+					        	<!-- 대댓글 삭제 버튼 -->
+					        	<div v-if="reply.replyId == replyObj.replyId" class="p-2" style=" border-bottom: 0.3px solid #dee2e6;" @click="deleteReply(i)">삭제</div>
+					        </div>
+				    	</div>
+	        		</i>
+	        		</div>
+          		</div>
+        		
+	        	
 	        </div>
 	        
 	        <!-- 대댓글 폼 -->
-	        <div v-if="reReplies[i] == true">
-	        	<textarea @blur="setReReplyObj($event, i)" placeholder="대댓글 내용"></textarea>
-	        	<button @click="addReReply(i)">작성</button>
-	        	<button @click="reReplies[i] = false">취소</button>
+	        <div v-if="reReplies[i] == true" class="ms-5">
+	        	<textarea @blur="setReReplyObj($event, i)" placeholder="댓글을 작성해주세요" 
+	        	class="row grey-f5f5f5 rounded-3 font-gray2 mx-0 ps-3"></textarea>
+	        	<button class="btn-purple2" @click="addReReply(i)">작성</button>
+	        	<button class="btn-purple2" @click="reReplies[i] = false">취소</button>
 	        </div>
 	        
 	      </div>
  	 </div>
-	</div>             
-		
  	 
  	 <hr>
  	 
 	  	<!-- 새댓글 폼 -->
-	  	<form @submit.prevent="addReply">
+	<form @submit.prevent="addReply" class="reply-form">
 	    <div>
-	      <input type="hidden" v-model="replyObj.replyId" required>
-	      <input type="hidden" v-model="replyObj.postNo" required>
+	        <input type="hidden" v-model="replyObj.replyId" required>
+	        <input type="hidden" v-model="replyObj.postNo" required>
 	    </div>
 	    <div>
-	      <textarea type="text" v-model="replyObj.replyContent" placeholder="댓글 내용" required></textarea>
+	        <textarea type="text" v-model="replyObj.replyContent" placeholder="글을 작성해주세요" required></textarea>
 	    </div>
-	    <div>
-	      <button type="submit">댓글 작성</button>
+	    <div class="submit-icon">
+	    	<button type="submit" style="none;">
+		        <i class="fa-sharp fa-solid fa-pen font-purple1"></i>
+	    	</button>
 	    </div>
-    	</form>
+	</form>
     	
 	</div>
+	</div>             
 	
 				
 				
@@ -457,7 +552,15 @@
 					console.log(this.fundDetail.tagNames[i]);
 					const url = ""
 					window.location.href = url;
-				}
+				},
+				// 모달 열기&닫기
+				showModal(i){
+					this.replies[i].modal = true;
+				},
+				hideModal(i){
+                	event.stopPropagation();
+                	this.replies[i].modal = false;
+				},
 		      	
 		    },
 		    created() {
@@ -475,4 +578,3 @@
 
 	
 	<jsp:include page="/WEB-INF/views/template/footer.jsp"></jsp:include>
-	

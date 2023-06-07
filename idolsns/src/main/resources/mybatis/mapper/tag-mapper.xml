@@ -27,6 +27,13 @@
 		select tag_no from tag where tag_Name=#{tagName}
 	</select>
 	
+	<!-- 태그 조회 (애연 추가)--> 
+	<select id="find" resultType="Long">
+		select * from tag where tag_Name=#{tagName}
+	</select>
+	
+	
+	
 	<!-- 태그 전체 조회 -->
 	<select id="selectAll" resultType="String">
 		select tag_name from tag where post_no = #{post_no}
