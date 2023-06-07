@@ -73,7 +73,7 @@
     	header {
     		position: sticky;
     		top: 0;
-    		z-index: 9999;
+    		z-index: 999;
     	}
     	
     	@media screen and (max-width:992px) {
@@ -401,13 +401,13 @@
 								<!-- 상대방이 보낸 메세지일 때 -->
 								<div v-if="message.memberId != memberId">
 									<!-- 프로필 영역 -->
-									<div class="d-flex align-items-center">
+									<a class="d-flex align-items-center link-to-profile" :href="'${pageContext.request.contextPath}/member/mypage/' + findMemberById(index).memberId">
 										<img :src="findMemberById(index).profileSrc" v-if="!sameTime(index)" 
 											class="profileImg me-2" style="height: 30px; width: 30px;">
 										<span style="font-size: 0.8em;" v-if="!sameTime(index)" style="margin: 0;">
 											{{ findMemberById(index).memberNick }}
 										</span>
-									</div>
+									</a>
 									<!-- 메세지 영역 -->
 									<div class="d-flex align-items-end" style="margin-left: 36.5px;">
 										<!-- 텍스트 메세지일 때 -->
@@ -487,7 +487,8 @@
 							<!-- 참여자 목록 -->
 							<div class="customModalBody">
 								<div v-for="(member, index) in chatMemberList" class="w-100 mb-3 d-flex w-100">
-									<div class="d-flex align-items-center col-9">
+									<a class="d-flex align-items-center col-9 link-to-profile" 
+											:href="'http://localhost:8080/member/mypage/' + member.memberId">
 										<div class="me-3">
 											<img :src="member.profileSrc" class="profileImg" style="height: 45px; width: 45px;">
 										</div>
@@ -495,7 +496,7 @@
 											<div style="font-size: 0.95em;">{{ member.memberNick }}</div>
 											<div style="font-size: 0.9em; color: #7f7f7f;">@{{ member.memberId }}</div>
 										</div>
-									</div>
+									</a>
 								</div>
 							</div>
 						</div>
