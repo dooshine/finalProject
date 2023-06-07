@@ -49,6 +49,9 @@
 					chatMenuModal: false,
 					inviteMemberModal: false,
 					memberListModal: false,
+					leaveRoomAlert: false,
+					deleteMsgAlert: false,
+					fileSizeAlert: false,
 					
 					// main에서 가져옴
 					chatRoom: {
@@ -88,6 +91,7 @@
 					clear() {
 						this.text = ""
 					},
+					modalImgURL: "",
 					
 					// 활성화 여부 저장
 					isVisible: true,
@@ -104,6 +108,10 @@
 				};
 			},
 			methods: {
+				// 로그인 안한 경우 로그인으로 이동
+				login() {
+					window.location.href = "${pageContext.request.contextPath}/member/login";
+				},
 				connect() {
 					const url = "${pageContext.request.contextPath}/ws/server";
 					this.socket = new SockJS(url);
@@ -133,6 +141,14 @@
 				messageHandler(e) {
 					const parsedData = JSON.parse(e.data);
 					//console.log(parsedData);
+					// 방 생성 메세지인 경우 chatRoomNo 변수에 저장
+					if(parsedData.type == 11) {
+						//console.log("newRoomNo: " + parsedData.chatRoomDto.chatRoomNo);
+						//this.chatRoomNo = parsedData.chatRoomDto.chatRoomNo;
+						console.log("newRoomNo: " + parsedData.chatRoomNo);
+						this.chatRoomNo = parsedData.chatRoomNo;
+						this.showNewChatRoomModal();
+					}
 					// 타입이 3인(삭제인) 메세지는 리스트에 추가하지 않음
 					if(parsedData.type == 3) {
 						this.messageList.splice(0);
@@ -161,8 +177,13 @@
 					}
 					this.loadRoomList();
 					this.loadChatNoti();
-					if(parsedData.chatMessageType === 1 || parsedData.chatMessageType === 4 || parsedData.chatMessageType === 5 || parsedData.chatMessageType === 6) {						
+					if((parsedData.chatMessageType === 1) || parsedData.chatMessageType === 4 || 
+						parsedData.chatMessageType === 5 || parsedData.chatMessageType === 6) {						
 						this.scrollBottom();
+					}
+					if(parsedData.chatMessageType === 5) {
+						this.chatMemberList.splice(0);
+						this.loadChatMember();
 					}
 				},
 				// 참여중인 방 정보 가져오기
@@ -247,13 +268,15 @@
 				// 채팅방 모달 열기
 				showChatRoomModal(index) {
 					if(this.chatRoomNo == this.chatRoomList[index].chatRoomNo) return;
+					if(this.chatRoomModal == true) this.hideChatRoomModal();
+					if(this.roomInfo.edit == true) this.cancelChange();
 					const chatRoomNo = this.chatRoomList[index].chatRoomNo;
 					const data = {
 							type: 2,
 							chatRoomNo: chatRoomNo
 					};
 					this.socket.send(JSON.stringify(data));
-					this.roomInfo.chatRoomNo = "";
+					/*this.roomInfo.chatRoomNo = "";
 					this.roomInfo.chatRoomName1 = "";
 					this.roomInfo.chatRoomName2 = "";
 					this.roomInfo.chatRoomStart = "";
@@ -261,11 +284,11 @@
 					this.roomInfoCopy.chatRoomName1 = "";
 					this.chatMemberList.splice(0);
 					this.messageList.splice(0);
-					this.chatJoin = "";
+					this.chatJoin = "";*/
 					this.chatRoomNo = chatRoomNo;
 					this.loadRoomInfo();
 					this.loadChatMember();
-					this.getChatJoin();
+					//this.getChatJoin();
 					// 메세지 읽기
 					this.readMessage();
 					this.loadRoomList();
@@ -277,6 +300,7 @@
 					});
 					this.memberListModal = false;
 					this.inviteMemberModal = false;
+					this.fileSizeAlert = false;
 				},
 				// 채팅방 모달 닫기
 				hideChatRoomModal() {
@@ -293,6 +317,42 @@
 					this.memberListModal = false;
 					this.chatMenuModal = false;
 					this.chatRoomModal = false;
+					this.hideLeaveRoomAlert();
+					this.hideDeleteMsgAlert();
+					this.fileSizeAlert = false;
+				},
+				// 새 채팅방 모달 열기
+				showNewChatRoomModal() {
+					const chatRoomNo = this.chatRoomNo;
+					console.log("showNewChatRoomModal: " + chatRoomNo);
+					const data = {
+							type: 2,
+							chatRoomNo: chatRoomNo
+					};
+					this.socket.send(JSON.stringify(data));
+					this.roomInfo.chatRoomNo = "";
+					this.roomInfo.chatRoomName1 = "";
+					this.roomInfo.chatRoomName2 = "";
+					this.roomInfo.chatRoomStart = "";
+					this.roomInfo.chatRoomType = "";
+					this.roomInfoCopy.chatRoomName1 = "";
+					this.chatMemberList.splice(0);
+					this.messageList.splice(0);
+					this.chatJoin = "";
+					this.loadRoomInfo();
+					this.loadChatMember();
+					this.getChatJoin();
+					// 메세지 읽기
+					//this.readMessage();
+					this.loadRoomList();
+					this.chatRoomModal = true;
+					this.loadMessage();
+					this.$nextTick(() => {
+					    this.text = "";
+					    this.$refs.messageInput.focus();
+					});
+					//this.memberListModal = false;
+					//this.inviteMemberModal = false;
 				},
 				// 채팅방 메뉴 모달 열기
 				showChatMenuModal() {
@@ -324,6 +384,30 @@
 					this.selectedMemberIdList = [];
 					this.inviteMemberModal = false;
 				},
+				// 채팅방 나가기 경고 모달 열기
+				showLeaveRoomAlert() {
+					this.leaveRoomAlert = true;
+					this.hideChatMenuModal();
+				},
+				// 채팅방 나가기 경고 모달 닫기
+				hideLeaveRoomAlert() {
+					this.leaveRoomAlert = false;
+				},
+				// 메세지 삭제 경고 모달 열기
+				showDeleteMsgAlert(index) {
+					this.deleteMsgAlert = true;
+					this.msgIndex = index;
+				},
+				// 메세지 삭제 경고 모달 닫기
+				hideDeleteMsgAlert() {
+					this.msgIndex = "";
+					this.deleteMsgAlert = false;
+				},
+				// 파일 사이즈 경고 모달 닫기(열기는 20메가 이상인 파일 올릴 때 자동으로 열림)
+				hideFileSizeAlert() {
+					this.fileSizeAlert = false;
+				},
+				
 				// 로그인한 회원이 속해있는 채팅방 목록
 				async loadRoomList() {
 					const memberId = this.memberId;
@@ -406,6 +490,10 @@
 					this.selectedMemberIdList.splice(0);
 					this.createRoomModal = false;
 					this.chatMainModal = true;
+					setTimeout(() => {
+						this.chatRoomList.splice(0);
+						this.loadRoomList();
+					}, 30);
 					setTimeout(() => {
 						this.chatRoomList.splice(0);
 						this.loadRoomList();
@@ -529,11 +617,14 @@
 				async loadMessage() {
 					const chatRoomNo = this.chatRoomNo;
 					this.messageList.splice(0);
+					this.getChatJoin();
 					const url = "${pageContext.request.contextPath}/chat/message/" + chatRoomNo;
 					const resp = await axios.get(url);
+					//console.log("chatMessageTime: " + resp.data[0].chatMessageTime)
+					//console.log("chatJoin: " + this.chatJoin)
 					for(let i=0; i<resp.data.length; i++) {
 						if(resp.data[i].chatMessageTime >= this.chatJoin)
-							console.log(resp.data[i].chatRoomNo)
+							//console.log(resp.data[i].chatRoomNo)
 							this.messageList.push(resp.data[i]);
 					}
 					this.scrollBottom();
@@ -566,10 +657,11 @@
 					if(this.textCount < 1) return;
 					if(this.textCount > 300) return;
 					this.firstMsg();
+					const text = this.text.trim();
 					const data = {
 						type: 1,
 						chatRoomNo: this.chatRoomNo,
-						chatMessageContent: this.text
+						chatMessageContent: text
 					};
 					this.socket.send(JSON.stringify(data));
 					this.clear();
@@ -579,6 +671,28 @@
 				async sendPic() {
 					const fileInput = document.querySelector('.picInput');
 					const file = fileInput.files[0];
+					let reader = new FileReader();
+					const isValid = await new Promise((resolve, reject) => {
+						reader.onload = function(e) {
+							const fileSize = e.target.result.length;
+							const isValidSize = fileSize <= 20961034;
+							resolve(isValidSize);
+						};
+						reader.onerror = function(error) {
+							reject(error);
+						};
+						reader.readAsDataURL(file);
+					})
+					/*let isValid;
+					reader.onload = function(e) {
+						let fileSize = e.target.result.length;
+						isValid = fileSize <= 20961034;
+						
+					}*/
+					if(!isValid) {
+						this.fileSizeAlert = true;
+						return;
+					}
 					console.log("전송")
 					const formData = new FormData();
 					formData.append("attach", file);
@@ -618,12 +732,13 @@
 					const chatRoomNo = this.chatRoomNo;
 					const data = {
 						type: 3, 
-						chatMessageNo: this.messageList[index].chatMessageNo, 
+						chatMessageNo: this.messageList[this.msgIndex].chatMessageNo, 
 						chatRoomNo: chatRoomNo,
-						attachmentNo: this.messageList[index].attachmentNo
+						attachmentNo: this.messageList[this.msgIndex].attachmentNo
 					};
 					this.socket.send(JSON.stringify(data));
 					this.messageList.splice(index, -1);
+					this.hideDeleteMsgAlert();
 				},
 				// 해당 채팅방에 참여한 날짜와 시간 가져오기
 				async getChatJoin() {
@@ -713,6 +828,7 @@
 					this.chatMemberList.splice(0);
 					this.selectedMemberList.splice(0);
 					this.selectedMemberIdList.splice(0);
+					this.selectedMemberNickList.splice(0);
 					this.loadChatMember();
 					this.hideInviteMemberModal();
 				},
@@ -753,6 +869,10 @@
 						window.location.href = `${pageContext.request.contextPath}/member/mypage/${memberId}`	;
 					}
 				},
+				// 이미지 메세지 모달로 크게 보기위한 url 셋팅
+				setModalImgURL(index) {
+					this.modalImgURL = "${pageContext.request.contextPath}/download?attachmentNo=" + this.messageList[index].attachmentNo;
+				}
 			},
 			computed: {
 				memberCount() {

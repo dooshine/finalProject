@@ -19,16 +19,7 @@
     	}
     
     
-    	section {
-		  font-family: "Noto Sans KR", sans-serif;
-		}
-		   	
-    
-    
-    	.title {
-    		font-weight: bold; 
-    		
-    		}
+    	
     
         .fund_label {
         	color: gray;
@@ -110,7 +101,7 @@
     </style>
     
    	<div id="app">
-		<div class="container rounded p-3" style="background-color:white">
+		<div class="custom-container">
 			  
 		<div>
 			<h2 class="title text-center mt-5 mb-5">{{ fundDetail.fundTitle }}</h2>

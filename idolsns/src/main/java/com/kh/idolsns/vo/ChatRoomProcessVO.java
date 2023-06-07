@@ -17,5 +17,6 @@ public class ChatRoomProcessVO {
 	private List<String> memberList;
 	private ChatRoomPrivDto chatRoomPrivDto;
 	private int chatRoomNo;
+	private int chatMessageType;
 	
 }
