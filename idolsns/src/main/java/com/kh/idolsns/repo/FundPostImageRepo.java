@@ -8,6 +8,7 @@ import com.kh.idolsns.dto.FundPostImageDto;
 import com.kh.idolsns.dto.PostImageDto;
 import com.kh.idolsns.dto.TagDto;
 import com.kh.idolsns.vo.FundDetailVO;
+import com.kh.idolsns.vo.FundSearchVO;
 
 public interface FundPostImageRepo {
 
@@ -19,5 +20,5 @@ public interface FundPostImageRepo {
 	
 	List<FundPostImageDto> selectListByPaging(int page);
 	List<FundPostImageDto> selectListByPaging(int page, String searchKeyword);
-	List<FundListWithTagDto> selectListWithTag(int page, String searchKeyword);
+	List<FundListWithTagDto> selectListWithTag(int page, FundSearchVO vo);
 }
