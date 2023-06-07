@@ -11,25 +11,18 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.kh.idolsns.constant.NotiConstant;
 import com.kh.idolsns.constant.WebSocketConstant;
 import com.kh.idolsns.dto.ChatJoinDto;
 import com.kh.idolsns.dto.ChatMessageDto;
-import com.kh.idolsns.dto.ChatNotiDto;
 import com.kh.idolsns.dto.ChatReadDto;
-import com.kh.idolsns.dto.MemberSimpleProfileDto;
-import com.kh.idolsns.dto.NotiDto;
 import com.kh.idolsns.repo.AttachmentRepo;
 import com.kh.idolsns.repo.ChatJoinRepo;
 import com.kh.idolsns.repo.ChatMessageRepo;
-import com.kh.idolsns.repo.ChatNotiRepo;
 import com.kh.idolsns.repo.ChatReadRepo;
 import com.kh.idolsns.repo.ChatRoomRepo;
-import com.kh.idolsns.repo.NotiRepo;
 import com.kh.idolsns.vo.ChatMemberVO;
 import com.kh.idolsns.vo.ChatMessageReceiveVO;
 import com.kh.idolsns.vo.ChatMessageVO;
-import com.kh.idolsns.vo.ChatRoomProcessVO;
 import com.kh.idolsns.vo.ChatRoomVO;
 import lombok.extern.slf4j.Slf4j;
 
@@ -83,13 +76,13 @@ public class ChatServiceImpl implements ChatService {
 	public void join(ChatMemberVO member, int chatRoomNo) {
 		// 방 생성
 		createRoom(chatRoomNo);
-		log.debug("chatrooms after create: " + chatRooms);
+		//log.debug("chatrooms after create: " + chatRooms);
 		// 방 선택
 		ChatRoomVO chatRoom = chatRooms.get(chatRoomNo);
 		// 입장
 		chatRoom.enter(member);
-		log.debug("chatRoom after create: " + chatRoom);
-		log.debug("chatrooms after join: " + chatRooms);
+		//log.debug("chatRoom after create: " + chatRoom);
+		//log.debug("chatrooms after join: " + chatRooms);
 		//log.debug("chatRooms: " + chatRooms);
 	}
 	
@@ -214,9 +207,9 @@ public class ChatServiceImpl implements ChatService {
 	public void broadcastNewRoom(int chatRoomNo, TextMessage jsonMessage) throws IOException {
 		if(!roomExist(chatRoomNo)) return;
 		ChatRoomVO chatRoom = chatRooms.get(chatRoomNo);
-		log.debug("chatRoom: " + chatRoom);
-		log.debug("broadcastNewRoom: " + chatRoomNo);
-		log.debug("jsonMessage: " + jsonMessage);
+		//log.debug("chatRoom: " + chatRoom);
+		//log.debug("broadcastNewRoom: " + chatRoomNo);
+		//log.debug("jsonMessage: " + jsonMessage);
 		chatRoom.broadcast(jsonMessage);
 	}
 	
@@ -356,7 +349,7 @@ public class ChatServiceImpl implements ChatService {
 		else if(receiveVO.getType() == WebSocketConstant.NEW_ROOM) {
 			int chatRoomNo = chatRoomService.createChatRoom(receiveVO);
 			receiveVO.setChatRoomNo(chatRoomNo);
-			log.debug("new roomNo: " + chatRoomNo);
+			//log.debug("new roomNo: " + chatRoomNo);
 			//chatRooms.put(chatRoomNo, new ChatRoomVO());
 			//createRoom(chatRoomNo);
 			join(member, chatRoomNo);
@@ -367,39 +360,6 @@ public class ChatServiceImpl implements ChatService {
 			//log.debug("chatRooms after create: " + chatRooms);
 			this.broadcastNewRoom(chatRoomNo, jsonMessage);
 		}
-		// 새 메세지 알림인 경우
-		/*else if(receiveVO.getType() == WebSocketConstant.NEW_MSG) {
-			// 채팅방 번호
-			int chatRoomNo  = receiveVO.getChatRoomNo();
-			// 보낸 회원 아이디
-			String memberId = receiveVO.getMemberId();
-			// 채팅방 참여자 목록 (아이디, 닉넴, 프사)
-			List<MemberSimpleProfileTempDto> receiverList = receiveVO.getReceiverList();
-			// 아이디만 뽑은 목록 (발신자 아이디 제외하고 수신자 아이디만 추출)
-			List<String> receiverIdList = new ArrayList<>();
-			for(int i = 0; i<receiverList.size(); i++) {
-				if(!receiverList.get(i).getMemberId().equals(memberId)) {
-					receiverIdList.add(receiverList.get(i).getMemberId());
-				}
-			}
-			// 알림 테이블, 채팅 알림 테이블에 저장
-			for(int i=0; i<receiverIdList.size(); i++) {
-				log.debug("receiverId: " + receiverIdList.get(i));
-				int notiNo = notiRepo.sequence();
-				NotiDto notiDto = NotiDto.builder()
-						.notiNo(notiNo)
-						.memberId(receiverIdList.get(i))
-						.notiType(NotiConstant.WEEZ)
-					.build();
-				notiRepo.insert(notiDto);
-				ChatNotiDto chatNotiDto = ChatNotiDto.builder()
-							.chatRoomNo(chatRoomNo)
-							.notiNo(notiNo)
-							.memberId(receiverIdList.get(i))
-						.build();
-				chatNotiRepo.insert(chatNotiDto);
-			}
-		}*/
 	}
 
 }
