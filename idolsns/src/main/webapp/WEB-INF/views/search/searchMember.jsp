@@ -46,7 +46,7 @@
   <%-- ######################## 회원 검색결과 ######################## --%>
   <div class="row mt-5">
     <div class="col">
-      <table class="table">
+      <table class="table" v-if="memberSearchList.length > 0">
         <thead>
           <tr class="text-center">
             <th scope="col">프로필 사진</th>
@@ -79,6 +79,9 @@
           </tr>
         </tbody>
       </table>
+      <div v-if="memberSearchList.length === 0">
+        <h3 class="pb-5 px-4">검색 결과가 없습니다</h3>
+      </div>
     </div>
   </div>
   <%-- ######################## 회원 검색결과 끝 ######################## --%>
@@ -145,11 +148,11 @@
         // 회원 팔로우 버튼
         async followMember(memberSearch){
             // 1. 회원 로그인 확인
-            if(memberId === ""){
-                if(confirm("로그인 한 회원만 사용할 수 있는 기능입니다. 로그인 하시겠습니까?")) {
-                    window.location.href = contextPath + "/member/login";
-                }
-            }
+            // if(memberId === ""){
+            //     if(confirm("로그인 한 회원만 사용할 수 있는 기능입니다. 로그인 하시겠습니까?")) {
+            //         window.location.href = contextPath + "/member/login";
+            //     }
+            // }
 
             // artistEngNameLower
             // 2. toggle 팔로우 삭제, 팔로우 생성

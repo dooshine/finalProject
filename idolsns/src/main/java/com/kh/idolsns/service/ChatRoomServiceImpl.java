@@ -53,7 +53,7 @@ public class ChatRoomServiceImpl implements ChatRoomService {
 			
 			// 1, 2 둘 다 있으면 -> 둘 다 참여 중인 갠톡방이 있으므로 방 생성 중지
 			if(isChatRoomExist1 && isChatRoomExist2) {
-				log.debug("existRoom1.getChatRoomNo(): " + existRoom1.getChatRoomNo());
+				//log.debug("existRoom1.getChatRoomNo(): " + existRoom1.getChatRoomNo());
 				return existRoom1.getChatRoomNo();
 			}
 			
