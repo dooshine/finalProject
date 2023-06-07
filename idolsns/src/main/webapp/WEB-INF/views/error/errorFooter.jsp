@@ -7,7 +7,6 @@
 
 	<!-- 일반페이지 일때 -->
 	<c:if test="${!requestScope['javax.servlet.forward.servlet_path'].startsWith('/admin')}">
-	<%-- <c:if test='${!(requestScope["javax.servlet.forward.servlet_path"].startsWith("/admin") || requestScope["javax.servlet.error.exception_type"].contains("NoHandlerFoundException"))}'> --%>
 		<div class="col-3 py-4">
 			<!-- 캘린더 영역 -->
 			 <jsp:include page="/WEB-INF/views/template/calendar.jsp"></jsp:include>

@@ -181,12 +181,13 @@
         async loadArtist(){
             // 대표페이지 이름
             const artistEngNameLower = window.location.pathname.split("/").at(-1);
-
+			// url
             const url = "http://localhost:8080/rest/artist/";
-
+			// 조회
             const resp = await axios.get(url, { params: { artistEngNameLower: artistEngNameLower } });
-            console.table(resp.data)
-            this.artistObj = resp.data;
+			// 조회 결과 없을 시 
+			if(resp.data)
+			this.artistObj = resp.data;
         
             // 지도 데이터 가져오기
             const mapResp = await axios.get(url);

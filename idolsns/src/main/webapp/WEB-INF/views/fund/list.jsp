@@ -300,14 +300,14 @@
                       },
                       
                       // 시간순 정렬
-                      sortByDate() {
-                   	  	const resp = await axios.get("http://localhost:8080/rest/fund/page/sort-by-date");
+//                       sortByDate() {
+//                    	  	const resp = await axios.get("http://localhost:8080/rest/fund/page/sort-by-date");
 
-                   	    // 가져온 데이터로 fundings 배열 업데이트
-                   	    this.fundings = resp.data.fundPostImageDtos || resp.data.fundListWithTagDtos;
+//                    	    가져온 데이터로 fundings 배열 업데이트
+//                    	    this.fundings = resp.data.fundPostImageDtos || resp.data.fundListWithTagDtos;
                    	    
                    	    
-                      }
+//                       }
                  },
                  watch: {
                    // percent가 변하면 percent의 값을 읽어와서 80% 이상인지 판정

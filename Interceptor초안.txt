@@ -1,0 +1,25 @@
+# 패키지 구성
+1. advice
+  - ★ErrorController
+	해당 Exception 발생 시 대처 방법(redirect, jsp)
+  - (401)RequireLoginException
+  - (403)RequirePermissionException 
+2. configuration
+  - ★InterceptorConfiguration
+	각 Interceptor를 적용 시킬 주소 등록
+3. interceptor
+  - AdminInterceptor(관리자 인터셉터)
+  - AdminNoticeInterceptor(공지 인터셉터, 삭제예정)
+  - MemberInterceptor(회원로그인 인터셉터)
+  - ★PostManageInterceptor(게시물 작성 인터셉터 / 검토요망)
+  - ★ReplyManageInterceptor(댓글 수정,삭제 인터셉터 / 검토요망)
+  - TestInterceptor(테스트 인터셉터, 삭제예정)
+
+
+
+
+# 예시
+1. 일반회원이 관리자페이지 들어갈 때 (localhost:8080/admin/member)
+2. 없는 아이돌 페이지 들어가려고 할 때 (localhost:8080/artist/zicoabcd)
+
+

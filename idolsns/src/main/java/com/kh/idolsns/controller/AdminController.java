@@ -1,7 +1,5 @@
 package com.kh.idolsns.controller;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -51,5 +49,11 @@ public class AdminController {
     @GetMapping("/artist")
     public String artist(){
         return "/admin/adminArtist";
+    }
+
+    // 관리자페이지 테스트
+    @GetMapping("/test")
+    public String test(){
+        return "/admin/adminTest";
     }
 }

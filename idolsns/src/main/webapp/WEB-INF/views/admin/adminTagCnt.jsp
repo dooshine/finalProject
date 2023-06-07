@@ -143,6 +143,7 @@
                 const url = "http://localhost:8080/rest/fixedTag/check";
 
                 const resp = await axios.get(url, {params: {fixedTagName: tagName}});
+                // this.isFixedTagList[i] = true;
                 this.isFixedTagList[i] = resp.data;
             }
         },
