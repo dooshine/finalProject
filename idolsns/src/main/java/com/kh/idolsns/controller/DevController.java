@@ -57,4 +57,11 @@ public class DevController {
     public String css(){
         return "/dev/dev_dooCss";
     }
+
+
+    // test 예제
+    @GetMapping("/test")
+    public String test(){
+        return "/dev/dev_test";
+    }
 }

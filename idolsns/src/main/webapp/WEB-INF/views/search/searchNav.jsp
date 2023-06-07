@@ -2,7 +2,7 @@
 
 
 
-<ul class="custom-tab-header mx-0">
+<ul class="custom-tab-header mx-0 d-flex">
     <li class="${requestScope['javax.servlet.forward.servlet_path'].startsWith('/search/post') ? 'custom-tab-list active' : 'custom-tab-list'}">
       <a href="/search/post/?q=${param.q}">
         <span class="mdi mdi-star-four-points-circle fw-bold">

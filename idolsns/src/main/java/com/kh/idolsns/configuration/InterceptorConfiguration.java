@@ -52,6 +52,7 @@ public class InterceptorConfiguration implements WebMvcConfigurer{
                 // "/admin/**",
                 // "/board/**"
                 "/rest/follow/**"
+                // "/rest/chat/**"
         )
         .excludePathPatterns(
                 // "/member/join",
@@ -61,6 +62,7 @@ public class InterceptorConfiguration implements WebMvcConfigurer{
                 // "/member/exitFinish",
                 // "/board/list",
                 // "/board/detail"
+                "/rest/follow/test"
         );
 
         //[3] 관리자 전용 검사 인터셉터

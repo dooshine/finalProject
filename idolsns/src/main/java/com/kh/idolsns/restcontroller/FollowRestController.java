@@ -6,6 +6,7 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -155,5 +156,14 @@ public class FollowRestController {
     public MemberFollowProfileInfoDto selectMemberFollowProfileInfo(@RequestParam String memberId){
         MemberFollowProfileInfoDto dto = sqlSession.selectOne("follow.selectMemberFollowProfileInfo", memberId);
         return dto;
+    }
+
+
+    // [테스트] 상태코드 전달하기
+    @GetMapping("/test")
+    public ResponseEntity<String> test(){
+        // return ResponseEntity.notFound().build();
+        return ResponseEntity.status(403).build();
+        // return
     }
 }
