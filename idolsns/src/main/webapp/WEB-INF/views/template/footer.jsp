@@ -871,7 +871,9 @@
 				//유저버튼 - 로그인 or 마이페이지로 이동
 				async goToLoginPage() {
 					const response = await axios.get("/member/goToLoginPage");
+					console.log(response.data);
 					if(response.data == "") {
+						
 						window.location.href = `${pageContext.request.contextPath}/member/login`;
 					}
 					else {
