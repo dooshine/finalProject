@@ -31,7 +31,7 @@
   <aside class ="col-12 py-4" id="aside-bar">
 	<div class= "nav flex-column">
         <a href="${pageContext.request.contextPath}/">
-        	<i class="fa-solid fa-house" :class="{selected: asideTab === '홈'}"></i><span class="ps-2"> 홈</span></a>
+        	<i class="fa-solid fa-house" :class="{selected: asideTab === '홈'}"><span class="ps-2"> 홈</span></i></a>
         <a href="#" @click="toggleMyArtist">
         	<i class="ti ti-star-filled" :class="{selected: asideTab === '대표페이지'}"><span class="ps-2"> 내 아이돌</span></i></a>
 		<div v-if="toggleFollowPageList">
@@ -44,7 +44,7 @@
         	<!-- <i class="fa-solid fa-comments-dollar" :class="{selected: asideTab === '펀딩'}"> 펀딩</i></a> -->
 			<i class="fa-solid fa-piggy-bank" :class="{selected: asideTab === '펀딩'}"><span class="ps-2"> 펀딩</span></i></a>
         <a href="${pageContext.request.contextPath}/point/charge">
-        	<i class="fa-solid fa-wallet" :class="{selected: asideTab === '충전'}"><span class="ps-2"> 충전</span></i></a>
+        	<i class="fa-solid fa-wallet" :class="{selected: asideTab === '포인트'}"><span class="ps-2"> 충전</span></i></a>
   	</div>
   </aside>
 
@@ -90,18 +90,28 @@
 		},
 
 		loadAsideTab(){
-			console.log(window.location.pathname);
-			if(window.location.pathname.includes("point")){
-				this.asideTab = "충전";
-			} else if(window.location.pathname.includes("fund")){
+			// 경로
+			const pathName = window.location.pathname;
+
+			// 정규표현식(포인트, 펀딩, 홈, 대표페이지)
+			const pointRegex = /^(\/point\/).*$/;
+			const fundRegex = /^(\/fund\/).*$/;
+			const homeRegex = /^\/$/;
+			const artistRegex = /^(\/artist\/).*$/;
+
+			// 경로에 따른 asideTab 지정
+			if(pointRegex.test(pathName)){
+				this.asideTab = "포인트";
+			} else if(fundRegex.test(pathName)){
 				this.asideTab = "펀딩";
-			} else if(window.location.pathname==="/"){
+			} else if(homeRegex.test(pathName)){
 				this.asideTab = "홈";
-			} else if(window.location.pathname.includes("artist")){
+			} else if(artistRegex.test(pathName)){
 				this.asideTab = "대표페이지";
 				this.toggleFollowPageList = true;
 			}
 		},
+
 		// 풀네임
 		fullName(name, engName){
           return name + "(" + engName + ")";

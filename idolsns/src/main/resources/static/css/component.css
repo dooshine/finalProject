@@ -67,6 +67,13 @@
     border-radius: 5px;
     cursor: pointer;
 }
+.custom-btn-sm {
+    background-color: white;
+    border: 1px solid white;
+    padding: 4px 8px;
+    border-radius: 5px;
+    cursor: pointer;
+}
 
 .btn-round {
     border-radius: 100px;

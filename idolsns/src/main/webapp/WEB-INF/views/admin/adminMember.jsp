@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 
-<jsp:include page="/WEB-INF/views/admin/adminHeader.jsp"></jsp:include>
+<jsp:include page="/WEB-INF/views/template/header.jsp"></jsp:include>
 
 <style>
     .back-gray {
@@ -46,9 +46,8 @@
     }
 </style>
 
-<div class="container mt-5 custom-container" id="app">
+<div class="container custom-container" id="app">
     <!-- # 회원조회 타이틀 -->
-    <input type="checkbox" class="form-check-input">
     <div class="row mt-3">
         <div class="col">
             <h1>회원 목록</h1>
@@ -298,7 +297,7 @@
           // 페이지네이션 Obj
           pageObj: {
             page: 1,
-            size: 1,
+            size: 10,
             blocksize: 5,
             total: 0, 
 
@@ -521,6 +520,5 @@
     }).mount('#app')
   </script>
 
-<jsp:include page="/WEB-INF/views/admin/adminFooter.jsp"></jsp:include>
-	
+<jsp:include page="/WEB-INF/views/template/footer.jsp"></jsp:include>	
 	

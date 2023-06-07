@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>   
-<jsp:include page="/WEB-INF/views/template/header.jsp"></jsp:include> 
+<jsp:include page="/WEB-INF/views/template/header_member.jsp"></jsp:include> 
 
 <!DOCTYPE html>
 <html lang="ko">
@@ -31,6 +31,9 @@
 </head>
 <body>
 
+	<br><br>
+	<div class="container" id=app>
+
 	<form action="password" method="post" autocomplete="off">
 	
 		<div class="container">
@@ -49,7 +52,14 @@
 		</div>
 	
 	</form>
+	
+	</div>
 
+
+	<script>
+		Vue.createApp({
+			
+		}).mount("#app");
+	</script>
 </body>    
 
-<jsp:include page="/WEB-INF/views/template/footer.jsp"></jsp:include>

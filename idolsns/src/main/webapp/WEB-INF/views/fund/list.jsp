@@ -117,19 +117,24 @@
             }
       </style>
       
-<%--       <c:forEach var="fundPostDto" items="${fundList}"> --%>
-<%--          ${fundPostDto}<br> --%>
-<%--       </c:forEach> --%>
-      
-              
-
         <div id="app">
-               <div class="container rounded p-3" style="background-color:white;">
-               <div>
-                     <input type="text" v-model="searchQuery" placeholder="검색창">
-                     <button @click="searchFunding">검색</button>
-                 </div>
-                 <div class="funding-list justify-content-center mt-5">
+               <div class="custom-container">
+				<div class="d-flex">
+					<!-- 펀딩 글 작성 -->
+					<div class="d-flex justify-content-center align-items-center">
+						<button class="btn-purple1" @click="startFunding">글 작성</button>
+						<!-- 정렬 -->
+						<button v-if="dateSort" class="btn-purple1 ms-1" @click="sortByDate">최신순</button>
+						<button v-else class="btn-purple1 ms-1" @click="sortByDate">오랜된순</button>
+					</div>
+	             	<!-- 검색창 -->
+	               	<div class="search-box w-35 ms-auto me-4">
+	                    <input class="search-input" type="text" v-model="searchQuery" placeholder="검색창" @keyup.enter="searchFunding">
+	                </div>
+               	</div>
+               	
+               	<!-- 펀딩 리스트 -->
+                 <div class="funding-list justify-content-center mt-4">
                  
                    <div class="funding-item" v-for="(funding, index) in fundings" :key="funding.memberId"
                                               v-on:click="link(funding)">
@@ -137,7 +142,7 @@
                      <h3 class="title">{{ funding.fundTitle }}</h3>
                      <p class="description">{{ funding.fundShortTitle }}</p>
                      <div class="progress-bar">
-                       <div class="progress" :style="{ width: funding.progress + '%' }"></div>
+                       <div class="progress" :style="{ width: (funding.totalPrice / funding.fundGoal * 100).toFixed(1) + '%' }"></div>
                      </div>
                      <div class="info">
                        <div>
@@ -169,13 +174,17 @@
                     page: 1,
                     searchPage: 1,
                     finish: false,
-                 fundings: [],
-                 initFundings: false,
+                 	fundings: [],
+                	initFundings: false,
                  // 무한스크롤 안전장치
-                 loading: false,
+                	loading: false,
                  // 검색 키워드
-                 searchQuery: "",
-                 searchQueryTemp: "",
+                	searchQuery: "",
+                	searchQueryTemp: "",
+                	
+                	// 시간순 정렬
+                	dateSort: true,
+                	 
                   };
                   },
                computed: {
@@ -200,8 +209,8 @@
 	                  
 	                  this.loading = false;
 	                  
-	                  // 데이터가 10개 미만이면 더 읽을게 없다
-	                       if(resp.data.length < 10){ 
+	                  // 데이터가 12개 미만이면 더 읽을게 없다
+	                       if(resp.data.length < 12){ 
 	                           this.finish = true;
 	                       }
 	                  
@@ -212,16 +221,24 @@
                           const startDate = new Date(funding.postStart);
                           const endDate = new Date(funding.postEnd);
                           const currentDate = new Date();
-                          const fundState = this.fundings.fundState;
-                          console.log(currentDate);
+                          const fundState = funding.fundState;
+                          console.log(fundState);
                           const timeDiff = endDate.getTime() - startDate.getTime();
-                          if (timeDiff >= 24 * 60 * 60 * 1000) {
-                            // 1일 이상인 경우
-                            return Math.ceil(timeDiff / (24 * 60 * 60 * 1000))+"일 남음";
-                          } 
-                           // 당일인 경우
+                          
+                          // 마간기간이 남은 경우
+                          if(timeDiff > 0){
+	                          // 1일 이상인 경우
+	                          if (timeDiff >= 24 * 60 * 60 * 1000) {
+	                            return Math.ceil(timeDiff / (24 * 60 * 60 * 1000))+"일 남음";
+	                          } 
+	                          // 당일인 경우
+	                          else {
+	                              return "오늘 마감";
+	                          }
+                          }
+                          // 이미 마감된 경우
                           else {
-                              return "오늘마감";
+                        	  return fundState;
                           }
                     },
                     getProgress(funding) {
@@ -243,40 +260,54 @@
                      formatCurrency(value) {
                         return value.toLocaleString();
                       },
+                      
                       // 펀딩 검색
                       async searchFunding() {
                          if(!this.searchQuery) return; // 빈 칸 입력시
                          
-                  // funding 리스트 초기화
-                  if(!this.initFundings || this.searchQueryTemp != this.searchQuery) {
-                     this.fundings = [];
-                     this.initFundings = true; 
-                     this.finish = false; // 검색어가 다르면 초기화
-                  }
-                       if(this.finish == true) return; // 다 불러왔으면
-                  
-                  // 다른 검색어로 검색했을때
-                  if(this.searchQueryTemp != this.searchQuery) {
-                     this.searchPage = 1;
-                  }
-                  // searchQueryTemp에 이전 검색어 저장
-                   this.searchQueryTemp = this.searchQuery;
-                       
-                  const resp = await axios.get("http://localhost:8080/rest/fund/page/"
-
-                        +this.searchPage+"?searchKeyword="+this.searchQuery);     
-                  console.log(resp.data);
-                  // data가 FundListVO에 list 2개로 담겨옴
-                  // fundPostImageDtos가 null이면 fundListWithTagDtos를 
-                  // 데이터에 넣고 vice versa
-                  resp.data.fundPostImageDtos == null ? this.fundings.push(...resp.data.fundListWithTagDtos) : this.fundings.push(...resp.data.fundPostImageDtos);
-                  this.searchPage ++;
-                  
-                  // 데이터가 10개 미만이면 더 읽을게 없다
-                       if(resp.data.length < 10){
-                           this.finish = true;
-                          }
+	                  // funding 리스트 초기화
+	                  if(!this.initFundings || this.searchQueryTemp != this.searchQuery) {
+	                     this.fundings = [];
+	                     this.initFundings = true; 
+	                     this.finish = false; // 검색어가 다르면 초기화
+	                  }
+	                       if(this.finish == true) return; // 다 불러왔으면
+	                  
+	                  // 다른 검색어로 검색했을때
+	                  if(this.searchQueryTemp != this.searchQuery) {
+	                     this.searchPage = 1;
+	                  }
+	                  // searchQueryTemp에 이전 검색어 저장
+	                   this.searchQueryTemp = this.searchQuery;
+	                       
+	                  const resp = await axios.get("http://localhost:8080/rest/fund/page/"
+	
+	                        +this.searchPage+"?searchKeyword="+this.searchQuery);     
+	                  console.log(resp.data);
+	                  // data가 FundListVO에 list 2개로 담겨옴
+	                  // fundPostImageDtos가 null이면 fundListWithTagDtos를 데이터에 넣고 vice versa
+	                  resp.data.fundPostImageDtos == null ? this.fundings.push(...resp.data.fundListWithTagDtos) : this.fundings.push(...resp.data.fundPostImageDtos);
+	                  this.searchPage ++;
+	                  
+	                  // 데이터가 12개 미만이면 더 읽을게 없다
+	                       if(resp.data.length < 12){
+	                           this.finish = true;
+	                          }
                       },
+                      // 펀딩 글쓰기로 이동
+                      startFunding() {
+                    	  window.location.href = "/fund/write";
+                      },
+                      
+                      // 시간순 정렬
+                      sortByDate() {
+                   	  	const resp = await axios.get("http://localhost:8080/rest/fund/page/sort-by-date");
+
+                   	    // 가져온 데이터로 fundings 배열 업데이트
+                   	    this.fundings = resp.data.fundPostImageDtos || resp.data.fundListWithTagDtos;
+                   	    
+                   	    
+                      }
                  },
                  watch: {
                    // percent가 변하면 percent의 값을 읽어와서 80% 이상인지 판정
