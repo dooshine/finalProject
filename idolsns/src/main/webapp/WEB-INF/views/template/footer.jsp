@@ -5,14 +5,19 @@
 
             </div>
 
+	<style>
+		/*.calendar-area {
+			position: sticky;
+			/*position: -webkit-sticky;*/
+		}*/
+	</style>
 	<!-- 일반페이지 일때 -->
-	<c:if test="${!requestScope['javax.servlet.forward.servlet_path'].startsWith('/admin')}">
 	<%-- <c:if test='${!(requestScope["javax.servlet.forward.servlet_path"].startsWith("/admin") || requestScope["javax.servlet.error.exception_type"].contains("NoHandlerFoundException"))}'> --%>
-		<div class="col-3 py-4">
-			<!-- 캘린더 영역 -->
-			 <jsp:include page="/WEB-INF/views/template/calendar.jsp"></jsp:include>
-		</div>
-	</c:if>
+			<div class="col-3 py-4 calendar-area">
+				<!-- 캘린더 영역 -->
+			 	<jsp:include page="/WEB-INF/views/template/calendar.jsp"></jsp:include>
+			</div>
+	<%-- </c:if> --%>
 	
 
 
@@ -406,6 +411,8 @@
 				},
 				// 파일 사이즈 경고 모달 닫기(열기는 20메가 이상인 파일 올릴 때 자동으로 열림)
 				hideFileSizeAlert() {
+					const fileInput = document.querySelector('.picInput');
+					fileInput.value = '';
 					this.fileSizeAlert = false;
 				},
 				
@@ -707,6 +714,7 @@
 							chatMessageContent: "사진 " + resp.data.attachmentNo
 						}
 						this.socket.send(JSON.stringify(data));
+						fileInput.value = '';
 						this.loadRoomList();
 					}
 				},
@@ -867,13 +875,18 @@
 						window.location.href = `${pageContext.request.contextPath}/member/login`;
 					}
 					else {
-						window.location.href = `${pageContext.request.contextPath}/member/mypage/${memberId}`	;
+						window.location.href = `${pageContext.request.contextPath}/member/mypage/${memberId}`;
 					}
 				},
 				// 이미지 메세지 모달로 크게 보기위한 url 셋팅
 				setModalImgURL(index) {
 					this.modalImgURL = "${pageContext.request.contextPath}/download?attachmentNo=" + this.messageList[index].attachmentNo;
-				}
+				},
+				// 채팅방에서 상대방 프사나 닉넴 클릭하면 그 사람 프로필 페이지로 이동
+				/*moveToProfile(index) {
+					this.targetId = this.messageList[index].memberId;
+					window.location.href = `${pageContext.request.contextPath}/member/mypage/${targetId}`;
+				}*/
 			},
 			computed: {
 				memberCount() {
