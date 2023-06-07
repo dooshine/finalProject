@@ -81,7 +81,7 @@
    
    
 <!-- 	<div class="container-fluid" id="app" test> -->
-	<div class="container-fluid" id="app">
+	<div class="container-fluid" id="app" test>
 		
 		<!----------- 글쓰기 버튼 ------------>
 	    <div class="bg-white mb-4 p-4 rounded-4">
