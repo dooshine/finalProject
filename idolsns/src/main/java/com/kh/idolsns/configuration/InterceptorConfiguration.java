@@ -48,22 +48,32 @@ public class InterceptorConfiguration implements WebMvcConfigurer{
         
 		registry.addInterceptor(memberInterceptor)
         .addPathPatterns(
-                // "/member/**",
-                // "/admin/**",
-                // "/board/**"
+                "/member/**",
+                //"/admin/**",
+                // "/board/**",
                 "/rest/follow/**",               
         		"/rest/post/**", // PostRestController전체 memberInterceptor 처리
         		"/rest/attachment/upload2/**",
         		"/rest/post/reply/delete/**",
         		"/rest/post/rereply/**",
-        		"/rest/post/reply/redelete/**"
+        		"/rest/post/reply/redelete/**",                
+                "/chat/**",
+                "/calendar/**",
+                "/rest/point/**",
+                "/rest/fund/**",
+                "/point/**"
         )
         .excludePathPatterns(
-                // "/member/join",
-                // "/member/joinFinish",
-                // "/member/login",
-                // "/member/find",
-                // "/member/exitFinish",
+                 "/member/join",
+                 "/member/joinFinish",
+                 "/member/login",
+                 "/member/find",
+                 "/member/exitFinish",
+                 "/member/findId",
+                 "/member/findIdFinish",
+                 "/member/findPw",
+                 "/member/findPwFinish",
+                 
                 // "/board/list",
                 // "/board/detail"
         		"/rest/post/all/**", // 전체 목록 조회 페이지

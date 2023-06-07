@@ -20,11 +20,11 @@
 	
 	     
     <style>
-		@media screen and (max-width:992px) {
+		/*@media screen and (max-width:992px) {
 		  	.col-6 {
 		    width: 100%; 
 		  }
-    	}
+    	}*/
 
 		/*   이미지 스와이핑 창 스타일 */
     	.swiper { 

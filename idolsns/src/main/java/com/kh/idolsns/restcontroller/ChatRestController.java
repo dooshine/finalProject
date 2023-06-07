@@ -148,7 +148,6 @@ public class ChatRestController {
 	@GetMapping("/message/noti/{memberId}")
 	public boolean loadChatNoti(@PathVariable String memberId) {
 		return chatReadRepo.newChatCount(memberId) > 0;
-		//return chatNotiRepo.myNotiList(memberId) > 0;
 	}
 	
 	// 채팅방 각각 새 메세지 알림 있는지 확인
