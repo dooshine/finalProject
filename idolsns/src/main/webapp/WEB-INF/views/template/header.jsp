@@ -70,11 +70,11 @@
     		font-family:  "Font Awesome 6 Free"  !important;
     	}
     	
-    	header {
-    		position: sticky;
+    	/*header {
+    		position: fixed;
     		top: 0;
     		z-index: 999;
-    	}
+    	}*/
     	
     	@media screen and (max-width:992px) {
 		  	#calendar {
@@ -111,6 +111,31 @@
     		background: none;
     		border: none;
     	}
+    	
+    	/* 채팅 관련인데 이 부분만 css로 빼면 이상해져서 여기에 다시 작성 */
+    	.fakeBtn {
+			width: 30px;
+			height: 30px;
+			background: #a698fd;
+			border-radius: 100px;
+			cursor: pointer;
+		}
+		
+		.fakeBtn:hover {
+			background: #6A53FB;
+		}
+		
+		.fakeBtn[disabled] ,
+		.fakeBtn[disabled]:hover {
+			background: #a698fd;
+			cursor: default;
+		}
+		
+		.ti-photo-up,
+		.ti-send {
+			color: white;
+			font-size: 18px;
+		}
     </style>
 </head>
 

@@ -20,8 +20,8 @@ public class ChatMessageRepoImpl implements ChatMessageRepo {
 		sql.insert("chatMessage.sendMessage", dto);
 	}
 	@Override
-	public List<ChatMessageDto> messageList(int chatRoomNo) {
-		return sql.selectList("chatMessage.listMessage", chatRoomNo);
+	public List<ChatMessageDto> messageList(ChatMessageDto dto) {
+		return sql.selectList("chatMessage.listMessage", dto);
 	}
 	@Override
 	public void deleteMessage(long chatMessageNo) {
