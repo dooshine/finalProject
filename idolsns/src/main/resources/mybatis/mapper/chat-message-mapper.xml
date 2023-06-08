@@ -41,7 +41,7 @@
 	<!-- 메세지 불러오기 -->
 	<select id="listMessage" resultType="ChatMessageDto">
 		select * from chat_message 
-		where chat_room_no = #{chatRoomNo} and chat_message_time > #{chatMessageTime}
+		where chat_room_no = #{chatRoomNo} and chat_message_time >= #{chatMessageTime}
 		order by chat_message_no asc
 	</select>
 	
