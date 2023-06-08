@@ -168,6 +168,14 @@ public class MemberController {
 		return "member/mypage";
 	}
 	
+	//내페이지 or 남의페이지 구분
+	@GetMapping("/mypage")
+	@ResponseBody
+	public String mypage(HttpSession session) {
+		String memberId = (String) session.getAttribute("memberId");
+		return memberId;
+	}
+	
 	//마이페이지 - 아이디, 닉네임 조회
 	@GetMapping("/profile")
 	@ResponseBody
