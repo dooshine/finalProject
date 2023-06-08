@@ -39,7 +39,7 @@
 	
 		<div v-show="page==1"  class="row justify-content-center" style="text-align:center;">
 				<div class="row justify-content-center mb-1">
-					<img src="/static/image/logo2.jpg" style="width:200px;">
+					<img src="/static/image/logo.png" style="width:200px;">
 				</div>
 				<div class="row ">
 					<h3 class="font-gray2" style="text-align:center;">비밀번호를 찾고자하는 아이디를 입력해주세요.</h3>
@@ -60,7 +60,7 @@
 		
 		<div v-show="page==2"  class="row justify-content-center" style="text-align:center;">
 				<div class="row justify-content-center mb-1">
-					<img src="/static/image/logo2.jpg" style="width:200px;">
+					<img src="/static/image/logo.png" style="width:200px;">
 				</div>
 				<div class="row">
 					<h3 class="font-gray2" style="text-align:center;">회원가입 시 사용했던 이메일을 입력하세요.</h3>
