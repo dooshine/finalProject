@@ -1710,7 +1710,7 @@
 
         			// 로그인 팔로우 정보 로드
         			this.memberFollowObj = resp.data;
-        			console.log(this.memberFollowObj);
+        			//console.log(this.memberFollowObj);
         			this.fetchPosts();
         			
         		},

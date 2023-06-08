@@ -70,17 +70,55 @@
     		font-family:  "Font Awesome 6 Free"  !important;
     	}
     	
-/*     	header { */
-/*     		position: sticky; */
-/*     		top: 0; */
-/*     		z-index: 999; */
-/*     	} */
-    	
+    	nav.navbar {
+    		position: fixed;
+			width: 100%;
+    		top: 0;
+    		z-index: 999;
+    	}
+    	#aside-bar {
+			position: fixed; 
+			top:90px; 
+			width: 25%;
+			height: 90%;
+		}
     	@media screen and (max-width:992px) {
 		  	#calendar {
 		  		display: none;
 		  	}
+			.col-3.calendar-area {
+				width: 0%;
+			}
+			.col-6.article {
+				width: 85%;
+			}
+			.col-3.left-aside {
+				width: 15%;
+			}
+			#aside-bar {
+				width: 15%;
+			}
+
+			.nav .aside-name-tag {
+				/* font-size: 0px; */
+				display: none;
+		  	}
+			.nav img {
+				margin-left: 0px !important;
+			}
+			.nav a {
+				text-align: center;
+			}
     	}
+		@media screen and (max-width:640px){
+			#header-area .navbar .container-fluid .col-3 {
+				width: 40%;
+			}
+			#header-area .navbar .container-fluid .col-6 {
+				width: 20%;
+			}
+			
+		}
     	/*@media screen and (max-width:767px) {
 		  	.hide-part {
 		    	display:none; 
@@ -111,6 +149,10 @@
     		background: none;
     		border: none;
     	}
+		.container-fluid {
+			padding-left: 0px;
+			padding-right: 0px;
+		}
     </style>
 </head>
 
@@ -122,19 +164,19 @@
         <header>
    
         	<div id="header-area" style="position: relative;">
-				<nav class="navbar navbar-light back-white" style="box-shadow: 0px 3px 4px rgba(3, 21, 17, 0.1);">
+				<nav class="navbar navbar-light back-white px-4" style="box-shadow: 0px 3px 4px rgba(3, 21, 17, 0.1);">
 				  	<div class="container-fluid">
 				  		<div class="col-3">
 					    	<a class="navbar-brand" href="/"><img src="/static/image/logo.png" style="width:130px;"></a>
 					    </div>
-				    	<div class="col-6 d-flex" id="navbarSupportedContent">
+				    	<div class="col-6 d-flex px-3" id="navbarSupportedContent">
 				      		<form action="/search/post" class="d-flex w-100" method="get">
 				      			<div class="search-box w-100">
 					        		<input name="q" class="search-input me-2 w-100" placeholder="STARLINK 검색" type="text" value="${param.q}">
 					        	</div>
 				      		</form>
 				    	</div>
-				    	<div class="col-3 d-flex justify-content-end">
+				    	<div class="col-3 d-flex justify-content-end" id="header-buttons">
 				    		<!-- 알림버튼 -->
 				    		<button class="noti-btn me-2">
 								<img class="noti nav-item hide-part" alt="알림" src="/static/image/notificationIcon.png">
@@ -414,7 +456,7 @@
 										<div v-if="message.attachmentNo === 0" class="messageBox">{{ message.chatMessageContent }}</div>
 										<!-- 이미지 메세지일 때 -->
 										<img class="photoMessage" v-if="message.attachmentNo != 0" @load="scrollBottom" @click="setModalImgURL(index)"
-												data-bs-target="#image-modal" data-bs-toggle="modal"
+												data-bs-target="#image-modal-chat" data-bs-toggle="modal"
 												:src="'${pageContext.request.contextPath}/download?attachmentNo=' + message.attachmentNo" >
 										<div class="messageTime" v-if="displayTime(index)">{{ timeFormat(message.chatMessageTime) }}</div>
 									</div>
@@ -433,7 +475,7 @@
 										<div v-if="message.attachmentNo === 0" class="messageBox">{{ message.chatMessageContent }}</div>
 										<!-- 이미지 메세지일 때 -->
 										<img class="photoMessage myMessage" v-if="message.attachmentNo != 0" @load="scrollBottom"  @click="setModalImgURL(index)"
-												data-bs-target="#image-modal" data-bs-toggle="modal"
+												data-bs-target="#image-modal-chat" data-bs-toggle="modal"
 												:src="'${pageContext.request.contextPath}/download?attachmentNo=' + message.attachmentNo">
 									</div>
 								</div>
@@ -609,7 +651,7 @@
 				</div>
 				<!---------------------------------------- 초대 모달 ---------------------------------------->
 				<!-- 이미지 확대 모달 -->
-				<div class="modal" tabindex="-1" role="dialog" id="image-modal">
+				<div class="modal" tabindex="-1" role="dialog" id="image-modal-chat">
 	     			<div class="modal-dialog modal-lg" role="image">
    						<div class="modal-content">
  					 		<img :src="modalImgURL">
@@ -618,8 +660,8 @@
 	           	</div>
 			</div>
         	<!----------------------------------------------- 헤더 끝 ----------------------------------------------->
-            
-			<div class="row">
+            <%-- 
+			<div class="row" style="position: fixed !important; top: 80px; z-index: 99999999999;">
 				<!-- (개발)로그인 버튼 -->
 				<div class="col-4">
 					<button><a href="/dev/login?memberId=testuser1">testuser1</a></button>
@@ -641,13 +683,14 @@
 					</c:if>
 				</div>
             </div>
+			--%>
         </header>
           <!-- <hr> -->
 
-        <section class="container-fluid">
-            <div class="row">
+        <section class="container-fluid px-0">
+            <div class="row mx-0">
 				<!-- aside -->
-                <div class="col-3 d-flex left-aside">
+                <div class="col-3 left-aside px-0">
 					<c:choose>
 						<%-- 일반페이지 aside --%>
 						<c:when test="${!requestScope['javax.servlet.forward.servlet_path'].startsWith('/admin')}">
@@ -663,7 +706,7 @@
 				<c:choose>
 					<%-- 일반페이지 본문 --%>
 					<c:when test="${!requestScope['javax.servlet.forward.servlet_path'].startsWith('/admin')}">
-						<div class="col-6 article container-fluid py-4" style="padding:0px;">
+						<div class="col-6 article container-fluid mb-4 px-4" style="padding:0px; margin-top: 90px;">
 					</c:when>
 					<%-- 관리자페이지페이지 본문 --%>
 					<c:otherwise>
