@@ -49,6 +49,12 @@
 		font-weight: bold;
 		font-size: 20px;
 	}
+	
+
+  .active-icon {
+    color: #6A53FB;
+  }
+
 
 
 </style>
@@ -62,7 +68,7 @@
 	        <div class="my-auto" >
 	            <div class="border artist-profile-img rounded-circle overflow-hidden">
 	                <!-- <img src="https://via.placeholder.com/200x200?text=LOGO"> -->
-	                <img :src="artistObj.attachmentNo==null?'https://via.placeholder.com/150x150?text=LOGO':'/download?attachmentNo='+artistObj.attachmentNo">
+	                <img :src="artistObj.attachmentNo==null?'https://via.placeholder.com/130x130?text=LOGO':'/download?attachmentNo='+artistObj.attachmentNo">
 	            </div>
 	        </div>
 	
@@ -99,25 +105,33 @@
 	    <div class="row px-5 pt-5 mb-4">
 	        <!-- [Component] 지도 -->
 	        <div class="col border custom-container mh-300 me-3 p-4">
-	            <div class="arti_title">📍지도</div>
-
-				<div id="mapShow" style="width: 100%; height: 300px;"></div>	             
-				      
-		      	
+	            <div class="arti_title">🗺️지도</div>
+				 <div class="row">
+	                <div class="col container pt-3 px-4">
+	          				<div id="map" class="border" style="width: 100%; height: 300px;"></div>
+							<div id="mapShow" class="border" style="width: 100%; height: 300px;"></div>	
+							
+						
+							
+						
+						</div>
+				    </div>  
+		      </div>	
 	        </div>
 	        <!-- [Component] 성지순례 목록글 -->
 	        <div class="col border custom-container mh-300 p-4">
 	            <div class="row">
 	                <div class="col">
-	                    <div class="arti_title">✨성지순례</div>
+	                    <div class="arti_title">📍성지순례</div>
 	                </div>
 	            </div>
 	            <div class="row">
 	                <div class="col container pt-3 px-4">
 	                 	<div v-for="post in postShowDto" :key="post.tagName">
-						    <template v-if="post.mapPlace !== null">
-						    	<div @click="showMap(post.mapPlace)" data-bs-target="#showMap" data-bs-toggle="modal">
-						        <i class="fa-solid fa-location-dot me-1"></i>{{ post.mapName }}
+						    <template v-if="post.mapName !== null">
+						    	<div @click="showMap(post.mapName,post.mapPlace)" data-bs-target="#showMap" data-bs-toggle="modal">
+						         <i class="fa-solid fa-location-dot me-1" :class="{'active-icon': selectedIcon === post.mapName}"></i>
+						         {{ post.mapName }}
 						        </div>
 						    </template>
 						</div>
@@ -182,7 +196,7 @@
     Vue.createApp({
       data() {
         return {
-        	
+        	selectedIcon: null,	
         	post: {
         		postNo:"",
         		tagName:"",
@@ -192,6 +206,7 @@
         	},
         	postShowDto: {},
         	
+        	markers:[],
         	
             artistObj: {},
             followPageObj: {
@@ -215,8 +230,6 @@
     	  
     	
 	        
-	        
-	        
         // # 사전 로드(대표페이지 정보, 로그인회원 팔로우 정보)
         // 1. 대표페이지(아티스트) 정보 조회
         async loadArtist(){
@@ -230,12 +243,11 @@
 			if(resp.data)
 			this.artistObj = resp.data;
 			
+			this.tagName = this.artistObj.artistName; // 태그명 설정
+
 			this.loadTags();
         
-            // 지도 데이터 가져오기
-            const mapResp = await axios.get(url);
-            this.mapData = mapResp.data;
-	        
+           
 	        },
         // 2.로그인 회원 팔로우 정보 로드
         async loadMemberFollowInfo(){
@@ -357,27 +369,79 @@
 			  console.log("내놔:" + resp.data);
 			  this.postShowDto = resp.data;
 			
+			
 			},
+			
+		displayAllMarkers() {
+				const mapContainer = document.getElementById('map');
+			    const mapOption = {
+			      center: new kakao.maps.LatLng(33.450701, 126.570667),
+			      level: 3
+			    };
 
-    		
-    	// 모달창 클릭 시 지도 정보 불러오기-------------------------
-      	showMap(keyword){
-      		this.showMapModalText = keyword;
-      		// 마커를 담을 배열입니다
-      		var markers = [];
+			    const map = new kakao.maps.Map(mapContainer, mapOption);
 
-      		// 지도 정보를 담을 변수
-      		let mapPlace = "기본";
+			    const positions = [
+			      {
+			        title: '카카오',
+			        latlng: new kakao.maps.LatLng(33.450705, 126.570677)
+			      },
+			      {
+			        title: '생태연못',
+			        latlng: new kakao.maps.LatLng(33.450936, 126.569477)
+			      },
+			      {
+			        title: '텃밭',
+			        latlng: new kakao.maps.LatLng(33.450879, 126.569940)
+			      },
+			      {
+			        title: '근린공원',
+			        latlng: new kakao.maps.LatLng(33.451393, 126.570738)
+			      }
+			    ];
 
-      		var mapContainer = document.getElementById('mapShow'), // 지도를 표시할 div 
-      		    mapOption = {
-      		        center: new kakao.maps.LatLng(37.606826, 126.8956567), // 지도의 중심좌표
-      		        level: 8 // 지도의 확대 레벨
-      		    };  
+			    const imageSrc =
+			      'https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png';
+			    const imageSize = new kakao.maps.Size(24, 35);
+			    const markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize);
 
-      		// 지도를 생성합니다    
-      		var map = new kakao.maps.Map(mapContainer, mapOption); 
+			    for (let i = 0; i < positions.length; i++) {
+			      const marker = new kakao.maps.Marker({
+			        map: map,
+			        position: positions[i].latlng,
+			        title: positions[i].title,
+			        image: markerImage
+			      });
+			    }
+			
+			},
+			
+				
+    	// 클릭 시 지도 정보 불러오기-------------------------
+      	showMap(keyword1,keyword2){
+			
+			//아이콘  색넣기
+			this.selectedIcon = keyword1;
+				
+            this.showMapName = keyword1;
+            this.showMapPlace = keyword2;
+            // 마커를 담을 배열입니다
+            var markers = [];
+            keyword2 = keyword2.replace(/\s+\d+$/, '');
+         var keyword = keyword1;
+         console.log(keyword);
+            // 지도 정보를 담을 변수
+            let mapPlace = "기본";
 
+            var mapContainer = document.getElementById('mapShow'), // 지도를 표시할 div 
+                mapOption = {
+                    center: new kakao.maps.LatLng(37.606826, 126.8956567), // 지도의 중심좌표
+                    level: 8 // 지도의 확대 레벨
+                };  
+
+            // 지도를 생성합니다    
+            var map = new kakao.maps.Map(mapContainer, mapOption); 
+            
       		// 장소 검색 객체를 생성합니다
       		var ps = new kakao.maps.services.Places();  
 	
@@ -392,6 +456,7 @@
       		        for (var i=0; i<data.length; i++) {
       		            displayMarker(data[i]);    
       		            bounds.extend(new kakao.maps.LatLng(data[i].y, data[i].x));
+      		            if(i==0) break;      		          
       		        }       
 
       		        // 검색된 장소 위치를 기준으로 지도 범위를 재설정합니다
@@ -418,16 +483,13 @@
       		    });
       		}
       	},
-    	  
-	        
-        
-
-  
+    	    
+      	
+     
       },
-      created(){
+      created(){  
     	  
     	  
-
     	// 카카오맵 API 로드
     	  const script = document.createElement('script');
     	  script.type = 'text/javascript';
@@ -444,20 +506,17 @@
     	  
     	  
         // 페이지 로드
+        
+        
+        
+        
         // 1. 아티스트 정보 로드
         this.loadArtist();
         // 2. 로그인 한 사람 팔로우 정보 로드
         this.loadMemberFollowInfo();
 
-
         // this.followBtn();
         
-        
-        ///////
-        //this.loadTags();
-        //this.loadPosts();
-  	  
-
 
       },
     }).mount('#app')

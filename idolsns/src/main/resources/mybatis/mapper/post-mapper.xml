@@ -29,6 +29,7 @@
 		    left join map m on p.post_no = m.post_no
 		    left join tag t on p.post_no = t.post_no
 		WHERE t.tag_name = #{tagName}
+		order by p.post_no desc
 
 	</select>
 
