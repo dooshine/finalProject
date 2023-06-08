@@ -738,24 +738,96 @@
 							<h6>신고 사유를 선택하세요</h6>
 						</div>
 						<div class="text-center mb-1">
-							<button class="custom-btn btn-round btn-purple1-secondary btn-sm" data-bs-modal="modal" @click="setReportReason('부적절한 컨텐츠 게시')">부적절한 컨텐츠 게시</button>
+							<button class="custom-btn btn-round btn-purple1-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#reportConfirm" @click="setReportReason('부적절한 컨텐츠 게시')">부적절한 컨텐츠 게시</button>
 						</div>
 						<div class="text-center mb-1">
-							<button class="custom-btn btn-round btn-purple1-secondary btn-sm " data-bs-modal="modal" @click="setReportReason('선정/폭력성')">선정/폭력성</button>
+							<button class="custom-btn btn-round btn-purple1-secondary btn-sm " data-bs-toggle="modal" data-bs-target="#reportConfirm" @click="setReportReason('선정/폭력성')">선정/폭력성</button>
 						</div>
 						<div class="text-center mb-1">						
-							<button class="custom-btn btn-round btn-purple1-secondary btn-sm " data-bs-modal="modal" @click="setReportReason('스팸/광고')">스팸/광고</button>
+							<button class="custom-btn btn-round btn-purple1-secondary btn-sm " data-bs-toggle="modal" data-bs-target="#reportConfirm" @click="setReportReason('스팸/광고')">스팸/광고</button>
 						</div>
 						<div class="text-center mb-1">
-							<button class="custom-btn btn-round btn-purple1-secondary btn-sm " data-bs-modal="modal" @click="setReportReason('거짓 또는 사기')">거짓 또는 사기</button>
+							<button class="custom-btn btn-round btn-purple1-secondary btn-sm " data-bs-toggle="modal" data-bs-target="#reportConfirm" @click="setReportReason('거짓 또는 사기')">거짓 또는 사기</button>
 						</div>
 						<div class="text-center mb-1">
-							<button class="custom-btn btn-round btn-purple1-secondary btn-sm " data-bs-modal="modal"  @click="setReportReason('테스트리폿사유')">테스트리폿사유</button>
+							<button class="custom-btn btn-round btn-purple1-secondary btn-sm " data-bs-toggle="modal" data-bs-target="#reportConfirm" @click="setReportReason('테스트리폿사유')">테스트리폿사유</button>
 						</div>
 					</div>
 					<br>
 					<div class="row ">
 						
+					</div>
+				</div>
+
+				<!-- footer -->
+				<div class="modal-footer"></div>
+
+			</div>
+		</div>
+	</div>
+	
+	<!-- 유저 신고 확인 목달  -->
+	<div class="modal" tabindex="-1" role="dialog" id="reportConfirm"
+		data-bs-backdrop="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+
+				<!-- header -->
+				<div class="modal-header">
+					
+				</div>
+
+				<!-- body -->
+				<div class="modal-body my-3">
+					<div class="row">
+						<div class="text-center mb-5">
+							<h6>신고 사유가 맞습니까?</h6>
+						</div>
+						<div class="text-center mb-5">
+							<h4 class="font-purple1" >{{reportReason}}</h4>
+						</div>
+						<div class="text-center mb-2">
+							<button class="mx-2 custom-btn btn-round btn-purple1 btn-sm" data-bs-toggle="modal" data-bs-target="#reportEnd" @click="">네</button>
+							<button class="mx-2 custom-btn btn-round btn-purple1-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#reportMember">아니오</button>
+						</div>
+					</div>
+				</div>
+
+				<!-- footer -->
+				<div class="modal-footer"></div>
+
+			</div>
+		</div>
+	</div>
+	
+	<!-- 유저 신고 확인 목달  -->
+	<div class="modal" tabindex="-1" role="dialog" id="reportEnd"
+		data-bs-backdrop="static">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+
+				<!-- header -->
+				<div class="modal-header">
+					
+				</div>
+
+				<!-- body -->
+				<div class="modal-body my-3">
+					<div class="row">
+						<div class="text-center mb-5">
+							<h5>{{reportMemberId}}유저에 대한 신고가 접수 되었습니다.</h5>
+						</div>
+						<div class="row  mb-5">
+							<div class="text-end col-5">
+								<h5>사유 : </h5>
+							</div>
+							<div class="text-start col-7">
+								<h5 class="font-purple1" >{{reportReason}}</h5>
+							</div>
+						</div>
+						<div class="text-center mb-2">
+							<button class="mx-2 custom-btn btn-round btn-purple1" data-bs-dismiss="modal" @click="fetchPosts()" >네</button>							
+						</div>
 					</div>
 				</div>
 
@@ -1852,12 +1924,38 @@
                 // 팔로우 관련 비동기 처리-----------------------------------
                 
                 // 유저 신고 관련 처리 ------------------------------------
+                // 유저 신고하기 버튼 클릭, 
                 reportModal(reportMemberId){
-                	this.reportMemberId = reportMemberId; 
+                	this.reportMemberId = reportMemberId;
+                	this.hidePostModal();   
                 },
                 
+             	// 유저 신고 사유 선택--------------------------
                 setReportReason(reportReason){
                 	this.reportReason = reportReason; 
+                	             	
+                },
+                
+                // 유저 신고 생성--------------------------
+                async reportMember(){
+                	if(this.memberId ===null && this.reportMemberId ===null){
+                		return;
+                	}
+                	let reportDto = {
+                		memberId: this.memberId,
+                		reportTargetType: "회원",
+                		reportTargetPrimaryKey: this.reportMemberId,
+                		reportFto: this.reportReason
+                	};
+                	console.log(this.reportDto);
+                	
+                	const url = "http://localhost:8080/rest/report/";
+                	try{
+                		const resp = await axios.post(url, reportDto);
+                	}
+                	catch(error){
+                		console.log(error);
+                	}
                 },
              	// 유저 신고 관련 처리 ------------------------------------
                 
