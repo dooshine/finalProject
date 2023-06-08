@@ -6,7 +6,7 @@ public interface ChatMessageRepo {
 
 	int sequence();
 	void sendMessage(ChatMessageDto dto);
-	List<ChatMessageDto> messageList(int chatRoomNo);
+	List<ChatMessageDto> messageList(ChatMessageDto dto);
 	void deleteMessage(long chatMessageNo);
 	void sendPic(ChatMessageDto dto);
 	

@@ -9,10 +9,10 @@
  <mapper namespace="map">
  	<insert id="insert">
  		insert into map(
- 			post_no, map_place
+ 			post_no, map_place, map_name
  		)
  		values (
- 			#{postNo}, #{mapPlace}
+ 			#{postNo}, #{mapPlace}, #{mapName}
  		)
  	</insert>
  	

@@ -13,7 +13,7 @@
 	</style>
 	<!-- 일반페이지 일때 -->
 	<c:if test='${!(requestScope["javax.servlet.forward.servlet_path"].startsWith("/admin") || requestScope["javax.servlet.error.exception_type"].contains("NoHandlerFoundException"))}'>
-			<div class="col-3 py-4 calendar-area">
+			<div class="col-3 py-4 calendar-area px-0">
 				<!-- 캘린더 영역 -->
 			 	<jsp:include page="/WEB-INF/views/template/calendar.jsp"></jsp:include>
 			</div>
@@ -26,11 +26,11 @@
 
         
         </section>
-        <hr>
+		<%-- <div class="custom-hr"></div> --%>
         <footer>
-            <h1>푸터</h1>
+            <%-- <h1>푸터</h1>
             <h2>세션 memberId: ${sessionScope.memberId}</h2>
-            <h2>세션 memberLevel: ${sessionScope.memberLevel}</h2>
+            <h2>세션 memberLevel: ${sessionScope.memberLevel}</h2> --%>
         </footer>
     </main>
  
@@ -92,7 +92,7 @@
 					},
 					chatMemberList: [],
 					messageList: [],
-					chatJoin: "",
+					//chatJoin: "",
 					// 입력창 초기화
 					clear() {
 						this.text = ""
@@ -119,6 +119,7 @@
 					window.location.href = "${pageContext.request.contextPath}/member/login";
 				},
 				connect() {
+					if(this.memberId === "") return;
 					const url = "${pageContext.request.contextPath}/ws/server";
 					this.socket = new SockJS(url);
 					// this: 뷰 객체
@@ -151,7 +152,7 @@
 					if(parsedData.type == 11) {
 						//console.log("newRoomNo: " + parsedData.chatRoomDto.chatRoomNo);
 						//this.chatRoomNo = parsedData.chatRoomDto.chatRoomNo;
-						console.log("newRoomNo: " + parsedData.chatRoomNo);
+						//console.log("newRoomNo: " + parsedData.chatRoomNo);
 						this.chatRoomNo = parsedData.chatRoomNo;
 						this.showNewChatRoomModal();
 					}
@@ -319,7 +320,7 @@
 					this.roomInfoCopy.chatRoomName1 = "";
 					this.chatMemberList.splice(0);
 					this.messageList.splice(0);
-					this.chatJoin = "";
+					//this.chatJoin = "";
 					this.memberListModal = false;
 					this.chatMenuModal = false;
 					this.chatRoomModal = false;
@@ -330,7 +331,7 @@
 				// 새 채팅방 모달 열기
 				showNewChatRoomModal() {
 					const chatRoomNo = this.chatRoomNo;
-					console.log("showNewChatRoomModal: " + chatRoomNo);
+					//console.log("showNewChatRoomModal: " + chatRoomNo);
 					const data = {
 							type: 2,
 							chatRoomNo: chatRoomNo
@@ -344,10 +345,10 @@
 					this.roomInfoCopy.chatRoomName1 = "";
 					this.chatMemberList.splice(0);
 					this.messageList.splice(0);
-					this.chatJoin = "";
+					//this.chatJoin = "";
 					this.loadRoomInfo();
 					this.loadChatMember();
-					this.getChatJoin();
+					//this.getChatJoin();
 					// 메세지 읽기
 					//this.readMessage();
 					this.loadRoomList();
@@ -452,6 +453,7 @@
 				},
 				// 팔로우 목록 불러오기
 				async loadFollowList() {
+					if(this.memberId === "") return;
 					const url = "${pageContext.request.contextPath}/rest/follow/member";
 					const resp = await axios.get(url);
 					//console.log("data: " + resp.data);
@@ -472,6 +474,7 @@
 				},
 				// 채팅방 만들기
 				createChatRoom() {
+					if(this.memberId === "") return;
 					if(this.selectedMemberList.length > 1) {
 						this.chatRoom.chatRoomType = 'G';
 					}
@@ -481,7 +484,7 @@
 					for(let i=0; i<this.selectedMemberList.length; i++) {
 						this.selectedMemberIdList[i] = this.selectedMemberList[i].memberId;
 					}
-					console.log("selectedMemberIdList: " + this.selectedMemberIdList);
+					//console.log("selectedMemberIdList: " + this.selectedMemberIdList);
 					const data = {
 							type: 11,
 							memberId: this.memberId,
@@ -510,6 +513,7 @@
 				
 				// 채팅방 정보 불러오기
 				async loadRoomInfo() {
+					if(this.memberId === "") return;
 					const chatRoomNo = this.chatRoomNo;
 					const url = "${pageContext.request.contextPath}/chat/chatRoom/chatRoomNo/" + chatRoomNo;
 					const resp = await axios.get(url);
@@ -522,6 +526,7 @@
 				},
 				// 참여자 정보 불러오기
 				async loadChatMember() {
+					if(this.memberId === "") return;
 					const chatRoomNo = this.chatRoomNo;
 					//console.log("chatRoomNo: " + chatRoomNo);
 					const url = "${pageContext.request.contextPath}/chat/chatRoom/chatMember/" + chatRoomNo;
@@ -623,18 +628,24 @@
 				},
 				// 메세지 불러오기
 				async loadMessage() {
+					if(this.memberId === "") return;
 					const chatRoomNo = this.chatRoomNo;
 					this.messageList.splice(0);
-					this.getChatJoin();
-					const url = "${pageContext.request.contextPath}/chat/message/" + chatRoomNo;
-					const resp = await axios.get(url);
+					//this.getChatJoin();
+					const url = "${pageContext.request.contextPath}/chat/message";
+					const data = {
+							memberId: this.memberId,
+							chatRoomNo: chatRoomNo
+					}
+					const resp = await axios.post(url, data);
 					//console.log("chatMessageTime: " + resp.data[0].chatMessageTime)
 					//console.log("chatJoin: " + this.chatJoin)
-					for(let i=0; i<resp.data.length; i++) {
+					/*for(let i=0; i<resp.data.length; i++) {
 						if(resp.data[i].chatMessageTime >= this.chatJoin)
 							//console.log(resp.data[i].chatRoomNo)
 							this.messageList.push(resp.data[i]);
-					}
+					}*/
+					this.messageList.push(...resp.data);
 					this.scrollBottom();
 				},
 				// 보내는 메세지가 오늘의 첫 메세지인지 확인
@@ -677,6 +688,7 @@
 				},
 				// 사진 보내기(실시간 알림 전송 포함)
 				async sendPic() {
+					if(this.memberId === "") return;
 					const fileInput = document.querySelector('.picInput');
 					const file = fileInput.files[0];
 					let reader = new FileReader();
@@ -738,6 +750,7 @@
 				},
 				// 보낸 메세지 삭제
 				deleteMessage(index) {
+					if(this.memberId === "") return;
 					const chatRoomNo = this.chatRoomNo;
 					const data = {
 						type: 3, 
@@ -750,7 +763,7 @@
 					this.hideDeleteMsgAlert();
 				},
 				// 해당 채팅방에 참여한 날짜와 시간 가져오기
-				async getChatJoin() {
+				/*async getChatJoin() {
 					const chatRoomNo = this.chatRoomNo;
 					const memberId = this.memberId;
 					const url = "${pageContext.request.contextPath}/chat/chatRoom/join/";
@@ -760,9 +773,10 @@
 					};
 					const resp = await axios.post(url, data);
 					this.chatJoin = resp.data;
-				},
+				},*/
 				// 채팅방 나가기
 				async leaveRoom() {
+					if(this.memberId === "") return;
 					const memberId = this.memberId;
 					const chatRoomNo = this.chatRoomNo;
 					const member = this.chatMemberList.find(function(member) {
@@ -797,6 +811,7 @@
 				},
 				// 채팅방 이름 변경
 				async saveRoomName() {
+					if(this.memberId === "") return;
 					if(this.roomInfo.chatRoomName1.length < 1) return;
 					if(this.roomInfo.chatRoomName1.length > 20) return;
 					const chatRoomNo = this.chatRoomNo;
@@ -813,6 +828,7 @@
 				},
 				// 사용자 초대
 				async inviteMember() {
+					if(this.memberId === "") return;
 					const chatRoomNo = this.chatRoomNo;
 					for(let i=0; i<this.selectedMemberList.length; i++) {
 						this.selectedMemberIdList[i] = this.selectedMemberList[i].memberId;
@@ -873,7 +889,6 @@
 					const response = await axios.get("/member/goToLoginPage");
 					console.log(response.data);
 					if(response.data == "") {
-						
 						window.location.href = `${pageContext.request.contextPath}/member/login`;
 					}
 					else {
@@ -889,6 +904,7 @@
 					this.targetId = this.messageList[index].memberId;
 					window.location.href = `${pageContext.request.contextPath}/member/mypage/${targetId}`;
 				}*/
+				
 			},
 			computed: {
 				memberCount() {
@@ -933,6 +949,54 @@
 					//console.log("in focus");
 					this.isFocused = true;
 				});
+
+				
+
+				function getWindowWidth() {
+					return window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+				};
+
+
+				// ######################## 헤더 조정 ########################
+				var inputCompoEle = document.getElementById('navbarSupportedContent');
+				var inputEle = $(inputCompoEle).find("input[name=q]");
+					// 헤더버튼 요소 선택
+				var headerButtons = document.getElementById('header-buttons');
+				function focusInput() {
+					$(this).css('width', '60%');
+					$(headerButtons).find("img").hide();
+				}
+				function rollbackView() {
+					$(inputCompoEle).css('width', '20%');
+					$(headerButtons).find("img").show();
+				}
+
+				function registerEvent() {
+					var windowWidth = getWindowWidth();
+
+					if (windowWidth <= 640) {
+						// 헤더검색창 요소 선택
+						
+						// 헤더검색창 클릭 이벤트 처리
+						$(inputCompoEle).css('width', '20%');
+						inputCompoEle.addEventListener('click', focusInput);
+
+						inputEle.blur(rollbackView);
+					} else {
+						$(inputCompoEle).css('width', '50%');
+						inputCompoEle.removeEventListener('click', focusInput);
+						inputEle.off('blur', rollbackView);
+					}
+				}
+
+
+				// 페이지 로드 시 등록 이벤트
+				window.addEventListener('load', registerEvent);
+				// 또는 윈도우 크기 변경 시마다 이벤트 등록
+				window.addEventListener('resize', registerEvent);
+
+
+				// ######################## 헤더 조정 끝 ########################
 			},
 			watch: {
 				// 채팅방 모달 켜질 때 메세지 입력창으로 커서 이동되게
@@ -971,4 +1035,3 @@
     
 </body>
 </html>
-

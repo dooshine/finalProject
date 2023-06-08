@@ -5,7 +5,13 @@ let calendar;
 let startDate;
 let endDate;
 let calendarNo;
-document.addEventListener('DOMContentLoaded', function() {
+
+$(function(){
+	$("#addCalendarModal").click(function(){
+		loadCalendar();
+	});
+})
+function loadCalendar() {
 	const calendarEl = document.getElementById('calendar');
 	calendar = new FullCalendar.Calendar(calendarEl, {
 		//locale: 'ko',
@@ -189,7 +195,9 @@ document.addEventListener('DOMContentLoaded', function() {
 		}
 	});
 	calendar.render();
-}); 
+}
+
+document.addEventListener('DOMContentLoaded', loadCalendar); 
 
 // 로그인한 회원의 일정 불러오는 함수
 function loadMemberCalendar() {
@@ -393,6 +401,8 @@ $(function() {
 })
 
 // 로그인하러 가기 버튼
-$(".calendar-login-btn").on("click", function() {
-    window.location.href = contextPath + "/member/login";
-});
+$(function() {
+	$(".calendar-login-btn").on("click", function() {
+	    window.location.href = contextPath + "/member/login";
+	});
+})

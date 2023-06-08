@@ -20,7 +20,11 @@
                     	<div class="beforeLogin">
                     		<h5 class="text-center mt-4">🙌</h5>
 	                    	<h5 class="text-center mt-3 mb-4">로그인하고 중요한 일정을 등록해 보세요!</h5>
-	                    	<button type="button" class="custom-btn btn-purple1 btn-round w-100 mb-4 calendar-login-btn">
+<%-- 	                    <a class="custom-btn btn-purple1 btn-round w-100 mb-4 calendar-login-btn" 
+	                    			style="text-decoration: none; width: 100%" href="${pageContext.request.contextPath}/member/login">
+								로그인하러 가기
+							</a> --%>
+							<button type="button" class="custom-btn btn-purple1 btn-round w-100 mb-4 calendar-login-btn">
 								로그인하러 가기
 							</button>
 						</div>
