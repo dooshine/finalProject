@@ -52,6 +52,18 @@
 	font-size: 10px;
 }
 
+.fs-15px {
+	font-size: 15px;
+} 
+
+.fs-14px {
+	font-size: 14px;
+}
+
+.fs-13px {
+	font-size: 13px;
+}
+
 .fs-12px {
 	font-size: 12px;
 }
@@ -306,7 +318,7 @@
 					<div class="row mt-3">
 						<div class="col">
 							<button
-								class="custom-btn btn-purple1 btn-sm rounded-pill mx-2 fixed-tag"
+								class="custom-btn btn-purple1 btn-sm rounded-pill mx-2 my-2 fixed-tag"
 								v-for="(newFixedTag, i) in newFixedTagList">{{
 								newFixedTag }}</button>
 						</div>
@@ -388,31 +400,48 @@
 
 				<!-- body -->
 				<div class="modal-body">
-					<div class="row mt-3">
+					<!-- 지도 구간 -->
+					<div class="row" v-if="address!=''">
+						<div class="text-secondary text-start fs-15px">
+							<i class="ms-2 fa-solid fa-location-dot"></i>&nbsp;{{placeName}} ({{address}})	
+						</div>
+					</div>
+					<!--         -->
+					<div class="row">
 						<div class="col">
 							<button
-								class="custom-btn btn-purple1 btn-sm rounded-pill mx-2 fixed-tag">
+								class="custom-btn btn-purple1 btn-sm rounded-pill mx-2 my-2 fixed-tag">
 								{{postType}}</button>
 							<button
-								class="custom-btn btn-purple1 btn-sm rounded-pill mx-2 fixed-tag"
+								class="custom-btn btn-purple1 btn-sm rounded-pill mx-2 my-2 fixed-tag"
 								v-for="(newFixedTag, i) in newFixedTagList">{{
 								newFixedTag }}</button>
 						</div>
 					</div>
-					<textarea class="col-12 post border border-secondary rounded-2"
+					<textarea class="col-12 mt-2 post border border-secondary rounded-2"
 						style="height: 200px;" placeholder=" 글 작성란"></textarea>
-						
-					<!-- 사진 보여주는 구간 -->
-					<div id="preview" contenteditable="true" class="ratio ratio-1x1"></div>
-					<!-- 사진 보여주는 구간 -->
+					
+					
 					<div class="row">	
 						<h6 class="all-tag text font-purple1 my-2"></h6>
 					</div>
+					
+					
+					<!-- 사진 보여주는 구간 -->
+					<div id="preview" contenteditable="true"></div>
+					<!-- 사진 보여주는 구간 -->
+					
 				</div>
 
 				<!-- footer -->
 				<div class="modal-footer">
 					<div class="col-5 col-md-5 col-lg-5 text-start">
+<!-- 						<label class="fakeBtn d-flex align-items-center justify-content-center me-2"> -->
+<!-- 				            		<i class="ti ti-photo-up"></i> -->
+<!-- 				            		d-none -->
+<!-- 				            		<input class="form-control picInput d-none" type="file" accept=".png, .jpg, .gif" @change="sendPic" /> -->
+<!-- 				        </label> -->
+
 						<input type="file" class="fs-6" id="fileInput" multiple>
 					</div>
 					<div class="col-6 col-md-6 col-lg-6 text-end fs-4">
@@ -470,10 +499,10 @@
 				<div class="modal-footer justify-content-end">
 					<div class="col-7 col-md-7 col-lg-7">
 						<div class="row text-start">
-							<span class="placeName fs-12px"></span>
+							<span class="placeName fs-15px"></span>
 						</div>
 						<div class="row text-start">
-							<span class="address fs-12px"></span>
+							<span class="address fs-15px"></span>
 						</div>
 					</div>
 
@@ -483,7 +512,7 @@
 							<div class="col-7">
 								<button type="button"
 									class="custom-btn btn-round btn-purple1 btn-sm bttest"
-									data-bs-target="#modal3" data-bs-toggle="modal">글쓰기</button>
+									data-bs-target="#modal3" @click="setMapPlace()" data-bs-toggle="modal">글쓰기</button>
 							</div>
 
 							<div class="col-5">
@@ -690,8 +719,55 @@
 			</div>
 		</div>
 	</div>
+	
+	<!-- 유저 신고 모달 -->
+	<div class="modal" tabindex="-1" role="dialog" id="reportMember"
+		data-bs-backdrop="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
 
-	<!-- 	    <button type="button" onclick="relayout();" class="btn btn-white btn-outline-dark rounded-pill col-12 " data-bs-target="#modalmap" data-bs-toggle="modal">지도 테스트 모달</button> -->
+				<!-- header -->
+				<div class="modal-header">
+					
+				</div>
+
+				<!-- body -->
+				<div class="modal-body my-3">
+					<div class="row">
+						<div class="text-center mb-2">
+							<h6>신고 사유를 선택하세요</h6>
+						</div>
+						<div class="text-center mb-1">
+							<button class="custom-btn btn-round btn-purple1-secondary btn-sm" data-bs-modal="modal" @click="setReportReason('부적절한 컨텐츠 게시')">부적절한 컨텐츠 게시</button>
+						</div>
+						<div class="text-center mb-1">
+							<button class="custom-btn btn-round btn-purple1-secondary btn-sm " data-bs-modal="modal" @click="setReportReason('선정/폭력성')">선정/폭력성</button>
+						</div>
+						<div class="text-center mb-1">						
+							<button class="custom-btn btn-round btn-purple1-secondary btn-sm " data-bs-modal="modal" @click="setReportReason('스팸/광고')">스팸/광고</button>
+						</div>
+						<div class="text-center mb-1">
+							<button class="custom-btn btn-round btn-purple1-secondary btn-sm " data-bs-modal="modal" @click="setReportReason('거짓 또는 사기')">거짓 또는 사기</button>
+						</div>
+						<div class="text-center mb-1">
+							<button class="custom-btn btn-round btn-purple1-secondary btn-sm " data-bs-modal="modal"  @click="setReportReason('테스트리폿사유')">테스트리폿사유</button>
+						</div>
+					</div>
+					<br>
+					<div class="row ">
+						
+					</div>
+				</div>
+
+				<!-- footer -->
+				<div class="modal-footer"></div>
+
+			</div>
+		</div>
+	</div>
+	
+	
+	<button type="button" onclick="relayout();" class="btn btn-white btn-outline-dark rounded-pill col-12 " data-bs-target="#modalmap" data-bs-toggle="modal">지도 테스트 모달</button>
 	<!--------------- 게시물들 반복구간 ------------->
 	<div v-for="(post, index) in posts" :key="index">
 
@@ -783,7 +859,7 @@
 									<div class="col-1"></div>
 									<div class="col-11 ms-2">
 										<div class="custom-hr my-2 me-4"></div>
-										<h6>유저 신고 하기</h6>
+										<h6 data-bs-toggle="modal" data-bs-target="#reportMember" @click="reportModal(post.memberId)">유저 신고 하기</h6>
 									</div>
 								</div>
 								<div class="row">
@@ -1530,8 +1606,15 @@
                 	// 로그인 맴버 팔로우 목록 조회
                 	memberFollowObj: {},
                 	
-                	// 
+                	// 게시글 타입
                 	postType: null,
+                	
+                	// 지도 타입
+                	placeName: '',
+                	address: '',
+                	
+                	reportMemberId: null,
+                	reportReason: null,
                 };
             },
             computed:{
@@ -1766,9 +1849,18 @@
                     this.loadMemberFollowInfo();
                   	this.fetchPosts();
                 },
-        		
-        		
                 // 팔로우 관련 비동기 처리-----------------------------------
+                
+                // 유저 신고 관련 처리 ------------------------------------
+                reportModal(reportMemberId){
+                	this.reportMemberId = reportMemberId; 
+                },
+                
+                setReportReason(reportReason){
+                	this.reportReason = reportReason; 
+                },
+             	// 유저 신고 관련 처리 ------------------------------------
+                
                 
              	// 좋아요 관련 비동기 처리-----------------------------------
              	// 아이디 접속해 있고, 좋아요 클릭시에 실행
@@ -1955,6 +2047,12 @@
              	},
              	// 게시글 수정----
              	
+             	setMapPlace(){
+             		this.placeName = document.querySelector('.placeName').innerText;
+             		console.log("하하"+this.placeName);
+             		this.address = document.querySelector('.address').innerText;
+             		console.log("호호"+this.address);
+             	},             	
              	
             	// 모달창 클릭 시 지도 정보 불러오기-------------------------
             	showMap(keyword1,keyword2){
