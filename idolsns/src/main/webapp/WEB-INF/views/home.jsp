@@ -1447,7 +1447,7 @@
                 	this.modalImageUrlList = attachmentList;
                 },
                 
-                
+                 
                 // 게시글, 댓글 시간 철리
                 getTimeDifference(time){
                 	const writeTime = new Date(time);
