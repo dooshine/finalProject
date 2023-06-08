@@ -51,6 +51,7 @@ public class InterceptorConfiguration implements WebMvcConfigurer{
                 "/member/**",
                 //"/admin/**",
                 // "/board/**",
+
                 "/chat/**",
                 "/calendar/**",
         		"/point/**",

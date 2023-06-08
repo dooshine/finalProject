@@ -24,6 +24,12 @@
   .custom-tab-list {
     padding: 12px 20px;
   }
+  .cursor-pointer {
+    cursor: pointer;
+  }
+  .hover-back:hover {
+    background-color: #f2f2f2;
+  }
 </style>
 
 
@@ -37,7 +43,7 @@
   <%-- ######################## 대표페이지 검색결과 ######################## --%>
   <div class="row mt-5">
     <div class="col">
-      <table class="table">
+      <table class="table" v-if="artistSearchList.length > 0">
         <thead>
           <tr class="text-center">
             <th scope="col">프로필 사진</th>
@@ -47,7 +53,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(artistSearch, i) in artistSearchList" :key="i">
+          <tr class="hover-back" v-for="(artistSearch, i) in artistSearchList" :key="i">
             <td class="cursor-pointer" @click="goArtistPage(artistSearch)">
               <div class="search-table-col">
                 <img :src="artistSearch.attachmentNo === 0 ? '/static/image/profileDummy.png' : '/download/?attachmentNo=' + artistSearch.attachmentNo" style="width: 50px; height: 50px;">
@@ -69,13 +75,11 @@
               </div>
             </td>
           </tr>
-          <tr v-if="artistSearchList.length === 0">
-            <td colspan="4">
-              <h3 class="m-3">검색 결과가 없습니다</h3>
-            </td>
-          </tr>
         </tbody>
       </table>
+      <div v-if="artistSearchList.length === 0">
+        <h3 class="pb-5 px-4">검색 결과가 없습니다</h3>
+      </div>
     </div>
   </div>
   <%-- ######################## 대표페이지 검색결과 끝 ######################## --%>
