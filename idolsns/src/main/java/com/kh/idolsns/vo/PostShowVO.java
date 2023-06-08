@@ -5,6 +5,7 @@ import java.sql.Timestamp;
 import java.util.List;
 
 import com.kh.idolsns.dto.AttachmentDto;
+import com.kh.idolsns.dto.FollowDto;
 import com.kh.idolsns.dto.ReplyDto;
 
 import lombok.Data;
@@ -36,6 +37,7 @@ public class PostShowVO {
 	// -----------------------------------
 	// 위치 정보
 	private String mapPlace;
+	private String mapName;
 	// ----------------------------------
 	// 태그 정보,게시물 이미지는 DTO List형태로 받기
 	private List<String> freeTagList;
@@ -51,6 +53,7 @@ public class PostShowVO {
 	// ----------------------------------
 	// 댓글 List형태로 받기
 	private List<ReplyDto> replyList; 
-	
+	//-----------------------------------
+
 	
 }

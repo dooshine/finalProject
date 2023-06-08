@@ -82,20 +82,21 @@
 					let postText = $(".post").val();					
 					// postDto에 삽입하기 위해 post로 송신할 JSON 객체생성
 					let postDto = {
-						memberId: "testuser1",
+						memberId: memberId,
 						postType: categori,
 						postContent: postText		
 					}
 					
 					
-					console.log(postDto)
 					
+					console.log(postDto+"보낸 데이터");
 					// 게시글을 비동기로 서버에 등록 
 					$.ajax({
 						  url: "http://localhost:8080/rest/post/",
 						  method: "post",
 						  data: postDto,
 						  success: function(postNo) {
+							
 							// 게시물 등록 성공 시에, 고정 태그 정보를 비동기로 서버에 등록
 						 	let fixedTagData ={
 								 fixedTag: fixedTag,
@@ -167,10 +168,11 @@
 							});														
 							
 							// 게시물 지도 등록
-							if(mapPlace!="기본"){
+							if(mapPlace!="기본" && mapName!="기본"){
 								let postDto = {
 									postNo : postNo,
-									mapPlace : mapPlace
+									mapPlace : mapPlace,
+									mapName : mapName
 								};
 								console.log(mapPlace);
 								$.ajax({

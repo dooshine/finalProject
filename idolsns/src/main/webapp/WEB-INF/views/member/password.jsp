@@ -41,19 +41,20 @@
 			<div class="row">
 				<input class="custom-input-rounded-container width: 100%;"  type="password" name="currentPw" placeholder="현재 비밀번호">
 			</div>
+			   <h6 class="font-purple1 text-center">잘못된 비밀번호입니다. 다시 입력하세요.</h6>
 			<br>
 			<div class="row mb-1">
 				<input class="custom-input-rounded-container width: 100%;"  type="password"  v-model="memberNewPw" name="changePw" placeholder="새로운 비밀번호"
 				:class="{'is-invalid':memberNewPw !== '' && !memberNewPwValid}">
-				<div class="invalid-feedback"></div>
+				<div class="invalid-feedback">{{memberNewPwMessage}}</div>
 			</div>
 			<div class="row mb-3">
 				<input class="custom-input-rounded-container width: 100%;"  type="password" v-model="memberNewPwRe" name="changePw" placeholder="새로운 비밀번호 확인"
-				:class="{'is-invalid' memberNewPw !== '' && !memberNewPwValid}">
-				
+				:class="{'is-invalid' :memberNewPw !== '' && !memberNewPwReValid}">
+				<div class="invalid-feedback">{{memberNewPwReMessage}}</div>
 			</div>
 			<div class="row">
-				<button type="submit"  :disabled="!allValid()" class="custom-btn btn-round btn-purple1" >변경</button>
+				<button type="submit"  v-bind:disabled="!allValid" class="custom-btn btn-round btn-purple1" >변경</button>
 			</div>
 		</form>
 	</div>

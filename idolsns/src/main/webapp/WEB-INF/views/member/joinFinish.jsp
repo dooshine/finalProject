@@ -49,7 +49,7 @@
 	
 	<!-- 로그인 왼쪽 -->
 	<div class="col-6" style="float:left; margin-left: 40px;">
-		<img src="/static/image/logo2.jpg" style="width:200px;">
+		<img src="/static/image/logo.png" style="width:200px;">
 		<br><br>
 		<h3 class="font-gray2 font-bold">스타링크에 오신것을 환영합니다.</h3>
 		<h3 class="font-gray2 font-bold">회원가입이 완료되었습니다.</h3>
