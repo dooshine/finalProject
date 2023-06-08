@@ -393,6 +393,8 @@ $(function() {
 })
 
 // 로그인하러 가기 버튼
-$(".calendar-login-btn").on("click", function() {
-    window.location.href = contextPath + "/member/login";
-});
+$(function() {
+	$(".calendar-login-btn").on("click", function() {
+	    window.location.href = contextPath + "/member/login";
+	});
+})

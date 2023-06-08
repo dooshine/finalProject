@@ -81,19 +81,6 @@
 		  		display: none;
 		  	}
     	}
-    	/*@media screen and (max-width:767px) {
-		  	.hide-part {
-		    	display:none; 
-		  	}
-    	}*/
-    	/*@media screen and (max-width:667px) {
-		  	.col-6 {
-		  		width: 306px;
-		  	}
-		  	.col-3 {
-		  		width: 153px;
-		  	}
-    	}*/
     
     	.profileDummy,
     	.noti,

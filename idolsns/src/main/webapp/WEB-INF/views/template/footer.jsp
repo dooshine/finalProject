@@ -5,12 +5,6 @@
 
             </div>
 
-	<style>
-		/*.calendar-area {
-			position: sticky;
-			/*position: -webkit-sticky;*/
-		}*/
-	</style>
 	<!-- 일반페이지 일때 -->
 	<%-- <c:if test='${!(requestScope["javax.servlet.forward.servlet_path"].startsWith("/admin") || requestScope["javax.servlet.error.exception_type"].contains("NoHandlerFoundException"))}'> --%>
 			<div class="col-3 py-4 calendar-area">
