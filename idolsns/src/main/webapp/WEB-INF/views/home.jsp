@@ -89,7 +89,7 @@
 
 
 <!-- 	<div class="container-fluid" id="app" test> -->
-<div class="container-fluid" id="app" test>
+<div class="container-fluid" id="app" >
 <!-- 	<button class="custom-btn btn-purple1-secondary" @click="changeCustom">커스텀모달</button> -->
 <!-- 	<div v-if="customOn" class="custom-modal" id="deleteAlertModal"> -->
 <!-- 		<div class="custom-modal-body"> -->
@@ -109,7 +109,7 @@
 <!-- 		</div> -->
 <!-- 	</div> -->
 	<!----------- 글쓰기 버튼 ------------>
-	<div class="bg-white mb-4 p-4 rounded-4">
+	<div class="bg-white mb-4 p-4 rounded-4" v-if="memberId!=null">
 		<div class="row mt-1">
 			<div
 				class="col-1 col-md-1 col-lg-1 d-flex align-items-center justify-content-center p-0">
@@ -129,7 +129,7 @@
 	<!----------- 글쓰기 버튼 ------------>
 
 	<!-- 지도 테스트 모달 버튼 (클릭 시 지도 relayout함수 호출 -> 안하면 지도 이미지 깨짐)-->
-		    <button type="button" onclick="relayout();" class="btn btn-white btn-outline-dark rounded-pill col-12 " data-bs-target="#modalmap" data-bs-toggle="modal">지도 테스트 모달</button>
+<!-- 		    <button type="button" onclick="relayout();" class="btn btn-white btn-outline-dark rounded-pill col-12 " data-bs-target="#modalmap" data-bs-toggle="modal">지도 테스트 모달</button> -->
 
 	<!----------------------------------- 단계별 모달창 구성------------------------------------------------->
 	<!-- 1. 카테고리 선택 -->
