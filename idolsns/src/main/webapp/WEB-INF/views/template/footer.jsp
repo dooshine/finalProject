@@ -13,7 +13,7 @@
 	</style>
 	<!-- 일반페이지 일때 -->
 	<c:if test='${!(requestScope["javax.servlet.forward.servlet_path"].startsWith("/admin") || requestScope["javax.servlet.error.exception_type"].contains("NoHandlerFoundException"))}'>
-			<div class="col-3 py-4 calendar-area">
+			<div class="col-3 py-4 calendar-area px-0">
 				<!-- 캘린더 영역 -->
 			 	<jsp:include page="/WEB-INF/views/template/calendar.jsp"></jsp:include>
 			</div>
@@ -26,11 +26,11 @@
 
         
         </section>
-        <hr>
+		<%-- <div class="custom-hr"></div> --%>
         <footer>
-            <h1>푸터</h1>
+            <%-- <h1>푸터</h1>
             <h2>세션 memberId: ${sessionScope.memberId}</h2>
-            <h2>세션 memberLevel: ${sessionScope.memberLevel}</h2>
+            <h2>세션 memberLevel: ${sessionScope.memberLevel}</h2> --%>
         </footer>
     </main>
  
@@ -889,6 +889,7 @@
 					this.targetId = this.messageList[index].memberId;
 					window.location.href = `${pageContext.request.contextPath}/member/mypage/${targetId}`;
 				}*/
+				
 			},
 			computed: {
 				memberCount() {
@@ -933,6 +934,54 @@
 					//console.log("in focus");
 					this.isFocused = true;
 				});
+
+				
+
+				function getWindowWidth() {
+					return window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+				};
+
+
+				// ######################## 헤더 조정 ########################
+				var inputCompoEle = document.getElementById('navbarSupportedContent');
+				var inputEle = $(inputCompoEle).find("input[name=q]");
+					// 헤더버튼 요소 선택
+				var headerButtons = document.getElementById('header-buttons');
+				function focusInput() {
+					$(this).css('width', '60%');
+					$(headerButtons).find("img").hide();
+				}
+				function rollbackView() {
+					$(inputCompoEle).css('width', '20%');
+					$(headerButtons).find("img").show();
+				}
+
+				function registerEvent() {
+					var windowWidth = getWindowWidth();
+
+					if (windowWidth <= 640) {
+						// 헤더검색창 요소 선택
+						
+						// 헤더검색창 클릭 이벤트 처리
+						$(inputCompoEle).css('width', '20%');
+						inputCompoEle.addEventListener('click', focusInput);
+
+						inputEle.blur(rollbackView);
+					} else {
+						$(inputCompoEle).css('width', '50%');
+						inputCompoEle.removeEventListener('click', focusInput);
+						inputEle.off('blur', rollbackView);
+					}
+				}
+
+
+				// 페이지 로드 시 등록 이벤트
+				window.addEventListener('load', registerEvent);
+				// 또는 윈도우 크기 변경 시마다 이벤트 등록
+				window.addEventListener('resize', registerEvent);
+
+
+				// ######################## 헤더 조정 끝 ########################
 			},
 			watch: {
 				// 채팅방 모달 켜질 때 메세지 입력창으로 커서 이동되게
