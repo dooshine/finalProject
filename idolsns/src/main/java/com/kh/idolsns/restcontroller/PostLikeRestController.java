@@ -41,7 +41,7 @@ public class PostLikeRestController {
 				postLikeRepo.delete(postLikeDto);
 				return "disLike";
 			}
-			else{ //안되어 있으면 
+			else{ //안되어 있으면
 				postLikeRepo.insert(postLikeDto);
 				return "Like";
 			}		
@@ -85,5 +85,21 @@ public class PostLikeRestController {
 		
 		return response; 
 	}
+	
+	@GetMapping("/like/check/{postNo}")
+	public boolean check(@PathVariable Long postNo, HttpSession session) {
+		// 회원아이디
+		String memberId = (String)session.getAttribute("memberId");
+		
+		// 포스트라이크 DTO
+//		PostLikeDto dto = new PostLikeDto();
+//		dto.setMemberId(memberId);
+//		dto.setPostNo(postNo);
+		
+		// 게시물 좋아요 여부 확인	
+//		return postLikeRepo.check(dto);
+		return postLikeRepo.check(PostLikeDto.builder().memberId(memberId).postNo(postNo).build());
+	}
+	
 	
 }

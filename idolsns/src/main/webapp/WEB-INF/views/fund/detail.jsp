@@ -146,7 +146,8 @@
 		
 			<div class="row mt-3" style="padding-left: 1em">
 			    <button class="btn btn-primary like-btn">
-			      <i class="fa fa-heart"></i> 
+			      <i v-if="isLiked" class="fs-4 ti ti-heart-filled" @click="checkLike"></i> 
+			      <i v-else class="fs-4 ti ti-heart" @click="checkLike"></i> 
 			      <!-- {{ likeCount }}  -->
 			    </button>
 	
@@ -398,7 +399,10 @@
 				  index: -1,
 				  replyNo: "",
 				  replyContent: "",
-			   	}
+			   	},
+			   	
+			   	// 좋아요 유무
+			   	isLiked : false,
 		      };
 		    },
 		    computed: {
@@ -562,6 +566,32 @@
                 	event.stopPropagation();
                 	this.replies[i].modal = false;
 				},
+				
+				// 좋아요 체크 후 추가&삭제
+				async checkLike() {
+					const postNo = this.fundDetail.postNo;
+					axios.get('http://localhost:8080/rest/post/like/'+postNo)
+            		.then(response => {
+            			console.log(response.data);
+            			this.checkFundLike();
+            			
+            				
+            		})
+            		.catch(error => {
+            			console.error(error);
+            		})
+					
+				},
+				
+				// 좋아요 체크
+				async checkFundLike() {
+					const postNo = this.fundDetail.postNo;
+					const resp = await axios.get("http://localhost:8080/rest/post/like/check/"+postNo);
+					this.isLiked = resp.data;
+// 					console.log(resp.data);
+				
+					
+				}
 		      	
 		    },
 		    created() {
@@ -571,6 +601,7 @@
 		    	  this.loadFundVO();
 		    	  this.loadReplies();
 		    	  this.loadTagNames();
+		    	  this.checkFundLike();
 		    	},
 		    mounted() {
 		    	}

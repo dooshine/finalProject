@@ -60,7 +60,6 @@ public class InterceptorConfiguration implements WebMvcConfigurer{
                 "/chat/**",
                 "/calendar/**",
         		"/rest/point/**",
-        		"/rest/fund/**",
         		"/point/**",
         		"/fund/**"
         )       
@@ -87,6 +86,7 @@ public class InterceptorConfiguration implements WebMvcConfigurer{
                  
                  "/fund/list",
                  "/fund/detail",
+                 "/fund/order",
                  
                 // "/board/list",
                 // "/board/detail"

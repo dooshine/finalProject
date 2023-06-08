@@ -40,6 +40,7 @@
 							$("form").prepend(input);
 
 							var imgNode = $("<img>").attr("src", "http://localhost:8080/rest/attachment/download/"+response.attachmentNo);
+							imgNode.attr('width','100%');
 							$("[name=postContent]").summernote('insertNode', imgNode.get(0));
 						},
 						error:function(){}
@@ -66,6 +67,11 @@
 			.title {
 	   			font-weight:bold;
 		   	}
+		   	
+			/* 	summernote block url access */
+		   	.note-group-image-url {
+			  display: none;
+			}
 	
 	</style>
 	
@@ -91,12 +97,14 @@
 	
 	<div class="input-group mb-3">
 	    <span class="input-group-text" id="inputGroup-sizing-default">시작일</span>
-	  <input type="date" name="postStart" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default">
+	  <input type="date" name="postStart" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" 
+	  			:min="minDate" v-model="postStart">
 	</div>
 	
 	<div class="input-group mb-3">
 	    <span class="input-group-text" id="inputGroup-sizing-default">종료일</span>
-	  <input type="date" name="postEnd" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default">
+	  <input type="date" name="postEnd" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default"
+	  			:min="minDateEnd" v-model="postEnd">
 	</div>
 	
 	<div class="input-group mb-3">
@@ -113,13 +121,16 @@
 
 
 
-	<div class="input-group mb-3">
-	  <div class="input-group-prepend">
-	    <span class="input-group-text" @click="selectFile">대표 이미지(1개)</span>
+	<div class="input-group mb-5 row">
+	
+	  <div class="input-group-prepend col-4 d-flex justify-content-center align-items-center">
+	    <span class="input-group-text " @click="selectFile">대표 이미지(1개)</span>
 	  </div>
-	  <div class="custom-file">
+	  
+	  <div class="custom-file col-6">
+	  	<img :src="previewURL" style="width:200px; height: 200px;"/>
 	    <input type="file" name="attach" class="custom-file-input" id="inputGroupFile01"
-	    			ref="fileInput" style="display:none;">
+	    			ref="fileInput" style="display:none;" @change="handleMainImagePreview">
 	  </div>
 	</div>
 	<!-- 고정태그 입력 시 목록 불러오기 -->
@@ -168,7 +179,12 @@
    	          	      findFixedTagName: "",
          	          findFixedTagList: [],
          	          newFixedTagList: [],
-         	         el: '#app',
+         	          previewURL: "/static/image/profileDummy.png",
+         	          el: '#app',
+         	          minDate: "",
+         	          minDateEnd: "",
+         	          postStart: "",
+         	          posrtEnd: "",
             	   }
 	            	},
             	computed: {
@@ -197,16 +213,41 @@
                     },
                     selectFile() {
                     	this.$refs.fileInput.click();
-                    }
+                    },
+                    // 대표사진 미리보기
+                    handleMainImagePreview(){
+                        // 업로드 파일
+                        const file = event.target.files[0];
+
+                        this.previewURL = URL.createObjectURL(file);
+                    },
+                    
+                    // 종료일
+                    updateEndDateMin() {
+					    if (this.postStart) {
+					      const minDateEnd = new Date(this.postStart);
+					      minDateEnd.setDate(minDateEnd.getDate());
+					      this.minDateEnd = minDateEnd.toISOString().split("T")[0];
+					    }
+					  }
                     
 	           	},
 	           	watch: {
 	           		findFixedTagName:_.throttle(function(){
 	                    //this == 뷰 인스턴스
 	                    this.loadFindFixedTagList();
-	        }, 250),
+	        			}, 250),
+	        			
+	        		// 종료일 update
+        			postStart(newDate) {
+        			    this.updateEndDateMin();
+        			  }
+	        	
 	            },
 	            mounted() {
+	            	const today = new Date().toISOString().split("T")[0];
+	            	this.minDate = today;
+	            	this.updateEndDateMin();
 	            },
 	           	created() {
 	           	}

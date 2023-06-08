@@ -129,33 +129,34 @@
 					</div>
 	             	<!-- 검색창 -->
 	               	<div class="search-box w-35 ms-auto me-4">
-	                    <input class="search-input" type="text" v-model="searchQuery" placeholder="검색창" @keyup.enter="fetchFundingList">
+	                    <input class="search-input" type="text" v-model="searchQuery" @keyup.enter="fetchOrderedFundingList">
 	                </div>
                	</div>
                	
                	<!-- 펀딩 리스트 -->
                  <div class="funding-list justify-content-center mt-4">
                  
-                   <div class="funding-item" v-for="(funding, index) in fundings" :key="funding.memberId"
+                   <div class="funding-item" v-for="(funding, index) in fundings" :key="index"
                                               v-on:click="link(funding)">
                      <img :src="getImageUrl(funding)" alt="Funding Image">
                      <h3 class="title">{{ funding.fundTitle }}</h3>
                      <p class="description">{{ funding.fundShortTitle }}</p>
                      <div class="progress-bar">
-                       <div class="progress" :style="{ width: (funding.totalPrice / funding.fundGoal * 100).toFixed(1) + '%' }"></div>
+                       	<div class="progress" :style="{ width: (funding.totalPrice / funding.fundGoal * 100).toFixed(1) + '%' }"></div>
                      </div>
                      <div class="info">
-                       <div>
-                     <span style="font-weight:bold">
-                     {{ (funding.totalPrice / funding.fundGoal * 100).toFixed(1) }}
-                     </span>%
-                         <span class="fund_span">{{ formatCurrency(funding.totalPrice) }}</span>원
-                       </div>
-                       <div>
-                         <span class="value">{{ getTimeDiff(funding) }}</span>
-                       </div>
+	                       <div>
+		                     <span style="font-weight:bold">
+		                     {{ (funding.totalPrice / funding.fundGoal * 100).toFixed(1) }}
+		                     </span>%
+	                         <span class="fund_span">{{ formatCurrency(funding.totalPrice) }}</span>원
+	                       </div>
+	                       <div>
+	                         <span class="value">{{ getTimeDiff(funding) }}</span>
+	                       </div>
                      </div>
                    </div>
+                   
                  </div>
                </div>
                
@@ -183,10 +184,10 @@
                 	searchQueryTemp: "",
                 	
                 	// 정렬
-                	orderList: [],
+                	orderList: ["post_time desc"],
                 	
                 	// 시간순 정렬 버튼
-                	dateSort: true,
+                	dateSort: false,
                 	 
                   };
                   },
@@ -202,21 +203,21 @@
                    async fetchFundingList() {
                  	  
 		                  // funding 리스트 초기화
-		                  if(!this.initFundings || this.searchQueryTemp != this.searchQuery) {
-		                     this.fundings = [];
-		                     this.initFundings = true; 
-		                     this.finish = false; // 검색어가 다르면 초기화
-		                  }
+// 		                  if(!this.initFundings || this.searchQueryTemp != this.searchQuery) {
+// 		                     this.fundings = [];
+// 		                     this.initFundings = true; 
+// 		                     this.finish = false; // 검색어가 다르면 초기화
+// 		                  }
 	                      // 다 불러왔으면
-	                      if(this.finish == true) return; 
+// 	                      if(this.finish == true) return; 
 		                  
 		                  // 다른 검색어로 검색했을때
-		                  if(this.searchQueryTemp != this.searchQuery) {
-		                     this.searchPage = 1;
-		                  }
+// 		                  if(this.searchQueryTemp != this.searchQuery) {
+// 		                     this.searchPage = 1;
+// 		                  }
 		                  
 		                  // searchQueryTemp에 이전 검색어 저장
-		                  this.searchQueryTemp = this.searchQuery;
+// 		                  this.searchQueryTemp = this.searchQuery;
 		                       
 		                  const resp = await axios.get("http://localhost:8080/rest/fund/page/"+this.searchPage,
 		                        {
@@ -230,9 +231,34 @@
 		                    		return new URLSearchParams(params).toString();
 		                    	}
 		                        });     
-		                  console.log(resp.data);
+		                  console.log("이거 왜 실행 안돼냐고");
 		                  this.fundings.push(...resp.data);
-		                  this.searchPage ++;
+		                  this.searchPage++;
+		                  
+		                  // 데이터가 12개 미만이면 더 읽을게 없다
+		                       if(resp.data.length < 12){
+		                           this.finish = true;
+		                          }
+                   },
+                   
+                   async fetchOrderedFundingList(){
+                	   	  this.searchPage=1;
+                	   	  
+		                  const resp = await axios.get("http://localhost:8080/rest/fund/page/"+this.searchPage,
+		                        {
+		                	  params: {
+		                		  	// 검색어
+		                        	searchKeyword : this.searchQuery,
+		                        	// 정렬 조건
+		                        	orderList : this.orderList
+		                        },
+		                        paramsSerializer: params => {
+		                    		return new URLSearchParams(params).toString();
+		                    	}
+		                        });
+// 		                  console.log(resp.data)
+		                  this.fundings = [...resp.data];
+		                  this.searchPage++;
 		                  
 		                  // 데이터가 12개 미만이면 더 읽을게 없다
 		                       if(resp.data.length < 12){
@@ -294,7 +320,7 @@
                     	        this.dateSort = false;
                     	        if (!this.orderList.includes(descOrder)) {
                     	            this.orderList = [descOrder];
-                    	            this.fetchFundingList();
+//                     	            this.fetchFundingList();
                     	        }
                     	    }
                     	    // 오래된순
@@ -302,10 +328,11 @@
                     	        this.dateSort = true;
                     	        if (!this.orderList.includes(ascOrder)) {
                     	            this.orderList = [ascOrder];
-                    	            this.fetchFundingList();
+//                     	            this.fetchFundingList();
                     	        }
                     	    }
                     	    console.log(this.orderList);
+                    	    console.log(this.fundings);
                       }
                  },
                  watch: {
@@ -319,7 +346,8 @@
                    },
                    // 정렬하면
                    orderList() {
-                	   this.fetchFundingList();
+//                 	   this.fetchFundingList();
+						this.fetchOrderedFundingList();
                    }
                },
                mounted() {
@@ -334,7 +362,7 @@
 
                        // data의 percent를 계산된 값으로 갱신
                        this.percent = Math.round(percent);
-                   },250));
+                   },100));
                },
                  created() {
 //                     this.loadFundPostImageList();
