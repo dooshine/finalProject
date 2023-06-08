@@ -1,12 +1,8 @@
 package com.kh.idolsns.restcontroller;
 import java.sql.Date;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
-
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,13 +16,11 @@ import com.kh.idolsns.dto.ChatJoinDto;
 import com.kh.idolsns.dto.ChatMessageDto;
 import com.kh.idolsns.dto.ChatReadDto;
 import com.kh.idolsns.dto.ChatRoomDto;
-import com.kh.idolsns.dto.MemberDto;
 import com.kh.idolsns.dto.MemberSimpleProfileDto;
 import com.kh.idolsns.repo.ChatJoinRepo;
 import com.kh.idolsns.repo.ChatMessageRepo;
 import com.kh.idolsns.repo.ChatReadRepo;
 import com.kh.idolsns.repo.ChatRoomRepo;
-import com.kh.idolsns.repo.MemberRepo;
 import com.kh.idolsns.repo.MemberSimpleProfileRepo;
 import com.kh.idolsns.service.ChatRoomService;
 import com.kh.idolsns.vo.ChatMemberJoinVO;

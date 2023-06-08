@@ -697,7 +697,7 @@
 					<!-- 								{{memberFollowObj.followMemberList}} -->
 					<!-- 								memberId와 post.memebrId가 다른데 팔로우목록이 있는 경우에,																 -->
 					<div
-						v-if="memberId != post.memberId && memberFollowObj.followMemberList.includes(post.memberId)"
+						v-if="memberFollowObj.followMemberList && memberId != post.memberId && memberFollowObj.followMemberList.includes(post.memberId)"
 						class="row text-end">
 						<div class="col-9"></div>
 						<button
@@ -707,7 +707,7 @@
 
 					<!-- 								memberId와 post.memeberId가 다른데 팔로우 목록에 없는 경우에  -->
 					<div
-						v-else-if="memberId != post.memberId && !(memberFollowObj.followMemberList.includes(post.memberId))"
+						v-else-if="memberFollowObj.followMemberList && memberId != post.memberId && !(memberFollowObj.followMemberList.includes(post.memberId))"
 						@click="createFollowMember(post.memberId)" class="row text-end">
 						<div class="col-10"></div>
 						<button class="col-2 custom-btn btn-purple1 btn-sm rounded-3">팔로우</button>
@@ -1680,7 +1680,7 @@
 
         			// 로그인 팔로우 정보 로드
         			this.memberFollowObj = resp.data;
-        			console.log(this.memberFollowObj);
+        			//console.log(this.memberFollowObj);
         			this.fetchPosts();
         			
         		},
