@@ -362,7 +362,6 @@
         checkLike(postNo,index){
           axios.get('http://localhost:8080/rest/post/like/'+postNo)
             .then(response => {
-              console.log(response.data);
               // 응답이 좋아요면 좋아요 +1
               if(response.data== 'Like'){
                 this.posts[index].likeCount = this.posts[index].likeCount + 1; 
@@ -441,8 +440,6 @@
           this.rereplyContent = ''; 
           this.tempPostNo = postNo;
           this.tempReplyNo = replyNo;
-          console.log(postNo);
-          console.log(replyNo);
         },
               
         hideRereplyInput(){
@@ -585,9 +582,6 @@
           this.postPage++;
           this.fixedTagSearchList = resp.data;
           this.getLikePostIndex(this.fixedTagSearchList);
-
-          console.log("this.fixedTagSearchList: ");
-          console.log(this.fixedTagSearchList);
         },
         getAttachmentUrl(attachmentNo) {		
           return "http://localhost:8080/rest/attachment/download/"+attachmentNo;
