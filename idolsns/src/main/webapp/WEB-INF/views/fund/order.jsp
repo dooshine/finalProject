@@ -32,7 +32,7 @@
    		  <form id="orderProcess" method="post" action="/fund/order">
     		
     		<div class="container border mt-5 d-flex" style="padding:1em;">
-    			<img src="/download?attachmentNo=${fundMainImageDto.attachmentNo }" class="col-5">
+    			<img src="/download?attachmentNo=${fundMainImageDto.attachmentNo}" class="col-5">
     			
     			<div class="col-7">
     			${fundPostDto.fundTitle} <br>

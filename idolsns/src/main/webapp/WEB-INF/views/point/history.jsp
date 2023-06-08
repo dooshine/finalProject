@@ -6,13 +6,15 @@
 <jsp:include page="/WEB-INF/views/template/header.jsp"></jsp:include> 
 
 
-  
   <style>
    @media screen and (max-width:992px) {
 		  	.col-6 {
 		    width: 100%; 
 		  }
     	}
+		 
+			   	
+		   
 		    ul.custom-tab-header {
 		      padding: 0;
 		      margin: 0;
@@ -72,9 +74,9 @@
 	    .radio_label {
 			white-space: nowrap;
 		}
+	  
 	   
 	   
-	
 	   
 	   	.custom-table-tr {
 			/* background-color: #f8f7fc; */
@@ -89,10 +91,9 @@
 			
 		}
 	   
-
-		
 	    
 	</style>
+
 
 	
 		
@@ -109,7 +110,9 @@
 		        <h3 class="font-bold mt-5 mb-3" style="padding-left: 0.5em">충전 내역</h3>
 		
 		   <div style="padding-left: 0.5em; padding-right: 0.5em;">
-	            <div class="container my-3 custom-border-box">내 포인트: <span class="amount font-bold font-purple1" >{{ formattedAmount }}</span>원</div>
+	            <div class="container my-3 custom-border-box">
+	            내 포인트: <span class="amount font-bold font-purple1">{{ formattedAmount }}
+	            </span>원</div>
 	        </div>
         
 				<div class="modal-body" style="padding-left: 0.5em; padding-right: 0.5em;">
@@ -134,11 +137,10 @@
 				      
 				        <td>
 						    <span :style="paymentDto.paymentStatus === '취소' ? 'text-decoration: line-through; color: grey;' : ''">
-						    {{ formatCurrency(paymentDto.paymentStatus) }}</span>
+						    {{ paymentDto.paymentStatus }}</span>
 					    </td>
 				        <td>
 				          <a :href="'detail?paymentNo=' + paymentDto.paymentNo">
-
 				            <button class="btn-sm btn-purple1">
 				              더보기
 				            </button>

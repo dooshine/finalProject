@@ -8,5 +8,6 @@ import lombok.NoArgsConstructor;
 @Data @NoArgsConstructor @AllArgsConstructor @Builder
 public class MapDto {
 	private Long postNo;
+	private String mapName;
 	private String mapPlace;
 }

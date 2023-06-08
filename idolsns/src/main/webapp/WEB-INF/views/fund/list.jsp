@@ -122,7 +122,7 @@
 				<div class="d-flex">
 					<!-- 펀딩 글 작성 -->
 					<div class="d-flex justify-content-center align-items-center">
-						<button class="btn-purple1" @click="startFunding">글 작성</button>
+						<button class="btn-custom btn-purple1" @click="startFunding">프로젝트 올리기</button>
 						<!-- 정렬 -->
 						<button v-if="dateSort" class="btn-purple1 ms-1" @click="sortByDate">최신순</button>
 						<button v-else class="btn-purple1 ms-1" @click="sortByDate">오랜된순</button>

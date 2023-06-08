@@ -35,9 +35,20 @@
         min-height: 300px;
     }
     .artist-profile-img {
-        width: 200px;
-        height: 200px;
+        width: 130px;
+        height: 130px;
     }
+
+	
+	.arti_name {
+		font-weight: bold;
+		font-size: 30px;
+	}
+
+	.arti_title {
+		font-weight: bold;
+		font-size: 20px;
+	}
 
 
 </style>
@@ -46,99 +57,113 @@
 <div id="app">
 	<div class="custom-container">
 	    <!-- # 대표페이지 프로필 -->
-	    <div class="row my-5 mx-5">
+	    <div class="my-5 mx-5 d-flex">
 	        <!-- 대표페이지 프로필 사진 -->
-	        <div class="col">
+	        <div class="my-auto" >
 	            <div class="border artist-profile-img rounded-circle overflow-hidden">
 	                <!-- <img src="https://via.placeholder.com/200x200?text=LOGO"> -->
-	                <img :src="artistObj.attachmentNo==null?'https://via.placeholder.com/200x200?text=LOGO':'/download?attachmentNo='+artistObj.attachmentNo">
+	                <img :src="artistObj.attachmentNo==null?'https://via.placeholder.com/150x150?text=LOGO':'/download?attachmentNo='+artistObj.attachmentNo">
 	            </div>
 	        </div>
 	
 	        <!-- 대표페이지 이름 및 팔로워 -->
-	        <div class="col container pt-4">
+	        <div class="col container my-auto" style="text-align:left; padding-left:2em;" >
 	            <!-- 대표페이지 이름 -->
-	            <div class="row">
-	                <h1 class="p-0">
+	            <div class="row arti_name">
 	                    {{fullName}}
-	                </h1>
 	            </div>
 	            <!-- 대표페이지 팔로워 -->
 	            <div class="row">
-	                팔로워 {{artistObj.followCnt ?? 0}}명
+	             	   팔로워 {{artistObj.followCnt ?? 0}}명
 	            </div>
 	        </div>
 	
 	        <!-- 버튼(팔로우하기, 글쓰기) -->
-	        <div class="col pt-4 container">
-	            <div class="row mb-2">
-	                <button class="custom-btn btn-round" :class="{'btn-purple1':!isFollowingArtist, 'btn-purple1-secondary': isFollowingArtist}"  v-text="isFollowingArtist?'팔로우취소':'팔로우하기'" @click="followPage">팔로우하기</button>
+	        <div class="col container my-auto">
+	            <div class="row mb-2 justify-content-end" >
+	                <button class="custom-btn btn-round" style="width:150px;" 
+	                :class="{'btn-purple1':!isFollowingArtist, 'btn-purple1-secondary': isFollowingArtist}"  v-text="isFollowingArtist?'팔로우취소':'팔로우하기'" @click="followPage">팔로우하기</button>
 	                <!-- <button  :class="{'btn-primary':!isFollowMemberList[i], 'btn-secondary': isFollowMemberList[i]}" v-text="isFollowMemberList[i]?'팔로우취소':'팔로우하기'" @click="followMember(member.memberId, i)"></button> -->
 	            </div>
-	            <div class="row">
-	                <button class="custom-btn btn-round btn-gray">글쓰기</button>
+	            <div class="row justify-content-end">
+	                <button class="custom-btn btn-round btn-gray" style="width:150px;">글쓰기</button>
 	            </div>
 	        </div>
 	    </div>
 	
-	    <hr>
+	
+	    <hr class="m-0">
+	
 	
 	    <!-- # 지도 -->
 	    <div class="row px-5 pt-5 mb-4">
 	        <!-- [Component] 지도 -->
-	        <div class="col border rounded-4 mh-300 container me-3 p-4">
-	            <h3>지도</h3>
-	      
-	            
+	        <div class="col border custom-container mh-300 me-3 p-4">
+	            <div class="arti_title">📍지도</div>
+
 				<div id="mapShow" style="width: 100%; height: 300px;"></div>	             
 				      
 		      	
 	        </div>
 	        <!-- [Component] 성지순례 목록글 -->
-	        <div class="col border rounded-4 mh-300 container p-4">
+	        <div class="col border custom-container mh-300 p-4">
 	            <div class="row">
 	                <div class="col">
-	                    <h3>✨성지순례✨</h3>
+	                    <div class="arti_title">✨성지순례</div>
 	                </div>
 	            </div>
 	            <div class="row">
 	                <div class="col container pt-3 px-4">
-	                
-	                
-	                   <div><i class="fa-solid fa-location-dot me-1"></i>{{postShow.mapPlace}}</div>
-	                
-	                
-	                </div>
-	            </div>
-	        </div>
-	    </div>
-	
+	                 	<div v-for="post in postShowDto" :key="post.tagName">
+						    <template v-if="post.mapPlace !== null">
+						    	<div @click="showMap(post.mapPlace)" data-bs-target="#showMap" data-bs-toggle="modal">
+						        <i class="fa-solid fa-location-dot me-1"></i>{{ post.mapName }}
+						        </div>
+						    </template>
+						</div>
+		            </div>
+		        </div>
+		    </div>
+		   </div>
+		
 	    <!-- # 같이가요, 펀딩 -->
 	    <div class="row px-5">
 	        <!-- [Component] 같이가요 -->
-	        <div class="col border rounded-4 mh-300 container me-3 p-4">
+	        <div class="col border custom-container mh-300 me-3 p-4">
 	            <div class="row">
 	                <div class="col">
-	                    <h3>👭같이가요👬</h3>
+	                    <div class="arti_title">👭같이가요</div>
 	                </div>
 	            </div>
 	            <div class="row">
 	                <div class="col container pt-3 px-4">
-	                    <div>같이가용 같이가용</div>
+	                    <div v-for="post in postShowDto" :key="post.tagName">
+						    <template v-if="post.postType == '같이가요'">
+						    	{{ post.postContent }}
+						    </template>
+						</div>
 	                </div>
 	            </div>
 	        </div>
 	        <!-- [Component] 펀딩 -->
-	        <div class="col border rounded-4 mh-300 p-4">
+	        <div class="col border custom-container mh-300 p-4">
 	            <div class="row">
 	                <div class="col">
-	                    <h3>📢후원하기📢</h3>
+	                    <div class="arti_title">📢후원하기</div>
 	                    <!-- 🎉📣📣 -->
 	                </div>
 	            </div>
 	            <div class="row">
-	                <div class="col container pt-3 px-4">
-	                    <div>후원해요</div>
+	             <div class="col container pt-3 px-4">
+	            <div v-for="post in postShowDto" :key="post.tagName">
+						    <template v-if="post.fundTitle !== null">
+                			<a :href="`${pageContext.request.contextPath}/fund/detail?postNo=${post.postNo}`">
+						        {{ post.fundTitle }}
+						    </a>
+						    </template>
+						</div>
+	            
+	               
 	                </div>
 	            </div>
 	        </div>
@@ -146,18 +171,27 @@
 	</div>
 </div>
 
+
+
+
+
+
+
 <!-- 뷰 스크립트 작성 -->
 <script>
     Vue.createApp({
       data() {
         return {
         	
-        	postShow: {
+        	post: {
         		postNo:"",
         		tagName:"",
         		mapPlace:"",
         		fundTitle:"",
+        		mapName:""
         	},
+        	postShowDto: {},
+        	
         	
             artistObj: {},
             followPageObj: {
@@ -195,6 +229,8 @@
 			// 조회 결과 없을 시 
 			if(resp.data)
 			this.artistObj = resp.data;
+			
+			this.loadTags();
         
             // 지도 데이터 가져오기
             const mapResp = await axios.get(url);
@@ -312,18 +348,16 @@
         /////
         
     	//고정태그 찾기
-    	async loadTags(){
-    		
-    		const tagName = this.artistObj.artistName;
-    		console.log("이름:" +tagName)
-    		const url = "/rest/tag/" + tagName;
-    		
-    		
-    		const resp = await axios.get(url);
-    		this.postShowDto = resp.data;
-
-    	},
-  		
+    	async loadTags() {
+			  const tagName = this.artistObj.artistName;
+			  console.log("태그:" + tagName);
+			  const url = "/rest/post/" + tagName;
+			
+			  const resp = await axios.get(url);
+			  console.log("내놔:" + resp.data);
+			  this.postShowDto = resp.data;
+			
+			},
 
     		
     	// 모달창 클릭 시 지도 정보 불러오기-------------------------
@@ -420,17 +454,18 @@
         
         
         ///////
-        this.loadTags();
+        //this.loadTags();
         //this.loadPosts();
   	  
-  	  
-
-
 
 
       },
     }).mount('#app')
 </script>
+
+
+
+
 
 <%-- <jsp:include page="/WEB-INF/views/artist/artistFooter.jsp"></jsp:include> --%>
 <jsp:include page="/WEB-INF/views/template/footer.jsp"></jsp:include>
