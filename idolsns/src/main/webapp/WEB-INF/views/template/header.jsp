@@ -70,8 +70,9 @@
     		font-family:  "Font Awesome 6 Free"  !important;
     	}
     	
-    	header {
-    		position: sticky;
+    	nav.navbar {
+    		/* position: fixed; */
+			width: 100%;
     		top: 0;
     		z-index: 999;
     	}

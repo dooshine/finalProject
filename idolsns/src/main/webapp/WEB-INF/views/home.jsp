@@ -69,7 +69,7 @@
 		  padding: 24px;
 		  border-radius: 0.5rem;
 		  border-width: 1px;
-/* 		  border-color: black; /* 테두리 색상 지정 */ */
+/* 		  border-color: black; /* 테두리 색상 지정  */
 		  border-style: solid;
 		}
 		
@@ -785,6 +785,15 @@
                            					 	</div>                           					 	
                            					 </div>
                            			</div>
+									<%-- 서영모달
+									<div class="modal" tabindex="-1" role="dialog" id="image-modal">
+										<div class="modal-dialog modal-lg" role="image">
+												<div class="modal-content">
+													<img :src="modalImgURL">
+												</div>                           					 	
+										</div>
+									</div>
+									 --%>
                            			<!-- 다중 이미지 스와이핑 모달창 나중에 보자...-->
 <!-- 					                <div class="modal" tabindex="-1" role="dialog" id="imageList-modal" -->
 <!--                            					 data-bs-backdrop="true"  test> -->
@@ -963,7 +972,6 @@
 					               			<!-- 댓글 상자 -->
 				                		</div>
 				                		<!-- 댓글 표시 -->
-				                		
 				                		<!-- 대댓글 표시 -->
 				                		<div v-for="(rereply,rereplyIdx) in post.replyList.slice(replyIdx+1)" :key='rereplyIdx'>			                							                				             				
 				                				<!-- 대댓글이 들어갈 조건 -->
