@@ -148,7 +148,7 @@ function getListItem(index, places) {
 function ifClick(){
 	var infoDivs = document.querySelectorAll('.info');
 	
-	
+
 	// 각 div 태그에 클릭 이벤트 리스너를 추가합니다.
 	infoDivs.forEach(function(div) {
 	  div.addEventListener('click', function() {
