@@ -49,7 +49,7 @@
 	
 	<!-- 로그인 왼쪽 -->
 	<div class="col-6" style="float:left; margin-left: 40px;">
-		<img src="/static/image/logo2.jpg" style="width:200px;">
+		<img src="/static/image/logo.png" style="width:200px;">
 		<br><br>
 		<h3 class="font-gray2 font-bold">스타링크에서 당신의 아이돌과 소통하세요</h3>
 	</div>
