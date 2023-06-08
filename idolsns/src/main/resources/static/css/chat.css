@@ -241,10 +241,10 @@ scrollbar-width: none;
 }
 
 .fakeBtn[disabled] ,
-  	.fakeBtn[disabled]:hover {
-  		background: #a698fd;
-  		cursor: default;
-  	}
+.fakeBtn[disabled]:hover {
+	background: #a698fd;
+	cursor: default;
+}
 
 .ti-photo-up,
 .ti-send {
@@ -395,4 +395,7 @@ scrollbar-width: none;
 .link-to-profile:hover {
 	text-decoration: none;
 	color: black;
+}
+#image-modal {
+	z-index: 999999;
 }
