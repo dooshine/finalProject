@@ -89,25 +89,25 @@
 
 
 <!-- 	<div class="container-fluid" id="app" test> -->
-<div class="container-fluid" id="app" test>
-	<button class="custom-btn btn-purple1-secondary" @click="changeCustom">커스텀모달</button>
-	<div v-if="customOn" class="custom-modal" id="deleteAlertModal">
-		<div class="custom-modal-body">
-			<div class="text-center mb-3">
-				<i class="ti ti-alert-triangle"></i>
-			</div>
-			<div class="text-center">삭제한 일정은 복구할 수
-				없습니다.zzzzzzzzzzzzzzzzzzzzzzzzzzz</div>
-			<div class="text-center">일정을 정말 삭제하시겠습니까?</div>
-			<div class="d-flex justify-content-center mt-4">
-				<button
-					class="custom-btn btn-round btn-purple1-secondary me-2 w-100"
-					id="delete-schedule">삭제</button>
-				<button class="custom-btn btn-round btn-purple1 w-100"
-					@click="changeCustom" id="delete-cancel">취소</button>
-			</div>
-		</div>
-	</div>
+<div class="container-fluid" id="app" >
+<!-- 	<button class="custom-btn btn-purple1-secondary" @click="changeCustom">커스텀모달</button> -->
+<!-- 	<div v-if="customOn" class="custom-modal" id="deleteAlertModal"> -->
+<!-- 		<div class="custom-modal-body"> -->
+<!-- 			<div class="text-center mb-3"> -->
+<!-- 				<i class="ti ti-alert-triangle"></i> -->
+<!-- 			</div> -->
+<!-- 			<div class="text-center">삭제한 일정은 복구할 수 -->
+<!-- 				없습니다.zzzzzzzzzzzzzzzzzzzzzzzzzzz</div> -->
+<!-- 			<div class="text-center">일정을 정말 삭제하시겠습니까?</div> -->
+<!-- 			<div class="d-flex justify-content-center mt-4"> -->
+<!-- 				<button -->
+<!-- 					class="custom-btn btn-round btn-purple1-secondary me-2 w-100" -->
+<!-- 					id="delete-schedule">삭제</button> -->
+<!-- 				<button class="custom-btn btn-round btn-purple1 w-100" -->
+<!-- 					@click="changeCustom" id="delete-cancel">취소</button> -->
+<!-- 			</div> -->
+<!-- 		</div> -->
+<!-- 	</div> -->
 	<!----------- 글쓰기 버튼 ------------>
 	<div class="bg-white mb-4 p-4 rounded-4">
 		<div class="row mt-1">
@@ -129,7 +129,7 @@
 	<!----------- 글쓰기 버튼 ------------>
 
 	<!-- 지도 테스트 모달 버튼 (클릭 시 지도 relayout함수 호출 -> 안하면 지도 이미지 깨짐)-->
-		    <button type="button" onclick="relayout();" class="btn btn-white btn-outline-dark rounded-pill col-12 " data-bs-target="#modalmap" data-bs-toggle="modal">지도 테스트 모달</button>
+<!-- 		    <button type="button" onclick="relayout();" class="btn btn-white btn-outline-dark rounded-pill col-12 " data-bs-target="#modalmap" data-bs-toggle="modal">지도 테스트 모달</button> -->
 
 	<!----------------------------------- 단계별 모달창 구성------------------------------------------------->
 	<!-- 1. 카테고리 선택 -->
