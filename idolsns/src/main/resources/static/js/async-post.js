@@ -168,10 +168,11 @@
 							});														
 							
 							// 게시물 지도 등록
-							if(mapPlace!="기본"){
+							if(mapPlace!="기본" && mapName!="기본"){
 								let postDto = {
 									postNo : postNo,
-									mapPlace : mapPlace
+									mapPlace : mapPlace,
+									mapName : mapName
 								};
 								console.log(mapPlace);
 								$.ajax({
