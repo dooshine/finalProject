@@ -1431,19 +1431,37 @@
 
 		            // artistEngNameLower
 		            // 2. toggle 팔로우 삭제, 팔로우 생성
-		            const isFollowingMember = memberSearch.isFollowMember;
+					const targetMemberId = window.location.pathname.split('/').slice(-1);
 		            if(isFollowingMember){
-		                if(!confirm(this.fullName(memberSearch.memberId, memberSearch.memberNick) + "님 팔로우를 취소하시겠습니까?")) return;
-		                this.setFollowMemberObj(memberSearch.memberId);
-		                await this.deleteFollow();
+		                if(!confirm(this.fullName(targetMemberId) + "님 팔로우를 취소하시겠습니까?")) return;
+		                // this.setFollowMemberObj(targetMemberId);
+		                // await this.deleteMemberFollow();
 		            } else {
-		                this.setFollowMemberObj(memberSearch.memberId);
-		                await this.createFollow();
+		                // this.setFollowMemberObj(targetMemberId);
+		                // await this.createFollow();
 		            }
 
-		            await this.loadMemberFollowInfo();
-		            this.loadMemberSearchList();
+		            // await this.loadMemberFollowInfo();
+		            // this.loadMemberSearchList();
 		        },
+
+				// 대표페이지 팔로우 생성
+				async createFollow(){
+					// 팔로우 생성 url
+					const url = "http://localhost:8080/rest/follow/";
+					await axios.post(url, this.followObj);
+					// [develope] 
+				},
+				// 대표페이지 팔로우 취소
+				async deleteMemberFollow(){
+					// 팔로우 생성 url
+					const url = "http://localhost:8080/rest/follow/";
+					await axios.delete(url, {
+						data: this.followObj,
+					});
+					// [develope]
+				},
+
 
 		        // 회원 팔로우 대상 설정
 		        setFollowMemberObj (followMemberId){
