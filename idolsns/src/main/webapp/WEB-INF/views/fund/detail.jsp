@@ -145,9 +145,9 @@
 			
 		
 			<div class="row mt-3" style="padding-left: 1em">
-			    <button class="btn btn-primary like-btn">
-			      <i v-if="isLiked" class="fs-4 ti ti-heart-filled" @click="checkLike"></i> 
-			      <i v-else class="fs-4 ti ti-heart" @click="checkLike"></i> 
+			    <button class="btn btn-primary like-btn" @click="checkLike">
+			      <i v-if="isLiked" class="fs-4 ti ti-heart-filled"></i> 
+			      <i v-else class="fs-4 ti ti-heart"></i> 
 			      <!-- {{ likeCount }}  -->
 			    </button>
 	

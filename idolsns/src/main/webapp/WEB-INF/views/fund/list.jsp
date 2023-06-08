@@ -125,7 +125,7 @@
 						<button class="btn-purple1" @click="startFunding">글 작성</button>
 						<!-- 정렬 -->
 						<button v-if="dateSort" class="btn-purple1 ms-1" @click="sortByDate">최신순</button>
-						<button v-else class="btn-purple1 ms-1" @click="sortByDate">오랜된순</button>
+						<button v-else class="btn-purple1 ms-1" @click="sortByDate">오래된순</button>
 					</div>
 	             	<!-- 검색창 -->
 	               	<div class="search-box w-35 ms-auto me-4">
