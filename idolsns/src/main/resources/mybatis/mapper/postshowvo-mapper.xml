@@ -10,7 +10,7 @@
 	<select id="selectOne" resultType="PostShowVO">	
 		select p.*, sp.schedule_start, sp.schedule_end,
 		            tp.together_start, tp.together_end,
-		            m.map_place, mb.member_nick , mpi.attachment_no
+		            m.map_place, m.map_name, mb.member_nick , mpi.attachment_no
 		from post p
 		full outer join schedule_post sp on p.post_no = sp.post_no
 		Left outer join together_post tp on p.post_no = tp.post_no
@@ -23,7 +23,7 @@
 	<select id="selectAll" resultType="PostShowVO">
 		select p.*, sp.schedule_start, sp.schedule_end,
             tp.together_start, tp.together_end,
-            m.map_place, mb.member_nick , mpi.attachment_no
+            m.map_place, m.map_name, mb.member_nick , mpi.attachment_no
 			from post p 
 			full outer join schedule_post sp on p.post_no = sp.post_no
 			Left outer join together_post tp on p.post_no = tp.post_no
@@ -51,7 +51,7 @@
 		<include refid="topNheader"></include>
 		select p.*, sp.schedule_start, sp.schedule_end,
             tp.together_start, tp.together_end,
-            m.map_place, mb.member_nick , mpi.attachment_no
+            m.map_place, m.map_name, mb.member_nick , mpi.attachment_no
 			from post p 
 			full outer join schedule_post sp on p.post_no = sp.post_no
 			Left outer join together_post tp on p.post_no = tp.post_no
@@ -70,7 +70,7 @@
 		<include refid="topNheader"></include>
     	SELECT testuserP.*,sp.schedule_start, sp.schedule_end,
                     tp.together_start, tp.together_end,
-                    m.map_place, mb.member_nick , mpi.attachment_no
+                    m.map_place, m.map_name, mb.member_nick , mpi.attachment_no
          FROM (
                 SELECT p.*
                 FROM post p
@@ -91,7 +91,7 @@
 		<include refid="topNheader"></include>
 	    SELECT testuserP.*,sp.schedule_start, sp.schedule_end,
                     tp.together_start, tp.together_end,
-                    m.map_place, mb.member_nick , mpi.attachment_no
+                    m.map_place, m.map_name, mb.member_nick , mpi.attachment_no
          FROM (
                 select * 
                 from post 
@@ -111,7 +111,7 @@
 		<include refid="topNheader"></include>
 		SELECT testuserP.*,sp.schedule_start, sp.schedule_end,
                     tp.together_start, tp.together_end,
-                    m.map_place, mb.member_nick , mpi.attachment_no
+                    m.map_place, m.map_name, mb.member_nick , mpi.attachment_no
          FROM (
                 SELECT p.*
                 FROM post p
@@ -195,7 +195,7 @@
 	<select id="getPostShow" resultMap="postShowResultMap">
 			select p.*, sp.schedule_start, sp.schedule_end,
             tp.together_start, tp.together_end,
-            m.map_place, mb.member_nick , mpi.attachment_no
+            m.map_place, m.map_name, mb.member_nick , mpi.attachment_no
 			from post p 
 			full outer join schedule_post sp on p.post_no = sp.post_no
 			Left outer join together_post tp on p.post_no = tp.post_no

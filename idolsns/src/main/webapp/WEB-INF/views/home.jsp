@@ -1,1264 +1,1441 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+	pageEncoding="UTF-8"%>
 <jsp:include page="/WEB-INF/views/template/header.jsp"></jsp:include>
 
 
-		
-	<!------- 카카오 지도 관련-------->
-	<!-- 카카오 api 키 등록 -->
-	<script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=047888df39ba653ff171c5d03dc23d6a&libraries=services"></script>
-	<!-- 맵 관련 css -->
-	<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/static/css/map.css">
-	<!------- 카카오 지도 관련-------->
-    
-    <!-- tabler 아이콘 -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
-     
-    <!-- swiper cdn -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css"/>
-	<script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
-	
-	     
-    <style>
-		/*@media screen and (max-width:992px) {
+
+<!------- 카카오 지도 관련-------->
+<!-- 카카오 api 키 등록 -->
+<script
+	src="//dapi.kakao.com/v2/maps/sdk.js?appkey=047888df39ba653ff171c5d03dc23d6a&libraries=services"></script>
+<!-- 맵 관련 css -->
+<link rel="stylesheet" type="text/css"
+	href="${pageContext.request.contextPath}/static/css/map.css">
+<!------- 카카오 지도 관련-------->
+
+<!-- tabler 아이콘 -->
+<link rel="stylesheet"
+	href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+
+<!-- swiper cdn -->
+<link rel="stylesheet"
+	href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css" />
+<script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
+
+
+<style>
+/*@media screen and (max-width:992px) {
 		  	.col-6 {
 		    width: 100%; 
 		  }
     	}*/
 
-		/*   이미지 스와이핑 창 스타일 */
-    	.swiper { 
-		width: 600px;
-		height: 600px;
-		}
-		
-    	.address{
-    	font-size:10px;
-    	}
-    	.grey{
-    	color: grey;
-    	}
-    	.grey-e0e0e0{
-    	background-color: 	#E0E0E0;
-    	}
-    	.grey-f5f5f5{
-    	background-color: 	#f5f5f5;
-    	}
-    	.fs-7{
-    	font-size: 10px;
-    	}
-    	.fs-12px{
-    	font-size: 12px;
-    	}
-    	.fs-11px{
-    	font-size: 11px;
-    	}
-    	.h-20{
-    	height: 20px;
-    	}
-    	.reply-text{
-    	font-size: 5px;
-    	}	
-		.post-modal{
-			z-index: 9999;
-			position: absolute;			
-		}
-		.post-modal-content {
-		  box-shadow: 0px 3px 4px rgba(3, 21, 17, 0.1);
-		  background-color: white;
-		  padding: 24px;
-		  border-radius: 0.5rem;
-		  border-width: 1px;
-/* 		  border-color: black; /* 테두리 색상 지정  */
-		  border-style: solid;
-		}
-		
+/*   이미지 스와이핑 창 스타일 */
+.swiper {
+	width: 600px;
+	height: 600px;
+}
 
-    </style>
+.grey {
+	color: grey;
+}
 
-   
+.grey-e0e0e0 {
+	background-color: #E0E0E0;
+}
 
-   
-   
+.grey-f5f5f5 {
+	background-color: #f5f5f5;
+}
+
+.fs-7 {
+	font-size: 10px;
+}
+
+.fs-12px {
+	font-size: 12px;
+}
+
+.fs-11px {
+	font-size: 11px;
+}
+
+.h-20 {
+	height: 20px;
+}
+
+.reply-text {
+	font-size: 5px;
+}
+
+.post-modal {
+	z-index: 9999;
+	position: absolute;
+}
+
+.post-modal-content {
+	box-shadow: 0px 3px 4px rgba(3, 21, 17, 0.1);
+	background-color: white;
+	padding: 24px;
+	border-radius: 0.5rem;
+	border-width: 1px;
+	/* 		  border-color: black; /* 테두리 색상 지정 */ */
+	border-style: solid;
+}
+</style>
+
+
+
+
+
 <!-- 	<div class="container-fluid" id="app" test> -->
-	<div class="container-fluid" id="app">
-		<%-- <button class="custom-btn btn-purple1-secondary" @click="changeCustom">커스텀모달</button> --%>
-        <div v-if="customOn" class="custom-modal"  id="deleteAlertModal">
-           <div class="custom-modal-body">
-               <div class="text-center mb-3">
-                  <i class="ti ti-alert-triangle"></i>
-               </div>
-               <div class="text-center">삭제한 일정은 복구할 수 없습니다.zzzzzzzzzzzzzzzzzzzzzzzzzzz</div>
-               <div class="text-center">일정을 정말 삭제하시겠습니까?</div>
-               <div class="d-flex justify-content-center mt-4">
-                  <button class="custom-btn btn-round btn-purple1-secondary me-2 w-100" id="delete-schedule">삭제</button>
-                  <button class="custom-btn btn-round btn-purple1 w-100" @click="changeCustom" id="delete-cancel">취소</button>
-               </div>
-           </div>
-        </div>
-		<!----------- 글쓰기 버튼 ------------>
-	    <div class="bg-white mb-4 p-4 rounded-4">
-	        <div class="row mt-1">
-	            <div class="col-1 col-md-1 col-lg-1 d-flex align-items-center justify-content-center p-0">
-	               <img class="rounded-circle img-fluid" src="static/image/profileDummy.png">
-	            </div>
-	            <div class="col-11 col-md-11 col-lg-11 d-flex align-items-center justify-content-center">
-	                <button type="button" class="custom-btn btn-round btn-purple1-secondary me-2 w-100" data-bs-target="#modal1" data-bs-toggle="modal">${memberId}님 무슨 생각을 하고 계신가요?</button>
-	            </div>
-	            
-	        </div>	        
-	    </div>
-	    <!----------- 글쓰기 버튼 ------------>
-	    
-        <!-- 지도 테스트 모달 버튼 (클릭 시 지도 relayout함수 호출 -> 안하면 지도 이미지 깨짐)-->
-<!-- 	    <button type="button" onclick="relayout();" class="btn btn-white btn-outline-dark rounded-pill col-12 " data-bs-target="#modalmap" data-bs-toggle="modal">지도 테스트 모달</button> -->
-	    
-	    <!----------------------------------- 단계별 모달창 구성------------------------------------------------->
-		<!-- 1. 카테고리 선택 -->
-        <div class="modal" tabindex="-1" role="dialog" id="modal1"
-                            data-bs-backdrop="static"> <!-- static이면 모달창 외부 클릭해도 안꺼짐 -->
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                
-                	<!-- header -->
-                    <div class="modal-header">
-                        <h5 class="modal-title"><i class="fa-solid fa-xmark fa-lg grey" data-bs-dismiss="modal"></i></h5>
-                    </div>
-                   
-                    <!-- body -->
-                    <div class="modal-body">
-                        <!-- 태그 버튼 선택 -->
-                        
-                        <p class="text-center">무엇에 대한 글인가요?(카테고리 설정)</p>
-                        <div class="row justify-content-center"> 
-                        	<button type="button" class="col-3 custom-btn btn-round btn-purple1 btn-sm modal2 rounded-pill"
-	                        	data-bs-target="#modalfixed" data-bs-toggle="modal">
-	                        	자유
-	                        </button>
-	                        &nbsp;&nbsp;
-	                        <button type="button" class="col-3 custom-btn btn-round btn-purple1 btn-sm modal2 rounded-pill"
-	                        	data-bs-target="#modal1-1" data-bs-toggle="modal">
-	                        	행사일정
-	                        </button>
-                     	    &nbsp;&nbsp;
-	                        <button type="button" class="col-3 custom-btn btn-round btn-purple1 btn-sm modal2 rounded-pill"
-	                        	data-bs-target="#modal1-2" data-bs-toggle="modal">
-	                        	같이가요
-	                        </button>
-                        </div>
-                    </div>
-                   
-                    <!-- footer -->
-                    <div class="modal-footer">
-                    		<br>
-<!--                         <button type="button" class="btn btn-secondary btn-sm" -->
-<!--                                 data-bs-dismiss="modal">닫기</button> -->
-                    </div>
-                    
-                </div>      
-            </div>
-        </div>
- 
-        <!-- 1-1. 행사일정 기간 -->
-        <div class="modal" tabindex="-1" role="dialog" id="modal1-1"
-                            data-bs-backdrop="static"> <!-- static이면 모달창 외부 클릭해도 안꺼짐 -->
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                
-                	<!-- header -->
-                    <div class="modal-header">
-                         <h5 class="modal-title"><i class="fa-solid fa-xmark fa-lg grey" data-bs-dismiss="modal"></i></h5>
-                    </div>
-                    
-                    <!-- body -->
-                    <div class="modal-body">
-                        <!-- 태그 버튼 선택 -->
-                        <p class="text-center">행사일정의 시작, 종료 날짜 및 시간을 선택하세요</p>
-                        <div class="row justify-content-center"> 
-                        	<h6 class="col-5 text-center">시작 날짜 및 시간</h6>
-                        	<input type="datetime-local" id="schedule-start" class="col-7">
-                        </div>
-                        <br>
-                        <div class="row justify-content-center"> 
-                        	<h6 class="col-5 text-center">종료 날짜 및 시간</h6>
-                        	<input type="datetime-local" id="schedule-end" class="col-7">
-                        </div>
-                    </div>
-                   
-                    <!-- footer -->
-                    <div class="modal-footer">
-                        <button type="button" class="custom-btn btn-round btn-purple1 btn-sm"
-	                        	data-bs-target="#modalfixed" data-bs-toggle="modal">
-	                        	다음
-	                    </button>
-<!--                         <button type="button" class="btn btn-secondary btn-sm" -->
-<!--                                 data-bs-dismiss="modal">닫기</button> -->
-                    </div>
-                    
-                </div>      
-            </div>
-        </div>
-   
-        <!-- 1-2. 같이가요 기간 -->
-        <div class="modal" tabindex="-1" role="dialog" id="modal1-2"
-                            data-bs-backdrop="static"> <!-- static이면 모달창 외부 클릭해도 안꺼짐 -->
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                
-                	<!-- header -->
-                    <div class="modal-header">
-                         <h5 class="modal-title"><i class="fa-solid fa-xmark fa-lg grey" data-bs-dismiss="modal"></i></h5>
-                    </div>
-                    
-                    <!-- body -->
-                    <div class="modal-body">
-                        <!-- 태그 버튼 선택 -->
-                        <p class="text-center">같이가요의 시작, 종료 날짜 및 시간을 선택하세요</p>
-                        <div class="row justify-content-center"> 
-                        	<h6 class="col-5 text-center">시작 날짜</h6>
-                        	<input type="datetime-local" id="together-start" class="col-7">
-                        </div>
-                        <br>
-                        <div class="row justify-content-center"> 
-                        	<h6 class="col-5 text-center">종료 날짜</h6>
-                        	<input type="datetime-local" id="together-end" class="col-7">
-                        </div>
-                    </div>
-                   
-                    <!-- footer -->
-                    <div class="modal-footer">
-                        <button type="button" class="custom-btn btn-round btn-purple1 btn-sm"
-	                        	data-bs-target="#modalfixed" data-bs-toggle="modal">
-	                        	다음
-	                    </button>
-<!--                         <button type="button" class="btn btn-secondary btn-sm" -->
-<!--                                 data-bs-dismiss="modal">닫기</button> -->
-                    </div>
-                    
-                </div>      
-            </div>
-        </div>
-        
-        <!-- 2-0.  고정 태그 창 -->
-        <div class="modal" tabindex="-1" role="dialog" id="modalfixed"
-                            data-bs-backdrop="static">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                
-                	<!-- header -->
-                    <div class="modal-header">
-                         <h5 class="modal-title"><i class="fa-solid fa-xmark fa-lg grey" data-bs-dismiss="modal"></i></h5>
-                    </div>
-                    
-                    <!-- body -->
-                    <div class="modal-body">
-                        <p class="text-center">글에 적용할 고정 태그를 입력해주세요</p>
-                        <div class="row text-center">
-                     	    <div class="col-2"></div>
-                        	<input type="text" class="col-8" placeholder="태그를 입력하세요"
-                        	@input="findFixedTagName = $event.target.value" v-model="findFixedTagName">
-                        	<div class="col-2"></div>
-<!--                         	<div class="col-1"></div> -->
-<!--                         	<button class="col-2 tag-btn">입력</button> -->
-                        </div>
-					    <div class="row">
-					        <div class="mb-1" v-for="(findFixedTag, i) in findFixedTagList" :key="i">
-					            <button class="custom-btn btn-purple1-secondary btn-sm rounded-pill mx-2" @click="addNewFixedTag(findFixedTag)">{{ findFixedTag }}</button>
-					        </div>
-					    </div>
-					    <div class="row mt-3">
-					        <div class="col">
-					            <button class="custom-btn btn-purple1 btn-sm rounded-pill mx-2 fixed-tag" v-for="(newFixedTag, i) in newFixedTagList">{{ newFixedTag }}</button>
-					        </div>
-					    </div>
-                        
-                        <div class="row">
-                        	<h6 class="all-tag text font-purple1"></h6>
-                        </div>                         
-                    </div>
-                    
-                    <!-- footer -->
-                    <div class="modal-footer">
-                       	<button type="button" class="custom-btn btn-round btn-purple1 btn-sm fixed-tag-end"
-                            data-bs-target="#modal2" data-bs-toggle="modal">
-                        	자유태그 작성하기
-                        </button>
-<!--                         <button type="button" class="btn btn-secondary btn-sm" -->
-<!--                                 data-bs-dismiss="modal">닫기</button> -->
-                    </div>
-                    
-                </div>      
-            </div>
-         </div>
-        
-                                
-		<!-- 2.  태그 창 (첫번 째 창에서 다음 버튼이 클릭 되었을 때, 비동기로 현존하는 이벤트 태그들을 가져옴)-->
-        <div class="modal" tabindex="-1" role="dialog" id="modal2"
-                            data-bs-backdrop="static">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                
-                	<!-- header -->
-                    <div class="modal-header">
-                         <h5 class="modal-title"><i class="fa-solid fa-xmark fa-lg grey" data-bs-dismiss="modal"></i></h5>
-                    </div>
-                    
-                    <!-- body -->
-                    <div class="modal-body">
-                        <p class="text-center">글에 적용할 자유 태그를 입력해주세요</p>
-                        <div class="row text-center">
-                     	    <div class="col-1"></div>
-                        	<input type="text" class="tag-input col-7" placeholder="태그를 입력하세요">
-                        	<div class="col-1"></div>
-                        	<button class="col-2 custom-btn btn-round btn-purple1 btn-sm tag-btn">입력</button>
-                        </div>
-                        <div class="row">
-                        	<h6 class="all-tag text font-purple1"></h6>
-                        </div>                         
-                    </div>
-                    
-                    <!-- footer -->
-                    <div class="modal-footer">
-                       	<button type="button" class="custom-btn btn-round btn-purple1 btn-sm"
-                            data-bs-target="#modal3" data-bs-toggle="modal">
-                        	글작성하기
-                        </button>
-<!--                         <button type="button" class="btn btn-secondary btn-sm" -->
-<!--                                 data-bs-dismiss="modal">닫기</button> -->
-                    </div>
-                    
-                </div>      
-            </div>
-         </div>
-                  
-        <!-- 3. 글 및 파일 업로드 창 (두 번째 창에서 다음 버튼이 클릭 되었을 때, 비동기로 현존하는 아이돌 태그들을 가져옴)-->
-        <div class="modal" tabindex="-1" role="dialog" id="modal3"
-                            data-bs-backdrop="static">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                
-                	<!-- header -->
-                    <div class="modal-header">
-                         <h5 class="modal-title"><i class="fa-solid fa-xmark fa-lg grey" data-bs-dismiss="modal"></i></h5>
-                    </div>
-                    
-                    <!-- body -->
-                    <div class="modal-body">
-                        <textarea class="col-12 post border border-secondary rounded-2" style="height: 200px;" placeholder=" 글 작성란"></textarea>
-                        <div id="preview" contenteditable="true"></div>
-                        
-                    </div>
-                    
-                    <!-- footer -->
-                    <div class="modal-footer">
-                    	<div class="col-7 text-start">
-                    		<input type="file" class="fs-6" id="fileInput" multiple>
-                    	</div>
-                    	<div class="col-4 text-end fs-4">
-                    		<button type="button" class="custom-btn btn-round btn-purple1 btn-sm write-finish mx-2"
-                                data-bs-dismiss="modal">작성완료</button>
-							<button type="button" class="custom-btn btn-round btn-purple1 btn-sm"
-								data-bs-target="#modalmap" onclick="relayout();" data-bs-toggle="modal">지도정보삽입</button>                    
-<!--                         <button type="button" class="btn btn-secondary btn-sm" -->
-<!--                                 data-bs-dismiss="modal">닫기</button> -->
-                    	</div>
-                    	
-                    	
-                    </div>
-                    
-                </div>      
-            </div>
-         </div>
-         
-        <!-- 4. 지도 정보 및 업로드 창 -->
-	    <div class="modal" tabindex="-1" role="dialog" id="modalmap"
-        					data-bs-backdrop="static">
-        	<div class="modal-dialog" role="document">
-        		<div class="modal-content">
-        			<div class="modal-header">
-        				<h6> 지역을 검색하고 선택하세요 ex) 이레빌딩 or 선유동2로</h6>
-        			</div>
-        			
-        			<div class="modal-body row">
-        				<div class="col-1">
-        				</div>
-        				<div class="map_wrap col-10">
-					          <div id="map" style="width:100%;height:100%;position:relative;overflow:visible;align-content:center;"></div>
-					
-					          <div id="menu_wrap" class="bg_white">
-					              <div class="option">
-					                  <div>
-					                      <!-- <form onsubmit="searchPlaces(); return false;"> -->
-					                          키워드 : <input type="text" id="keyword" size="15"> 
-					                          <button type="button" onclick="searchPlaces();">검색하기</button> 
-					                      <!-- </form> -->
-					                  </div>
-					              </div>
-					              <ul id="placesList"></ul>
-					              <div id="pagination"></div>
-					          </div>
-					      </div>
-        				
-        				<div class="col-1">
-        				</div>
-        			</div>
-        			<br>
-        			<!-- footer -->
-                    <div class="modal-footer justify-content-end">
-                    	
-						  <div class="col-6 text-start">
-						    	<span class="address"></span>
-						  </div>
+<div class="container-fluid" id="app" >
+<!-- 	<button class="custom-btn btn-purple1-secondary" @click="changeCustom">커스텀모달</button> -->
+<!-- 	<div v-if="customOn" class="custom-modal" id="deleteAlertModal"> -->
+<!-- 		<div class="custom-modal-body"> -->
+<!-- 			<div class="text-center mb-3"> -->
+<!-- 				<i class="ti ti-alert-triangle"></i> -->
+<!-- 			</div> -->
+<!-- 			<div class="text-center">삭제한 일정은 복구할 수 -->
+<!-- 				없습니다.zzzzzzzzzzzzzzzzzzzzzzzzzzz</div> -->
+<!-- 			<div class="text-center">일정을 정말 삭제하시겠습니까?</div> -->
+<!-- 			<div class="d-flex justify-content-center mt-4"> -->
+<!-- 				<button -->
+<!-- 					class="custom-btn btn-round btn-purple1-secondary me-2 w-100" -->
+<!-- 					id="delete-schedule">삭제</button> -->
+<!-- 				<button class="custom-btn btn-round btn-purple1 w-100" -->
+<!-- 					@click="changeCustom" id="delete-cancel">취소</button> -->
+<!-- 			</div> -->
+<!-- 		</div> -->
+<!-- 	</div> -->
+	<!----------- 글쓰기 버튼 ------------>
+	<div class="bg-white mb-4 p-4 rounded-4">
+		<div class="row mt-1">
+			<div
+				class="col-1 col-md-1 col-lg-1 d-flex align-items-center justify-content-center p-0">
+				<img class="rounded-circle img-fluid"
+					src="static/image/profileDummy.png">
+			</div>
+			<div
+				class="col-11 col-md-11 col-lg-11 d-flex align-items-center justify-content-center">
+				<button type="button"
+					class="custom-btn btn-round btn-purple1-secondary me-2 w-100"
+					data-bs-target="#modal1" data-bs-toggle="modal">${memberId}님
+					무슨 생각을 하고 계신가요?</button>
+			</div>
 
-	
-						  <div class="col-5 ">
-						  	<div class="row justify-content-end">
-						  		 <div class="col-7">
-<!-- 						  		 	<button type="button" class="btn btn-primary btn-sm"> -->
-<!-- 						  		 	작성완료</button> -->
-						  		 	<button type="button" class="custom-btn btn-round btn-purple1 btn-sm bttest"
-                            			data-bs-target="#modal3" data-bs-toggle="modal">
-                        			글쓰기
-                        			</button>
-						  		 </div>
-						  		 
-						  		 <div class="col-5">
-						  		 	<button type="button" class=" custom-btn btn-round btn-purple1-secondary btn-sm"
-							        	    data-bs-dismiss="modal">닫기</button>	
-						  		 </div>
-						  		  
-						  	</div>
-							
-						  </div>
-                    </div>
-                    
-        		</div>
-        	</div>
-        </div>
-	    
-	    
-	    <!-- 게시글 지도 게시 모달창 (게시글에서 위치나 지도 마크 클릭 시 모달 띠우기)-->
-        <div class="modal" tabindex="-1" role="dialog" id="showMap"
-                            data-bs-backdrop="static">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content mx-2">
-                
-                	<!-- header -->
-                    <div class="modal-header">
-                        <h5 class="modal-title">위치 정보</h5>
-                    </div>
-                    
-                    <!-- body -->
-                    <div class="modal-body row">
-                        <div class="col-1">
-        				</div>
-        				<div class="map_wrap col-10 ">
-        					<div id="mapShow" style="width:100%;height:100%;position:relative;overflow:visible;align-content:center;"></div>
-					    </div>
-        				<div class="col-1">
-        				</div>
-                    </div>
-                    
-                    <!-- footer -->
-                    <div class="modal-footer">
-                    	<div class="col-6 text-start">
-                    		{{showMapModalText}}
-                    	</div>
-                    	<div class="col-5 text-end">     
-	                        <button type="button" class="btn btn-secondary btn-sm"
-	                                data-bs-dismiss="modal">닫기</button>
-                        </div>
-                    </div>
-                    
-                </div>      
-            </div>
-         </div>
+		</div>
+	</div>
+	<!----------- 글쓰기 버튼 ------------>
 
-	     
-	     <!-- 게시물 삭제 확인 모달  -->
-	     <div class="modal" tabindex="-1" role="dialog" id="deleteConfirm"
-                            data-bs-backdrop="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                
-                	<!-- header -->
-                    <div class="modal-header">
-<!--                         <h5 class="modal-title">해당 게시글을 삭제하시겠습니까?</h5> -->
-                    </div>
-                    
-                    <!-- body -->
-                    <div class="modal-body my-3">
-                    	<div class="row">
-	                        <div class="text-center">
-	                        	<h6>해당 게시글을 삭제 하시겠습니까?</h6>
-	                        </div>
-	                    </div>
-                        <br>
-        				<div class="row ">
-        					<div class="text-center ">
-        						<button class="custom-btn btn-round btn-purple1 btn-sm col-3 mx-3"
-        							data-bs-target="#deleteEnd" data-bs-toggle="modal" @click="deletePost(get)">네</button>
-        						<button class=" custom-btn btn-round btn-purple1-secondary btn-sm col-3"
-        							data-bs-dismiss="modal">아니오</button>
-        					</div>
-        				</div>
-                    </div>
-                    
-                    <!-- footer -->
-                    <div class="modal-footer">
-                    	
-                    </div>
-                    
-                </div>      
-            </div>
-         </div>
-         
-         <!-- 게시물 삭제 종료 모달 -->
-	     <div class="modal" tabindex="-1" role="dialog" id="deleteEnd"
-                            data-bs-backdrop="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                
-                	<!-- header -->
-                    <div class="modal-header">
-<!--                         <h5 class="modal-title">해당 게시글을 삭제하시겠습니까?</h5> -->
-                    </div>
-                    
-                    <!-- body -->
-                    <div class="modal-body my-3">
-                    	<div class="row">
-	                        <div class="text-center">
-	                        	<h6>게시물이 삭제 되었습니다. </h6>
-	                        </div>
-	                    </div>
-                        <br>
-        				<div class="row ">
-        					<div class="text-center ">
-        						<button class="custom-btn btn-round btn-purple1 btn-sm col-3 mx-3"
-        							data-bs-dismiss="modal">확인</button>
-        					</div>
-        				</div>
-                    </div>
-                    
-                    <!-- footer -->
-                    <div class="modal-footer">
-                    	
-                    </div>
-                    
-                </div>      
-            </div>
-         </div>
-	     
-	     <!-- 게시글 수정 모달 -->
-	      <div class="modal" tabindex="-1" role="dialog" id="updatePost"
-                            data-bs-backdrop="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                
-                	<!-- header -->
-                    <div class="modal-header text-center">
-                        <h5 class="modal-title">글을 수정하세요</h5>
-                    </div>
-                    
-                    <!-- body -->
-                    <div class="modal-body my-3">
-                    	<div class="row">
-	                        <div class="text-center">
-	                        	<textarea class="col-12 post border border-secondary rounded-2" style="height: 200px;" v-if="updatePost != null" v-model="updatePost.postContent"></textarea>
-	                        </div>
-	                    </div>
-                        <br>
-        				<div class="row ">
-        					<div class="text-center ">
-        						<button class="custom-btn btn-round btn-purple1 btn-sm col-3 mx-3"
-        							data-bs-toggle="modal" data-bs-target="#editEnd" @click="updatePostFunc(updatePost.postContent)">확인</button>
-        					</div>
-        				</div>
-                    </div>
-                    
-                    <!-- footer -->
-                    <div class="modal-footer">
-                    	
-                    </div>
-                    
-                </div>      
-            </div>
-         </div>
-         
-         <!-- 게시물 수정 종료 모달 -->
-	     <div class="modal" tabindex="-1" role="dialog" id="editEnd"
-                            data-bs-backdrop="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                
-                	<!-- header -->
-                    <div class="modal-header">
-<!--                         <h5 class="modal-title">해당 게시글을 삭제하시겠습니까?</h5> -->
-                    </div>
-                    
-                    <!-- body -->
-                    <div class="modal-body my-3">
-                    	<div class="row">
-	                        <div class="text-center">
-	                        	<h6>게시물이 수정 되었습니다. </h6>
-	                        </div>
-	                    </div>
-                        <br>
-        				<div class="row ">
-        					<div class="text-center ">
-        						<button class="custom-btn btn-round btn-purple1 btn-sm col-3 mx-3"
-        							data-bs-dismiss="modal" @click="confirmUpdate">확인</button>
-        					</div>
-        				</div>
-                    </div>
-                    
-                    <!-- footer -->
-                    <div class="modal-footer">
-                    	
-                    </div>
-                    
-                </div>      
-            </div>
-         </div>
-	     
-<!-- 	    <button type="button" onclick="relayout();" class="btn btn-white btn-outline-dark rounded-pill col-12 " data-bs-target="#modalmap" data-bs-toggle="modal">지도 테스트 모달</button> -->
-	    <!--------------- 게시물들 반복구간 ------------->
-	    <div v-for="(post, index) in posts" :key="index">
-	    
-	    		<!-- 글 박스 루프 1개-->
-                <div class="mb-2 custom-container">                
-                	<!-- 프로필 사진과 아이디 -->
-                	<div class="row mt-1">
-			            <div class="col-1 col-md-1 col-lg-1 d-flex align-items-center justify-content-center">
-			               <img class="rounded-circle img-fluid" src="static/image/profileDummy.png">
-			            </div>
-			            <div class="col-5 col-md-5 col-lg-5 align-items-center justify-content-start">
-														
+	<!-- 지도 테스트 모달 버튼 (클릭 시 지도 relayout함수 호출 -> 안하면 지도 이미지 깨짐)-->
+<!-- 		    <button type="button" onclick="relayout();" class="btn btn-white btn-outline-dark rounded-pill col-12 " data-bs-target="#modalmap" data-bs-toggle="modal">지도 테스트 모달</button> -->
+
+	<!----------------------------------- 단계별 모달창 구성------------------------------------------------->
+	<!-- 1. 카테고리 선택 -->
+	<div class="modal" tabindex="-1" role="dialog" id="modal1"
+		data-bs-backdrop="static">
+		<!-- static이면 모달창 외부 클릭해도 안꺼짐 -->
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+
+				<!-- header -->
+				<div class="modal-header">
+					<h5 class="modal-title">
+						<i class="fa-solid fa-xmark fa-lg grey" data-bs-dismiss="modal"></i>
+					</h5>
+				</div>
+
+				<!-- body -->
+				<div class="modal-body">
+					<!-- 태그 버튼 선택 -->
+
+					<p class="text-center">무엇에 대한 글인가요?(카테고리 설정)</p>
+					<div class="row justify-content-center">
+						<button type="button"
+							class="col-3 custom-btn btn-round btn-purple1 btn-sm modal2 rounded-pill"
+							data-bs-target="#modalfixed" data-bs-toggle="modal">자유</button>
+						&nbsp;&nbsp;
+						<button type="button"
+							class="col-3 custom-btn btn-round btn-purple1 btn-sm modal2 rounded-pill"
+							data-bs-target="#modal1-1" data-bs-toggle="modal">행사일정</button>
+						&nbsp;&nbsp;
+						<button type="button"
+							class="col-3 custom-btn btn-round btn-purple1 btn-sm modal2 rounded-pill"
+							data-bs-target="#modal1-2" data-bs-toggle="modal">같이가요</button>
+					</div>
+				</div>
+
+				<!-- footer -->
+				<div class="modal-footer">
+					<br>
+					<!--                         <button type="button" class="btn btn-secondary btn-sm" -->
+					<!--                                 data-bs-dismiss="modal">닫기</button> -->
+				</div>
+
+			</div>
+		</div>
+	</div>
+
+	<!-- 1-1. 행사일정 기간 -->
+	<div class="modal" tabindex="-1" role="dialog" id="modal1-1"
+		data-bs-backdrop="static">
+		<!-- static이면 모달창 외부 클릭해도 안꺼짐 -->
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+
+				<!-- header -->
+				<div class="modal-header">
+					<h5 class="modal-title">
+						<i class="fa-solid fa-xmark fa-lg grey" data-bs-dismiss="modal"></i>
+					</h5>
+				</div>
+
+				<!-- body -->
+				<div class="modal-body">
+					<!-- 태그 버튼 선택 -->
+					<p class="text-center">행사일정의 시작, 종료 날짜 및 시간을 선택하세요</p>
+					<div class="row justify-content-center">
+						<h6 class="col-5 text-center">시작 날짜 및 시간</h6>
+						<input type="datetime-local" id="schedule-start" class="col-7">
+					</div>
+					<br>
+					<div class="row justify-content-center">
+						<h6 class="col-5 text-center">종료 날짜 및 시간</h6>
+						<input type="datetime-local" id="schedule-end" class="col-7">
+					</div>
+				</div>
+
+				<!-- footer -->
+				<div class="modal-footer">
+					<button type="button"
+						class="custom-btn btn-round btn-purple1 btn-sm"
+						data-bs-target="#modalfixed" data-bs-toggle="modal">다음</button>
+					<!--                         <button type="button" class="btn btn-secondary btn-sm" -->
+					<!--                                 data-bs-dismiss="modal">닫기</button> -->
+				</div>
+
+			</div>
+		</div>
+	</div>
+
+	<!-- 1-2. 같이가요 기간 -->
+	<div class="modal" tabindex="-1" role="dialog" id="modal1-2"
+		data-bs-backdrop="static">
+		<!-- static이면 모달창 외부 클릭해도 안꺼짐 -->
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+
+				<!-- header -->
+				<div class="modal-header">
+					<h5 class="modal-title">
+						<i class="fa-solid fa-xmark fa-lg grey" data-bs-dismiss="modal"></i>
+					</h5>
+				</div>
+
+				<!-- body -->
+				<div class="modal-body">
+					<!-- 태그 버튼 선택 -->
+					<p class="text-center">같이가요의 시작, 종료 날짜 및 시간을 선택하세요</p>
+					<div class="row justify-content-center">
+						<h6 class="col-5 text-center">시작 날짜</h6>
+						<input type="datetime-local" id="together-start" class="col-7">
+					</div>
+					<br>
+					<div class="row justify-content-center">
+						<h6 class="col-5 text-center">종료 날짜</h6>
+						<input type="datetime-local" id="together-end" class="col-7">
+					</div>
+				</div>
+
+				<!-- footer -->
+				<div class="modal-footer">
+					<button type="button"
+						class="custom-btn btn-round btn-purple1 btn-sm"
+						data-bs-target="#modalfixed" data-bs-toggle="modal">다음</button>
+					<!--                         <button type="button" class="btn btn-secondary btn-sm" -->
+					<!--                                 data-bs-dismiss="modal">닫기</button> -->
+				</div>
+
+			</div>
+		</div>
+	</div>
+
+	<!-- 2-0.  고정 태그 창 -->
+	<div class="modal" tabindex="-1" role="dialog" id="modalfixed"
+		data-bs-backdrop="static">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+
+				<!-- header -->
+				<div class="modal-header">
+					<h5 class="modal-title">
+						<i class="fa-solid fa-xmark fa-lg grey" data-bs-dismiss="modal"></i>
+					</h5>
+				</div>
+
+				<!-- body -->
+				<div class="modal-body">
+					<p class="text-center">글에 적용할 고정 태그를 입력해주세요</p>
+					<div class="row text-center">
+						<div class="col-2"></div>
+						<input type="text" class="col-8" placeholder="태그를 입력하세요"
+							@input="findFixedTagName = $event.target.value"
+							v-model="findFixedTagName">
+						<div class="col-2"></div>
+						<!--                         	<div class="col-1"></div> -->
+						<!--                         	<button class="col-2 tag-btn">입력</button> -->
+					</div>
+					<div class="row">
+						<div class="mb-1" v-for="(findFixedTag, i) in findFixedTagList"
+							:key="i">
+							<button
+								class="custom-btn btn-purple1-secondary btn-sm rounded-pill mx-2"
+								@click="addNewFixedTag(findFixedTag)">{{ findFixedTag
+								}}</button>
+						</div>
+					</div>
+					<div class="row mt-3">
+						<div class="col">
+							<button
+								class="custom-btn btn-purple1 btn-sm rounded-pill mx-2 fixed-tag"
+								v-for="(newFixedTag, i) in newFixedTagList">{{
+								newFixedTag }}</button>
+						</div>
+					</div>
+
+					<div class="row">
+						<h6 class="all-tag text font-purple1"></h6>
+					</div>
+				</div>
+
+				<!-- footer -->
+				<div class="modal-footer">
+					<button type="button"
+						class="custom-btn btn-round btn-purple1 btn-sm fixed-tag-end"
+						data-bs-target="#modal2" data-bs-toggle="modal">자유태그 작성하기
+					</button>
+					<!--                         <button type="button" class="btn btn-secondary btn-sm" -->
+					<!--                                 data-bs-dismiss="modal">닫기</button> -->
+				</div>
+
+			</div>
+		</div>
+	</div>
+
+
+	<!-- 2.  태그 창 (첫번 째 창에서 다음 버튼이 클릭 되었을 때, 비동기로 현존하는 이벤트 태그들을 가져옴)-->
+	<div class="modal" tabindex="-1" role="dialog" id="modal2"
+		data-bs-backdrop="static">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+
+				<!-- header -->
+				<div class="modal-header">
+					<h5 class="modal-title">
+						<i class="fa-solid fa-xmark fa-lg grey" data-bs-dismiss="modal"></i>
+					</h5>
+				</div>
+
+				<!-- body -->
+				<div class="modal-body">
+					<p class="text-center">글에 적용할 자유 태그를 입력해주세요</p>
+					<div class="row text-center">
+						<div class="col-1"></div>
+						<input type="text" class="tag-input col-7" placeholder="태그를 입력하세요">
+						<div class="col-1"></div>
+						<button
+							class="col-2 custom-btn btn-round btn-purple1 btn-sm tag-btn">입력</button>
+					</div>
+					<div class="row">
+						<h6 class="all-tag text font-purple1"></h6>
+					</div>
+				</div>
+
+				<!-- footer -->
+				<div class="modal-footer">
+					<button type="button"
+						class="custom-btn btn-round btn-purple1 btn-sm"
+						data-bs-target="#modal3" data-bs-toggle="modal">글작성하기</button>
+					<!--                         <button type="button" class="btn btn-secondary btn-sm" -->
+					<!--                                 data-bs-dismiss="modal">닫기</button> -->
+				</div>
+
+			</div>
+		</div>
+	</div>
+
+	<!-- 3. 글 및 파일 업로드 창 (두 번째 창에서 다음 버튼이 클릭 되었을 때, 비동기로 현존하는 아이돌 태그들을 가져옴)-->
+	<div class="modal" tabindex="-1" role="dialog" id="modal3"
+		data-bs-backdrop="static">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+
+				<!-- header -->
+				<div class="modal-header">
+					<h5 class="modal-title">
+						<i class="fa-solid fa-xmark fa-lg grey" data-bs-dismiss="modal"></i>
+					</h5>
+				</div>
+
+				<!-- body -->
+				<div class="modal-body">
+					<textarea class="col-12 post border border-secondary rounded-2"
+						style="height: 200px;" placeholder=" 글 작성란"></textarea>
+					<div id="preview" contenteditable="true"></div>
+
+				</div>
+
+				<!-- footer -->
+				<div class="modal-footer">
+					<div class="col-7 text-start">
+						<input type="file" class="fs-6" id="fileInput" multiple>
+					</div>
+					<div class="col-4 text-end fs-4">
+						<button type="button"
+							class="custom-btn btn-round btn-purple1 btn-sm write-finish mx-2"
+							data-bs-dismiss="modal">작성완료</button>
+						<button type="button"
+							class="custom-btn btn-round btn-purple1 btn-sm"
+							data-bs-target="#modalmap" onclick="relayout();"
+							data-bs-toggle="modal">지도정보삽입</button>
+						<!--                         <button type="button" class="btn btn-secondary btn-sm" -->
+						<!--                                 data-bs-dismiss="modal">닫기</button> -->
+					</div>
+
+
+				</div>
+
+			</div>
+		</div>
+	</div>
+
+	<!-- 4. 지도 정보 및 업로드 창 -->
+	<div class="modal" tabindex="-1" role="dialog" id="modalmap"
+		data-bs-backdrop="static">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h6>지역을 검색하고 선택하세요 ex) 이레빌딩 or 선유동2로</h6>
+				</div>
+
+				<div class="modal-body row">
+					<div class="col-1"></div>
+					<div class="map_wrap col-10">
+						<div id="map"
+							style="width: 100%; height: 100%; position: relative; overflow: visible; align-content: center;"></div>
+
+						<div id="menu_wrap" class="bg_white">
+							<div class="option">
+								<div>
+									<!-- <form onsubmit="searchPlaces(); return false;"> -->
+									키워드 : <input type="text" id="keyword" size="15">
+									<button type="button" onclick="searchPlaces();">검색하기</button>
+									<!-- </form> -->
+								</div>
+							</div>
+							<ul id="placesList"></ul>
+							<div id="pagination"></div>
+						</div>
+					</div>
+
+					<div class="col-1"></div>
+				</div>
+				<br>
+				<!-- footer -->
+				<div class="modal-footer justify-content-end">
+					<div class="col-7 col-md-7 col-lg-7">
+						<div class="row text-start">
+							<span class="placeName fs-12px"></span>
+						</div>
+						<div class="row text-start">
+							<span class="address fs-12px"></span>
+						</div>
+					</div>
+
+
+					<div class="col-4 col-md-4 col-lg-4 ">
+						<div class="row text-end">
+							<div class="col-7">
+								<button type="button"
+									class="custom-btn btn-round btn-purple1 btn-sm bttest"
+									data-bs-target="#modal3" data-bs-toggle="modal">글쓰기</button>
+							</div>
+
+							<div class="col-5">
+								<button type="button"
+									class=" custom-btn btn-round btn-purple1-secondary btn-sm"
+									data-bs-dismiss="modal">닫기</button>
+							</div>
+
+						</div>
+
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</div>
+
+
+	<!-- 게시글 지도 게시 모달창 (게시글에서 위치나 지도 마크 클릭 시 모달 띠우기)-->
+	<div class="modal" tabindex="-1" role="dialog" id="showMap"
+		data-bs-backdrop="static">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content mx-2">
+
+				<!-- header -->
+				<div class="modal-header">
+					<h5 class="modal-title">위치 정보</h5>
+				</div>
+
+				<!-- body -->
+				<div class="modal-body row">
+					<div class="col-1"></div>
+					<div class="map_wrap col-10 ">
+						<div id="mapShow"
+							style="width: 100%; height: 100%; position: relative; overflow: visible; align-content: center;"></div>
+					</div>
+					<div class="col-1"></div>
+				</div>
+
+				<!-- footer -->
+				<div class="modal-footer">
+					<div class="col-6 col-6-md col-6-lg text-start">
+						<div class="row">
+							<h6> {{showMapName}} </h6>
+						</div>
+						<div class="row">
+							<h6> {{showMapPlace}} </h6>
+						</div>
+					</div>
+					<div class="col-5 text-end">
+						<button type="button" class="btn btn-secondary btn-sm"
+							data-bs-dismiss="modal">닫기</button>
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</div>
+
+
+	<!-- 게시물 삭제 확인 모달  -->
+	<div class="modal" tabindex="-1" role="dialog" id="deleteConfirm"
+		data-bs-backdrop="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+
+				<!-- header -->
+				<div class="modal-header">
+					<!--                         <h5 class="modal-title">해당 게시글을 삭제하시겠습니까?</h5> -->
+				</div>
+
+				<!-- body -->
+				<div class="modal-body my-3">
+					<div class="row">
+						<div class="text-center">
+							<h6>해당 게시글을 삭제 하시겠습니까?</h6>
+						</div>
+					</div>
+					<br>
+					<div class="row ">
+						<div class="text-center ">
+							<button
+								class="custom-btn btn-round btn-purple1 btn-sm col-3 mx-3"
+								data-bs-target="#deleteEnd" data-bs-toggle="modal"
+								@click="deletePost(get)">네</button>
+							<button
+								class=" custom-btn btn-round btn-purple1-secondary btn-sm col-3"
+								data-bs-dismiss="modal">아니오</button>
+						</div>
+					</div>
+				</div>
+
+				<!-- footer -->
+				<div class="modal-footer"></div>
+
+			</div>
+		</div>
+	</div>
+
+	<!-- 게시물 삭제 종료 모달 -->
+	<div class="modal" tabindex="-1" role="dialog" id="deleteEnd"
+		data-bs-backdrop="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+
+				<!-- header -->
+				<div class="modal-header">
+					<!--                         <h5 class="modal-title">해당 게시글을 삭제하시겠습니까?</h5> -->
+				</div>
+
+				<!-- body -->
+				<div class="modal-body my-3">
+					<div class="row">
+						<div class="text-center">
+							<h6>게시물이 삭제 되었습니다.</h6>
+						</div>
+					</div>
+					<br>
+					<div class="row ">
+						<div class="text-center ">
+							<button
+								class="custom-btn btn-round btn-purple1 btn-sm col-3 mx-3"
+								data-bs-dismiss="modal">확인</button>
+						</div>
+					</div>
+				</div>
+
+				<!-- footer -->
+				<div class="modal-footer"></div>
+
+			</div>
+		</div>
+	</div>
+
+	<!-- 게시글 수정 모달 -->
+	<div class="modal" tabindex="-1" role="dialog" id="updatePost"
+		data-bs-backdrop="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+
+				<!-- header -->
+				<div class="modal-header text-center">
+					<h5 class="modal-title">글을 수정하세요</h5>
+				</div>
+
+				<!-- body -->
+				<div class="modal-body my-3">
+					<div class="row">
+						<div class="text-center">
+							<textarea class="col-12 post border border-secondary rounded-2"
+								style="height: 200px;" v-if="updatePost != null"
+								v-model="updatePost.postContent"></textarea>
+						</div>
+					</div>
+					<br>
+					<div class="row ">
+						<div class="text-center ">
+							<button
+								class="custom-btn btn-round btn-purple1 btn-sm col-3 mx-3"
+								data-bs-toggle="modal" data-bs-target="#editEnd"
+								@click="updatePostFunc(updatePost.postContent)">확인</button>
+						</div>
+					</div>
+				</div>
+
+				<!-- footer -->
+				<div class="modal-footer"></div>
+
+			</div>
+		</div>
+	</div>
+
+	<!-- 게시물 수정 종료 모달 -->
+	<div class="modal" tabindex="-1" role="dialog" id="editEnd"
+		data-bs-backdrop="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+
+				<!-- header -->
+				<div class="modal-header">
+					<!--                         <h5 class="modal-title">해당 게시글을 삭제하시겠습니까?</h5> -->
+				</div>
+
+				<!-- body -->
+				<div class="modal-body my-3">
+					<div class="row">
+						<div class="text-center">
+							<h6>게시물이 수정 되었습니다.</h6>
+						</div>
+					</div>
+					<br>
+					<div class="row ">
+						<div class="text-center ">
+							<button
+								class="custom-btn btn-round btn-purple1 btn-sm col-3 mx-3"
+								data-bs-dismiss="modal" @click="confirmUpdate">확인</button>
+						</div>
+					</div>
+				</div>
+
+				<!-- footer -->
+				<div class="modal-footer"></div>
+
+			</div>
+		</div>
+	</div>
+
+	<!-- 	    <button type="button" onclick="relayout();" class="btn btn-white btn-outline-dark rounded-pill col-12 " data-bs-target="#modalmap" data-bs-toggle="modal">지도 테스트 모달</button> -->
+	<!--------------- 게시물들 반복구간 ------------->
+	<div v-for="(post, index) in posts" :key="index">
+
+		<!-- 글 박스 루프 1개-->
+		<div class="mb-2 custom-container">
+			<!-- 프로필 사진과 아이디 -->
+			<div class="row mt-1">
+				<div
+					class="col-1 col-md-1 col-lg-1 d-flex align-items-center justify-content-center">
+					<img class="rounded-circle img-fluid"
+						src="static/image/profileDummy.png">
+				</div>
+				<div
+					class="col-5 col-md-5 col-lg-5 align-items-center justify-content-start">
+
+					<div class="row">
+						<h4>{{ post.memberId }}</h4>
+					</div>
+					<div class="row">
+						<p class="text-secondary">@{{post.memberNick }} ·
+							{{getTimeDifference(post.postTime) }}</p>
+
+					</div>
+				</div>
+				<div
+					class="col-5 col-md-5 col-lg-5 align-items-center justify-content-end">
+					<!-- 								{{memberFollowObj.followMemberList}} -->
+					<!-- 								memberId와 post.memebrId가 다른데 팔로우목록이 있는 경우에,																 -->
+					<div
+						v-if="memberId != post.memberId && memberFollowObj.followMemberList.includes(post.memberId)"
+						class="row text-end">
+						<div class="col-9"></div>
+						<button
+							class="col-3 custom-btn btn-purple1-secondary btn-sm rounded-3"
+							@click="deleteFollowMember(post.memberId)">팔로우 취소</button>
+					</div>
+
+					<!-- 								memberId와 post.memeberId가 다른데 팔로우 목록에 없는 경우에  -->
+					<div
+						v-else-if="memberId != post.memberId && !(memberFollowObj.followMemberList.includes(post.memberId))"
+						@click="createFollowMember(post.memberId)" class="row text-end">
+						<div class="col-10"></div>
+						<button class="col-2 custom-btn btn-purple1 btn-sm rounded-3">팔로우</button>
+					</div>
+
+					<!-- 								memberId와 post.memberId가 같으면 -->
+					<div v-else class="row"></div>
+				</div>
+				<div
+					class="col-1 col-md-1 col-lg-1 d-flex align-items-start justify-content-end">
+					<i class="fs-3 text-secondary ti ti-dots-vertical"
+						@click="setPostModalIndex(index)" data-toggle="dropdown"></i>
+					<!-- 			               <i class="ti ti-x" @click="deletePost(post.postNo)"></i> -->
+					<div v-if="index === getPostModalIndex()" class="post-modal">
+						<div class="mt-3 mr-4"></div>
+						<div class="post-modal-content">
+							<div v-if="post.memberId === memberId">
 								<div class="row">
-								<h4>{{ post.memberId }}</h4>   
+									<div class="text-start col-1 mb-2">
+										<i class="ti ti-x" @click="hidePostModal"></i>
+									</div>
 								</div>
 								<div class="row">
-								<p class="text-secondary">@{{post.memberNick }} · {{getTimeDifference(post.postTime) }} </p>
-								
+									<div class="col-1"></div>
+									<div class="col-11 ms-2">
+										<h6 data-bs-target="#deleteConfirm" data-bs-toggle="modal"
+											@click="setDeletePostNo(post.postNo)">게시물 삭제</h6>
+									</div>
 								</div>
-			            </div>
-			            <div class="col-5 col-md-5 col-lg-5 align-items-center justify-content-end">
-<!-- 								{{memberFollowObj.followMemberList}} -->
-<!-- 								memberId와 post.memebrId가 다른데 팔로우목록이 있는 경우에,																 -->
-								<div v-if="memberId != post.memberId && memberFollowObj.followMemberList.includes(post.memberId)" class="row text-end">
-									<div class="col-9"></div>
-									<button class="col-3 custom-btn btn-purple1-secondary btn-sm rounded-3" @click="deleteFollowMember(post.memberId)">팔로우 취소</button>
+								<div class="row">
+									<div class="col-1"></div>
+									<div class="col-11 ms-2">
+										<div class="custom-hr my-2 me-4"></div>
+										<h6 data-bs-target="#updatePost" data-bs-toggle="modal"
+											@click="setUpdatePost(post)">게시물 글 내용 수정</h6>
+									</div>
 								</div>
-								
-<!-- 								memberId와 post.memeberId가 다른데 팔로우 목록에 없는 경우에  -->
-								<div v-else-if="memberId != post.memberId && !(memberFollowObj.followMemberList.includes(post.memberId))" @click="createFollowMember(post.memberId)" class="row text-end">
-									<div class="col-10"></div>
-									<button class="col-2 custom-btn btn-purple1 btn-sm rounded-3">팔로우</button>
-								</div>
-								
-<!-- 								memberId와 post.memberId가 같으면 -->
-								<div v-else class="row">								
-								</div>
-			            </div>
-			            <div class="col-1 col-md-1 col-lg-1 d-flex align-items-start justify-content-end">
-			               <i class="fs-3 text-secondary ti ti-dots-vertical" @click="setPostModalIndex(index)" data-toggle="dropdown"></i>
-<!-- 			               <i class="ti ti-x" @click="deletePost(post.postNo)"></i> -->
-							   <div v-if="index === getPostModalIndex()" class="post-modal">
-							   		<div class="mt-3 mr-4"></div>
-							   		<div class="post-modal-content">
-								   			<div v-if="post.memberId === memberId">
-								   				<div class="row">
-									   				<div class="text-start col-1 mb-2">
-									   					<i class="ti ti-x" @click="hidePostModal"></i>
-									   				</div>
-									   			</div>
-									   			<div class="row">
-										   			<div class="col-1"></div>
-									   				<div class="col-11 ms-2">
-									   					<h6 data-bs-target="#deleteConfirm" data-bs-toggle="modal" @click="setDeletePostNo(post.postNo)">게시물 삭제</h6>
-									   				</div>
-									   			</div>
-									   			<div class="row">
-									   				<div class="col-1"></div>
-									   				<div class="col-11 ms-2">
-										   				<div class="custom-hr my-2 me-4"></div>
-										   				<h6 data-bs-target="#updatePost" data-bs-toggle="modal" @click="setUpdatePost(post)">게시물 글 내용 수정</h6>
-								   					</div>
-									   			</div>								   				
-								   				
-								   				
-									   				
-								   			</div>							   										   			
-								   			<div v-else>
-								   				<div class="row">
-									   				<div class="text-start col-1 mb-2">
-									   					<i class="ti ti-x" @click="hidePostModal"></i>
-									   				</div>
-									   			</div>
-									   			<div class="row">
-									   			</div>
-									   			<div class="row">
-									   				<div class="col-1"></div>
-									   				<div class="col-11 ms-2">
-										   				<div class="custom-hr my-2 me-4"></div>
-										   				<h6>유저 신고 하기</h6>
-								   					</div>
-									   			</div>		
-									   			<div class="row">
-									   				<div class="col-1"></div>
-									   				<div class="col-11 ms-2">
-										   				<div class="custom-hr my-2 me-4"></div>
-										   				<h6>게시물 신고 하기</h6>
-								   					</div>
-									   			</div>
-								   				
-								   			</div>
-							   		</div>
-							   </div>
-							   
-							  
-			            </div>
-							
-	       			</div>	
-					<!-- 프로필 사진과 아이디 -->
-					
-					<!-- 고정 태그와 글 타입들 -->
-	                <div class="row mb-3 ">
-	                	<div class="col-1 col-md-1 col-lg-1 d-flex align-items-center justify-content-center">			            
-			            </div>
-			            <div class="col-10 col-md-10 col-lg-10 d-flex align-items-center justify-content-start">
-							<button class="mx-1 px-2 h-20 custom-btn btn-round btn-purple1 rounded-4 align-items-center justify-content-center fs-7 text-light">
-								{{ post.postType }}							 
-							</button>
-							
-							<a :href="searchUrl">
-							<button v-for="fixedTag in post.fixedTagList" :key="fixedTag" @click="searchFixedTag(fixedTag)" class="mx-1 px-2 h-20 custom-btn btn-round btn-purple1 align-items-center justify-content-center fs-7 text-light">
-								{{ fixedTag }}
-							</button>
-							</a>
-														 													    
-			            </div>
-						<div class="col-1 col-md-1 col-lg-1 d-flex align-items-center justify-content-center"> 
-			            </div>	                
-	                </div>
-	                <!-- 고정 태그와 글 타입들 -->	 
-	                               
-	                <!-- 지도 맵이 있는 경우에만 지도 정보 표기 -->						
-	                <div class="row my-2" v-if="post.mapPlace !== '' && post.mapPlace !== null && post.mapPlace !== undefined">	                	
-	                	<div class="col-1 col-md-1 col-lg-1 d-flex align-items-center justify-content-center">			            
-			            </div>
-			            <div class="col-10 col-md-10 col-lg-10 d-flex align-items-center justify-content-start fs-6 text-secondary " @click="showMap(post.mapPlace)" data-bs-target="#showMap" data-bs-toggle="modal">
-							 <i class="fa-solid fa-location-dot"></i>&nbsp;{{ post.mapPlace}}								
-			            </div>
-						<div class="col-1 col-md-1 col-lg-1 d-flex align-items-center justify-content-center"> 
-			            </div>            
-	                </div>
-	                <!-- 지도 맵이 있는 경우에만 지도 정보 표기 -->	
-	                
-	                
-	                <!-- 글 내용 -->
-	                <div class="row my-2">
-	                	<div class="col-1 col-md-1 col-lg-1 align-items-center justify-content-center">
-			               
-			            </div>
-			            
-			            <!-- 하얀색 글박스증 co1-10인 가운데 부분 -->
-			            <div class="col-10 col-md-10 col-lg-10 align-items-center">							
-		                	
-		                	
-		                	<!-- 글 -->
-		                	<div class="row">
-		                		<p>{{ post.postContent }}</p>
-		                		<div class="d-flex">
-		                		<p v-for="freeTag in post.freeTagList" :key="freeTag" class="fs-6 font-purple1">\#{{ freeTag }} &nbsp;</p>	
-		                		</div>
-		                	</div>
-							
-		                	
-		                	<!-- 이미지 표시 -->
-		                	<div class="row">
-		                		<div v-if="post.attachmentList && post.attachmentList.length > 0"  class="d-flex">
-					                <!-- 단일 이미지인 경우 -->
-					                <div v-if="post.attachmentList.length == 1" class="row text-center" >
-					                	<div v-for="(attachmentNo, attachmentIndex) in post.attachmentList" :key="attachmentIndex" class="col-6">
-					                		<img :src="getAttachmentUrl(attachmentNo)" @click="setModalImageUrl(attachmentNo)" class="img-fluid" style="max-width:100%;aspect-ratio:1/1;" alt="Attachment" data-bs-target="#image-modal" data-bs-toggle="modal">
-					                	</div>                	        	
-					                </div>
-					                <!-- 두 개 이상의 이미지인 경우 -->
-					                <div v-else-if="post.attachmentList.length > 1" class="row text-center">
-					                	<div v-for="(attachmentNo, attachmentIndex) in post.attachmentList" :key="attachmentIndex" class="col-6">
-					                		<img :src="getAttachmentUrl(attachmentNo)"  @click="setModalImageUrl(attachmentNo)" class="img-fluid mb-3" style="max-width:100%;aspect-ratio:1/1;" alt="Attachment" data-bs-target="#image-modal" data-bs-toggle="modal">
-					                	</div>
-					                </div>
-					                
-					                <!-- 두 개 이상의 이미지인 경우 (이미지 스와이핑 : 나중에하자 ㅅ....) -->
-<!-- 					                <div v-else-if="post.attachmentList.length = -999" class="row text-center"> -->
-<!-- 					                	<div v-for="(attachmentNo, attachmentIndex) in post.attachmentList" :key="attachmentIndex" class="col-6"> -->
-<!-- 					                		첫 번째 이미지는 그냥 모달로 보여줌 -->
-<!-- 					                		<div v-if="attachmentIndex === 0"> -->
-<!-- 					                			<img :src="getAttachmentUrl(attachmentNo)" @click="setModalImageUrl(attachmentNo)" class="img-fluid" style="max-width:100%;aspect-ratio:1/1;" alt="Attachment" data-bs-target="#image-modal" data-bs-toggle="modal"> -->
-<!-- 					                		</div> -->
-<!-- 					                		이후의 이미지는 swiper를 사용하여 보여줌 -->
-<!-- 					                		<div v-else-if="attachmentIndex == 1 "> -->
-<!-- 					                			<img :src="getAttachmentUrl(attachmentNo)" @click="setModalImageUrlList(post.attachmentList)" class="img-fluid" style="max-width:100%;aspect-ratio:1/1;" alt="Attachment" data-bs-target="#imageList-modal" data-bs-toggle="modal"> -->
-<!-- 					                		</div> -->
-<!-- 					                	</div> -->
-<!-- 					                </div> -->
 
-					                <!-- 이미지 출력 모달창 -->
-					                <div class="modal" tabindex="-1" role="dialog" id="image-modal"
-                           					 data-bs-backdrop="true">
-                           					 <div class="modal-dialog modal-lg" role="image">
-                           					 	<div class="modal-content">
-                           					 		<img :src="modalImageUrl">
-                           					 	</div>                           					 	
-                           					 </div>
-                           			</div>
-									<%-- 서영모달
-									<div class="modal" tabindex="-1" role="dialog" id="image-modal">
-										<div class="modal-dialog modal-lg" role="image">
-												<div class="modal-content">
-													<img :src="modalImgURL">
-												</div>                           					 	
+
+
+							</div>
+							<div v-else>
+								<div class="row">
+									<div class="text-start col-1 mb-2">
+										<i class="ti ti-x" @click="hidePostModal"></i>
+									</div>
+								</div>
+								<div class="row"></div>
+								<div class="row">
+									<div class="col-1"></div>
+									<div class="col-11 ms-2">
+										<div class="custom-hr my-2 me-4"></div>
+										<h6>유저 신고 하기</h6>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-1"></div>
+									<div class="col-11 ms-2">
+										<div class="custom-hr my-2 me-4"></div>
+										<h6>게시물 신고 하기</h6>
+									</div>
+								</div>
+
+							</div>
+						</div>
+					</div>
+
+
+				</div>
+
+			</div>
+			<!-- 프로필 사진과 아이디 -->
+
+			<!-- 고정 태그와 글 타입들 -->
+			<div class="row mb-3 ">
+				<div
+					class="col-1 col-md-1 col-lg-1 d-flex align-items-center justify-content-center">
+				</div>
+				<div
+					class="col-10 col-md-10 col-lg-10 d-flex align-items-center justify-content-start">
+					<button
+						class="mx-1 px-2 h-20 custom-btn btn-round btn-purple1 rounded-4 align-items-center justify-content-center fs-7 text-light">
+						{{ post.postType }}</button>
+
+					<a :href="searchUrl">
+						<button v-for="fixedTag in post.fixedTagList" :key="fixedTag"
+							@click="searchFixedTag(fixedTag)"
+							class="mx-1 px-2 h-20 custom-btn btn-round btn-purple1 align-items-center justify-content-center fs-7 text-light">
+							{{ fixedTag }}</button>
+					</a>
+
+				</div>
+				<div
+					class="col-1 col-md-1 col-lg-1 d-flex align-items-center justify-content-center">
+				</div>
+			</div>
+			<!-- 고정 태그와 글 타입들 -->
+
+			<!-- 지도 맵이 있는 경우에만 지도 정보 표기 -->
+			<div class="row my-2"
+				v-if="post.mapPlace !== '' && post.mapPlace !== null && post.mapPlace !== undefined">
+				<div
+					class="col-1 col-md-1 col-lg-1 d-flex align-items-center justify-content-center">
+				</div>
+				<div
+					class="col-10 col-md-10 col-lg-10 d-flex align-items-center justify-content-start fs-6 text-secondary "
+					@click="showMap(post.mapName,post.mapPlace)" data-bs-target="#showMap"
+					data-bs-toggle="modal">
+					<i class="fa-solid fa-location-dot"></i>&nbsp;{{post.mapName}} ({{
+					post.mapPlace}})
+				</div>
+				<div
+					class="col-1 col-md-1 col-lg-1 d-flex align-items-center justify-content-center">
+				</div>
+			</div>
+			<!-- 지도 맵이 있는 경우에만 지도 정보 표기 -->
+
+
+			<!-- 글 내용 -->
+			<div class="row my-2">
+				<div
+					class="col-1 col-md-1 col-lg-1 align-items-center justify-content-center">
+
+				</div>
+
+				<!-- 하얀색 글박스증 co1-10인 가운데 부분 -->
+				<div class="col-10 col-md-10 col-lg-10 align-items-center">
+
+
+					<!-- 글 -->
+					<div class="row">
+						<p>{{ post.postContent }}</p>
+						<div class="d-flex">
+							<p v-for="freeTag in post.freeTagList" :key="freeTag"
+								class="fs-6 font-purple1">\#{{ freeTag }} &nbsp;</p>
+						</div>
+					</div>
+
+
+					<!-- 이미지 표시 -->
+					<div class="row">
+						<div v-if="post.attachmentList && post.attachmentList.length > 0"
+							class="d-flex">
+							<!-- 단일 이미지인 경우 -->
+							<div v-if="post.attachmentList.length == 1"
+								class="row text-center">
+								<div
+									v-for="(attachmentNo, attachmentIndex) in post.attachmentList"
+									:key="attachmentIndex" class="col-6">
+									<img :src="getAttachmentUrl(attachmentNo)"
+										@click="setModalImageUrl(attachmentNo)" class="img-fluid"
+										style="max-width: 100%; aspect-ratio: 1/1;" alt="Attachment"
+										data-bs-target="#image-modal" data-bs-toggle="modal">
+								</div>
+							</div>
+							<!-- 두 개 이상의 이미지인 경우 -->
+							<div v-else-if="post.attachmentList.length > 1"
+								class="row text-center">
+								<div
+									v-for="(attachmentNo, attachmentIndex) in post.attachmentList"
+									:key="attachmentIndex" class="col-6">
+									<img :src="getAttachmentUrl(attachmentNo)"
+										@click="setModalImageUrl(attachmentNo)" class="img-fluid mb-3"
+										style="max-width: 100%; aspect-ratio: 1/1;" alt="Attachment"
+										data-bs-target="#image-modal" data-bs-toggle="modal">
+								</div>
+							</div>
+
+							<!-- 두 개 이상의 이미지인 경우 (이미지 스와이핑 : 나중에하자 ㅅ....) -->
+							<!-- 					                <div v-else-if="post.attachmentList.length = -999" class="row text-center"> -->
+							<!-- 					                	<div v-for="(attachmentNo, attachmentIndex) in post.attachmentList" :key="attachmentIndex" class="col-6"> -->
+							<!-- 					                		첫 번째 이미지는 그냥 모달로 보여줌 -->
+							<!-- 					                		<div v-if="attachmentIndex === 0"> -->
+							<!-- 					                			<img :src="getAttachmentUrl(attachmentNo)" @click="setModalImageUrl(attachmentNo)" class="img-fluid" style="max-width:100%;aspect-ratio:1/1;" alt="Attachment" data-bs-target="#image-modal" data-bs-toggle="modal"> -->
+							<!-- 					                		</div> -->
+							<!-- 					                		이후의 이미지는 swiper를 사용하여 보여줌 -->
+							<!-- 					                		<div v-else-if="attachmentIndex == 1 "> -->
+							<!-- 					                			<img :src="getAttachmentUrl(attachmentNo)" @click="setModalImageUrlList(post.attachmentList)" class="img-fluid" style="max-width:100%;aspect-ratio:1/1;" alt="Attachment" data-bs-target="#imageList-modal" data-bs-toggle="modal"> -->
+							<!-- 					                		</div> -->
+							<!-- 					                	</div> -->
+							<!-- 					                </div> -->
+
+							<!-- 이미지 출력 모달창 -->
+							<div class="modal" tabindex="-1" role="dialog" id="image-modal"
+								data-bs-backdrop="true">
+								<div class="modal-dialog modal-lg" role="image">
+									<div class="modal-content">
+										<img :src="modalImageUrl">
+									</div>
+								</div>
+							</div>
+							<!-- 다중 이미지 스와이핑 모달창 나중에 보자...-->
+							<!-- 					                <div class="modal" tabindex="-1" role="dialog" id="imageList-modal" -->
+							<!--                            					 data-bs-backdrop="true"  test> -->
+							<!--                            					 <div class="modal-dialog modal-lg" role="image"> -->
+							<!--                            					 	<div class="modal-content"> -->
+							<!--                            					 		header -->
+							<!-- 										            <div class="modal-header"> -->
+							<!-- 										                <h5 class="modal-title"><i class="fa-solid fa-xmark fa-lg grey" data-bs-dismiss="modal"></i></h5> -->
+							<!-- 										            </div> -->
+
+							<!-- 										            body -->
+							<!--                            					 		<div class="modal-body"> -->
+							<!-- 	                           					 		Slider main container -->
+							<!-- 														<div class="swiper-container w-100"> -->
+							<!-- 														  Additional required wrapper -->
+							<!-- 														  <div class="swiper-wrapper"> -->
+							<!-- 														  	<div class="swiper-slide mx-5"> -->
+							<!-- 														  		<img class="img-fluid" style="width:200px;height:200px;" src="https://cdn.pixabay.com/photo/2023/05/21/06/05/water-jet-8007873_640.jpg"> -->
+							<!-- 														  	</div> -->
+							<!-- 														  	<div class="swiper-slide mx-5"> -->
+							<!-- 														  		<img class="img-fluid" style="width:200px;height:200px;" src="https://cdn.pixabay.com/photo/2023/05/21/06/05/water-jet-8007873_640.jpg"> -->
+							<!-- 														  	</div> -->
+							<!-- 														  	<div class="swiper-slide mx-5"> -->
+							<!-- 														  		<img class="img-fluid"  style="width:200px;height:200px;" src="https://cdn.pixabay.com/photo/2023/05/21/06/05/water-jet-8007873_640.jpg"> -->
+							<!-- 														  	</div> -->
+							<!-- 														  	<div v-for="(modalImageUrlitem, urlIdx) in modalImageUrlList" :key="urlIdx"> -->
+							<!-- 														  		Slides -->
+							<!-- 														  		<div  class="swiper-slide" style="width:80%;height:80%;"> -->
+							<!-- 														  			<img v-if="urlIdx>0" :src="getAttachmentUrl(modalImageUrlitem)" class="swiper-slide img-fluid"> -->
+							<!-- 														  		</div> -->
+							<!-- 														  	</div> -->
+							<!-- 														  </div>													   -->
+							<!-- 														  If we need pagination -->
+							<!-- 														  <div class="swiper-pagination"></div> -->
+
+
+
+							<!-- 													  If we need scrollbar -->
+							<!-- 													  <div class="swiper-scrollbar"></div> -->
+							<!-- 														</div> -->
+							<!-- 													</div> -->
+
+							<!-- 													footer -->
+							<!-- 										            <div class="modal-footer"> -->
+							<!-- 										            If we need navigation buttons -->
+							<!-- 														  <div class="swiper-button-prev"></div> -->
+							<!-- 														  <div class="swiper-button-next"></div> -->
+							<!-- 										            </div> -->
+							<!--                            					 	</div>					 	 -->
+							<!--                            					 </div> -->
+							<!--                            			</div> -->
+
+
+
+							<div
+								v-for="(attachmentNo, attachmentIndex) in post.attachmentList"
+								:key="attachmentIndex">
+								<!-- 일단 이미지만 -->
+
+
+
+								<!-- 					                	이미지인 경우 -->
+								<!-- 					                	<div v-if="checkFileType(attachmentNo) === 'image' "> -->
+								<!-- 					                		<img :src="getAttachmentUrl(attachmentNo)" class="mx-1 px-1"style="max-width:100%;max-height:100%" alt="Attachment"> -->
+								<!-- 					                	</div> -->
+								<!-- 					                	<div v-else-if="checkFileType(attachmentNo) === 'video'"> -->
+								<!-- 					                		<video :src="getAttachmentUrl(attachmentNo)" class="mx-1 px-1" style="max-width:100%;max-height:100%"  controls> -->
+								<!-- 				                		 	</video> -->
+								<!-- 					                	</div> -->
+								<!-- 					                	<div v-else-if="checkFileType(attachmentNo) === 'unknown'"> -->
+								<!-- 					                		<h1>언노운</h1> -->
+								<!-- 					                	</div>					                     -->
+							</div>
+							<br>
+						</div>
+						<div v-else></div>
+					</div>
+
+
+					<!-- 구분선 -->
+					<div class="row">
+						<hr style="width: 100%;">
+					</div>
+
+					<!-- 좋아요, 댓글, 공유하기 -->
+					<div class="row">
+
+						<!-- 좋아요 -->
+						<div class="col-4 text-start font-purple1">
+							<div class="row" v-if="postLikeIndexList.includes(index)">
+								<div class="col-2">
+									<i class="fs-4 ti ti-heart-filled"
+										@click="checkLike(post.postNo,index)"></i>
+								</div>
+								<div class="col-4 ">
+									<h6 class="postlikeCount">{{post.likeCount}}</h6>
+								</div>
+							</div>
+							<div class="row" v-else>
+								<div class="col-2">
+									<i class="fs-4 ti ti-heart"
+										@click="checkLike(post.postNo,index)"></i>
+								</div>
+								<div class="col-4 ">
+									<h6 class="postlikeCount">{{post.likeCount}}</h6>
+								</div>
+							</div>
+						</div>
+						<!-- 좋아요 -->
+
+						<!-- 댓글 작성버튼 -->
+						<div class="col-4 text-center text-secondary">
+							<i class="fs-4 ti ti-message" @click="showReplyInput(index)"></i>
+						</div>
+						<!-- 댓글 작성버튼 -->
+
+						<!-- 공유하기 버튼 -->
+						<div class="col-4 text-end text-secondary">
+							<i class="fs-4 ti ti-share"></i>
+						</div>
+						<!-- 공유하기 버튼 -->
+
+					</div>
+
+					<!-- 구분선 -->
+					<div class="row">
+						<hr class="mt-2" style="width: 100%;">
+					</div>
+
+
+
+
+
+					<!-- 댓글, 대댓글 보여주는 창-->
+					<div v-if="post.replyList.length >= 1">
+
+						<!-- 댓글이 다섯개 이하인 경우 -->
+						<div v-if="5 >= post.replyList.length ">
+							<div v-for="(reply,replyIdx) in post.replyList" :key="replyIdx">
+								<!-- 댓글 표시 -->
+								<div class="row" v-if="reply.replyNo == reply.replyGroupNo">
+
+									<!-- 댓글 프로필 이미지 -->
+									<div class="col-1">
+										<div class="row mt-2 text-center">
+											<img class="img-fluid rounded-circle "
+												src="static/image/profileDummy.png">
 										</div>
 									</div>
-									 --%>
-                           			<!-- 다중 이미지 스와이핑 모달창 나중에 보자...-->
-<!-- 					                <div class="modal" tabindex="-1" role="dialog" id="imageList-modal" -->
-<!--                            					 data-bs-backdrop="true"  test> -->
-<!--                            					 <div class="modal-dialog modal-lg" role="image"> -->
-<!--                            					 	<div class="modal-content"> -->
-<!--                            					 		header -->
-<!-- 										            <div class="modal-header"> -->
-<!-- 										                <h5 class="modal-title"><i class="fa-solid fa-xmark fa-lg grey" data-bs-dismiss="modal"></i></h5> -->
-<!-- 										            </div> -->
-										            
-<!-- 										            body -->
-<!--                            					 		<div class="modal-body"> -->
-<!-- 	                           					 		Slider main container -->
-<!-- 														<div class="swiper-container w-100"> -->
-<!-- 														  Additional required wrapper -->
-<!-- 														  <div class="swiper-wrapper"> -->
-<!-- 														  	<div class="swiper-slide mx-5"> -->
-<!-- 														  		<img class="img-fluid" style="width:200px;height:200px;" src="https://cdn.pixabay.com/photo/2023/05/21/06/05/water-jet-8007873_640.jpg"> -->
-<!-- 														  	</div> -->
-<!-- 														  	<div class="swiper-slide mx-5"> -->
-<!-- 														  		<img class="img-fluid" style="width:200px;height:200px;" src="https://cdn.pixabay.com/photo/2023/05/21/06/05/water-jet-8007873_640.jpg"> -->
-<!-- 														  	</div> -->
-<!-- 														  	<div class="swiper-slide mx-5"> -->
-<!-- 														  		<img class="img-fluid"  style="width:200px;height:200px;" src="https://cdn.pixabay.com/photo/2023/05/21/06/05/water-jet-8007873_640.jpg"> -->
-<!-- 														  	</div> -->
-<!-- 														  	<div v-for="(modalImageUrlitem, urlIdx) in modalImageUrlList" :key="urlIdx"> -->
-<!-- 														  		Slides -->
-<!-- 														  		<div  class="swiper-slide" style="width:80%;height:80%;"> -->
-<!-- 														  			<img v-if="urlIdx>0" :src="getAttachmentUrl(modalImageUrlitem)" class="swiper-slide img-fluid"> -->
-<!-- 														  		</div> -->
-<!-- 														  	</div> -->
-<!-- 														  </div>													   -->
-<!-- 														  If we need pagination -->
-<!-- 														  <div class="swiper-pagination"></div> -->
-														
-														 
-														
-	<!-- 													  If we need scrollbar -->
-	<!-- 													  <div class="swiper-scrollbar"></div> -->
-<!-- 														</div> -->
-<!-- 													</div> -->
-													
-<!-- 													footer -->
-<!-- 										            <div class="modal-footer"> -->
-<!-- 										            If we need navigation buttons -->
-<!-- 														  <div class="swiper-button-prev"></div> -->
-<!-- 														  <div class="swiper-button-next"></div> -->
-<!-- 										            </div> -->
-<!--                            					 	</div>					 	 -->
-<!--                            					 </div> -->
-<!--                            			</div> -->
-                           			
-					               
-					                
-					                <div v-for="(attachmentNo, attachmentIndex) in post.attachmentList" :key="attachmentIndex">
-					                	<!-- 일단 이미지만 -->
-					                	
-					                	
-					                
-<!-- 					                	이미지인 경우 -->
-<!-- 					                	<div v-if="checkFileType(attachmentNo) === 'image' "> -->
-<!-- 					                		<img :src="getAttachmentUrl(attachmentNo)" class="mx-1 px-1"style="max-width:100%;max-height:100%" alt="Attachment"> -->
-<!-- 					                	</div> -->
-<!-- 					                	<div v-else-if="checkFileType(attachmentNo) === 'video'"> -->
-<!-- 					                		<video :src="getAttachmentUrl(attachmentNo)" class="mx-1 px-1" style="max-width:100%;max-height:100%"  controls> -->
-<!-- 				                		 	</video> -->
-<!-- 					                	</div> -->
-<!-- 					                	<div v-else-if="checkFileType(attachmentNo) === 'unknown'"> -->
-<!-- 					                		<h1>언노운</h1> -->
-<!-- 					                	</div>					                     -->
-					                </div>
-					                <br>
-					            </div>
-					            <div v-else>
-					            </div>
-		                	</div>
-		                	
-		                	
-		                	<!-- 구분선 -->
-		                	<div class="row">
-		                		<hr style="width:100%;">
-		                	</div>
-		                	
-		                	<!-- 좋아요, 댓글, 공유하기 -->
-		                	<div class="row">
-		                	
-		                		<!-- 좋아요 -->		                		
-		                		<div class="col-4 text-start font-purple1">
-		                			<div class="row" v-if="postLikeIndexList.includes(index)">
-		                				<div class="col-2">
-		                					<i class="fs-4 ti ti-heart-filled" @click="checkLike(post.postNo,index)"></i>
-		                				</div>
-		                				<div class="col-4 ">
-		                					<h6 class="postlikeCount">{{post.likeCount}}</h6>
-		                				</div>		                						                				
-		                			</div>
-		                			<div class="row" v-else>
-		                				<div class="col-2">
-		                					<i class="fs-4 ti ti-heart" @click="checkLike(post.postNo,index)"></i>
-		                				</div>
-		                				<div class="col-4 ">
-		                					<h6 class="postlikeCount">{{post.likeCount}}</h6>
-		                				</div>
-		                			</div>
-		                		</div>
-		                		<!-- 좋아요 -->
-		                		
-		                		<!-- 댓글 작성버튼 -->
-							    <div class="col-4 text-center text-secondary">				
-							    	<i class="fs-4 ti ti-message" @click="showReplyInput(index)"></i>					    
-							    </div>
-							    <!-- 댓글 작성버튼 -->
-							    
-							    <!-- 공유하기 버튼 -->
-							    <div class="col-4 text-end text-secondary"><i class="fs-4 ti ti-share"></i></div>
-							    <!-- 공유하기 버튼 -->
-							     
-		                	</div>
-		                	
-		                	<!-- 구분선 -->
-		                	<div class="row">
-		                		<hr class="mt-2" style="width:100%;">		                
-		                	</div>
-		                	
-		                	
-		                	
-		                	
-		                	
-		                	<!-- 댓글, 대댓글 보여주는 창-->
-		                	<div v-if="post.replyList.length >= 1">
-		                		
-		                		<!-- 댓글이 다섯개 이하인 경우 -->
-		                		<div v-if="5 >= post.replyList.length ">
-									<div v-for="(reply,replyIdx) in post.replyList" :key="replyIdx">
-										<!-- 댓글 표시 -->
-										<div class="row" v-if="reply.replyNo == reply.replyGroupNo">
-											
-											<!-- 댓글 프로필 이미지 -->
-					                		<div class="col-1">
-					                			<div class="row mt-2 text-center">
-					                				<img class="img-fluid rounded-circle " src="static/image/profileDummy.png">
-					                			</div>
-					                		</div>
-					                		
-					                		<!-- 댓글 상자 -->
-					                		<div class="col-11 align-items-center">
-					                			<div class="mt-1"></div>
-					                			<div class="mx-2"></div>
-					                			
-					                			<!-- 댓글 아이디가 내용보다 길면 -->
-					                			<div v-if="reply.replyContent.length &lt; reply.replyId.length" style="max-width:100%" class="row grey-f5f5f5 rounded-3 text-left" :style="{ width: (reply.replyId.length * 12 + 30) + 'px' }">
-					                				<div class="row mt-2"></div>
-					                				<h6 class="mr-1 fs-12px fw-bold">{{reply.replyId}}</h6>
-					                				<h6 class="mr-1 fs-11px lh-lg" >{{reply.replyContent}}</h6>				                				
-					                				<div class="row mb-1"></div>
-					                			</div>
-					                			
-					                			<!-- 댓글 내용이 아이디보다 길면 -->
-					                			<div v-else class="row grey-f5f5f5 rounded-3 text-left" style="max-width:100%" :style="{width: (reply.replyContent.length * 11 +30) + 'px' }">
-					                				<div class="row mt-2"></div>
-					                				<h6 class="mr-1 fs-12px fw-bold">{{reply.replyId}}</h6>
-					                				<h6 class="mr-1 fs-11px lh-lg"  >{{reply.replyContent}}</h6>
-					                				<div class="row mb-1"></div>
-					                			</div>
-					                			
-					                			<!-- 댓글창 아이콘 -->
-					                			<div class="row d-flex flex-nowrap text-start">
-	<!-- 				                				<h6 class="col-1 text-start reply-text" style="white-space: nowrap;">좋아요 </h6> -->
-													<h6 class="col-1 mt-1  reply-text text-secondary" style="white-space: nowrap">{{getTimeDifference(reply.replyTime)}}</h6>
-					                				<h6 class="col-1 mt-1  reply-text text-secondary" @click="showRereplyInput(post.postNo,reply.replyNo),hideReplyInput()" style="white-space: nowrap;cursor:pointer;">댓글 달기</h6>
-					                				<!-- 댓글 삭제  -->
-					                				<h6 v-if="reply.replyId === memberId" class="col-l mt-1 text-start reply-text text-danger" style="cursor:pointer;" @click="deleteReply(reply.replyNo)">댓글 삭제</h6>
-					                			</div>
-					                			<div class="mb-1"></div>			                			
-					                		</div>
-					               			<!-- 댓글 상자 -->
-				                		</div>
-				                		<!-- 댓글 표시 -->
-				                		<!-- 대댓글 표시 -->
-				                		<div v-for="(rereply,rereplyIdx) in post.replyList.slice(replyIdx+1)" :key='rereplyIdx'>			                							                				             				
-				                				<!-- 대댓글이 들어갈 조건 -->
-					                			<div v-if="reply.replyNo === rereply.replyGroupNo"><!-- 특정 댓글의 그룹번호가 특정 댓글번호와 일치할 때(대댓글인경우) -->				                				
-					                				<!-- 대댓글 들 -->
-					                				<div class="row ">
-					                					<div class="col-1">
-					                					</div>
-					                					<div class="col-1">
-								                			<div class="row my-2 text-center">
-								                				<img class="img-fluid rounded-circle" src="static/image/profileDummy.png">
-								                			</div>
-					                					</div>
-					                					<div class="col-10">
-								                			<div class="mt-1"></div>
-								                			<div class="mx-2"></div>
-								                			<!-- 대댓글 아이디가 내용보다 길면 -->								                			
-								                			<div v-if="rereply.replyContent && rereply.replyId && rereply.replyContent.length &lt; rereply.replyId.length" style="max-width:100%" class="row grey-f5f5f5 rounded-3 text-left" :style="{ width: (rereply.replyId.length * 12 +30) + 'px' }">
-								                				<div class="row mt-2"></div>
-								                				<h6 class="mr-1 fs-12px fw-bold">{{rereply.replyId}}</h6>
-								                				<h6 class="mr-1 fs-11px lh-lg" >{{rereply.replyContent}}</h6>
-								                				<div class="row mb-1"></div>
-								                			</div>
-								                			<!-- 대댓글 내용이 아이디보다 길면 -->
-								                			<div v-else class="row grey-f5f5f5 rounded-3 text-left" style="max-width:100%" :style="{ width: (rereply.replyContent.length * 11 +30) + 'px' }">
-								                				<div class="row mt-2"></div>
-								                				<h6 class="mr-1 fs-12px fw-bold">{{rereply.replyId}}</h6>
-								                				<h6 class="mr-1 fs-11px lh-lg"  >{{rereply.replyContent}}</h6>
-								                				<div class="row mb-1"></div>
-								                			</div>
-								                			
-								                			<!-- 대댓글창 아이콘 -->
-								                			<div class="row d-flex flex-nowrap">
-								                				<h6 class="col-1 mt-1 text-start reply-text text-secondary" >{{getTimeDifference(rereply.replyTime)}}</h6>								                												                				
-								                				<h6 class="col-1 mt-1 text-start reply-text text-secondary" @click="showRereplyInput(post.postNo,reply.replyNo),hideReplyInput()" style="white-space: nowrap;cursor:pointer;">댓글 달기</h6>
-								                				<!-- 대댓글 삭제  -->
-								                				<h6 v-if="rereply.replyId == memberId" class="col-l mt-1 text-start reply-text text-danger" style="cursor:pointer;" @click="deleteRereply(rereply.replyNo)">댓글 삭제</h6>
-								                			</div>
-								                			<div class="mb-1"></div>
-								                			
-					                					</div>
-					                					
-					                				</div>
-					                			</div>
-					                	</div>
-					                	<!-- 대댓글 표시 -->
-					                	
-					                	
-					                	<!-- 대댓글 작성 창 -->
-			                			<div v-if=" post.postNo === tempPostNo && reply.replyNo === tempReplyNo">
-			                				<div class="row">
-			                					<div class="col-1">
-			                					</div>
-			                					<div class="col-1">
-				                					<img class="img-fluid rounded-circle " src="static/image/profileDummy.png">		                			
-			                					</div>		                					
-			                					<div class="col-10 mt-1">	
-			                						                		
-						                			<div class="pt-2 ps-2 pe-2 w-100 rounded-4 grey-f5f5f5">
-						                					
-						                				<div class="mt-1"></div>
-						                					<textarea placeholder=" 댓글을 입력하세요." class="grey-f5f5f5 border-0 " style="min-width:100%;height:3em;outline:none;overflow:hidden;" v-model="rereplyContent" ></textarea>
-						                				<div class="d-flex">
-							                				<div class="col text-start"><i class="ti ti-x fx-12px font-purple1" @click="hideRereplyInput()"></i></div>
-							                				<div class="col text-end"><i class="fs-5 font-purple1 ti ti-arrow-badge-right-filled" @click="rereplySending(post.postNo,reply.replyNo,index)"></i></div>
-						                				</div>
-														
-						                			</div>
-			                					</div>
-			                				</div>
-			                			</div>
-			                			<!-- 대댓글 작성 창 -->
-					                	
-								    </div>
-							    </div>
-							    <!-- 댓글이 다섯개 이하인 경우 -->
-							    
-							    
-							     
-							    
-							    <!-- 댓글이 다섯 개 초과인 경우 -->
-							    <div v-else-if="post.replyList.length >5">
-									<div v-for="(reply,replyIdx) in post.replyList" :key="replyIdx">
-										<!-- 댓글이 다섯 개 초과인 경우중, 댓글이 5개 이하 이거나 글 인덱스의 전체보기 버튼이 눌렸을 때, -->	
-									  	<div v-if="4 >= replyIdx || replyAllList[index] ">
-									 
-										  	<!-- 댓글 표시 -->
-											<div class="row" v-if="reply.replyNo == reply.replyGroupNo">
-												
-												<!-- 댓글 프로필 이미지 -->
-						                		<div class="col-1">
-						                			<div class="row mt-2 text-center">
-						                				<img class="img-fluid rounded-circle " src="static/image/profileDummy.png">
-						                			</div>
-						                		</div>
-						                		
-						                		<!-- 댓글 상자 -->
-						                		<div class="col-11 align-items-center">
-						                			<div class="mt-1"></div>
-						                			<div class="mx-2"></div>
-						                			
-						                			<!-- 댓글 아이디가 내용보다 길면 -->
-						                			<div v-if="reply.replyContent.length &lt; reply.replyId.length" style="max-width:100%" class="row grey-f5f5f5 rounded-3 text-left" :style="{ width: (reply.replyId.length * 12 + 30) + 'px' }">
-						                				<div class="row mt-2"></div>
-						                				<h6 class="mr-1 fs-12px fw-bold">{{reply.replyId}}</h6>
-						                				<h6 class="mr-1 fs-11px lh-lg" >{{reply.replyContent}}</h6>				                				
-						                				<div class="row mb-1"></div>
-						                			</div>
-						                			
-						                			<!-- 댓글 내용이 아이디보다 길면 -->
-						                			<div v-else class="row grey-f5f5f5 rounded-3 text-left" style="max-width:100%" :style="{width: (reply.replyContent.length * 11 +30) + 'px' }">
-						                				<div class="row mt-2"></div>
-						                				<h6 class="mr-1 fs-12px fw-bold">{{reply.replyId}}</h6>
-						                				<h6 class="mr-1 fs-11px lh-lg"  >{{reply.replyContent}}</h6>
-						                				<div class="row mb-1"></div>
-						                			</div>
-						                			
-						                			<!-- 댓글창 아이콘 -->
-						                			<div class="row d-flex flex-nowrap">
-		<!-- 				                				<h6 class="col-1 text-start reply-text" style="white-space: nowrap;">좋아요 </h6> -->
-														<h6 class="col-1 mt-1 text-start reply-text text-secondary" style="white-space: nowrap">{{getTimeDifference(reply.replyTime) }} </h6>
-						                				<h6 class="col-1 mt-1 text-start reply-text text-secondary" @click="showRereplyInput(post.postNo,reply.replyNo),hideReplyInput()" style="white-space: nowrap;cursor:pointer;">댓글 달기</h6>
-						                				<!-- 댓글 삭제  -->
-						                				<h6 v-if="reply.replyId === memberId" class="col-l mt-1 text-start reply-text text-danger" style="cursor:pointer;" @click="deleteReply(reply.replyNo)">댓글 삭제</h6>
-						                			</div>
-						                			<div class="mb-1"></div>			                			
-						                		</div>
-						               			<!-- 댓글 상자 -->
-					                		</div>
-					                		<!-- 댓글 표시 -->
-					                		
-					                		<!-- 대댓글 표시 -->
-					                		<div v-for="(rereply,rereplyIdx) in post.replyList.slice(replyIdx+1)" :key='rereplyIdx'>			                							                				             				
-					                				<!-- 대댓글이 들어갈 조건 -->
-						                			<div v-if="(reply.replyNo === rereply.replyGroupNo) && (3 >= (replyIdx + rereplyIdx) || replyAllList[index])"><!-- 특정 댓글의 그룹번호가 특정 댓글번호와 일치할 때(대댓글인경우) -->				                				
-						                				<!-- 대댓글 들 -->
-						                				<div class="row ">
-						                					<div class="col-1">
-						                					</div>
-						                					<div class="col-1">
-									                			<div class="row my-2 text-center">
-									                				<img class="img-fluid rounded-circle" src="static/image/profileDummy.png">
-									                			</div>
-						                					</div>
-						                					<div class="col-10">
-									                			<div class="mt-1"></div>
-									                			<div class="mx-2"></div>
-									                			<!-- 대댓글 아이디가 내용보다 길면 -->
-									                			<div v-if="rereply.replyContent.length &lt; rereply.replyId.length" style="max-width:100%" class="row grey-f5f5f5 rounded-3 text-left" :style="{ width: (rereply.replyId.length * 12 +30) + 'px' }">
-									                				<div class="row mt-2"></div>
-									                				<h6 class="mr-1 fs-12px fw-bold">{{rereply.replyId}}</h6>
-									                				<h6 class="mr-1 fs-11px lh-lg" >{{rereply.replyContent}}</h6>
-									                				<div class="row mb-1"></div>
-									                			</div>
-									                			<!-- 대댓글 내용이 아이디보다 길면 -->
-									                			<div v-else class="row grey-f5f5f5 rounded-3 text-left" style="max-width:100%" :style="{ width: (rereply.replyContent.length * 11 +30) + 'px' }">
-									                				<div class="row mt-2"></div>
-									                				<h6 class="mr-1 fs-12px fw-bold">{{rereply.replyId}}</h6>
-									                				<h6 class="mr-1 fs-11px lh-lg"  >{{rereply.replyContent}}</h6>
-									                				<div class="row mb-1"></div>
-									                			</div>
-									                			
-									                			<!-- 대댓글창 아이콘 -->
-									                			<div class="row d-flex flex-nowrap">
-									                				<h6 class="col-1 mt-1 text-start reply-text text-secondary" style="white-space: nowrap">{{getTimeDifference(rereply.replyTime) }} </h6>
-									                				<h6 class="col-1 mt-1 text-start reply-text text-secondary" @click="showRereplyInput(post.postNo,reply.replyNo),hideReplyInput()" style="white-space: nowrap;cursor:pointer;">댓글 달기</h6>
-									                				<!-- 대댓글 삭제  -->
-									                				<h6 v-if="rereply.replyId == memberId" class="col-l mt-1 text-start reply-text text-danger" style="cursor:pointer;" @click="deleteRereply(rereply.replyNo)">댓글 삭제</h6>
-									                			</div>
-									                			<div class="mb-1"></div>
-									                			
-						                					</div>
-						                					
-						                				</div>
-						                			</div>
-						                	</div>
-						                	<!-- 대댓글 작성 창 -->
-				                			<div v-if=" post.postNo === tempPostNo && reply.replyNo === tempReplyNo">
-				                				<div class="row">
-				                					<div class="col-1">
-				                					</div>
-				                					<div class="col-1">
-					                					<img class="img-fluid rounded-circle " src="static/image/profileDummy.png">		                			
-				                					</div>		                					
-				                					<div class="col-10 mt-1">	
-				                						                		
-							                			<div class="pt-2 ps-2 pe-2 w-100 rounded-4 grey-f5f5f5">
-							                					
-							                				<div class="mt-1"></div>
-							                					<textarea placeholder=" 댓글을 입력하세요." class="grey-f5f5f5 border-0 " style="min-width:100%;height:3em;outline:none;overflow:hidden;" v-model="rereplyContent" ></textarea>
-							                				<div class="d-flex">
-								                				<div class="col text-start"><i class="ti ti-x fx-12px font-purple1" @click="hideRereplyInput()"></i></div>
-								                				<div class="col text-end"><i class="fs-5 font-purple1 ti ti-arrow-badge-right-filled" @click="rereplySending(post.postNo,reply.replyNo,index)"></i></div>
-							                				</div>
-															
-							                			</div>
-				                					</div>
-				                				</div>
-				                			</div>
-				                			
-					                	</div>
-					                	<!-- 댓글이 다섯 개 초과인 경우중, 댓글이 5개 이하 이거나 글 인덱스의 전체보기 버튼이 눌렸을 때, -->	
-					                	
-					                	
-								    </div>
-							    </div> 	
-							    <!-- 댓글이 다섯 개 초과인 경우 -->	
-							    						             		
-		                	</div>
-		                	<!-- 댓글, 대댓글 보여주는 창 (댓글이 다섯 개 이하일때) -->
-		                	
-		                	<!-- 댓글 작성창  -->
-		                	<div class="row" v-if="replyFlagList[index]"> 
-		                		<div class="col-1">
-		                			<img class="rounded-circle img-fluid" src="static/image/profileDummy.png">
-		                		</div>
-		                		<div class="col-11 mt-1">		                		
-		                			<div class="pt-2 ps-2 pe-2 w-100 rounded-4 grey-f5f5f5">
-		                					
-		                				<div class="mt-1"></div>
-		                					<textarea placeholder=" 댓글을 입력하세요." class="grey-f5f5f5 border-0 " style="min-width:100%;height:6em;outline:none;overflow:hidden;" v-model="replyContent" ></textarea>
-		                				<div class="d-flex">
-			                				<div class="col text-start"><i class="ti ti-x fx-12px font-purple1" @click="hideReplyInput(index)"></i></div>
-			                				<div class="col text-end"><i class="fs-5 font-purple1 ti ti-arrow-badge-right-filled" @click="replySending(post.postNo,index)"></i></div>
-		                				</div>
-										
-		                			</div> 
-		                		</div>
-		                	</div>
-							<!-- 댓글 더보기 버튼 -->
-		                	<div v-if="post.replyList.length >5">
-		                		<h6 class="mt-2 fs-11px text-secondary" v-if="!replyAllList[index]" @click="showReplyMoreThanFive(index)">댓글 더보기 ({{post.replyList.length -5}}개의 댓글)</h6>
-		                		<h6 class="mt-2 fs-11px text-secondary" v-else @click="hideReplyMoreThanFive(index)">댓글 숨기기 </h6>		                					                		
-		                	</div>
-					        <!-- 댓글 더보기 버튼 -->	                
-		                
-			            </div>
-			            <!-- 하얀색 글박스증 co1-10인 가운데 부분 -->
-			            
-						
-						
-	                </div>
-	                <!-- 글 내용 -->
-	                
 
-                </div>
-                <!-- 글 박스 루프 1개-->
-                
-       	 </div>
-       	 <!--------------- 게시물들 반복구간 ------------->
+									<!-- 댓글 상자 -->
+									<div class="col-11 align-items-center">
+										<div class="mt-1"></div>
+										<div class="mx-2"></div>
+
+										<!-- 댓글 아이디가 내용보다 길면 -->
+										<div
+											v-if="reply.replyContent.length &lt; reply.replyId.length"
+											style="max-width: 100%"
+											class="row grey-f5f5f5 rounded-3 text-left"
+											:style="{ width: (reply.replyId.length * 12 + 30) + 'px' }">
+											<div class="row mt-2"></div>
+											<h6 class="mr-1 fs-12px fw-bold">{{reply.replyId}}</h6>
+											<h6 class="mr-1 fs-11px lh-lg">{{reply.replyContent}}</h6>
+											<div class="row mb-1"></div>
+										</div>
+
+										<!-- 댓글 내용이 아이디보다 길면 -->
+										<div v-else class="row grey-f5f5f5 rounded-3 text-left"
+											style="max-width: 100%"
+											:style="{width: (reply.replyContent.length * 11 +30) + 'px' }">
+											<div class="row mt-2"></div>
+											<h6 class="mr-1 fs-12px fw-bold">{{reply.replyId}}</h6>
+											<h6 class="mr-1 fs-11px lh-lg">{{reply.replyContent}}</h6>
+											<div class="row mb-1"></div>
+										</div>
+
+										<!-- 댓글창 아이콘 -->
+										<div class="row d-flex flex-nowrap text-start">
+											<!-- 				                				<h6 class="col-1 text-start reply-text" style="white-space: nowrap;">좋아요 </h6> -->
+											<h6 class="col-1 mt-1  reply-text text-secondary"
+												style="white-space: nowrap">{{getTimeDifference(reply.replyTime)}}</h6>
+											<h6 class="col-1 mt-1  reply-text text-secondary"
+												@click="showRereplyInput(post.postNo,reply.replyNo),hideReplyInput()"
+												style="white-space: nowrap; cursor: pointer;">댓글 달기</h6>
+											<!-- 댓글 삭제  -->
+											<h6 v-if="reply.replyId === memberId"
+												class="col-l mt-1 text-start reply-text text-danger"
+												style="cursor: pointer;" @click="deleteReply(reply.replyNo)">댓글
+												삭제</h6>
+										</div>
+										<div class="mb-1"></div>
+									</div>
+									<!-- 댓글 상자 -->
+								</div>
+								<!-- 댓글 표시 -->
+
+								<!-- 대댓글 표시 -->
+								<div
+									v-for="(rereply,rereplyIdx) in post.replyList.slice(replyIdx+1)"
+									:key='rereplyIdx'>
+									<!-- 대댓글이 들어갈 조건 -->
+									<div v-if="reply.replyNo === rereply.replyGroupNo">
+										<!-- 특정 댓글의 그룹번호가 특정 댓글번호와 일치할 때(대댓글인경우) -->
+										<!-- 대댓글 들 -->
+										<div class="row ">
+											<div class="col-1"></div>
+											<div class="col-1">
+												<div class="row my-2 text-center">
+													<img class="img-fluid rounded-circle"
+														src="static/image/profileDummy.png">
+												</div>
+											</div>
+											<div class="col-10">
+												<div class="mt-1"></div>
+												<div class="mx-2"></div>
+												<!-- 대댓글 아이디가 내용보다 길면 -->
+												<div
+													v-if="rereply.replyContent && rereply.replyId && rereply.replyContent.length &lt; rereply.replyId.length"
+													style="max-width: 100%"
+													class="row grey-f5f5f5 rounded-3 text-left"
+													:style="{ width: (rereply.replyId.length * 12 +30) + 'px' }">
+													<div class="row mt-2"></div>
+													<h6 class="mr-1 fs-12px fw-bold">{{rereply.replyId}}</h6>
+													<h6 class="mr-1 fs-11px lh-lg">{{rereply.replyContent}}</h6>
+													<div class="row mb-1"></div>
+												</div>
+												<!-- 대댓글 내용이 아이디보다 길면 -->
+												<div v-else class="row grey-f5f5f5 rounded-3 text-left"
+													style="max-width: 100%"
+													:style="{ width: (rereply.replyContent.length * 11 +30) + 'px' }">
+													<div class="row mt-2"></div>
+													<h6 class="mr-1 fs-12px fw-bold">{{rereply.replyId}}</h6>
+													<h6 class="mr-1 fs-11px lh-lg">{{rereply.replyContent}}</h6>
+													<div class="row mb-1"></div>
+												</div>
+
+												<!-- 대댓글창 아이콘 -->
+												<div class="row d-flex flex-nowrap">
+													<h6 class="col-1 mt-1 text-start reply-text text-secondary">{{getTimeDifference(rereply.replyTime)}}</h6>
+													<h6 class="col-1 mt-1 text-start reply-text text-secondary"
+														@click="showRereplyInput(post.postNo,reply.replyNo),hideReplyInput()"
+														style="white-space: nowrap; cursor: pointer;">댓글 달기</h6>
+													<!-- 대댓글 삭제  -->
+													<h6 v-if="rereply.replyId == memberId"
+														class="col-l mt-1 text-start reply-text text-danger"
+														style="cursor: pointer;"
+														@click="deleteRereply(rereply.replyNo)">댓글 삭제</h6>
+												</div>
+												<div class="mb-1"></div>
+
+											</div>
+
+										</div>
+									</div>
+								</div>
+								<!-- 대댓글 표시 -->
+
+
+								<!-- 대댓글 작성 창 -->
+								<div
+									v-if=" post.postNo === tempPostNo && reply.replyNo === tempReplyNo">
+									<div class="row">
+										<div class="col-1"></div>
+										<div class="col-1">
+											<img class="img-fluid rounded-circle "
+												src="static/image/profileDummy.png">
+										</div>
+										<div class="col-10 mt-1">
+
+											<div class="pt-2 ps-2 pe-2 w-100 rounded-4 grey-f5f5f5">
+
+												<div class="mt-1"></div>
+												<textarea placeholder=" 댓글을 입력하세요."
+													class="grey-f5f5f5 border-0 "
+													style="min-width: 100%; height: 3em; outline: none; overflow: hidden;"
+													v-model="rereplyContent"></textarea>
+												<div class="d-flex">
+													<div class="col text-start">
+														<i class="ti ti-x fx-12px font-purple1"
+															@click="hideRereplyInput()"></i>
+													</div>
+													<div class="col text-end">
+														<i
+															class="fs-5 font-purple1 ti ti-arrow-badge-right-filled"
+															@click="rereplySending(post.postNo,reply.replyNo,index)"></i>
+													</div>
+												</div>
+
+											</div>
+										</div>
+									</div>
+								</div>
+								<!-- 대댓글 작성 창 -->
+
+							</div>
+						</div>
+						<!-- 댓글이 다섯개 이하인 경우 -->
+
+
+
+
+						<!-- 댓글이 다섯 개 초과인 경우 -->
+						<div v-else-if="post.replyList.length >5">
+							<div v-for="(reply,replyIdx) in post.replyList" :key="replyIdx">
+								<!-- 댓글이 다섯 개 초과인 경우중, 댓글이 5개 이하 이거나 글 인덱스의 전체보기 버튼이 눌렸을 때, -->
+								<div v-if="4 >= replyIdx || replyAllList[index] ">
+
+									<!-- 댓글 표시 -->
+									<div class="row" v-if="reply.replyNo == reply.replyGroupNo">
+
+										<!-- 댓글 프로필 이미지 -->
+										<div class="col-1">
+											<div class="row mt-2 text-center">
+												<img class="img-fluid rounded-circle "
+													src="static/image/profileDummy.png">
+											</div>
+										</div>
+
+										<!-- 댓글 상자 -->
+										<div class="col-11 align-items-center">
+											<div class="mt-1"></div>
+											<div class="mx-2"></div>
+
+											<!-- 댓글 아이디가 내용보다 길면 -->
+											<div
+												v-if="reply.replyContent.length &lt; reply.replyId.length"
+												style="max-width: 100%"
+												class="row grey-f5f5f5 rounded-3 text-left"
+												:style="{ width: (reply.replyId.length * 12 + 30) + 'px' }">
+												<div class="row mt-2"></div>
+												<h6 class="mr-1 fs-12px fw-bold">{{reply.replyId}}</h6>
+												<h6 class="mr-1 fs-11px lh-lg">{{reply.replyContent}}</h6>
+												<div class="row mb-1"></div>
+											</div>
+
+											<!-- 댓글 내용이 아이디보다 길면 -->
+											<div v-else class="row grey-f5f5f5 rounded-3 text-left"
+												style="max-width: 100%"
+												:style="{width: (reply.replyContent.length * 11 +30) + 'px' }">
+												<div class="row mt-2"></div>
+												<h6 class="mr-1 fs-12px fw-bold">{{reply.replyId}}</h6>
+												<h6 class="mr-1 fs-11px lh-lg">{{reply.replyContent}}</h6>
+												<div class="row mb-1"></div>
+											</div>
+
+											<!-- 댓글창 아이콘 -->
+											<div class="row d-flex flex-nowrap">
+												<!-- 				                				<h6 class="col-1 text-start reply-text" style="white-space: nowrap;">좋아요 </h6> -->
+												<h6 class="col-1 mt-1 text-start reply-text text-secondary"
+													style="white-space: nowrap">{{getTimeDifference(reply.replyTime)
+													}}</h6>
+												<h6 class="col-1 mt-1 text-start reply-text text-secondary"
+													@click="showRereplyInput(post.postNo,reply.replyNo),hideReplyInput()"
+													style="white-space: nowrap; cursor: pointer;">댓글 달기</h6>
+												<!-- 댓글 삭제  -->
+												<h6 v-if="reply.replyId === memberId"
+													class="col-l mt-1 text-start reply-text text-danger"
+													style="cursor: pointer;"
+													@click="deleteReply(reply.replyNo)">댓글 삭제</h6>
+											</div>
+											<div class="mb-1"></div>
+										</div>
+										<!-- 댓글 상자 -->
+									</div>
+									<!-- 댓글 표시 -->
+
+									<!-- 대댓글 표시 -->
+									<div
+										v-for="(rereply,rereplyIdx) in post.replyList.slice(replyIdx+1)"
+										:key='rereplyIdx'>
+										<!-- 대댓글이 들어갈 조건 -->
+										<div
+											v-if="(reply.replyNo === rereply.replyGroupNo) && (3 >= (replyIdx + rereplyIdx) || replyAllList[index])">
+											<!-- 특정 댓글의 그룹번호가 특정 댓글번호와 일치할 때(대댓글인경우) -->
+											<!-- 대댓글 들 -->
+											<div class="row ">
+												<div class="col-1"></div>
+												<div class="col-1">
+													<div class="row my-2 text-center">
+														<img class="img-fluid rounded-circle"
+															src="static/image/profileDummy.png">
+													</div>
+												</div>
+												<div class="col-10">
+													<div class="mt-1"></div>
+													<div class="mx-2"></div>
+													<!-- 대댓글 아이디가 내용보다 길면 -->
+													<div
+														v-if="rereply.replyContent.length &lt; rereply.replyId.length"
+														style="max-width: 100%"
+														class="row grey-f5f5f5 rounded-3 text-left"
+														:style="{ width: (rereply.replyId.length * 12 +30) + 'px' }">
+														<div class="row mt-2"></div>
+														<h6 class="mr-1 fs-12px fw-bold">{{rereply.replyId}}</h6>
+														<h6 class="mr-1 fs-11px lh-lg">{{rereply.replyContent}}</h6>
+														<div class="row mb-1"></div>
+													</div>
+													<!-- 대댓글 내용이 아이디보다 길면 -->
+													<div v-else class="row grey-f5f5f5 rounded-3 text-left"
+														style="max-width: 100%"
+														:style="{ width: (rereply.replyContent.length * 11 +30) + 'px' }">
+														<div class="row mt-2"></div>
+														<h6 class="mr-1 fs-12px fw-bold">{{rereply.replyId}}</h6>
+														<h6 class="mr-1 fs-11px lh-lg">{{rereply.replyContent}}</h6>
+														<div class="row mb-1"></div>
+													</div>
+
+													<!-- 대댓글창 아이콘 -->
+													<div class="row d-flex flex-nowrap">
+														<h6
+															class="col-1 mt-1 text-start reply-text text-secondary"
+															style="white-space: nowrap">{{getTimeDifference(rereply.replyTime)
+															}}</h6>
+														<h6
+															class="col-1 mt-1 text-start reply-text text-secondary"
+															@click="showRereplyInput(post.postNo,reply.replyNo),hideReplyInput()"
+															style="white-space: nowrap; cursor: pointer;">댓글 달기</h6>
+														<!-- 대댓글 삭제  -->
+														<h6 v-if="rereply.replyId == memberId"
+															class="col-l mt-1 text-start reply-text text-danger"
+															style="cursor: pointer;"
+															@click="deleteRereply(rereply.replyNo)">댓글 삭제</h6>
+													</div>
+													<div class="mb-1"></div>
+
+												</div>
+
+											</div>
+										</div>
+									</div>
+									<!-- 대댓글 작성 창 -->
+									<div
+										v-if=" post.postNo === tempPostNo && reply.replyNo === tempReplyNo">
+										<div class="row">
+											<div class="col-1"></div>
+											<div class="col-1">
+												<img class="img-fluid rounded-circle "
+													src="static/image/profileDummy.png">
+											</div>
+											<div class="col-10 mt-1">
+
+												<div class="pt-2 ps-2 pe-2 w-100 rounded-4 grey-f5f5f5">
+
+													<div class="mt-1"></div>
+													<textarea placeholder=" 댓글을 입력하세요."
+														class="grey-f5f5f5 border-0 "
+														style="min-width: 100%; height: 3em; outline: none; overflow: hidden;"
+														v-model="rereplyContent"></textarea>
+													<div class="d-flex">
+														<div class="col text-start">
+															<i class="ti ti-x fx-12px font-purple1"
+																@click="hideRereplyInput()"></i>
+														</div>
+														<div class="col text-end">
+															<i
+																class="fs-5 font-purple1 ti ti-arrow-badge-right-filled"
+																@click="rereplySending(post.postNo,reply.replyNo,index)"></i>
+														</div>
+													</div>
+
+												</div>
+											</div>
+										</div>
+									</div>
+
+								</div>
+								<!-- 댓글이 다섯 개 초과인 경우중, 댓글이 5개 이하 이거나 글 인덱스의 전체보기 버튼이 눌렸을 때, -->
+
+
+							</div>
+						</div>
+						<!-- 댓글이 다섯 개 초과인 경우 -->
+
+					</div>
+					<!-- 댓글, 대댓글 보여주는 창 (댓글이 다섯 개 이하일때) -->
+
+					<!-- 댓글 작성창  -->
+					<div class="row" v-if="replyFlagList[index]">
+						<div class="col-1">
+							<img class="rounded-circle img-fluid"
+								src="static/image/profileDummy.png">
+						</div>
+						<div class="col-11 mt-1">
+							<div class="pt-2 ps-2 pe-2 w-100 rounded-4 grey-f5f5f5">
+
+								<div class="mt-1"></div>
+								<textarea placeholder=" 댓글을 입력하세요."
+									class="grey-f5f5f5 border-0 "
+									style="min-width: 100%; height: 6em; outline: none; overflow: hidden;"
+									v-model="replyContent"></textarea>
+								<div class="d-flex">
+									<div class="col text-start">
+										<i class="ti ti-x fx-12px font-purple1"
+											@click="hideReplyInput(index)"></i>
+									</div>
+									<div class="col text-end">
+										<i class="fs-5 font-purple1 ti ti-arrow-badge-right-filled"
+											@click="replySending(post.postNo,index)"></i>
+									</div>
+								</div>
+
+							</div>
+						</div>
+					</div>
+					<!-- 댓글 더보기 버튼 -->
+					<div v-if="post.replyList.length >5">
+						<h6 class="mt-2 fs-11px text-secondary"
+							v-if="!replyAllList[index]" @click="showReplyMoreThanFive(index)">댓글
+							더보기 ({{post.replyList.length -5}}개의 댓글)</h6>
+						<h6 class="mt-2 fs-11px text-secondary" v-else
+							@click="hideReplyMoreThanFive(index)">댓글 숨기기</h6>
+					</div>
+					<!-- 댓글 더보기 버튼 -->
+
+				</div>
+				<!-- 하얀색 글박스증 co1-10인 가운데 부분 -->
+
+
+
+			</div>
+			<!-- 글 내용 -->
+
+
+		</div>
+		<!-- 글 박스 루프 1개-->
+
 	</div>
-	
+	<!--------------- 게시물들 반복구간 ------------->
+</div>
 
-	
-	
 
-    <!-- Vue.createApp구간 -->
-    <script>
+
+
+
+<!-- Vue.createApp구간 -->
+<script>
         Vue.createApp({
             data(){
                 return {
@@ -1269,8 +1446,9 @@
                 	posts: [],
                 	
                 	// 지도에 주소 표시하는 문자열
-                	showMapModalText: '',
-                	          	
+                	showMapName: '',
+                	showMapPlace: '',
+                	
                 	// 좋아요 게시글 인덱스 배열
                 	postLikeIndexList: [], 
                 	
@@ -1749,11 +1927,14 @@
              	
              	
             	// 모달창 클릭 시 지도 정보 불러오기-------------------------
-            	showMap(keyword){
-            		this.showMapModalText = keyword;
+            	showMap(keyword1,keyword2){
+            		this.showMapName = keyword1;
+            		this.showMapPlace = keyword2;
             		// 마커를 담을 배열입니다
             		var markers = [];
-	
+            		keyword2 = keyword2.replace(/\s+\d+$/, '');
+					var keyword = keyword1 + keyword2
+					console.log(keyword);
             		// 지도 정보를 담을 변수
             		let mapPlace = "기본";
 
@@ -1778,8 +1959,10 @@
             		        var bounds = new kakao.maps.LatLngBounds();
 
             		        for (var i=0; i<data.length; i++) {
+            		        	
             		            displayMarker(data[i]);    
             		            bounds.extend(new kakao.maps.LatLng(data[i].y, data[i].x));
+            		            if(i==0) break;
             		        }       
 
             		        // 검색된 장소 위치를 기준으로 지도 범위를 재설정합니다
@@ -1883,13 +2066,14 @@
             },
         }).mount("#app");
     </script>
-    
 
-    <!-- 이미지 스와이핑 창 -->
-    <script src="${pageContext.request.contextPath}/static/js/swiping-image.js"></script>
-    <!-- 게시글 작성 ajax -->
-	<script src="${pageContext.request.contextPath}/static/js/async-post.js"></script>
-	 <!-- 카카오 API구현 JS -->
-	<script src="${pageContext.request.contextPath}/static/js/post-map.js"></script>
+
+<!-- 이미지 스와이핑 창 -->
+<script
+	src="${pageContext.request.contextPath}/static/js/swiping-image.js"></script>
+<!-- 게시글 작성 ajax -->
+<script src="${pageContext.request.contextPath}/static/js/async-post.js"></script>
+<!-- 카카오 API구현 JS -->
+<script src="${pageContext.request.contextPath}/static/js/post-map.js"></script>
 
 <jsp:include page="/WEB-INF/views/template/footer.jsp"></jsp:include>

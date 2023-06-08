@@ -98,8 +98,13 @@
                <h5>@{{memberId}}</h5>
             </div>
             <div class="col-4 text-right">
-               <button type = "button" class="btn btn-primary mt-4" v-on:click = "showModal">프로필 수정</button>
-               <i class="fa-solid fa-gear" v-on:click="showSettingsModal"></i>
+            	<div class="row" v-if="mypage">
+	               <button type = "button" class="btn btn-primary mt-4" v-on:click = "showModal">프로필 수정</button>
+    	           <i class="fa-solid fa-gear" v-on:click="showSettingsModal"></i>
+            	</div>
+            	<div class="row" v-if="!mypage">
+	               <button type = "button" class="btn btn-primary mt-4" v-on:click = "showModal">팔로우</button>
+            	</div>
             </div>
          </div>
          <div class="row">
@@ -1098,6 +1103,9 @@
                   
                   targetMemberFollowObj: {},
                   
+                  //내페이지 or 남의페이지
+                  mypage:true,
+                  
                // 게시글 VO를 저장할 배열
               	posts: [],
               	
@@ -1401,6 +1409,49 @@
 			    goToExit() {
 			    	window.location.href = '/member/exit';
 			    },
+			    
+			    //페이지 확인
+			    async mypageCheck() {
+			    	const response = await axios.get("/member/mypage")
+			    	if(response.data === this.memberId) {
+			    		this.mypage = true;
+			    	}
+			    	else {
+				    	this.mypage = false;
+			    	}
+			    },
+			    // 회원 팔로우 버튼
+		        async followMember(memberSearch){
+		            // 1. 회원 로그인 확인
+		            // if(memberId === ""){
+		            //     if(confirm("로그인 한 회원만 사용할 수 있는 기능입니다. 로그인 하시겠습니까?")) {
+		            //         window.location.href = contextPath + "/member/login";
+		            //     }
+		            // }
+
+		            // artistEngNameLower
+		            // 2. toggle 팔로우 삭제, 팔로우 생성
+		            const isFollowingMember = memberSearch.isFollowMember;
+		            if(isFollowingMember){
+		                if(!confirm(this.fullName(memberSearch.memberId, memberSearch.memberNick) + "님 팔로우를 취소하시겠습니까?")) return;
+		                this.setFollowMemberObj(memberSearch.memberId);
+		                await this.deleteFollow();
+		            } else {
+		                this.setFollowMemberObj(memberSearch.memberId);
+		                await this.createFollow();
+		            }
+
+		            await this.loadMemberFollowInfo();
+		            this.loadMemberSearchList();
+		        },
+
+		        // 회원 팔로우 대상 설정
+		        setFollowMemberObj (followMemberId){
+		            // 팔로우 대상 유형
+		            this.followObj.followTargetType = "회원";
+		            // 팔로우 대상 PK
+		            this.followObj.followTargetPrimaryKey = followMemberId;
+		        },
                   
 
 
@@ -1816,6 +1867,7 @@
             created(){
                this.profileImage();
        		this.pageListProfile();
+       		this. mypageCheck();
                
             // 게시글 불러오기
            	this.setId();
