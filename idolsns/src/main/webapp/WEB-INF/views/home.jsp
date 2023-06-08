@@ -79,7 +79,7 @@
 	padding: 24px;
 	border-radius: 0.5rem;
 	border-width: 1px;
-	/* 		  border-color: black; /* 테두리 색상 지정 */ */
+	/* 		  border-color: black; /* 테두리 색상 지정 */
 	border-style: solid;
 }
 </style>

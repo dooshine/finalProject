@@ -103,10 +103,10 @@
     	           <i class="fa-solid fa-gear" v-on:click="showSettingsModal"></i>
             	</div>
             	<div class="row" v-if="!mypage && follow">
-            		<button type ="button" class="custom-btn btn-round btn-purple2" v-on:click="memberFollowDelete()">팔로우 취소</button>
+            		<button type ="button" class="custom-btn btn-round btn-purple2" v-on:click="followMember(memberId)">팔로우 취소</button>
             	</div>
             	<div class="row" v-if="!mypage && !follow">
-	               <button type = "button" class="custom-btn btn-round btn-purple1" v-on:click = "memberFollowNew()">팔로우</button>
+	               <button type = "button" class="custom-btn btn-round btn-purple1" v-on:click = "followMember(memberId)">팔로우</button>
             	</div>
             </div>
          </div>
@@ -1162,6 +1162,12 @@
               	
               	modalImageUrlList:[],
               	
+
+				followObj: {
+					memberId: memberId,
+					followTargetType: "",
+					followTargetPrimaryKey: "",
+				},
                };
             },      
             methods:{
@@ -1426,28 +1432,18 @@
 			    	}
 			    },
 			    // 회원 팔로우 버튼
-		        async followMember(memberSearch){
-		            // 1. 회원 로그인 확인
-		            // if(memberId === ""){
-		            //     if(confirm("로그인 한 회원만 사용할 수 있는 기능입니다. 로그인 하시겠습니까?")) {
-		            //         window.location.href = contextPath + "/member/login";
-		            //     }
-		            // }
-
-		            // artistEngNameLower
-		            // 2. toggle 팔로우 삭제, 팔로우 생성
-					const targetMemberId = window.location.pathname.split('/').slice(-1);
-		            if(isFollowingMember){
-		                if(!confirm(this.fullName(targetMemberId) + "님 팔로우를 취소하시겠습니까?")) return;
-		                // this.setFollowMemberObj(targetMemberId);
-		                // await this.deleteMemberFollow();
+		        async followMember(targetMemberId){
+		            if(this.follow){
+		                if(!confirm(targetMemberId + "님 팔로우를 취소하시겠습니까?")) return;
+		                this.setFollowMemberObj(targetMemberId);
+		                await this.deleteMemberFollow();
 		            } else {
-		                // this.setFollowMemberObj(targetMemberId);
-		                // await this.createFollow();
+		                this.setFollowMemberObj(targetMemberId);
+		                await this.createFollow();
 		            }
-
-		            // await this.loadMemberFollowInfo();
-		            // this.loadMemberSearchList();
+		            await this.loadMemberFollowInfo();
+					this.followCheck();
+					this.followCnt();
 		        },
 
 				// 대표페이지 팔로우 생성
