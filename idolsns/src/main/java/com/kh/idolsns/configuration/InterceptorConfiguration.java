@@ -51,29 +51,7 @@ public class InterceptorConfiguration implements WebMvcConfigurer{
                 "/member/**",
                 //"/admin/**",
                 // "/board/**",
-<<<<<<< HEAD
-                //"/rest/follow/**",               
-        		//"/rest/post/**", // PostRestController전체 memberInterceptor 처리
-        		//"/rest/attachment/upload2/**",
-        		//"/rest/post/reply/delete/**",
-        		//"/rest/post/rereply/**",
-        		//"/rest/post/reply/redelete/**",
-                //"/chat/**",
-                //"/calendar/**",
-        		//"/rest/point/**",
-        		//"/rest/fund/**",
-=======
-                // "/rest/follow/**",               
-        		"/rest/post/**", // PostRestController전체 memberInterceptor 처리
-        		"/rest/attachment/upload2/**",
-        		"/rest/post/reply/delete/**",
-        		"/rest/post/rereply/**",
-        		"/rest/post/reply/redelete/**",
-                "/chat/**",
-                "/calendar/**",
-        		"/rest/point/**",
-        		"/rest/fund/**",
->>>>>>> refs/remotes/origin/main
+                // "/rest/follow/**",              
         		"/point/**",
         		"/fund/**"
         )       
