@@ -693,7 +693,7 @@
                 <div class="col-3 left-aside px-0">
 					<c:choose>
 						<%-- 일반페이지 aside --%>
-						<c:when test="${!requestScope['javax.servlet.forward.servlet_path'].startsWith('/admin')}">
+						<c:when test="${!admin}">
 							<jsp:include page="/WEB-INF/views/template/sidebar.jsp"></jsp:include>
 						</c:when>
 						<%-- 관리자페이지 aside --%>
@@ -705,10 +705,7 @@
 				<!-- 본문 -->
 				<c:choose>
 					<%-- 일반페이지 본문 --%>
-					<c:when test="${!requestScope['javax.servlet.forward.servlet_path'].startsWith('/admin')}">
-						<!-- <h1><br><br>${requestScope}</h1> -->
-						<h1><br><br>${requestScope[javax.servlet.forward.servlet_path]}</h1>
-
+					<c:when test="${!admin}">
 						<div class="col-6 article container-fluid mb-4 px-4" style="padding:0px; margin-top: 90px;">
 					</c:when>
 					<%-- 관리자페이지페이지 본문 --%>
