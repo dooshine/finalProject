@@ -9,4 +9,5 @@ import lombok.NoArgsConstructor;
 public class MapDto {
 	private Long postNo;
 	private String mapPlace;
+	private String mapName;
 }
