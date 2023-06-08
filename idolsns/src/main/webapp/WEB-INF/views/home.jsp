@@ -82,7 +82,20 @@
    
 <!-- 	<div class="container-fluid" id="app" test> -->
 	<div class="container-fluid" id="app">
-		
+		<button class="custom-btn btn-purple1-secondary" @click="changeCustom">커스텀모달</button>
+        <div v-if="customOn" class="custom-modal"  id="deleteAlertModal">
+           <div class="custom-modal-body">
+               <div class="text-center mb-3">
+                  <i class="ti ti-alert-triangle"></i>
+               </div>
+               <div class="text-center">삭제한 일정은 복구할 수 없습니다.zzzzzzzzzzzzzzzzzzzzzzzzzzz</div>
+               <div class="text-center">일정을 정말 삭제하시겠습니까?</div>
+               <div class="d-flex justify-content-center mt-4">
+                  <button class="custom-btn btn-round btn-purple1-secondary me-2 w-100" id="delete-schedule">삭제</button>
+                  <button class="custom-btn btn-round btn-purple1 w-100" @click="changeCustom" id="delete-cancel">취소</button>
+               </div>
+           </div>
+        </div>
 		<!----------- 글쓰기 버튼 ------------>
 	    <div class="bg-white mb-4 p-4 rounded-4">
 	        <div class="row mt-1">
@@ -90,7 +103,7 @@
 	               <img class="rounded-circle img-fluid" src="static/image/profileDummy.png">
 	            </div>
 	            <div class="col-11 col-md-11 col-lg-11 d-flex align-items-center justify-content-center">
-	                <button type="button" class="btn btn-white btn-outline-secondary rounded-pill col-12 border border-secondary" data-bs-target="#modal1" data-bs-toggle="modal">${memberId}님 무슨 생각을 하고 계신가요?</button>
+	                <button type="button" class="custom-btn btn-round btn-purple1-secondary me-2 w-100" data-bs-target="#modal1" data-bs-toggle="modal">${memberId}님 무슨 생각을 하고 계신가요?</button>
 	            </div>
 	            
 	        </div>	        
@@ -118,17 +131,17 @@
                         
                         <p class="text-center">무엇에 대한 글인가요?(카테고리 설정)</p>
                         <div class="row justify-content-center"> 
-                        	<button type="button" class="col-3 btn btn-primary btn-sm modal2 rounded-pill"
+                        	<button type="button" class="col-3 custom-btn btn-round btn-purple1 btn-sm modal2 rounded-pill"
 	                        	data-bs-target="#modalfixed" data-bs-toggle="modal">
 	                        	자유
 	                        </button>
 	                        &nbsp;&nbsp;
-	                        <button type="button" class="col-3 btn btn-primary btn-sm modal2 rounded-pill"
+	                        <button type="button" class="col-3 custom-btn btn-round btn-purple1 btn-sm modal2 rounded-pill"
 	                        	data-bs-target="#modal1-1" data-bs-toggle="modal">
 	                        	행사일정
 	                        </button>
                      	    &nbsp;&nbsp;
-	                        <button type="button" class="col-3 btn btn-primary btn-sm modal2 rounded-pill"
+	                        <button type="button" class="col-3 custom-btn btn-round btn-purple1 btn-sm modal2 rounded-pill"
 	                        	data-bs-target="#modal1-2" data-bs-toggle="modal">
 	                        	같이가요
 	                        </button>
@@ -174,7 +187,7 @@
                    
                     <!-- footer -->
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary btn-sm"
+                        <button type="button" class="custom-btn btn-round btn-purple1 btn-sm"
 	                        	data-bs-target="#modalfixed" data-bs-toggle="modal">
 	                        	다음
 	                    </button>
@@ -214,7 +227,7 @@
                    
                     <!-- footer -->
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary btn-sm"
+                        <button type="button" class="custom-btn btn-round btn-purple1 btn-sm"
 	                        	data-bs-target="#modalfixed" data-bs-toggle="modal">
 	                        	다음
 	                    </button>
@@ -250,23 +263,23 @@
                         </div>
 					    <div class="row">
 					        <div class="mb-1" v-for="(findFixedTag, i) in findFixedTagList" :key="i">
-					            <div class="btn btn-secondary btn-sm rounded-pill mx-2" @click="addNewFixedTag(findFixedTag)">{{ findFixedTag }}</div>
+					            <button class="custom-btn btn-purple1-secondary btn-sm rounded-pill mx-2" @click="addNewFixedTag(findFixedTag)">{{ findFixedTag }}</button>
 					        </div>
 					    </div>
 					    <div class="row mt-3">
 					        <div class="col">
-					            <button class="btn btn-primary btn-sm rounded-pill mx-2 fixed-tag" v-for="(newFixedTag, i) in newFixedTagList">{{ newFixedTag }}</button>
+					            <button class="custom-btn btn-purple1 btn-sm rounded-pill mx-2 fixed-tag" v-for="(newFixedTag, i) in newFixedTagList">{{ newFixedTag }}</button>
 					        </div>
 					    </div>
                         
                         <div class="row">
-                        	<h6 class="all-tag text text-primary"></h6>
+                        	<h6 class="all-tag text font-purple1"></h6>
                         </div>                         
                     </div>
                     
                     <!-- footer -->
                     <div class="modal-footer">
-                       	<button type="button" class="btn btn-primary btn-sm fixed-tag-end"
+                       	<button type="button" class="custom-btn btn-round btn-purple1 btn-sm fixed-tag-end"
                             data-bs-target="#modal2" data-bs-toggle="modal">
                         	자유태그 작성하기
                         </button>
@@ -297,16 +310,16 @@
                      	    <div class="col-1"></div>
                         	<input type="text" class="tag-input col-7" placeholder="태그를 입력하세요">
                         	<div class="col-1"></div>
-                        	<button class="col-2 btn btn-primary tag-btn">입력</button>
+                        	<button class="col-2 custom-btn btn-round btn-purple1 btn-sm tag-btn">입력</button>
                         </div>
                         <div class="row">
-                        	<h6 class="all-tag text text-primary"></h6>
+                        	<h6 class="all-tag text font-purple1"></h6>
                         </div>                         
                     </div>
                     
                     <!-- footer -->
                     <div class="modal-footer">
-                       	<button type="button" class="btn btn-primary btn-sm"
+                       	<button type="button" class="custom-btn btn-round btn-purple1 btn-sm"
                             data-bs-target="#modal3" data-bs-toggle="modal">
                         	글작성하기
                         </button>
@@ -342,9 +355,9 @@
                     		<input type="file" class="fs-6" id="fileInput" multiple>
                     	</div>
                     	<div class="col-4 text-end fs-4">
-                    		<button type="button" class="btn btn-primary btn-sm write-finish mx-2"
+                    		<button type="button" class="custom-btn btn-round btn-purple1 btn-sm write-finish mx-2"
                                 data-bs-dismiss="modal">작성완료</button>
-							<button type="button" class="btn btn-primary btn-sm"
+							<button type="button" class="custom-btn btn-round btn-purple1 btn-sm"
 								data-bs-target="#modalmap" onclick="relayout();" data-bs-toggle="modal">지도정보삽입</button>                    
 <!--                         <button type="button" class="btn btn-secondary btn-sm" -->
 <!--                                 data-bs-dismiss="modal">닫기</button> -->
@@ -403,14 +416,14 @@
 						  		 <div class="col-7">
 <!-- 						  		 	<button type="button" class="btn btn-primary btn-sm"> -->
 <!-- 						  		 	작성완료</button> -->
-						  		 	<button type="button" class="btn btn-primary btn-sm bttest"
+						  		 	<button type="button" class="custom-btn btn-round btn-purple1 btn-sm bttest"
                             			data-bs-target="#modal3" data-bs-toggle="modal">
                         			글쓰기
                         			</button>
 						  		 </div>
 						  		 
 						  		 <div class="col-5">
-						  		 	<button type="button" class="btn btn-secondary btn-sm"
+						  		 	<button type="button" class=" custom-btn btn-round btn-purple1-secondary btn-sm"
 							        	    data-bs-dismiss="modal">닫기</button>	
 						  		 </div>
 						  		  
@@ -483,9 +496,9 @@
                         <br>
         				<div class="row ">
         					<div class="text-center ">
-        						<button class="btn btn-primary col-3 mx-3"
+        						<button class="custom-btn btn-round btn-purple1 btn-sm col-3 mx-3"
         							data-bs-target="#deleteEnd" data-bs-toggle="modal" @click="deletePost(get)">네</button>
-        						<button class="btn btn-secondary col-3"
+        						<button class=" custom-btn btn-round btn-purple1-secondary btn-sm col-3"
         							data-bs-dismiss="modal">아니오</button>
         					</div>
         				</div>
@@ -521,7 +534,7 @@
                         <br>
         				<div class="row ">
         					<div class="text-center ">
-        						<button class="btn btn-primary col-3 mx-3"
+        						<button class="custom-btn btn-round btn-purple1 btn-sm col-3 mx-3"
         							data-bs-dismiss="modal">확인</button>
         					</div>
         				</div>
@@ -557,7 +570,7 @@
                         <br>
         				<div class="row ">
         					<div class="text-center ">
-        						<button class="btn btn-primary col-3 mx-3"
+        						<button class="custom-btn btn-round btn-purple1 btn-sm col-3 mx-3"
         							data-bs-toggle="modal" data-bs-target="#editEnd" @click="updatePostFunc(updatePost.postContent)">확인</button>
         					</div>
         				</div>
@@ -593,8 +606,8 @@
                         <br>
         				<div class="row ">
         					<div class="text-center ">
-        						<button class="btn btn-primary col-3 mx-3"
-        							data-bs-dismiss="modal">확인</button>
+        						<button class="custom-btn btn-round btn-purple1 btn-sm col-3 mx-3"
+        							data-bs-dismiss="modal" @click="confirmUpdate">확인</button>
         					</div>
         				</div>
                     </div>
@@ -619,7 +632,7 @@
 			            <div class="col-1 col-md-1 col-lg-1 d-flex align-items-center justify-content-center">
 			               <img class="rounded-circle img-fluid" src="static/image/profileDummy.png">
 			            </div>
-			            <div class="col-10 col-md-10 col-lg-10 align-items-center justify-content-start">
+			            <div class="col-5 col-md-5 col-lg-5 align-items-center justify-content-start">
 														
 								<div class="row">
 								<h4>{{ post.memberId }}</h4>   
@@ -627,6 +640,24 @@
 								<div class="row">
 								<p class="text-secondary">@{{post.memberNick }} · {{getTimeDifference(post.postTime) }} </p>
 								
+								</div>
+			            </div>
+			            <div class="col-5 col-md-5 col-lg-5 align-items-center justify-content-end">
+<!-- 								{{memberFollowObj.followMemberList}} -->
+<!-- 								memberId와 post.memebrId가 다른데 팔로우목록이 있는 경우에,																 -->
+								<div v-if="memberId != post.memberId && memberFollowObj.followMemberList.includes(post.memberId)" class="row text-end">
+									<div class="col-9"></div>
+									<button class="col-3 custom-btn btn-purple1-secondary btn-sm rounded-3" @click="deleteFollowMember(post.memberId)">팔로우 취소</button>
+								</div>
+								
+<!-- 								memberId와 post.memeberId가 다른데 팔로우 목록에 없는 경우에  -->
+								<div v-else-if="memberId != post.memberId && !(memberFollowObj.followMemberList.includes(post.memberId))" @click="createFollowMember(post.memberId)" class="row text-end">
+									<div class="col-10"></div>
+									<button class="col-2 custom-btn btn-purple1 btn-sm rounded-3">팔로우</button>
+								</div>
+								
+<!-- 								memberId와 post.memberId가 같으면 -->
+								<div v-else class="row">								
 								</div>
 			            </div>
 			            <div class="col-1 col-md-1 col-lg-1 d-flex align-items-start justify-content-end">
@@ -665,11 +696,6 @@
 									   				</div>
 									   			</div>
 									   			<div class="row">
-										   			<div class="col-1"></div>
-									   				<div class="col-11 ms-2 ">
-<!-- 									   					<h6 @click="userFollow">글쓴이 팔로우</h6> -->
-									   					<h6>유저 팔로우</h6>
-									   				</div>
 									   			</div>
 									   			<div class="row">
 									   				<div class="col-1"></div>
@@ -701,12 +727,15 @@
 	                	<div class="col-1 col-md-1 col-lg-1 d-flex align-items-center justify-content-center">			            
 			            </div>
 			            <div class="col-10 col-md-10 col-lg-10 d-flex align-items-center justify-content-start">
-							<div class="mx-1 px-2 h-20 bg-primary rounded-4 align-items-center justify-content-center">
-								<p class="fs-7 text-light">{{ post.postType }}</p>										 
-							</div>
-							<div v-for="fixedTag in post.fixedTagList" :key="fixedTag" class="mx-1 px-2 h-20 bg-primary rounded-pill align-items-center justify-content-center">
-								<p class="fs-7 text-light">{{ fixedTag }}</p>
-							</div>
+							<button class="mx-1 px-2 h-20 custom-btn btn-round btn-purple1 rounded-4 align-items-center justify-content-center fs-7 text-light">
+								{{ post.postType }}							 
+							</button>
+							
+							<a :href="searchUrl">
+							<button v-for="fixedTag in post.fixedTagList" :key="fixedTag" @click="searchFixedTag(fixedTag)" class="mx-1 px-2 h-20 custom-btn btn-round btn-purple1 align-items-center justify-content-center fs-7 text-light">
+								{{ fixedTag }}
+							</button>
+							</a>
 														 													    
 			            </div>
 						<div class="col-1 col-md-1 col-lg-1 d-flex align-items-center justify-content-center"> 
@@ -741,7 +770,7 @@
 		                	<div class="row">
 		                		<p>{{ post.postContent }}</p>
 		                		<div class="d-flex">
-		                		<p v-for="freeTag in post.freeTagList" :key="freeTag" class="fs-6 text-primary">\#{{ freeTag }} &nbsp;</p>	
+		                		<p v-for="freeTag in post.freeTagList" :key="freeTag" class="fs-6 font-purple1">\#{{ freeTag }} &nbsp;</p>	
 		                		</div>
 		                	</div>
 							
@@ -872,7 +901,7 @@
 		                	<div class="row">
 		                	
 		                		<!-- 좋아요 -->		                		
-		                		<div class="col-4 text-start text-primary">
+		                		<div class="col-4 text-start font-purple1">
 		                			<div class="row" v-if="postLikeIndexList.includes(index)">
 		                				<div class="col-2">
 		                					<i class="fs-4 ti ti-heart-filled" @click="checkLike(post.postNo,index)"></i>
@@ -951,10 +980,10 @@
 					                			</div>
 					                			
 					                			<!-- 댓글창 아이콘 -->
-					                			<div class="row d-flex flex-nowrap">
+					                			<div class="row d-flex flex-nowrap text-start">
 	<!-- 				                				<h6 class="col-1 text-start reply-text" style="white-space: nowrap;">좋아요 </h6> -->
-													<h6 class="col-1 mt-1 text-start reply-text text-secondary" style="white-space: nowrap">{{getTimeDifference(reply.replyTime) }} </h6>
-					                				<h6 class="col-1 mt-1 text-start reply-text text-secondary" @click="showRereplyInput(post.postNo,reply.replyNo),hideReplyInput()" style="white-space: nowrap;cursor:pointer;">댓글 달기</h6>
+													<h6 class="col-1 mt-1  reply-text text-secondary" style="white-space: nowrap">{{getTimeDifference(reply.replyTime)}}</h6>
+					                				<h6 class="col-1 mt-1  reply-text text-secondary" @click="showRereplyInput(post.postNo,reply.replyNo),hideReplyInput()" style="white-space: nowrap;cursor:pointer;">댓글 달기</h6>
 					                				<!-- 댓글 삭제  -->
 					                				<h6 v-if="reply.replyId === memberId" class="col-l mt-1 text-start reply-text text-danger" style="cursor:pointer;" @click="deleteReply(reply.replyNo)">댓글 삭제</h6>
 					                			</div>
@@ -1027,8 +1056,8 @@
 						                				<div class="mt-1"></div>
 						                					<textarea placeholder=" 댓글을 입력하세요." class="grey-f5f5f5 border-0 " style="min-width:100%;height:3em;outline:none;overflow:hidden;" v-model="rereplyContent" ></textarea>
 						                				<div class="d-flex">
-							                				<div class="col text-start"><i class="ti ti-x fx-12px text-primary" @click="hideRereplyInput()"></i></div>
-							                				<div class="col text-end"><i class="fs-5 text-primary ti ti-arrow-badge-right-filled" @click="rereplySending(post.postNo,reply.replyNo,index)"></i></div>
+							                				<div class="col text-start"><i class="ti ti-x fx-12px font-purple1" @click="hideRereplyInput()"></i></div>
+							                				<div class="col text-end"><i class="fs-5 font-purple1 ti ti-arrow-badge-right-filled" @click="rereplySending(post.postNo,reply.replyNo,index)"></i></div>
 						                				</div>
 														
 						                			</div>
@@ -1155,8 +1184,8 @@
 							                				<div class="mt-1"></div>
 							                					<textarea placeholder=" 댓글을 입력하세요." class="grey-f5f5f5 border-0 " style="min-width:100%;height:3em;outline:none;overflow:hidden;" v-model="rereplyContent" ></textarea>
 							                				<div class="d-flex">
-								                				<div class="col text-start"><i class="ti ti-x fx-12px text-primary" @click="hideRereplyInput()"></i></div>
-								                				<div class="col text-end"><i class="fs-5 text-primary ti ti-arrow-badge-right-filled" @click="rereplySending(post.postNo,reply.replyNo,index)"></i></div>
+								                				<div class="col text-start"><i class="ti ti-x fx-12px font-purple1" @click="hideRereplyInput()"></i></div>
+								                				<div class="col text-end"><i class="fs-5 font-purple1 ti ti-arrow-badge-right-filled" @click="rereplySending(post.postNo,reply.replyNo,index)"></i></div>
 							                				</div>
 															
 							                			</div>
@@ -1186,8 +1215,8 @@
 		                				<div class="mt-1"></div>
 		                					<textarea placeholder=" 댓글을 입력하세요." class="grey-f5f5f5 border-0 " style="min-width:100%;height:6em;outline:none;overflow:hidden;" v-model="replyContent" ></textarea>
 		                				<div class="d-flex">
-			                				<div class="col text-start"><i class="ti ti-x fx-12px text-primary" @click="hideReplyInput(index)"></i></div>
-			                				<div class="col text-end"><i class="fs-5 text-primary ti ti-arrow-badge-right-filled" @click="replySending(post.postNo,index)"></i></div>
+			                				<div class="col text-start"><i class="ti ti-x fx-12px font-purple1" @click="hideReplyInput(index)"></i></div>
+			                				<div class="col text-end"><i class="fs-5 font-purple1 ti ti-arrow-badge-right-filled" @click="replySending(post.postNo,index)"></i></div>
 		                				</div>
 										
 		                			</div> 
@@ -1283,14 +1312,28 @@
                 	
                 	// 게시글 수정 용 post
                 	updatePost: null,
+                	customOn: false,
                 	
+                	// 검색 주소
+                	searchUrl: null,
+                	
+                	 
+                	// 로그인 맴버 팔로우 목록 조회
+                	memberFollowObj: {},
+                	
+                
                 };
             },
             computed:{
             	
             },
             methods:{
-            		
+            	changeCustom()
+            	{
+            		this.customOn = !this.customOn;
+            	},
+            	
+            	
             	// 무한 페이징 게시글 불러오기 1페이지당 10개씩 매 페이지 별로 불러옴,
             	async fetchPosts(){
             		
@@ -1366,12 +1409,15 @@
 			    	
 			    	try {
 			    		await axios.put('http://localhost:8080/rest/post/',postDto);
-			    		this.fetchPosts();
+			    		
 			    	}
 			    	catch(error){
 			    		console.error(error);
 			    	}
 			    	
+			    },
+			    confirmUpdate(){
+			    	this.fetchPosts();
 			    },
 			    
 				 // 이미지, 비디오 관련 
@@ -1401,7 +1447,7 @@
                 	this.modalImageUrlList = attachmentList;
                 },
                 
-                
+                 
                 // 게시글, 댓글 시간 철리
                 getTimeDifference(time){
                 	const writeTime = new Date(time);
@@ -1409,20 +1455,20 @@
                 	const timeDifference = currentTime.getTime() - writeTime.getTime();
 					
                 	if (timeDifference < 20000) { // 20초 내                       
-                        return '방금 전';
+                        return '방금전';
                       } else if (timeDifference < 60000){ // 1분 내 
                     	const seconds = Math.floor(timeDifference / 1000);
-                        return seconds+'초 전';
+                        return seconds+'초전';
                       }
                 		else if (timeDifference < 3600000) { // 1시간 내
                         const minutes = Math.floor(timeDifference / 60000);
-                        return minutes+'분 전';
+                        return minutes+'분전';
                       } else if (timeDifference < 86400000) { // 24시간 내
                         const hours = Math.floor(timeDifference / 3600000);
-                        return hours+'시간 전';
+                        return hours+'시간전';
                       } else if (timeDifference < 604800000) { // 1주일 내
                         const days = Math.floor(timeDifference / 86400000);
-                        return days+'일 전';
+                        return days+'일전';
                       } else { // 1주일 이상
                     	var dateOptions; 
                     	// 년도 비교  
@@ -1436,6 +1482,77 @@
                       }
                 },
                 
+                // 팔로우 관련 비동기 처리-----------------------------------
+                // 팔로우 목록 불러오기 
+                async loadMemberFollowInfo(){
+        			// 로그인X → 실행 X
+        			if(this.memberId==="") return;
+        			// url
+        			const url = "http://localhost:8080/rest/follow/memberFollowInfo/"
+        			// 팔로우 목록 load
+        			const resp = await axios.get(url, {params:{memberId: this.memberId}});
+
+        			// 로그인 팔로우 정보 로드
+        			this.memberFollowObj = resp.data;
+        			console.log(this.memberFollowObj);
+        			this.fetchPosts();
+        			
+        		},
+        		
+                // 팔로우 생성 
+        		async createFollowMember(followedMemberId){
+                    // 1. 회원 로그인 확인
+                    if(this.memberId === ""){
+                        if(confirm("로그인 한 회원만 사용할 수 있는 기능입니다. 로그인 하시겠습니까?")) {
+                            window.location.href = contextPath + "/member/login";
+                        }
+                    }
+                    
+                    
+                    // 팔로우 설정                   
+                    var followDto = {
+                        memberId: this.memberId,
+                        followTargetType: "회원",
+                        followTargetPrimaryKey: followedMemberId
+                    };
+                    
+                    const url = "http://localhost:8080/rest/follow/";
+                    await axios.post(url,followDto);
+                   
+
+                    this.loadMemberFollowInfo();
+                  	this.fetchPosts();
+                    
+                },
+                
+                // 팔로우 삭제 
+        		async deleteFollowMember(followedMemberId){
+                	// 1. 회원 로그인 확인
+                    if(this.memberId === ""){
+                        if(confirm("로그인 한 회원만 사용할 수 있는 기능입니다. 로그인 하시겠습니까?")) {
+                            window.location.href = contextPath + "/member/login";
+                        }
+                    }
+                                        
+                    // 팔로우 설정                   
+                    var followDto = {
+                        memberId: this.memberId,
+                        followTargetType: "회원",
+                        followTargetPrimaryKey: followedMemberId
+                    };                    
+                    
+                    // 팔로우 삭제 
+                    const url = "http://localhost:8080/rest/follow/";
+                    await axios.delete(url, {
+                        data: followDto,
+                    });
+                    
+                    this.loadMemberFollowInfo();
+                  	this.fetchPosts();
+                },
+        		
+        		
+                // 팔로우 관련 비동기 처리-----------------------------------
                 
              	// 좋아요 관련 비동기 처리-----------------------------------
              	// 아이디 접속해 있고, 좋아요 클릭시에 실행
@@ -1480,6 +1597,10 @@
                 },
              	// 좋아요 관련 비동기 처리------------------------------------
                 
+             	// 고정 태그 맵핑
+             	searchFixedTag(data){
+                	this.searchUrl = 'http://localhost:8080/search/post/?q='+data;
+                },
              	
              	
                 // 댓글 창 관련 클릭 함수 -------------------------------              
@@ -1748,7 +1869,7 @@
             	// 게시글 불러오기            	
             	this.fetchPosts();
             	this.setId();
-            	
+            	this.loadMemberFollowInfo();
             	
             	
             },

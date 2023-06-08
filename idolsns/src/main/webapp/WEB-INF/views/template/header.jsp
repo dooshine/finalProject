@@ -70,11 +70,11 @@
     		font-family:  "Font Awesome 6 Free"  !important;
     	}
     	
-    	header {
-    		position: sticky;
-    		top: 0;
-    		z-index: 999;
-    	}
+/*     	header { */
+/*     		position: sticky; */
+/*     		top: 0; */
+/*     		z-index: 999; */
+/*     	} */
     	
     	@media screen and (max-width:992px) {
 		  	#calendar {
