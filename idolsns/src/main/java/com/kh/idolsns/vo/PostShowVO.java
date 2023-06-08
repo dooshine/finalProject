@@ -37,6 +37,7 @@ public class PostShowVO {
 	// -----------------------------------
 	// 위치 정보
 	private String mapPlace;
+	private String mapName;
 	// ----------------------------------
 	// 태그 정보,게시물 이미지는 DTO List형태로 받기
 	private List<String> freeTagList;

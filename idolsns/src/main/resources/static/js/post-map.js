@@ -3,6 +3,7 @@ var markers = [];
 
 // 지도 정보를 담을 변수
 let mapPlace = "기본";
+let mapName = "기본";
 
 var mapContainer = document.getElementById('map'), // 지도를 표시할 div 
     mapOption = {
@@ -121,11 +122,11 @@ function displayPlaces(places) {
 
 // 검색결과 항목을 Element로 반환하는 함수입니다
 function getListItem(index, places) {
-
+	
     var el = document.createElement('li'),
     itemStr = '<span class="markerbg marker_' + (index+1) + '"></span>' +
                 '<div class="info" onclick="ifClick();">' +
-                '   <h5>' + places.place_name + '</h5>';
+                '   <h5 class="placeName">' + places.place_name + '</h5>';
 
     if (places.road_address_name) {
         itemStr += '    <span class="roadName">' + places.road_address_name + '</span>' +
@@ -146,20 +147,34 @@ function getListItem(index, places) {
 // 버튼 클릭 시 위치 정보 표시 및 해당 좌표로 이동 
 function ifClick(){
 	var infoDivs = document.querySelectorAll('.info');
-
+	
+	
 	// 각 div 태그에 클릭 이벤트 리스너를 추가합니다.
 	infoDivs.forEach(function(div) {
 	  div.addEventListener('click', function() {
-	    
+		var placeInfos = div.querySelectorAll('h5.placeName');	
 	    // div 내부의 road 클래스를 가진 span 태그들을 선택합니다.
 	    var roadSpans = div.querySelectorAll('.roadName');
-	
+		var pi =  placeInfos[0].innerText;
+		console.log(pi)
+		
 	    // 각 span 태그에 적힌 내용을 콘솔에 출력합니다.
 	    roadSpans.forEach(function(span) {
 	     	var addressElement = document.querySelector('span.address');
 			addressElement.textContent = span.innerText;
+			
 			mapPlace = addressElement.textContent; 
 	    });
+	    
+	    // 각 span 태그에 적힌 내용을 콘솔에 출력합니다.
+	    placeInfos.forEach(function(span) {
+	     	var placeNameElement = document.querySelector('span.placeName');
+			placeNameElement.textContent = span.innerText;
+			
+			mapName = placeNameElement.textContent; 
+	    });
+	    
+		
 	  });
 	});
 }

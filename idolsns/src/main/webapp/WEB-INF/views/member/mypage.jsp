@@ -102,8 +102,11 @@
 	               <button type = "button" class="btn btn-primary mt-4" v-on:click = "showModal">프로필 수정</button>
     	           <i class="fa-solid fa-gear" v-on:click="showSettingsModal"></i>
             	</div>
-            	<div class="row" v-if="!mypage">
-	               <button type = "button" class="btn btn-primary mt-4" v-on:click = "showModal">팔로우</button>
+            	<div class="row" v-if="!mypage && follow">
+            		<button type ="button" class="custom-btn btn-round btn-purple2" v-on:click="memberFollowDelete()">팔로우 취소</button>
+            	</div>
+            	<div class="row" v-if="!mypage && !follow">
+	               <button type = "button" class="custom-btn btn-round btn-purple1" v-on:click = "memberFollowNew()">팔로우</button>
             	</div>
             </div>
          </div>
@@ -1104,7 +1107,9 @@
                   targetMemberFollowObj: {},
                   
                   //내페이지 or 남의페이지
-                  mypage:true,
+                  mypage:false,
+                  //팔로우 여부
+                  follow : true,
                   
                // 게시글 VO를 저장할 배열
               	posts: [],
@@ -1470,6 +1475,32 @@
 		            // 팔로우 대상 PK
 		            this.followObj.followTargetPrimaryKey = followMemberId;
 		        },
+			    
+			    //팔로우 여부 
+			    async followCheck() {
+			    	const response = await axios.get("/member/checkFollowMember", {
+			    		params : {
+							Id : this.memberId
+						}
+			    	});
+			    	console.log(response.data);
+			    	if(response.data == true) {
+			    		this.follow = true;
+			    	}	
+			    	else { 
+			    		this.follow = false;
+			    	}
+			    },
+			    
+			    //팔로우
+			    async memberFollowNew() {
+			    	const response = await axios.get("/member/follow", {
+			    		params : {
+							Id : this.memberId
+						}
+			    	});
+			    	this.followCheck();
+			    },
                   
 
 
@@ -1886,6 +1917,7 @@
                this.profileImage();
        		this.pageListProfile();
        		this. mypageCheck();
+       		this.followCheck();
                
             // 게시글 불러오기
            	this.setId();
