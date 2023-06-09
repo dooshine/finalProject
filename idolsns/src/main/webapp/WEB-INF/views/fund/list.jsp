@@ -94,7 +94,7 @@
          
          .progress {
             height: 100%;
-            background-color: #2ecc71;
+            background-color: #6A53FB;
             }
          
          .info {
@@ -126,25 +126,41 @@
 						
 						<div class="font-bold" style="font-size:30px;">아이돌의 펀딩을 받아봅시다
 						</div>
+						
+						<!-- 펀딩 글 작성 -->
 						<button class="custom-btn btn-round btn-purple1" @click="startFunding">프로젝트 올리기</button>
 					</div>
 				
 				
 				
-					<!-- 펀딩 글 작성 -->
-					<div class="d-flex align-items-center mt-4">
+			
+					<div class="d-flex justify-content-between mt-4 px-2">
 					
-		             	<!-- 검색창 -->
-	               	<div class="search-box w-35 ms-auto me-4">
-                    <input class="search-input" type="text" v-model="searchQuery" placeholder="검색창" 
-                    @keyup.enter="fetchOrderedFundingList">
-                </div>
-             
-		                
-		                	<!-- 정렬 -->
-						<button v-if="dateSort" class="btn-purple1 ms-1" @click="sortByDate">최신순</button>
-						<button v-else class="btn-purple1 ms-1" @click="sortByDate">오래된순</button>
-					</div>
+			             	<!-- 검색창 -->
+		               	<div class="search-box w-35 ms-auto me-4">
+		                    <input class="search-input" type="text" v-model="searchQuery" placeholder="검색창" 
+		                    @keyup.enter="fetchOrderedFundingList">
+	                	</div>
+	             
+			                
+			                	<!-- 정렬(성현)
+							<button v-if="dateSort" class="btn-purple1 ms-1" @click="sortByDate">최신순</button>
+							<button v-else class="btn-purple1 ms-1" @click="sortByDate">오래된순</button>
+							
+							-->
+						<div class="w-10">
+							<select class="form-select">
+								<option selected>정렬</option>
+							  	<option value="new">최신순</option>
+							  	<option	value="old">오래된순</option>
+							  	<option value="likes">좋아요순</option>
+							  	<option value="deadline">마감임박순</option>
+							</select>
+						</div>
+					
+					
+				
+				</div>
 	             	
                	
                	<!-- 펀딩 리스트 -->
