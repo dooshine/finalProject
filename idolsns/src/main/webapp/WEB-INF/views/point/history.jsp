@@ -90,6 +90,10 @@
 			/* border: 1.5px solid #6A53FB; */
 			
 		}
+		
+		td {
+			vertical-align: middle;
+		}
 	   
 	    
 	</style>
@@ -109,10 +113,10 @@
 		        
 		        <h3 class="font-bold mt-5 mb-3" style="padding-left: 0.5em">충전 내역</h3>
 		
-		   <div style="padding-left: 0.5em; padding-right: 0.5em;">
+		   <div style="padding-left: 0.5em; padding-right: 0.5em; font-size:20px;">
 	            <div class="container my-3 custom-border-box">
-	            내 포인트: <span class="amount font-bold font-purple1">{{ formattedAmount }}
-	            </span>원</div>
+	            내 스타: <span class="amount font-bold font-purple1">{{ formattedAmount }}
+	            </span>스타</div>
 	        </div>
         
 				<div class="modal-body" style="padding-left: 0.5em; padding-right: 0.5em;">

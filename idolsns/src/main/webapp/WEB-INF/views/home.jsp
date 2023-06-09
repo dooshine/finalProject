@@ -109,7 +109,7 @@
 <!-- 		</div> -->
 <!-- 	</div> -->
 	<!----------- 글쓰기 버튼 ------------>
-	<div class="bg-white mb-4 p-4 rounded-4">
+	<div class="bg-white mb-4 p-4 rounded-4" v-if="memberId!=null">
 		<div class="row mt-1">
 			<div
 				class="col-1 col-md-1 col-lg-1 d-flex align-items-center justify-content-center p-0">
@@ -154,15 +154,15 @@
 					<div class="row justify-content-center">
 						<button type="button"
 							class="col-3 custom-btn btn-round btn-purple1 btn-sm modal2 rounded-pill"
-							data-bs-target="#modalfixed" data-bs-toggle="modal">자유</button>
+							data-bs-target="#modalfixed" @click="setPostType('자유')" data-bs-toggle="modal">자유</button>
 						&nbsp;&nbsp;
 						<button type="button"
 							class="col-3 custom-btn btn-round btn-purple1 btn-sm modal2 rounded-pill"
-							data-bs-target="#modal1-1" data-bs-toggle="modal">행사일정</button>
+							data-bs-target="#modal1-1" @click="setPostType('행사일정')" data-bs-toggle="modal">행사일정</button>
 						&nbsp;&nbsp;
 						<button type="button"
 							class="col-3 custom-btn btn-round btn-purple1 btn-sm modal2 rounded-pill"
-							data-bs-target="#modal1-2" data-bs-toggle="modal">같이가요</button>
+							data-bs-target="#modal1-2" @click="setPostType('같이가요')" data-bs-toggle="modal">같이가요</button>
 					</div>
 				</div>
 
@@ -196,13 +196,17 @@
 					<!-- 태그 버튼 선택 -->
 					<p class="text-center">행사일정의 시작, 종료 날짜 및 시간을 선택하세요</p>
 					<div class="row justify-content-center">
+						<div class="col-1"></div>
 						<h6 class="col-5 text-center">시작 날짜 및 시간</h6>
-						<input type="datetime-local" id="schedule-start" class="col-7">
+						<input type="datetime-local" id="schedule-start" class="col-5">
+						<div class="col-1"></div>
 					</div>
 					<br>
 					<div class="row justify-content-center">
+						<div class="col-1"></div>
 						<h6 class="col-5 text-center">종료 날짜 및 시간</h6>
-						<input type="datetime-local" id="schedule-end" class="col-7">
+						<input type="datetime-local" id="schedule-end" class="col-5">
+						<div class="col-1"></div>
 					</div>
 				</div>
 
@@ -238,13 +242,17 @@
 					<!-- 태그 버튼 선택 -->
 					<p class="text-center">같이가요의 시작, 종료 날짜 및 시간을 선택하세요</p>
 					<div class="row justify-content-center">
+						<div class="col-1"></div>
 						<h6 class="col-5 text-center">시작 날짜</h6>
-						<input type="datetime-local" id="together-start" class="col-7">
+						<input type="datetime-local" id="together-start" class="col-5">
+						<div class="col-1"></div>
 					</div>
 					<br>
 					<div class="row justify-content-center">
+						<div class="col-1"></div>
 						<h6 class="col-5 text-center">종료 날짜</h6>
-						<input type="datetime-local" id="together-end" class="col-7">
+						<input type="datetime-local" id="together-end" class="col-5">
+						<div class="col-1"></div>
 					</div>
 				</div>
 
@@ -348,7 +356,7 @@
 							class="col-2 custom-btn btn-round btn-purple1 btn-sm tag-btn">입력</button>
 					</div>
 					<div class="row">
-						<h6 class="all-tag text font-purple1"></h6>
+						<h6 class="all-tag text font-purple1 my-2"></h6>
 					</div>
 				</div>
 
@@ -380,18 +388,34 @@
 
 				<!-- body -->
 				<div class="modal-body">
+					<div class="row mt-3">
+						<div class="col">
+							<button
+								class="custom-btn btn-purple1 btn-sm rounded-pill mx-2 fixed-tag">
+								{{postType}}</button>
+							<button
+								class="custom-btn btn-purple1 btn-sm rounded-pill mx-2 fixed-tag"
+								v-for="(newFixedTag, i) in newFixedTagList">{{
+								newFixedTag }}</button>
+						</div>
+					</div>
 					<textarea class="col-12 post border border-secondary rounded-2"
 						style="height: 200px;" placeholder=" 글 작성란"></textarea>
-					<div id="preview" contenteditable="true"></div>
-
+						
+					<!-- 사진 보여주는 구간 -->
+					<div id="preview" contenteditable="true" class="ratio ratio-1x1"></div>
+					<!-- 사진 보여주는 구간 -->
+					<div class="row">	
+						<h6 class="all-tag text font-purple1 my-2"></h6>
+					</div>
 				</div>
 
 				<!-- footer -->
 				<div class="modal-footer">
-					<div class="col-7 text-start">
+					<div class="col-5 col-md-5 col-lg-5 text-start">
 						<input type="file" class="fs-6" id="fileInput" multiple>
 					</div>
-					<div class="col-4 text-end fs-4">
+					<div class="col-6 col-md-6 col-lg-6 text-end fs-4">
 						<button type="button"
 							class="custom-btn btn-round btn-purple1 btn-sm write-finish mx-2"
 							data-bs-dismiss="modal">작성완료</button>
@@ -680,14 +704,13 @@
 					<img class="rounded-circle img-fluid"
 						src="static/image/profileDummy.png">
 				</div>
-				<div
-					class="col-5 col-md-5 col-lg-5 align-items-center justify-content-start">
+				<div class="col-5 col-md-5 col-lg-5 align-middle justify-content-center">
 
 					<div class="row">
-						<h4>{{ post.memberId }}</h4>
+						<h4>{{ post.memberNick}}</h4>
 					</div>
 					<div class="row">
-						<p class="text-secondary">@{{post.memberNick }} ·
+						<p class="text-secondary">@{{post.memberId}}
 							{{getTimeDifference(post.postTime) }}</p>
 
 					</div>
@@ -697,7 +720,7 @@
 					<!-- 								{{memberFollowObj.followMemberList}} -->
 					<!-- 								memberId와 post.memebrId가 다른데 팔로우목록이 있는 경우에,																 -->
 					<div
-						v-if="memberId != post.memberId && memberFollowObj.followMemberList.includes(post.memberId)"
+						v-if="memberFollowObj.followMemberList && memberId != post.memberId && memberFollowObj.followMemberList.includes(post.memberId)"
 						class="row text-end">
 						<div class="col-9"></div>
 						<button
@@ -707,7 +730,7 @@
 
 					<!-- 								memberId와 post.memeberId가 다른데 팔로우 목록에 없는 경우에  -->
 					<div
-						v-else-if="memberId != post.memberId && !(memberFollowObj.followMemberList.includes(post.memberId))"
+						v-else-if="memberFollowObj.followMemberList && memberId != post.memberId && !(memberFollowObj.followMemberList.includes(post.memberId))"
 						@click="createFollowMember(post.memberId)" class="row text-end">
 						<div class="col-10"></div>
 						<button class="col-2 custom-btn btn-purple1 btn-sm rounded-3">팔로우</button>
@@ -1507,11 +1530,12 @@
                 	// 로그인 맴버 팔로우 목록 조회
                 	memberFollowObj: {},
                 	
-                
+                	// 
+                	postType: null,
                 };
             },
             computed:{
-            	
+            
             },
             methods:{
             	changeCustom()
@@ -1569,6 +1593,12 @@
 	                if(resp.data.length < 10){
 	                	this.finish = true;
 	                }
+            	},
+            	
+            	// 게시글 작성 시 글타입을 표현하기 위한 함수
+            	setPostType(type){
+            		this.postType = type;
+            		console.log(this.postType);
             	},
             	
             	// 게시글 삭제 
@@ -1672,7 +1702,7 @@
                 // 팔로우 목록 불러오기 
                 async loadMemberFollowInfo(){
         			// 로그인X → 실행 X
-        			if(this.memberId==="") return;
+        			if(this.memberId===null) return;
         			// url
         			const url = "http://localhost:8080/rest/follow/memberFollowInfo/"
         			// 팔로우 목록 load
@@ -1680,14 +1710,14 @@
 
         			// 로그인 팔로우 정보 로드
         			this.memberFollowObj = resp.data;
-        			console.log(this.memberFollowObj);
+        			//console.log(this.memberFollowObj);
         			this.fetchPosts();
         			
         		},
         		
                 // 팔로우 생성 
         		async createFollowMember(followedMemberId){
-                    // 1. 회원 로그인 확인
+//                     // 1. 회원 로그인 확인
                     if(this.memberId === ""){
                         if(confirm("로그인 한 회원만 사용할 수 있는 기능입니다. 로그인 하시겠습니까?")) {
                             window.location.href = contextPath + "/member/login";
@@ -1713,7 +1743,7 @@
                 
                 // 팔로우 삭제 
         		async deleteFollowMember(followedMemberId){
-                	// 1. 회원 로그인 확인
+//                 	// 1. 회원 로그인 확인
                     if(this.memberId === ""){
                         if(confirm("로그인 한 회원만 사용할 수 있는 기능입니다. 로그인 하시겠습니까?")) {
                             window.location.href = contextPath + "/member/login";
@@ -1933,7 +1963,7 @@
             		// 마커를 담을 배열입니다
             		var markers = [];
             		keyword2 = keyword2.replace(/\s+\d+$/, '');
-					var keyword = keyword1 + keyword2
+					var keyword = keyword1
 					console.log(keyword);
             		// 지도 정보를 담을 변수
             		let mapPlace = "기본";

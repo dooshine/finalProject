@@ -67,7 +67,7 @@
 
 			
 	  	<div>
-        	<p class="container rounded p-3 border">내 포인트: 
+        	<p class="container rounded p-3 border">내 스타: 
         	<span class="amount" style="color:#77E9CC; font-weight:bold">{{ formattedAmount }}</span>원</p>
         </div>	
 			
@@ -82,7 +82,7 @@
 						
 			<!-- Add the error message -->
 			<p v-if="fundPriceExceedsAmount" style="color: red">
-			  보유 포인트 이상으로 후원할 수 없습니다.
+			  보유 스타 이상으로 후원할 수 없습니다.
 			</p>
 						
 						

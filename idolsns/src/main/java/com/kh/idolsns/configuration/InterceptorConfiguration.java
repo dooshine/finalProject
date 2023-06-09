@@ -51,9 +51,7 @@ public class InterceptorConfiguration implements WebMvcConfigurer{
                 "/member/**",
                 //"/admin/**",
                 // "/board/**",
-
-                "/chat/**",
-                "/calendar/**",
+                // "/rest/follow/**",              
         		"/point/**",
         		"/fund/**"
         )       
@@ -83,8 +81,17 @@ public class InterceptorConfiguration implements WebMvcConfigurer{
                  
                 // "/board/list",
                 // "/board/detail"
-
+                // "/rest/follow/test",
+        		//"/rest/post/all/**", // 전체 목록 조회 페이지
+        		//"/rest/post/page/**", // 게시물 전체 목록 페이지
+        		//"/rest/post/pageReload/**", // 게시물 목록 페이지 불러오기
+        		//"/rest/post/pageReload/memberLikePost/**", // 특정 맴버가 좋아요한 페이지 리로드
+        		//"/rest/post/pageReload/memberWritePost/**", // 특정 맴버가 작성한 페이지 리로드
+        		//"/rest/post/pageReload/fixedTagPost/**", // 특정 코정 태그 게시물 리로드 
+        		//"/rest/post/like/update/**", // 특정 게시물 좋아요 확인
+        		//"/rest/post/reply/**"
         );
+
 
         //[3] 관리자 전용 검사 인터셉터
         registry.addInterceptor(adminInterceptor)

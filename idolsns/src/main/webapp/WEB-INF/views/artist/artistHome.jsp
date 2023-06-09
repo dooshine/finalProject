@@ -68,7 +68,7 @@
 	        <div class="my-auto" >
 	            <div class="border artist-profile-img rounded-circle overflow-hidden">
 	                <!-- <img src="https://via.placeholder.com/200x200?text=LOGO"> -->
-	                <img :src="artistObj.attachmentNo==null?'https://via.placeholder.com/130x130?text=LOGO':'/download?attachmentNo='+artistObj.attachmentNo">
+	                <img class="artist-profile-img " :src="artistObj.attachmentNo==null?'https://via.placeholder.com/130x130?text=LOGO':'/download?attachmentNo='+artistObj.attachmentNo">
 	            </div>
 	        </div>
 	
@@ -78,6 +78,7 @@
 	            <div class="row arti_name">
 	                    {{fullName}}
 	            </div>
+	           
 	            <!-- 대표페이지 팔로워 -->
 	            <div class="row">
 	             	   팔로워 {{artistObj.followCnt ?? 0}}명
@@ -108,15 +109,12 @@
 	            <div class="arti_title">🗺️지도</div>
 				 <div class="row">
 	                <div class="col container pt-3 px-4">
-	          				<div id="map" class="border" style="width: 100%; height: 300px;"></div>
-							<div id="mapShow" class="border" style="width: 100%; height: 300px;"></div>	
+	          			
+						<div id="mapShow" class="border" style="width: 100%; height: 300px;"></div>
 							
 						
-							
-						
-						</div>
 				    </div>  
-		      </div>	
+		      	</div>	
 	        </div>
 	        <!-- [Component] 성지순례 목록글 -->
 	        <div class="col border custom-container mh-300 p-4">
@@ -204,9 +202,9 @@
         		fundTitle:"",
         		mapName:""
         	},
-        	postShowDto: {},
+        	postShowDto: [],
         	
-        	markers:[],
+        	positions:[],
         	
             artistObj: {},
             followPageObj: {
@@ -219,18 +217,43 @@
             memberFollowObj: {},
             isFollowingArtist: false,
             
-            };
+            map:null,
+        };
       },
       computed: {
         fullName(){
             return this.artistObj.artistName + "(" + this.artistObj.artistEngName + ")";
         },
       },
+      
+      /*mounted() {
+    	console.log("positions: " + this.positions[0])  
+      },*/
+      
       methods: {
     	  
     	
-	        
-        // # 사전 로드(대표페이지 정보, 로그인회원 팔로우 정보)
+    	 
+    	// 키워드 검색 완료 시 호출되는 콜백함수 입니다
+    	showMapPlacesSearchCB (data, status, pagination) {
+    		    if (status === kakao.maps.services.Status.OK) {
+
+    		        // 검색된 장소 위치를 기준으로 지도 범위를 재설정하기위해
+    		        // LatLngBounds 객체에 좌표를 추가합니다
+    		        var bounds = new kakao.maps.LatLngBounds();
+
+    		        for (var i=0; i<data.length; i++) {
+    		            bounds.extend(new kakao.maps.LatLng(data[i].y, data[i].x));
+    		            if(i==0) break;      		          
+    		        }       
+
+    		        // 검색된 장소 위치를 기준으로 지도 범위를 재설정합니다
+    		        this.map.setBounds(bounds);
+    		    } 
+    		},
+    	 
+
+    	// # 사전 로드(대표페이지 정보, 로그인회원 팔로우 정보)
         // 1. 대표페이지(아티스트) 정보 조회
         async loadArtist(){
             // 대표페이지 이름
@@ -370,124 +393,96 @@
 			  this.postShowDto = resp.data;
 			
 			
+			  await this.loadPositions();
 			},
 			
-		displayAllMarkers() {
-				const mapContainer = document.getElementById('map');
-			    const mapOption = {
-			      center: new kakao.maps.LatLng(33.450701, 126.570667),
-			      level: 3
-			    };
-
-			    const map = new kakao.maps.Map(mapContainer, mapOption);
-
-			    const positions = [
-			      {
-			        title: '카카오',
-			        latlng: new kakao.maps.LatLng(33.450705, 126.570677)
-			      },
-			      {
-			        title: '생태연못',
-			        latlng: new kakao.maps.LatLng(33.450936, 126.569477)
-			      },
-			      {
-			        title: '텃밭',
-			        latlng: new kakao.maps.LatLng(33.450879, 126.569940)
-			      },
-			      {
-			        title: '근린공원',
-			        latlng: new kakao.maps.LatLng(33.451393, 126.570738)
-			      }
-			    ];
-
-			    const imageSrc =
-			      'https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png';
-			    const imageSize = new kakao.maps.Size(24, 35);
-			    const markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize);
-
-			    for (let i = 0; i < positions.length; i++) {
-			      const marker = new kakao.maps.Marker({
-			        map: map,
-			        position: positions[i].latlng,
-			        title: positions[i].title,
-			        image: markerImage
-			      });
-			    }
 			
-			},
+			
+			
+		  // positions 불러오기
+	   	  loadPositions() {
+	   		for(let i=0; i<this.postShowDto.length; i++) {
+	   			this.positions[i] = this.postShowDto[i].mapPlace;
+	   		}  
+	   		
+	   		
+	           var mapContainer = document.getElementById('mapShow'), // 지도를 표시할 div 
+	               mapOption = {
+	                   center: new kakao.maps.LatLng(37.606826, 126.8956567), // 지도의 중심좌표
+	                   level: 3 // 지도의 확대 레벨
+	               };  
+	
+	           	// 지도를 생성합니다    
+	           	this.map = new kakao.maps.Map(mapContainer, mapOption); 
+	           
+	     		// 장소 검색 객체를 생성합니다
+	     		var ps = new kakao.maps.services.Places();
+	     		
+	     		const filterArray = this.postShowDto.map(dto=>dto.mapName).filter(data=>data!==null);
+	     		console.log(filterArray);
+	     		
+	     		ps.keywordSearch(filterArray,(data, status, pagination)=>{
+	     			console.log(data,status,pagination);
+	     			if(status === kakao.maps.services.Status.OK) {
+	     				this.displayMarker({x:data.x, y:data.y});
+	     			}
+	     		});
+	
+			      		
+			//ps.keywordSearch(this.keyword,showMapPlacesSearchCB);
+	     		
+	   	  },	
+		
+		
 			
 				
     	// 클릭 시 지도 정보 불러오기-------------------------
       	showMap(keyword1,keyword2){
-			
 			//아이콘  색넣기
 			this.selectedIcon = keyword1;
 				
             this.showMapName = keyword1;
             this.showMapPlace = keyword2;
+            
+            
             // 마커를 담을 배열입니다
             var markers = [];
             keyword2 = keyword2.replace(/\s+\d+$/, '');
-         var keyword = keyword1;
-         console.log(keyword);
+         	var keyword = keyword1;
+//          console.log(keyword);
             // 지도 정보를 담을 변수
             let mapPlace = "기본";
 
-            var mapContainer = document.getElementById('mapShow'), // 지도를 표시할 div 
-                mapOption = {
-                    center: new kakao.maps.LatLng(37.606826, 126.8956567), // 지도의 중심좌표
-                    level: 8 // 지도의 확대 레벨
-                };  
-
-            // 지도를 생성합니다    
-            var map = new kakao.maps.Map(mapContainer, mapOption); 
             
       		// 장소 검색 객체를 생성합니다
       		var ps = new kakao.maps.services.Places();  
 	
-      		// 키워드 검색 완료 시 호출되는 콜백함수 입니다
-      		function showMapPlacesSearchCB (data, status, pagination) {
-      		    if (status === kakao.maps.services.Status.OK) {
-
-      		        // 검색된 장소 위치를 기준으로 지도 범위를 재설정하기위해
-      		        // LatLngBounds 객체에 좌표를 추가합니다
-      		        var bounds = new kakao.maps.LatLngBounds();
-
-      		        for (var i=0; i<data.length; i++) {
-      		            displayMarker(data[i]);    
-      		            bounds.extend(new kakao.maps.LatLng(data[i].y, data[i].x));
-      		            if(i==0) break;      		          
-      		        }       
-
-      		        // 검색된 장소 위치를 기준으로 지도 범위를 재설정합니다
-      		        map.setBounds(bounds);
-      		    } 
-      		}            		
+      		ps.keywordSearch(keyword,(data, status, pagination)=>{
+      			this.showMapPlacesSearchCB(data, status, pagination);
+      		});
       		
-      		ps.keywordSearch(keyword,showMapPlacesSearchCB);
       		
-      		// 지도에 마커를 표시하는 함수입니다
-      		function displayMarker(place) {
-      		    
-      		    // 마커를 생성하고 지도에 표시합니다
-      		    var marker = new kakao.maps.Marker({
-      		        map: map,
-      		        position: new kakao.maps.LatLng(place.y, place.x) 
-      		    });
-
-      		    // 마커에 클릭이벤트를 등록합니다
-      		    kakao.maps.event.addListener(marker, 'click', function() {
-      		        // 마커를 클릭하면 장소명이 인포윈도우에 표출됩니다
-      		        infowindow.setContent('<div style="padding:5px;font-size:12px;">' + place.place_name + '</div>');
-      		        infowindow.open(map, marker);
-      		    });
-      		}
       	},
-    	    
+     
+      	// 지도에 마커를 표시하는 함수입니다
+  		displayMarker(place) {
+  		    // 마커를 생성하고 지도에 표시합니다
+  		    var marker = new kakao.maps.Marker({
+  		        map: this.map,
+  		        position: new kakao.maps.LatLng(place.y, place.x) 
+  		    });
+
+  		    // 마커에 클릭이벤트를 등록합니다
+  		    kakao.maps.event.addListener(marker, 'click', function() {
+  		        // 마커를 클릭하면 장소명이 인포윈도우에 표출됩니다
+  		        infowindow.setContent('<div style="padding:5px;font-size:12px;">' + place.place_name + '</div>');
+  		        infowindow.open(this.map, marker);
+  		    });
+  		},
       	
      
       },
-      created(){  
+      mounted(){  
     	  
     	  
     	// 카카오맵 API 로드
@@ -498,6 +493,7 @@
     	    kakao.maps.load(() => {
     	      this.loadArtist();
     	      this.loadMemberFollowInfo();
+    	      
     	    });
     	  };
 
@@ -516,7 +512,6 @@
         this.loadMemberFollowInfo();
 
         // this.followBtn();
-        
 
       },
     }).mount('#app')

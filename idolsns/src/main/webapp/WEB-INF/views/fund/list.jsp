@@ -138,7 +138,7 @@
                  
                    <div class="funding-item" v-for="(funding, index) in fundings" :key="funding.memberId"
                                               v-on:click="link(funding)">
-                     <img :src="getImageUrl(funding)" alt="Funding Image">
+                     <img :src="getImageUrl(funding)" alt="Funding Image" style="height:200px">
                      <h3 class="title">{{ funding.fundTitle }}</h3>
                      <p class="description">{{ funding.fundShortTitle }}</p>
                      <div class="progress-bar">
