@@ -52,6 +52,18 @@
 	font-size: 10px;
 }
 
+.fs-18px {
+	font-size: 18px;
+}
+
+.fs-17px {
+	font-size: 17px;
+}
+
+.fs-16px {
+	font-size: 16px;
+}
+
 .fs-15px {
 	font-size: 15px;
 } 
@@ -72,12 +84,27 @@
 	font-size: 11px;
 }
 
+.fs-10px {
+	font-size: 10px;
+}
+.fs-9px {
+	font-size: 9px;
+}
+.fs-8px {
+	font-size: 8px;
+}
+.fs-7px {
+	font-size: 7px;
+}
+.fs-6px {
+	font-size: 6px;
+}
 .h-20 {
 	height: 20px;
 }
 
 .reply-text {
-	font-size: 5px;
+	font-size: 14px;
 }
 
 .post-modal {
@@ -127,11 +154,11 @@
 					<!-- 세션이 프로필 사진이 있는 경우 -->  
 					<img v-if="sessionMemberAttachmentNo && sessionMemberAttachmentNo != null"
 						class="rounded-circle img-fluid"
-						:src="getAttachmentUrl(sessionMemberAttachmentNo)">
+						:src="getAttachmentUrl(sessionMemberAttachmentNo)" style="max-width: 100%; aspect-ratio: 1/1;">
 					
 					<!-- 세션이 프로필 사진이 없는 경우 -->
 					<img v-else class="rounded-circle img-fluid"
-						src="static/image/profileDummy.png">
+						src="static/image/profileDummy.png" style="max-width: 100%; aspect-ratio: 1/1;">
 			</div>
 			<div
 				class="col-11 col-md-11 col-lg-11 d-flex align-items-center justify-content-center">
@@ -1248,8 +1275,8 @@
 											class="row grey-f5f5f5 rounded-3 text-left"
 											:style="{ width: (reply.replyId.length * 12 + 30) + 'px' }">
 											<div class="row mt-2"></div>
-											<h6 class="mr-1 fs-12px fw-bold">{{reply.memberNick}}</h6>
-											<h6 class="mr-1 fs-11px lh-lg">{{reply.replyContent}}</h6>
+											<h6 class="mr-1 fw-bold">{{reply.memberNick}}</h6>
+											<h6 class="mr-1 lh-lg">{{reply.replyContent}}</h6>
 											<div class="row mb-1"></div>
 										</div>
 
@@ -1258,8 +1285,8 @@
 											style="max-width: 100%"
 											:style="{width: (reply.replyContent.length * 11 +30) + 'px' }">
 											<div class="row mt-2"></div>
-											<h6 class="mr-1 fs-12px fw-bold">{{reply.memberNick}}</h6>
-											<h6 class="mr-1 fs-11px lh-lg">{{reply.replyContent}}</h6>
+											<h6 class="mr-1 fw-bold">{{reply.memberNick}}</h6>
+											<h6 class="mr-1 lh-lg">{{reply.replyContent}}</h6>
 											<div class="row mb-1"></div>
 										</div>
 
@@ -1315,8 +1342,8 @@
 													class="row grey-f5f5f5 rounded-3 text-left"
 													:style="{ width: (rereply.replyId.length * 12 +30) + 'px' }">
 													<div class="row mt-2"></div>
-													<h6 class="mr-1 fs-12px fw-bold">{{rereply.memberNick}}</h6>
-													<h6 class="mr-1 fs-11px lh-lg">{{rereply.replyContent}}</h6>
+													<h6 class="mr-1 fw-bold">{{rereply.memberNick}}</h6>
+													<h6 class="mr-1 lh-lg">{{rereply.replyContent}}</h6>
 													<div class="row mb-1"></div>
 												</div>
 												<!-- 대댓글 내용이 아이디보다 길면 -->
@@ -1324,8 +1351,8 @@
 													style="max-width: 100%"
 													:style="{ width: (rereply.replyContent.length * 11 +30) + 'px' }">
 													<div class="row mt-2"></div>
-													<h6 class="mr-1 fs-12px fw-bold">{{rereply.memberNick}}</h6>
-													<h6 class="mr-1 fs-11px lh-lg">{{rereply.replyContent}}</h6>
+													<h6 class="mr-1 fw-bold">{{rereply.memberNick}}</h6>
+													<h6 class="mr-1 lh-lg">{{rereply.replyContent}}</h6>
 													<div class="row mb-1"></div>
 												</div>
 
@@ -1437,8 +1464,8 @@
 												class="row grey-f5f5f5 rounded-3 text-left"
 												:style="{ width: (reply.replyId.length * 12 + 30) + 'px' }">
 												<div class="row mt-2"></div>
-												<h6 class="mr-1 fs-12px fw-bold">{{reply.memberNick}}</h6>
-												<h6 class="mr-1 fs-11px lh-lg">{{reply.replyContent}}</h6>
+												<h6 class="mr-1 fw-bold">{{reply.memberNick}}</h6>
+												<h6 class="mr-1 lh-lg">{{reply.replyContent}}</h6>
 												<div class="row mb-1"></div>
 											</div>
 
@@ -1447,8 +1474,8 @@
 												style="max-width: 100%"
 												:style="{width: (reply.replyContent.length * 11 +30) + 'px' }">
 												<div class="row mt-2"></div>
-												<h6 class="mr-1 fs-12px fw-bold">{{reply.memberNick}}</h6>
-												<h6 class="mr-1 fs-11px lh-lg">{{reply.replyContent}}</h6>
+												<h6 class="mr-1 fw-bold">{{reply.memberNick}}</h6>
+												<h6 class="mr-1 lh-lg">{{reply.replyContent}}</h6>
 												<div class="row mb-1"></div>
 											</div>
 
@@ -2355,6 +2382,7 @@
             	// 게시글 불러오기            	
             	this.fetchPosts();
             	this.setId();
+            	//created()에 추가
             	this.getSessionMemberAttachmentNo();
             	this.loadMemberFollowInfo();
             	
