@@ -129,7 +129,7 @@
 	  
 	  <div class="custom-file col-6">
 	  	<img :src="previewURL" style="width:200px; height: 200px;"/>
-	    <input type="file" name="attach" class="custom-file-input" id="inputGroupFile01"
+	    <input type="file" name="attach" class="custom-file-input" id="inputGroupFile01" accept=".gif, .jpg, .png"
 	    			ref="fileInput" style="display:none;" @change="handleMainImagePreview">
 	  </div>
 	</div>
@@ -146,7 +146,7 @@
 	    </div>
 	    <div class="row mt-3">
 	        <div class="col">
-	            <button class="btn btn-primary" v-for="(newFixedTag, i) in newFixedTagList"
+	            <button class="btn btn-primary ms-1" v-for="(newFixedTag, i) in newFixedTagList"
 	            				@click="deleteTag(i)">{{ newFixedTag }}</button>
 	        </div>
 	    </div>

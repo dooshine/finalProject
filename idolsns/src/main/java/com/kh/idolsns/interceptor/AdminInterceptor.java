@@ -15,6 +15,9 @@ public class AdminInterceptor implements HandlerInterceptor{
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
             throws Exception {
+    	request.setAttribute("admin", true);
+//    	System.out.println("AdminInterceptor 통과");
+    	
         String method = request.getMethod();
         HttpSession session = request.getSession();
         String memberLevel = (String)session.getAttribute("memberLevel");

@@ -231,7 +231,6 @@
 		                    		return new URLSearchParams(params).toString();
 		                    	}
 		                        });     
-		                  console.log("이거 왜 실행 안돼냐고");
 		                  this.fundings.push(...resp.data);
 		                  this.searchPage++;
 		                  
