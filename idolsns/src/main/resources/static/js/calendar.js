@@ -158,6 +158,7 @@ function loadCalendar() {
 		},
 		// 일정 수정 - 날짜
 		eventChange: function(arg) {
+			if(memberId === "") return;
 			const calendarNo = arg.event.id;
 			const startDate = arg.event._instance.range.start;
 			const endDate = arg.event._instance.range.end;
@@ -201,6 +202,7 @@ document.addEventListener('DOMContentLoaded', loadCalendar);
 
 // 로그인한 회원의 일정 불러오는 함수
 function loadMemberCalendar() {
+	if(memberId === "") return;
 	return $.ajax({
 		url: contextPath + "/calendar/load/" + memberId,
 		success:function(resp){
@@ -225,6 +227,7 @@ function loadMemberCalendar() {
 
 // 일정 등록
 function addSchedule() {
+	if(memberId === "") return;
 	const calendarTitle = $("#calendarTitle").val();
 	const calendarMemo = $("#calendarMemo").val();
 	if(calendarTitle) {
@@ -252,6 +255,7 @@ function addSchedule() {
 
 // 일정 수정 - 내용
 function editSchedule() {
+	if(memberId === "") return;
 	const calendarTitle = $("#calendarTitleEdit").val();
 	const calendarMemo = $("#calendarMemoEdit").val();
 	console.log("calendarNo: " + calendarNo);
