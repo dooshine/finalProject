@@ -86,10 +86,11 @@
       <br><br>
       <div class="container">
          <div class="row" style="margin-left:30px">
-            <div>
+            <div class="col-3'">
                <img :src="memberProfileImageObj !== ''  && memberProfileImageObj.attachmentNo !== undefined ? '/download/?attachmentNo='+memberProfileImageObj.attachmentNo :  ' /static/image/profileDummy.png' "
                   style="width: 200px; height: 200px; border-radius: 100%;">
             </div>
+            <div class="col-3"></div>
          </div>
          
          <div class="row">
