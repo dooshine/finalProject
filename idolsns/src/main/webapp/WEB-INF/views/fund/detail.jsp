@@ -396,7 +396,7 @@
 		        <textarea type="text" v-model="replyObj.replyContent" placeholder="글을 작성해주세요" required></textarea>
 		    </div>
 		    <div class="submit-icon">
-		    	<button type="submit" style="none;">
+		    	<button type="submit">
 			        <i class="fa-sharp fa-solid fa-pen font-purple1"></i>
 		    	</button>
 		    </div>
