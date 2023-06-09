@@ -787,7 +787,7 @@
 							<h4 class="font-purple1" >{{reportReason}}</h4>
 						</div>
 						<div class="text-center mb-2">
-							<button class="mx-2 custom-btn btn-round btn-purple1 btn-sm" data-bs-toggle="modal" data-bs-target="#reportEnd" @click="">네</button>
+							<button class="mx-2 custom-btn btn-round btn-purple1 btn-sm" data-bs-toggle="modal" data-bs-target="#reportEnd" @click="reportMember()">네</button>
 							<button class="mx-2 custom-btn btn-round btn-purple1-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#reportMember">아니오</button>
 						</div>
 					</div>
@@ -1945,7 +1945,7 @@
                 		memberId: this.memberId,
                 		reportTargetType: "회원",
                 		reportTargetPrimaryKey: this.reportMemberId,
-                		reportFto: this.reportReason
+                		reportFor: this.reportReason
                 	};
                 	console.log(this.reportDto);
                 	
