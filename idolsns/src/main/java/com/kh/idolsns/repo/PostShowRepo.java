@@ -17,5 +17,9 @@ public interface PostShowRepo {
 	// 특정 고정태그 글
 	List<PostShowVO> selectFixedTagPostListByPagingReload(int page,String tagName);
 	
-	List<PostShowDto> selectList(String tagName);	
+
+//	List<PostShowVO> selectList(String tagName);
+	Integer selectSessionMemberAttachmentNo(String memberId);
+
+	List<PostShowDto> selectList(String tagName);
 }

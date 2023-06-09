@@ -75,6 +75,11 @@ public class PostShowRepoImpl implements PostShowRepo{
 	public List<PostShowDto> selectList(String tagName) {
 		return sqlSession.selectList("post.sortTag", tagName); 
 	}
+
+	@Override
+	public Integer selectSessionMemberAttachmentNo(String memberId) {		
+		return sqlSession.selectOne("postShow.selectSessionMemberAttachmentNo",memberId);
+	}
 }
 
 
