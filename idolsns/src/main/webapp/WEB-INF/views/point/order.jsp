@@ -91,6 +91,12 @@
 		}
 	   
 	    
+	    	td {
+			vertical-align: middle;
+		}
+	   
+	    
+	    
 	</style>
 
      <div id="app">
@@ -106,10 +112,10 @@
 	        
 	        <h3 class="font-bold mt-5 mb-3" style="padding-left: 0.5em">사용 내역</h3>
 	        
-	        <div style="padding-left: 0.5em; padding-right: 0.5em;">
+	        <div style="padding-left: 0.5em; padding-right: 0.5em; font-size:20px;">
 	             <div class="container my-3 custom-border-box">
-	             내 포인트: <span class="amount font-bold font-purple1">{{ formattedAmount }}
-	             </span>원</div>
+	             내 스타: <span class="amount font-bold font-purple1">{{ formattedAmount }}
+	             </span>스타</div>
 	        </div>
 				
 			<div class="modal-body" style="padding-left: 0.5em; padding-right: 0.5em;">
@@ -132,7 +138,7 @@
 		             <td>{{ fundDto.fundStatus }}</td>
 		             <td>
 		               <a :href="'detailOrder?fundNo=' + fundDto.fundNo">
-		              	<button class="custom-btn-sm btn-purple1">
+		              	<button class="btn-sm btn-purple1">
 		              	더보기
 		              	</button>
 		               </a>

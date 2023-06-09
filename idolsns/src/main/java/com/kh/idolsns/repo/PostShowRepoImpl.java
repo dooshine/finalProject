@@ -7,6 +7,7 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.kh.idolsns.dto.PostShowDto;
 import com.kh.idolsns.vo.PostShowVO;
 
 @Repository
@@ -71,8 +72,8 @@ public class PostShowRepoImpl implements PostShowRepo{
 	}
 
 	@Override
-	public List<PostShowVO> selectList(String tagName) {
-		return sqlSession.selectList("postShow.sortTag",tagName); 
+	public List<PostShowDto> selectList(String tagName) {
+		return sqlSession.selectList("post.sortTag", tagName); 
 	}
 }
 
