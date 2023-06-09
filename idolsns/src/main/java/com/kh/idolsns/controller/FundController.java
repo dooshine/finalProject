@@ -100,7 +100,7 @@ public class FundController {
                      @RequestParam MultipartFile attach,
                      @RequestParam(required=false) List<Integer> attachmentNo,
                      RedirectAttributes attr,
-                      @RequestParam List<String> newFixedTagList
+                      @RequestParam(required=false) List<String> newFixedTagList
                      ) throws IllegalStateException, IOException {
       // # 통합게시물 등록
       // 1. 통합게시물 시퀀스 발행
@@ -125,8 +125,6 @@ public class FundController {
         
         // 3. 펀딩게시물 등록
       fundPostRepo.insert(fundPostDto);
-      
-      // # 태그 등록은 비동기로 FundRestController에서 처리
       
       // # DB 저장
       if(!attach.isEmpty()) {
@@ -156,20 +154,24 @@ public class FundController {
             postImageRepo.insert(postImageDto);
          }
       }
+      System.out.println("newFixedTagList--------------------"+newFixedTagList);
+      // 태그 등록
+      if(newFixedTagList != null) { // 태그 선택을 했으면 실행
+    	  System.out.println("이거 나오면 안됨!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+    	  for(String tagName: newFixedTagList) {
+    		  tagRepo.insert(TagDto.builder()
+    				  .postNo(postNo)
+    				  .tagNo(tagRepo.sequence())
+    				  .tagName(tagName)
+    				  .tagType("고정")
+    				  .build());
+    	  }
+      }
       
             
       // 리디렉트어트리뷰트 추가
         attr.addAttribute("postNo", postNo);
       
-        System.out.println(newFixedTagList);
-        for(String tagName: newFixedTagList) {
-           tagRepo.insert(TagDto.builder()
-                    .postNo(postNo)
-                    .tagNo(tagRepo.sequence())
-                    .tagName(tagName)
-                    .tagType("고정")
-                    .build());
-        }
         
       return "redirect:detail";
    }
