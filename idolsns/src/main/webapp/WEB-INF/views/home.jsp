@@ -128,7 +128,7 @@
 
 
 <!-- 	<div class="container-fluid" id="app" test> -->
-<div class="container-fluid" id="app" test>
+<div class="container-fluid" id="app">
 <!-- 	<button class="custom-btn btn-purple1-secondary" @click="changeCustom">커스텀모달</button> -->
 <!-- 	<div v-if="customOn" class="custom-modal" id="deleteAlertModal"> -->
 <!-- 		<div class="custom-modal-body"> -->
