@@ -990,6 +990,7 @@
 					return window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
 				};
 
+
 				// ######################## 헤더 조정 ########################
 				var inputCompoEle = document.getElementById('navbarSupportedContent');
 				var inputEle = $(inputCompoEle).find("input[name=q]");
