@@ -84,8 +84,7 @@
                           </div>
                           <div class="text-center">회원 탈퇴가 취소되었습니다!</div>
                           <div class="d-flex justify-content-center mt-4">
-                             <button class="custom-btn btn-round btn-purple1-secondary me-2 w-100" id="delete-schedule">삭제</button>
-                             <button class="custom-btn btn-round btn-purple1 w-100" id="delete-cancel">취소</button>
+                             <button class="custom-btn btn-round btn-purple1 w-100" id="cancle">확인</button>
                           </div>
                        </div>
                    </div>
