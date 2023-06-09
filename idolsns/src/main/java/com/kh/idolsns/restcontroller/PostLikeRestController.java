@@ -91,6 +91,9 @@ public class PostLikeRestController {
 		// 회원아이디
 		String memberId = (String)session.getAttribute("memberId");
 		
+		if(memberId == "" || memberId == null) { // 세션 아이디 없을 때, 
+			return false; 
+		}
 		// 포스트라이크 DTO
 //		PostLikeDto dto = new PostLikeDto();
 //		dto.setMemberId(memberId);

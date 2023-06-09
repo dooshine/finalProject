@@ -100,7 +100,7 @@ public class FundController {
                      @RequestParam MultipartFile attach,
                      @RequestParam(required=false) List<Integer> attachmentNo,
                      RedirectAttributes attr,
-                      @RequestParam List<String> newFixedTagList
+                      @RequestParam(required=false) List<String> newFixedTagList
                      ) throws IllegalStateException, IOException {
       // # 통합게시물 등록
       // 1. 통합게시물 시퀀스 발행
@@ -173,8 +173,7 @@ public class FundController {
         attr.addAttribute("postNo", postNo);
       
         
-//      return "redirect:detail";
-        return null;
+      return "redirect:detail";
    }
    
    

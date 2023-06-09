@@ -208,6 +208,11 @@
                     	this.newFixedTagList.splice(i, 1);
                     },
                     async insertFixedTagList() {
+                    	if (this.findFixedTagName === "") {
+                            // findFixedTagName이 비어있는 경우 데이터 전송하지 않음
+                            return;
+                        }
+                    	
                     	const url = "/rest/fund/tag";
                     	const resp = axios.post(url, this.newFixedTagList)
                     },

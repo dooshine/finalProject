@@ -107,6 +107,21 @@
          resize: none;
          height: 100px;
       }
+      
+      /* 로그인 모달 스타일*/
+      .custom-modal-wrapper {
+	   position: fixed;
+	   top: 0;
+	   left: 0;
+	   width: 100%;
+	   height: 100%;
+	   display: flex;
+	   align-items: center;
+	   justify-content: center;
+	   z-index: 9999;
+	}
+      
+      
 		
 
     </style>
@@ -368,6 +383,8 @@
  	 
  	 <hr>
  	 
+ 	 <!-- 로그인이 되어있으면 -->
+ 	<div v-if="memberId != '' ">
 	  	<!-- 새댓글 폼 -->
 		<form @submit.prevent="addReply" class="reply-form">
 		    <div>
@@ -383,20 +400,29 @@
 		    	</button>
 		    </div>
 		</form>
+ 	</div>
+ 	
+ 	<!-- 로그인이 안되어있으면 -->
+	<div v-else>
+		
+	</div>
+	
 	
 	<!-- 로그인 모달 -->
-<!--       <div v-if="loginModal" class="custom-modal"> -->
-<!--          <div class="custom-modal-body"> -->
-<!--             <div class="text-center mb-3"> -->
-<!--                <i class="ti ti-alert-triangle"></i> -->
-<!--             </div> -->
-<!--             <div class="text-center">로그인이 필요한 기능입니다</div> -->
-<!--             <div class="d-flex justify-content-center mt-4"> -->
-<!--                <button class="custom-btn btn-round btn-purple1-secondary me-2 w-100" >로그인</button> -->
-<!--                <button class="custom-btn btn-round btn-purple1 w-100" >취소</button> -->
-<!--             </div> -->
-<!--          </div> -->
-<!--      </div> -->
+      <div v-if="loginModal" class="custom-modal-wrapper">
+      	<div class="custom-modal">
+         <div class="custom-modal-body" style="width: 300px;">
+            <div class="text-center mb-3">
+               <i class="ti ti-alert-triangle"></i>
+            </div>
+            <div class="text-center">로그인이 필요한 기능입니다</div>
+            <div class="d-flex justify-content-center mt-4">
+               <button class="custom-btn btn-round btn-purple1-secondary me-2 w-100" @click="linkToLogin">로그인</button>
+               <button class="custom-btn btn-round btn-purple1 w-100" @click="loginModal = false">취소</button>
+            </div>
+         </div>
+      	</div>
+     </div>
      
 	</div>             
 	
@@ -464,6 +490,10 @@
 			   	
 			   	// 로그인 모달
 			   	loginModal: false,
+			   	
+			   	// 세션 memberId
+			   	memberId: memberId,
+			   	
 		      };
 		    },
 		    computed: {
@@ -519,7 +549,6 @@
 	              },
 	            // 작성한 comment 서버로 전송
                 async addReply() {
-	              this.checkLogin();  
 	              if(this.replyObj.replyId == "") return;
 	              this.replyObj.postNo = this.fundDetail.postNo;
 				  const resp = await axios.post("http://localhost:8080/rest/reply/fund", 
@@ -588,6 +617,9 @@
 				},
 				// 대댓글 폼 보여주기 & 수정 폼 숨기기
 				showRereplyForm(i) {
+					// 로그인이 안되어 있으면
+					if(!this.checkLogin()) return;
+					
 					this.reReplies[i] = true
 					this.cancelUpdate();
 				},
@@ -632,7 +664,7 @@
 					const postNo = this.fundDetail.postNo;
 					const resp = await axios.get("http://localhost:8080/rest/post/like/check/"+postNo);
 					this.isLiked = resp.data;
-// 					console.log(resp.data);
+					console.log(resp.data);
 				
 					
 				},
@@ -650,7 +682,7 @@
                       if(timeDiff >= 0){
                           // 1일 이상인 경우
                           if (timeDiff >= 24 * 60 * 60 * 1000) {
-                            return Math.ceil(timeDiff / (24 * 60 * 60 * 1000))+"일 남음";
+                            return Math.ceil(timeDiff / (24 * 60 * 60 * 1000));
                           } 
                           // 당일인 경우
                           else {
@@ -666,15 +698,23 @@
                 // 멤버 프로필 이미지 불러오기
                 async fetchMemberImage() {
                 	const resp = await axios.get("http://localhost:8080/rest")
-                }
+                },
                 
 				
 				// 로그인 체크
-// 				checkLogin() {
-// 					if(memberId == "") {
-// 						loginModal = true;
-// 					}
-// 				}
+				checkLogin() {
+                	console.log("checkLogin executed");
+                	// 로그인이 안되어 있으면
+					if(this.memberId == "") {
+						this.loginModal = true;
+						return false
+					}
+				},
+				
+				// 로그인 페이지로
+				linkToLogin() {
+					window.location.href="/member/login";
+				}
 		    },
 		    created() {
 		    	  this.setPostNo();
@@ -684,7 +724,6 @@
 		    	  this.loadReplies();
 		    	  this.loadTagNames();
 		    	  this.checkFundLike();
-		    	  
 		    	},
 		    mounted() {
 		    	}
