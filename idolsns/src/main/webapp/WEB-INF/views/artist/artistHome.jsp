@@ -35,9 +35,26 @@
         min-height: 300px;
     }
     .artist-profile-img {
-        width: 200px;
-        height: 200px;
+        width: 130px;
+        height: 130px;
     }
+
+	
+	.arti_name {
+		font-weight: bold;
+		font-size: 30px;
+	}
+
+	.arti_title {
+		font-weight: bold;
+		font-size: 20px;
+	}
+	
+
+  .active-icon {
+    color: #6A53FB;
+  }
+
 
 
 </style>
@@ -46,99 +63,119 @@
 <div id="app">
 	<div class="custom-container">
 	    <!-- # 대표페이지 프로필 -->
-	    <div class="row my-5 mx-5">
+	    <div class="my-5 mx-5 d-flex">
 	        <!-- 대표페이지 프로필 사진 -->
-	        <div class="col">
+	        <div class="my-auto" >
 	            <div class="border artist-profile-img rounded-circle overflow-hidden">
 	                <!-- <img src="https://via.placeholder.com/200x200?text=LOGO"> -->
-	                <img :src="artistObj.attachmentNo==null?'https://via.placeholder.com/200x200?text=LOGO':'/download?attachmentNo='+artistObj.attachmentNo">
+	                <img class="artist-profile-img " :src="artistObj.attachmentNo==null?'https://via.placeholder.com/130x130?text=LOGO':'/download?attachmentNo='+artistObj.attachmentNo">
 	            </div>
 	        </div>
 	
 	        <!-- 대표페이지 이름 및 팔로워 -->
-	        <div class="col container pt-4">
+	        <div class="col container my-auto" style="text-align:left; padding-left:2em;" >
 	            <!-- 대표페이지 이름 -->
-	            <div class="row">
-	                <h1 class="p-0">
+	            <div class="row arti_name">
 	                    {{fullName}}
-	                </h1>
 	            </div>
+	           
 	            <!-- 대표페이지 팔로워 -->
 	            <div class="row">
-	                팔로워 {{artistObj.followCnt ?? 0}}명
+	             	   팔로워 {{artistObj.followCnt ?? 0}}명
 	            </div>
 	        </div>
 	
 	        <!-- 버튼(팔로우하기, 글쓰기) -->
-	        <div class="col pt-4 container">
-	            <div class="row mb-2">
-	                <button class="custom-btn btn-round" :class="{'btn-purple1':!isFollowingArtist, 'btn-purple1-secondary': isFollowingArtist}"  v-text="isFollowingArtist?'팔로우취소':'팔로우하기'" @click="followPage">팔로우하기</button>
+	        <div class="col container my-auto">
+	            <div class="row mb-2 justify-content-end" >
+	                <button class="custom-btn btn-round" style="width:150px;" 
+	                :class="{'btn-purple1':!isFollowingArtist, 'btn-purple1-secondary': isFollowingArtist}"  v-text="isFollowingArtist?'팔로우취소':'팔로우하기'" @click="followPage">팔로우하기</button>
 	                <!-- <button  :class="{'btn-primary':!isFollowMemberList[i], 'btn-secondary': isFollowMemberList[i]}" v-text="isFollowMemberList[i]?'팔로우취소':'팔로우하기'" @click="followMember(member.memberId, i)"></button> -->
 	            </div>
-	            <div class="row">
-	                <button class="custom-btn btn-round btn-gray">글쓰기</button>
+	            <div class="row justify-content-end">
+	                <button class="custom-btn btn-round btn-gray" style="width:150px;">글쓰기</button>
 	            </div>
 	        </div>
 	    </div>
 	
-	    <hr>
+	
+	    <hr class="m-0">
+	
 	
 	    <!-- # 지도 -->
 	    <div class="row px-5 pt-5 mb-4">
 	        <!-- [Component] 지도 -->
-	        <div class="col border rounded-4 mh-300 container me-3 p-4">
-	            <h3>지도</h3>
-	      
-	            
-				<div id="mapShow" style="width: 100%; height: 300px;"></div>	             
-				      
-		      	
+	        <div class="col border custom-container mh-300 me-3 p-4">
+	            <div class="arti_title">🗺️지도</div>
+				 <div class="row">
+	                <div class="col container pt-3 px-4">
+	          			
+						<div id="mapShow" class="border" style="width: 100%; height: 300px;"></div>
+							
+						
+				    </div>  
+		      	</div>	
 	        </div>
 	        <!-- [Component] 성지순례 목록글 -->
-	        <div class="col border rounded-4 mh-300 container p-4">
+	        <div class="col border custom-container mh-300 p-4">
 	            <div class="row">
 	                <div class="col">
-	                    <h3>✨성지순례✨</h3>
+	                    <div class="arti_title">📍성지순례</div>
 	                </div>
 	            </div>
 	            <div class="row">
 	                <div class="col container pt-3 px-4">
-	                
-	                
-	                   <div><i class="fa-solid fa-location-dot me-1"></i>{{postShow.mapPlace}}</div>
-	                
-	                
-	                </div>
-	            </div>
-	        </div>
-	    </div>
-	
+	                 	<div v-for="post in postShowDto" :key="post.tagName">
+						    <template v-if="post.mapName !== null">
+						    	<div @click="showMap(post.mapName,post.mapPlace)" data-bs-target="#showMap" data-bs-toggle="modal">
+						         <i class="fa-solid fa-location-dot me-1" :class="{'active-icon': selectedIcon === post.mapName}"></i>
+						         {{ post.mapName }}
+						        </div>
+						    </template>
+						</div>
+		            </div>
+		        </div>
+		    </div>
+		   </div>
+		
 	    <!-- # 같이가요, 펀딩 -->
 	    <div class="row px-5">
 	        <!-- [Component] 같이가요 -->
-	        <div class="col border rounded-4 mh-300 container me-3 p-4">
+	        <div class="col border custom-container mh-300 me-3 p-4">
 	            <div class="row">
 	                <div class="col">
-	                    <h3>👭같이가요👬</h3>
+	                    <div class="arti_title">👭같이가요</div>
 	                </div>
 	            </div>
 	            <div class="row">
 	                <div class="col container pt-3 px-4">
-	                    <div>같이가용 같이가용</div>
+	                    <div v-for="post in postShowDto" :key="post.tagName">
+						    <template v-if="post.postType == '같이가요'">
+						    	{{ post.postContent }}
+						    </template>
+						</div>
 	                </div>
 	            </div>
 	        </div>
 	        <!-- [Component] 펀딩 -->
-	        <div class="col border rounded-4 mh-300 p-4">
+	        <div class="col border custom-container mh-300 p-4">
 	            <div class="row">
 	                <div class="col">
-	                    <h3>📢후원하기📢</h3>
+	                    <div class="arti_title">📢후원하기</div>
 	                    <!-- 🎉📣📣 -->
 	                </div>
 	            </div>
 	            <div class="row">
-	                <div class="col container pt-3 px-4">
-	                    <div>후원해요</div>
+	             <div class="col container pt-3 px-4">
+	            <div v-for="post in postShowDto" :key="post.tagName">
+						    <template v-if="post.fundTitle !== null">
+                			<a :href="`${pageContext.request.contextPath}/fund/detail?postNo=${post.postNo}`">
+						        {{ post.fundTitle }}
+						    </a>
+						    </template>
+						</div>
+	            
+	               
 	                </div>
 	            </div>
 	        </div>
@@ -146,18 +183,28 @@
 	</div>
 </div>
 
+
+
+
+
+
+
 <!-- 뷰 스크립트 작성 -->
 <script>
     Vue.createApp({
       data() {
         return {
-        	
-        	postShow: {
+        	selectedIcon: null,	
+        	post: {
         		postNo:"",
         		tagName:"",
         		mapPlace:"",
         		fundTitle:"",
+        		mapName:""
         	},
+        	postShowDto: [],
+        	
+        	positions:[],
         	
             artistObj: {},
             followPageObj: {
@@ -170,20 +217,43 @@
             memberFollowObj: {},
             isFollowingArtist: false,
             
-            };
+            map:null,
+        };
       },
       computed: {
         fullName(){
             return this.artistObj.artistName + "(" + this.artistObj.artistEngName + ")";
         },
       },
+      
+      /*mounted() {
+    	console.log("positions: " + this.positions[0])  
+      },*/
+      
       methods: {
     	  
     	
-	        
-	        
-	        
-        // # 사전 로드(대표페이지 정보, 로그인회원 팔로우 정보)
+    	 
+    	// 키워드 검색 완료 시 호출되는 콜백함수 입니다
+    	showMapPlacesSearchCB (data, status, pagination) {
+    		    if (status === kakao.maps.services.Status.OK) {
+
+    		        // 검색된 장소 위치를 기준으로 지도 범위를 재설정하기위해
+    		        // LatLngBounds 객체에 좌표를 추가합니다
+    		        var bounds = new kakao.maps.LatLngBounds();
+
+    		        for (var i=0; i<data.length; i++) {
+    		            bounds.extend(new kakao.maps.LatLng(data[i].y, data[i].x));
+    		            if(i==0) break;      		          
+    		        }       
+
+    		        // 검색된 장소 위치를 기준으로 지도 범위를 재설정합니다
+    		        this.map.setBounds(bounds);
+    		    } 
+    		},
+    	 
+
+    	// # 사전 로드(대표페이지 정보, 로그인회원 팔로우 정보)
         // 1. 대표페이지(아티스트) 정보 조회
         async loadArtist(){
             // 대표페이지 이름
@@ -195,11 +265,12 @@
 			// 조회 결과 없을 시 
 			if(resp.data)
 			this.artistObj = resp.data;
+			
+			this.tagName = this.artistObj.artistName; // 태그명 설정
+
+			this.loadTags();
         
-            // 지도 데이터 가져오기
-            const mapResp = await axios.get(url);
-            this.mapData = mapResp.data;
-	        
+           
 	        },
         // 2.로그인 회원 팔로우 정보 로드
         async loadMemberFollowInfo(){
@@ -312,88 +383,108 @@
         /////
         
     	//고정태그 찾기
-    	async loadTags(){
-    		
-    		const tagName = this.artistObj.artistName;
-    		console.log("이름:" +tagName)
-    		const url = "/rest/tag/" + tagName;
-    		
-    		
-    		const resp = await axios.get(url);
-    		this.postShowDto = resp.data;
+    	async loadTags() {
+			  const tagName = this.artistObj.artistName;
+			  console.log("태그:" + tagName);
+			  const url = "/rest/post/" + tagName;
+			
+			  const resp = await axios.get(url);
+			  console.log("내놔:" + resp.data);
+			  this.postShowDto = resp.data;
+			
+			
+			  await this.loadPositions();
+			},
+			
+			
+			
+			
+		  // positions 불러오기
+	   	  loadPositions() {
+	   		for(let i=0; i<this.postShowDto.length; i++) {
+	   			this.positions[i] = this.postShowDto[i].mapPlace;
+	   		}  
+	   		
+	   		
+	           var mapContainer = document.getElementById('mapShow'), // 지도를 표시할 div 
+	               mapOption = {
+	                   center: new kakao.maps.LatLng(37.606826, 126.8956567), // 지도의 중심좌표
+	                   level: 3 // 지도의 확대 레벨
+	               };  
+	
+	           	// 지도를 생성합니다    
+	           	this.map = new kakao.maps.Map(mapContainer, mapOption); 
+	           
+	     		// 장소 검색 객체를 생성합니다
+	     		var ps = new kakao.maps.services.Places();
+	     		
+	     		const filterArray = this.postShowDto.map(dto=>dto.mapName).filter(data=>data!==null);
+	     		console.log(filterArray);
+	     		
+	     		ps.keywordSearch(filterArray,(data, status, pagination)=>{
+	     			console.log(data,status,pagination);
+	     			if(status === kakao.maps.services.Status.OK) {
+	     				this.displayMarker({x:data.x, y:data.y});
+	     			}
+	     		});
+	
+			      		
+			//ps.keywordSearch(this.keyword,showMapPlacesSearchCB);
+	     		
+	   	  },	
+		
+		
+			
+				
+    	// 클릭 시 지도 정보 불러오기-------------------------
+      	showMap(keyword1,keyword2){
+			//아이콘  색넣기
+			this.selectedIcon = keyword1;
+				
+            this.showMapName = keyword1;
+            this.showMapPlace = keyword2;
+            
+            
+            // 마커를 담을 배열입니다
+            var markers = [];
+            keyword2 = keyword2.replace(/\s+\d+$/, '');
+         	var keyword = keyword1;
+//          console.log(keyword);
+            // 지도 정보를 담을 변수
+            let mapPlace = "기본";
 
-    	},
-  		
-
-    		
-    	// 모달창 클릭 시 지도 정보 불러오기-------------------------
-      	showMap(keyword){
-      		this.showMapModalText = keyword;
-      		// 마커를 담을 배열입니다
-      		var markers = [];
-
-      		// 지도 정보를 담을 변수
-      		let mapPlace = "기본";
-
-      		var mapContainer = document.getElementById('mapShow'), // 지도를 표시할 div 
-      		    mapOption = {
-      		        center: new kakao.maps.LatLng(37.606826, 126.8956567), // 지도의 중심좌표
-      		        level: 8 // 지도의 확대 레벨
-      		    };  
-
-      		// 지도를 생성합니다    
-      		var map = new kakao.maps.Map(mapContainer, mapOption); 
-
+            
       		// 장소 검색 객체를 생성합니다
       		var ps = new kakao.maps.services.Places();  
 	
-      		// 키워드 검색 완료 시 호출되는 콜백함수 입니다
-      		function showMapPlacesSearchCB (data, status, pagination) {
-      		    if (status === kakao.maps.services.Status.OK) {
-
-      		        // 검색된 장소 위치를 기준으로 지도 범위를 재설정하기위해
-      		        // LatLngBounds 객체에 좌표를 추가합니다
-      		        var bounds = new kakao.maps.LatLngBounds();
-
-      		        for (var i=0; i<data.length; i++) {
-      		            displayMarker(data[i]);    
-      		            bounds.extend(new kakao.maps.LatLng(data[i].y, data[i].x));
-      		        }       
-
-      		        // 검색된 장소 위치를 기준으로 지도 범위를 재설정합니다
-      		        map.setBounds(bounds);
-      		    } 
-      		}            		
+      		ps.keywordSearch(keyword,(data, status, pagination)=>{
+      			this.showMapPlacesSearchCB(data, status, pagination);
+      		});
       		
-      		ps.keywordSearch(keyword,showMapPlacesSearchCB);
       		
-      		// 지도에 마커를 표시하는 함수입니다
-      		function displayMarker(place) {
-      		    
-      		    // 마커를 생성하고 지도에 표시합니다
-      		    var marker = new kakao.maps.Marker({
-      		        map: map,
-      		        position: new kakao.maps.LatLng(place.y, place.x) 
-      		    });
-
-      		    // 마커에 클릭이벤트를 등록합니다
-      		    kakao.maps.event.addListener(marker, 'click', function() {
-      		        // 마커를 클릭하면 장소명이 인포윈도우에 표출됩니다
-      		        infowindow.setContent('<div style="padding:5px;font-size:12px;">' + place.place_name + '</div>');
-      		        infowindow.open(map, marker);
-      		    });
-      		}
       	},
-    	  
-	        
-        
+     
+      	// 지도에 마커를 표시하는 함수입니다
+  		displayMarker(place) {
+  		    // 마커를 생성하고 지도에 표시합니다
+  		    var marker = new kakao.maps.Marker({
+  		        map: this.map,
+  		        position: new kakao.maps.LatLng(place.y, place.x) 
+  		    });
 
-  
+  		    // 마커에 클릭이벤트를 등록합니다
+  		    kakao.maps.event.addListener(marker, 'click', function() {
+  		        // 마커를 클릭하면 장소명이 인포윈도우에 표출됩니다
+  		        infowindow.setContent('<div style="padding:5px;font-size:12px;">' + place.place_name + '</div>');
+  		        infowindow.open(this.map, marker);
+  		    });
+  		},
+      	
+     
       },
-      created(){
+      mounted(){  
     	  
     	  
-
     	// 카카오맵 API 로드
     	  const script = document.createElement('script');
     	  script.type = 'text/javascript';
@@ -402,6 +493,7 @@
     	    kakao.maps.load(() => {
     	      this.loadArtist();
     	      this.loadMemberFollowInfo();
+    	      
     	    });
     	  };
 
@@ -410,27 +502,24 @@
     	  
     	  
         // 페이지 로드
+        
+        
+        
+        
         // 1. 아티스트 정보 로드
         this.loadArtist();
         // 2. 로그인 한 사람 팔로우 정보 로드
         this.loadMemberFollowInfo();
 
-
         // this.followBtn();
-        
-        
-        ///////
-        this.loadTags();
-        //this.loadPosts();
-  	  
-  	  
-
-
-
 
       },
     }).mount('#app')
 </script>
+
+
+
+
 
 <%-- <jsp:include page="/WEB-INF/views/artist/artistFooter.jsp"></jsp:include> --%>
 <jsp:include page="/WEB-INF/views/template/footer.jsp"></jsp:include>
