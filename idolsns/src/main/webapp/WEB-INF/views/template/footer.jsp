@@ -958,6 +958,7 @@
 				};
 
 
+				console.log("######################## 마운티드 발생 ########################");
 				// ######################## 헤더 조정 ########################
 				var inputCompoEle = document.getElementById('navbarSupportedContent');
 				var inputEle = $(inputCompoEle).find("input[name=q]");
@@ -987,6 +988,7 @@
 						$(inputCompoEle).css('width', '50%');
 						inputCompoEle.removeEventListener('click', focusInput);
 						inputEle.off('blur', rollbackView);
+						$(headerButtons).find("img").show();
 					}
 				}
 
@@ -1027,8 +1029,58 @@
 						}
 					},
 					immediate: true
+				},
+				newChatNoti(newValue) {
+					function getWindowWidth() {
+						return window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+					};
+
+					if(newValue){
+						// ######################## 헤더 조정 ########################
+						var inputCompoEle = document.getElementById('navbarSupportedContent');
+						var inputEle = $(inputCompoEle).find("input[name=q]");
+						
+							// 헤더버튼 요소 선택
+						function focusInputNoti() {
+							var notiMarkEle = $(".notiMark");
+							// notiMarkEle.css("background", "forestgreen");
+							notiMarkEle.hide();
+							// console.log("포커스");
+						}
+						function rollbackViewNoti() {
+							var notiMarkEle = $(".notiMark");
+							// notiMarkEle.css("background", "forestgreen");
+							notiMarkEle.show();
+							// console.log("블러");
+						}
+
+						function registerEvent() {
+							var windowWidth = getWindowWidth();
+
+							if (windowWidth <= 640) {
+								// 헤더검색창 요소 선택
+								
+								// 헤더검색창 클릭 이벤트 처리
+								inputCompoEle.addEventListener('click', focusInputNoti);
+								inputEle.blur(rollbackViewNoti);
+							} else {
+								inputCompoEle.removeEventListener('click', focusInputNoti);
+								inputEle.off('blur', rollbackViewNoti);
+								$(".notiMark").show();
+							}
+						}
+
+
+						// 페이지 로드 시 등록 이벤트
+						window.addEventListener('load', registerEvent);
+						// 또는 윈도우 크기 변경 시마다 이벤트 등록
+						window.addEventListener('resize', registerEvent);
+
+
+						// ######################## 헤더 조정 끝 ########################
+					}
 				}
-			}
+			},
 		}).mount("#header-area");
 	</script>
 

@@ -83,7 +83,7 @@ public class DevController {
         //     throw new LoginException();
         // }
         if(memberId == null){
-            return ResponseEntity.status(401).build();
+            return ResponseEntity.status(500).build();
         } else {
             return ResponseEntity.ok().body(Map.of("no", 1, "name", "김통깨"));
             // return ResponseEntity.ok().body(TestDto.builder().no(1).name("김통깨").build());
