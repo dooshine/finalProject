@@ -24,7 +24,6 @@ public class ErrorController {
 	//- 이 예외는 다른 예외로 변경할 수 없다
 	@ExceptionHandler(NoHandlerFoundException.class)
 	public String notFound(Exception ex, Model model) {
-		//ex.printStackTrace();
 		model.addAttribute("notFound", true);
 		return "/error/404";
 	}
