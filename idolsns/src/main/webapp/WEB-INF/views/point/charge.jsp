@@ -46,49 +46,47 @@
 		        
 		        <h3 class="font-bold mt-5 mb-3" style="padding-left: 12px;">스타 충전</h3>
 				
-        <div style="padding-left: 0.5em; padding-right: 0.5em;">
-            <div class="container my-3 custom-border-box">내 포인트: 
-				<span class="amount" style="color:#6A53FB; font-weight:bold">{{ formattedAmount }}</span>원</div>
+        <div style="padding-left: 0.5em; padding-right: 0.5em; font-size:20px;">
+            <div class="container my-3 custom-border-box">내 스타: 
+				<span class="amount" style="color:#6A53FB; font-weight:bold;">{{ formattedAmount }}</span>스타</div>
         </div>
 
         <form id="chargeForm" method="post" style="padding-left: 0.7em; padding-right: 0.7em;">
             
             
-                <label class="point_select">
+                <label class="point_select mb-1">
                     <input type="radio" name="total_amount" v-model="selectedAmount" value="1000"> 
                     <span class="amount"> 1,000</span>스타
                 </label>        
 
-                <label class="point_select">
+                <label class="point_select mb-1">
                     <input type="radio" name="total_amount" v-model="selectedAmount" value="5000"> 
                    <span class="amount"> 5,000</span>스타
                 </label>        
 
-                <label class="point_select">
+                <label class="point_select mb-1">
                     <input type="radio" name="total_amount" v-model="selectedAmount" value="10000"> 
                     <span class="amount"> 10,000</span>스타
                 </label>        
 
-                <label class="point_select">
+                <label class="point_select mb-1">
                     <input type="radio" name="total_amount" v-model="selectedAmount" value="20000"> 
                     <span class="amount"> 20,000</span>스타
                 </label>        
 
-                <label class="point_select">
+                <label class="point_select mb-1">
                     <input type="radio" name="total_amount" v-model="selectedAmount" value="50000"> 
                     <span class="amount"> 50,000</span>스타
                 </label>        
                 
                 
                 
-                
-                
                 <label class="point_select d-flex">
 				  
-				    <p class="amount">직접 입력</span>
-				    <div class="input-form" style="width:20%">
-				        <input type="number" value="custom" name="total_amount" v-model="selectedAmount" class="custom-input p-0" 
-							placeholder="금액 입력" min="1000">    
+				    <p class="amount">직접 입력&nbsp;</span>
+				    <div class="input-form" style="width:15%">
+				        <input style="border-bottom:0.3px solid" type="number" value="custom" name="total_amount" v-model="selectedAmount" class="custom-input p-0" 
+							placeholder="금액 입력" min="1000" max="999999999">    
 				    </div>스타
 				    
 				    

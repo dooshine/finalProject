@@ -6,11 +6,10 @@
 <jsp:include page="/WEB-INF/views/template/header.jsp"></jsp:include>
 
 
-
-    <style>
+ <style>
     
           /*조건부 스타일 - 태블릿*/
-        @media screen and (max-width:1200px) {
+        @media screen and (max-width:992px) {
     
     	 .col-6 {
 		    width: 100%;
@@ -19,151 +18,105 @@
     	}
     
     
-    	
     
-        .fund_label {
+        label {
         	color: gray;
 			width:100%;
 			font-size: 80%;
-			padding-left:1em;
+		
 		}
 		
 		.fund_span {
 			font-size: 30px;
-			padding-left:0.5em;
+		
 			
 		}
-	
-
-		.like-btn {
-		  
+		
+		td {
+		color: gray;	
+		font-size: 90%;
 		}
 		
-		.like-count {
-		  font-size: 14px;
-		  color: #777;
-		  
-		}
-		.grey-f5f5f5{
-    	background-color: 	#f5f5f5;
-    	}
-    	.author-badge {
-		  display: inline-block;
-		  background-color: #a294f9;
-		  padding: 2px 5px;
-		  border-radius: 10px;
-		  color: white;
-		  font-size: 13px;
-		}
-	    .reply-form {
-        margin-top: 20px;
-        background-color: #f9f9f9;
-        padding: 20px;
-        border-radius: 5px;
-        position: relative;
-	    }
-	
-	    .reply-form textarea {
-	        width: calc(100% - 40px);
-	        height: 100px;
-	        border: none;
-	        border-radius: 5px;
-	        padding: 10px;
-	        resize: none;
-	        font-size: 16px;
-	    }
-	
-	    .reply-form .submit-icon {
-	        position: absolute;
-	        bottom: 10px;
-	        right: 10px;
-	        color: #007bff;
-	        font-size: 24px;
-	        cursor: pointer;
-	    }
-		/* form 안에 버튼의 기본 스타일 제거 */
-	    form button {
-		  border: none;
-		  background: none;
-		  padding: 0;
-		  margin: 0;
-		  font: inherit;
-		  color: inherit;
-		  outline: none;
-		  cursor: pointer;
-		}
-		/* textarea setting */
-		textarea {
-			resize: none;
-			height: 100px;
-		}
 
     </style>
     
    	<div id="app">
-		<div class="custom-container">
+		<div class="container rounded p-5" style="background-color:white">
 			  
 		<div>
 			<h2 class="title text-center mt-5 mb-5">{{ fundDetail.fundTitle }}</h2>
 		</div>
 			
-		
-		<img :src="fundDetail.imageURL" alt="예시사진">
+			<div class="d-flex mt-5">
 			
-		
-		<div>
-
-			<label>모인 금액</label>
-			<span class="fund_span">{{ formatCurrency(fundDetail.fundTotal) }}</span>원
-			<span style="font-weight:bold">{{ (fundDetail.fundTotal / fundDetail.fundGoal * 100).toFixed(1) }}</span>%
-	
-		
-	
-			<label>남은 시간</label>
-			<span class="fund_span">{{ getTimeDiff }}</span>일
-		
-
-			<label>후원자</label>
-			<span class="fund_span">{{ fundDetail.fundSponsorCount }}</span>명
-
-		
-		</div>
-		
-		<div class="d-flex row mt-3" style="padding-left: 1em">
-		
-			<hr>
-		
-			<div>목표 금액</div>
-			<div>{{ formatCurrency(fundDetail.fundGoal) }}원</div>
-			<br>
+				<div class="mt-5">
+				<img :src="fundDetail.imageURL" alt="예시사진" style="width:450px; height:400px;">
+				</div>
 			
-			<div>펀딩 기간		</div>
-			<div>{{ fundDetail.postStart }} ~ {{ fundDetail.postEnd }}</div>
 			
-			<div >결제</div>
-			<div>{{ fundDetail.postEnd }} 결제 진행</div>
+				<div class="col mt-5" style="padding-left:2em; padding-right:2em;">
+		
+					<label>모인 금액</label>
+					<span class="fund_span">{{ formatCurrency(fundDetail.fundTotal) }}</span>원
+					<span style="font-weight:bold">{{ (fundDetail.fundTotal / fundDetail.fundGoal * 100).toFixed(1) }}</span>%
 			
+					<label class="mt-3">남은 시간</label>
+					<span class="fund_span">{{ getTimeDiff }}</span>일
 		
-			<div class="row mt-3" style="padding-left: 1em">
-			    <button class="btn btn-primary like-btn">
-			      <i class="fa fa-heart"></i> 
-			      <!-- {{ likeCount }}  -->
-			    </button>
-	
-		
-				 <button class="btn btn-primary share-btn">
-			      <i class="fa fa-share"></i>
-			      <!-- {{ likeCount }}  -->
-			    </button>
+					<label class="mt-3">후원자</label>
+					<span class="fund_span">{{ fundDetail.fundSponsorCount }}</span>명
 		
 			
-				<button type="submit" class="btn btn-primary" @click="order">
+				<hr class="row mt-3 mb-3">
+			
+			
+			
+			<table>
+				<tr>
+					<th style="padding-right:3em;">목표금액</th> 
+					<td >{{ formatCurrency(fundDetail.fundGoal) }}원</td>
+				</tr>
+				
+				<tr>
+					<th>펀딩 기간</th> 
+					<td>{{ fundDetail.postStart }} ~ {{ fundDetail.postEnd }}</td>
+				</tr>
+				
+				<tr>
+					<th>결제</th> 
+					<td>{{ fundDetail.postEnd }} 결제 진행</td>
+			
+			</table>
+			
+			<div class="row mt-3">
+				<button type="submit" class="btn btn-primary btn-lg " @click="order">
 				후원하기</button>
 			</div>	
 					
+			
+			
+			</div>
+			
+			</div>
+		
+			
+			<hr>
+					
+					
+		<!-- 펀딩 하단 (내용) -->			
+	<div>			
 			<div class="row mt-3" style="padding-left: 1em">
 				<div v-html="fundDetail.postContent"></div>
 			</div>
+					
+	</div>
+		
+		
+		
+	
+           
+		<hr>
+	
 			
 			<!-- 태그 출력 -->
 			<div class="row mt-3">
@@ -174,7 +127,7 @@
 					</button>
 				</div>
 			</div>
-		</div>
+		
 		
 	<!-- ------------------------ 댓글 ------------------------------- -->
 	  <hr>
@@ -341,8 +294,7 @@
 	</div>             
 	
 				
-				
-			
+	
 			
 				
 			
