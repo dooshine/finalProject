@@ -292,12 +292,6 @@
     	
 	</div>
 	</div>             
-	
-				
-	
-			
-				
-			
 			
     <script src="https://unpkg.com/vue@3.2.36"></script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
