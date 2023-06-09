@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.kh.idolsns.dto.ReplyDto;
 import com.kh.idolsns.repo.ReplyRepo;
+import com.kh.idolsns.service.ReplyShowService;
+import com.kh.idolsns.vo.ReplyShowVO;
 
 @CrossOrigin
 @RestController
@@ -25,11 +27,20 @@ public class ReplyRestController {
 	@Autowired
 	private ReplyRepo replyRepo;
 	
+	@Autowired
+	private ReplyShowService replyShowService;
+	
 	// 펀딩페이지 댓글 조회 
 	@GetMapping("/fund/{postNo}")
-	public List<ReplyDto> getReplies(@PathVariable Long postNo) {
-		return replyRepo.getRepliesByPostNo(postNo);
+	public List<ReplyShowVO> getReplies(@PathVariable Long postNo) {
+		return replyShowService.showReplyList(postNo);
 	}
+	
+//	@GetMapping("/fund/{postNo}")
+//	public List<ReplyDto> getReplies(@PathVariable Long postNo) {
+//		return replyRepo.getRepliesByPostNo(postNo);
+//	}
+	
 	
 	// 펀딩페이지 댓글 작성 
 	@PostMapping("/fund")

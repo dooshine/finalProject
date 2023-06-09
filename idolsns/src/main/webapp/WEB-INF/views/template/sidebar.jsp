@@ -65,7 +65,7 @@
   	</div>
 	<!-- 어사이드 푸터 -->
 	<div id="aside-footer" class="mt-auto ps-4 pb-4">
-		<span style="color: #7f7f7f">
+		<span style="color: #7f7f7f" class="font-small2">
 		<!-- <span style="background-color: forestgreen;"> -->
 			개인정보처리방침 · 약관 · STARLINK © 2023
 		</span>
