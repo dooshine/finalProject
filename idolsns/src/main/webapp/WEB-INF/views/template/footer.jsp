@@ -738,9 +738,42 @@
 				timeFormatDetailed(chatMessageTime) {
 					return moment(chatMessageTime).format("YYYY년 M월 D일 dddd");
 				},
-				timeFormatDetailed2(chatRoomLast) {
-					return moment(chatRoomLast).format("YYYY년 M월 D일");
-				},
+	            // 채팅방 목록 마지막 메세지 시간 (n시간 전 형식)
+                getTimeDifference(time) {
+                    const writeTime = new Date(time);
+                    const currentTime = new Date();
+                    const timeDifference = currentTime.getTime() - writeTime.getTime();
+                    if (timeDifference < 20000) { // 20초 내                       
+                         return '방금 전';
+                    }
+                    else if (timeDifference < 60000){ // 1분 내 
+                        const seconds = Math.floor(timeDifference / 1000);
+                        return seconds+'초 전';
+                    }
+                    else if (timeDifference < 3600000) { // 1시간 내
+                         const minutes = Math.floor(timeDifference / 60000);
+                         return minutes+'분 전';
+                    }
+                    else if (timeDifference < 86400000) { // 24시간 내
+                         const hours = Math.floor(timeDifference / 3600000);
+                         return hours+'시간 전';
+                    }
+                    else if (timeDifference < 604800000) { // 1주일 내
+                         const days = Math.floor(timeDifference / 86400000);
+                         return days+'일 전';
+                    }
+                    else { // 1주일 이상
+                        var dateOptions; 
+                        // 년도 비교
+                        if(writeTime.getFullYear() === currentTime.getFullYear()) { // 년도가 같으면
+                           dateOptions = {month: 'short', day: 'numeric' };
+                        } 
+                        else {
+                           dateOptions = { year: 'numeric', month: 'short', day: 'numeric' }; // 년도가 다르면 
+                        }
+                        return writeTime.toLocaleDateString('ko-KO', dateOptions);
+                    }
+                },
 				// 메세지 삭제버튼 보이기
 				showDeleteButton(index) {
 				    this.showDeleteButtonIndex = index;

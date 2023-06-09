@@ -153,6 +153,28 @@
 			padding-left: 0px;
 			padding-right: 0px;
 		}
+		
+		/* chat.css에 있는 내용인데 왜인지 안 먹어서 여기다가도 빼둠 */
+		.fakeBtn {
+			width: 30px;
+			height: 30px;
+			background: #a698fd;
+			border-radius: 100px;
+			cursor: pointer;
+		}
+		.fakeBtn:hover {
+			background: #6A53FB;
+		}
+		.fakeBtn[disabled] ,
+		.fakeBtn[disabled]:hover {
+			background: #a698fd;
+			cursor: default;
+		}
+		.ti-photo-up,
+		.ti-send {
+			color: white;
+			font-size: 18px;
+		}
     </style>
 </head>
 
@@ -258,7 +280,7 @@
 												<div class="sysMsgContent d-flex justify-content-between">
 													<div>마지막 메세지</div>
 													<div>·</div>
-													<div>{{ timeFormatDetailed2(chatRoomList[index].chatRoomLast) }}</div>
+													<div>{{ getTimeDifference(chatRoomList[index].chatRoomLast) }}</div>
 												</div>
 											</div>
 										</div>
@@ -275,7 +297,7 @@
 											</div>
 											<div class="col-9 ms-3">
 												<div class="d-flex align-items-center mb-2">
-													<div class="text-start d-flex align-items-baseline">
+													<div class="text-start d-flex align-items-baseline" style="max-width: 180px; overflow: hidden;">
 														<div class="me-2 w-100" style="max-width: 120px">
 															<h6 class="chatRoomName" style="max-width: 120px" :title="findMemberByIdInMain(index).memberNick">
 																{{ findMemberByIdInMain(index).memberNick }}
@@ -291,7 +313,7 @@
 												<div class="sysMsgContent d-flex justify-content-between">
 													<div>마지막 메세지</div>
 													<div>·</div>
-													<div>{{ timeFormatDetailed2(chatRoomList[index].chatRoomLast) }}</div>
+													<div>{{ getTimeDifference(chatRoomList[index].chatRoomLast) }}</div>
 												</div>
 											</div>
 										</div>
@@ -305,7 +327,7 @@
 											</div>
 											<div class="col-9 ms-3">
 												<div class="d-flex align-items-center mb-2">
-													<div class="text-start d-flex align-items-baseline">
+													<div class="text-start d-flex align-items-baseline" style="max-width: 180px; overflow: hidden;">
 														<div class="me-2 w-100" style="max-width: 120px">
 															<h6 class="chatRoomName" style="max-width: 120px" :title="findMemberByIdInMain(index).memberNick">
 																{{ findMemberByIdInMain(index).memberNick }}
@@ -321,7 +343,7 @@
 												<div class="sysMsgContent d-flex justify-content-between">
 													<div>마지막 메세지</div>
 													<div>·</div>
-													<div>{{ timeFormatDetailed2(chatRoomList[index].chatRoomLast) }}</div>
+													<div>{{ getTimeDifference(chatRoomList[index].chatRoomLast) }}</div>
 												</div>
 											</div>
 										</div>

@@ -1,10 +1,8 @@
 package com.kh.idolsns.vo;
 import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.kh.idolsns.dto.ChatRoomDto;
 import com.kh.idolsns.dto.MemberSimpleProfileDto;
-
 import lombok.Data;
 
 // 메세지 수신 양식
