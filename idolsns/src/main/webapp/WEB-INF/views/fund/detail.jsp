@@ -6,11 +6,10 @@
 <jsp:include page="/WEB-INF/views/template/header.jsp"></jsp:include>
 
 
-
-    <style>
+ <style>
     
           /*조건부 스타일 - 태블릿*/
-        @media screen and (max-width:1200px) {
+        @media screen and (max-width:992px) {
     
     	 .col-6 {
 		    width: 100%;
@@ -19,163 +18,210 @@
     	}
     
     
-    	
     
-        .fund_label {
+        label {
         	color: gray;
 			width:100%;
 			font-size: 80%;
-			padding-left:1em;
+		
 		}
 		
 		.fund_span {
 			font-size: 30px;
-			padding-left:0.5em;
+		
 			
 		}
-	
-
-		.like-btn {
-		  
+		
+		td {
+		color: gray;	
+		font-size: 90%;
 		}
 		
-		.like-count {
-		  font-size: 14px;
-		  color: #777;
-		  
-		}
-		.grey-f5f5f5{
-    	background-color: 	#f5f5f5;
-    	}
-    	.author-badge {
-		  display: inline-block;
-		  background-color: #a294f9;
-		  padding: 2px 5px;
-		  border-radius: 10px;
-		  color: white;
-		  font-size: 13px;
-		}
-	    .reply-form {
+          
+       
+    
+    
+       
+    
+   
+
+      .like-btn {
+        
+      }
+      
+      .like-count {
+        font-size: 14px;
+        color: #777;
+        
+      }
+      .grey-f5f5f5{
+       background-color:    #f5f5f5;
+       }
+       .author-badge {
+        display: inline-block;
+        background-color: #a294f9;
+        padding: 2px 5px;
+        border-radius: 10px;
+        color: white;
+        font-size: 13px;
+      }
+       .reply-form {
         margin-top: 20px;
         background-color: #f9f9f9;
         padding: 20px;
         border-radius: 5px;
         position: relative;
-	    }
-	
-	    .reply-form textarea {
-	        width: calc(100% - 40px);
-	        height: 100px;
-	        border: none;
-	        border-radius: 5px;
-	        padding: 10px;
-	        resize: none;
-	        font-size: 16px;
-	    }
-	
-	    .reply-form .submit-icon {
-	        position: absolute;
-	        bottom: 10px;
-	        right: 10px;
-	        color: #007bff;
-	        font-size: 24px;
-	        cursor: pointer;
-	    }
-		/* form 안에 버튼의 기본 스타일 제거 */
-	    form button {
-		  border: none;
-		  background: none;
-		  padding: 0;
-		  margin: 0;
-		  font: inherit;
-		  color: inherit;
-		  outline: none;
-		  cursor: pointer;
-		}
-		/* textarea setting */
-		textarea {
-			resize: none;
-			height: 100px;
-		}
+       }
+   
+       .reply-form textarea {
+           width: calc(100% - 40px);
+           height: 100px;
+           border: none;
+           border-radius: 5px;
+           padding: 10px;
+           resize: none;
+           font-size: 16px;
+       }
+   
+       .reply-form .submit-icon {
+           position: absolute;
+           bottom: 10px;
+           right: 10px;
+           color: #007bff;
+           font-size: 24px;
+           cursor: pointer;
+       }
+      /* form 안에 버튼의 기본 스타일 제거 */
+       form button {
+        border: none;
+        background: none;
+        padding: 0;
+        margin: 0;
+        font: inherit;
+        color: inherit;
+        outline: none;
+        cursor: pointer;
+      }
+      /* textarea setting */
+      textarea {
+         resize: none;
+         height: 100px;
+      }
+		
 
     </style>
     
    	<div id="app">
-		<div class="custom-container">
+		<div class="container rounded p-5" style="background-color:white">
 			  
 		<div>
 			<h2 class="title text-center mt-5 mb-5">{{ fundDetail.fundTitle }}</h2>
 		</div>
 			
-		
-		<img :src="fundDetail.imageURL" alt="예시사진">
+			<div class="d-flex mt-5">
 			
+				<div class="mt-5">
+				<img :src="fundDetail.imageURL" alt="예시사진" style="width:450px; height:400px;">
+				</div>
+			
+			
+				<div class="col mt-5" style="padding-left:2em; padding-right:2em;">
 		
-		<div>
+					<label>모인 금액</label>
+					<span class="fund_span">{{ formatCurrency(fundDetail.fundTotal) }}</span>원
+					<span style="font-weight:bold">{{ (fundDetail.fundTotal / fundDetail.fundGoal * 100).toFixed(1) }}</span>%
+			
+					<label class="mt-3">남은 시간</label>
+					<span class="fund_span">{{ getTimeDiff() }}</span>일
+		
+   
+					<label class="mt-3">후원자</label>
+					<span class="fund_span">{{ fundDetail.fundSponsorCount }}</span>명
 
-			<label>모인 금액</label>
-			<span class="fund_span">{{ formatCurrency(fundDetail.fundTotal) }}</span>원
-			<span style="font-weight:bold">{{ (fundDetail.fundTotal / fundDetail.fundGoal * 100).toFixed(1) }}</span>%
+		
 	
-		
-	
-			<label>남은 시간</label>
-			<span class="fund_span">{{ getTimeDiff }}</span>일
-		
+		<!--
+				 <button class="btn btn-primary share-btn">
+			      <i class="fa fa-share"></i>
+			       {{ likeCount }} 
+			    </button> -->
+			    
+			 
+			
+				<hr class="row mt-3 mb-3">
+			
+			
+			
+			<table>
+				<tr>
+					<th style="padding-right:3em;">목표금액</th> 
+					<td >{{ formatCurrency(fundDetail.fundGoal) }}원</td>
+				</tr>
+				
+				<tr>
+					<th>펀딩 기간</th> 
+					<td>{{ fundDetail.postStart }} ~ {{ fundDetail.postEnd }}</td>
+				</tr>
+				
+				<tr>
+					<th>결제</th> 
+					<td>{{ fundDetail.postEnd }} 결제 진행</td>
+			
+			</table>
+			
+			
+			
 
-			<label>후원자</label>
-			<span class="fund_span">{{ fundDetail.fundSponsorCount }}</span>명
 
-		
-		</div>
-		
-		<div class="d-flex row mt-3" style="padding-left: 1em">
-		
-			<hr>
-		
-			<div>목표 금액</div>
-			<div>{{ formatCurrency(fundDetail.fundGoal) }}원</div>
-			<br>
-			
-			<div>펀딩 기간		</div>
-			<div>{{ fundDetail.postStart }} ~ {{ fundDetail.postEnd }}</div>
-			
-			<div >결제</div>
-			<div>{{ fundDetail.postEnd }} 결제 진행</div>
-			
-		
 			<div class="row mt-3" style="padding-left: 1em">
 			    <button class="btn btn-primary like-btn" @click="checkLike">
 			      <i v-if="isLiked" class="fs-4 ti ti-heart-filled"></i> 
 			      <i v-else class="fs-4 ti ti-heart"></i> 
 			      <!-- {{ likeCount }}  -->
 			    </button>
-	
-		
-				 <button class="btn btn-primary share-btn">
-			      <i class="fa fa-share"></i>
-			      <!-- {{ likeCount }}  -->
-			    </button>
-		
+			</div>
 			
-				<button type="submit" class="btn btn-primary" @click="order">
+			
+			<div class="row mt-3">
+				<button type="submit" class="btn btn-primary btn-lg " @click="order">
 				후원하기</button>
 			</div>	
 					
+			
+			
+			</div>
+			
+			</div>
+		
+			
+			<hr>
+					
+					
+		<!-- 펀딩 하단 (내용) -->			
+	<div>			
 			<div class="row mt-3" style="padding-left: 1em">
 				<div v-html="fundDetail.postContent"></div>
 			</div>
+					
+	</div>
+		
+		
+		
+	
+           
+		<hr>
+	
 			
 			<!-- 태그 출력 -->
 			<div class="row mt-3">
 				<div class="col">
-					<button class="btn btn-primary" v-for="(tag, i) in fundDetail.tagNames"
+					<button class="btn btn-primary ms-1" v-for="(tag, i) in fundDetail.tagNames"
 								@click="tagLink(i)">
 					{{ tag }}
 					</button>
 				</div>
 			</div>
-		</div>
+		
 		
 	<!-- ------------------------ 댓글 ------------------------------- -->
 	  <hr>
@@ -355,9 +401,8 @@
 	</div>             
 	
 				
-				
-			
-			
+	
+	</div>		
 				
 			
 			
@@ -422,24 +467,6 @@
 		      };
 		    },
 		    computed: {
-		    	getTimeDiff() {
-        			const startDate = new Date(this.fundDetail.postStart);
-        		      const endDate = new Date(this.fundDetail.postEnd);
-        		      const timeDiff = endDate.getTime() - startDate.getTime();
-        		      if (timeDiff >= 24 * 60 * 60 * 1000) {
-        		        // 1일 이상인 경우
-        		        return Math.ceil(timeDiff / (24 * 60 * 60 * 1000))+"일";
-        		      } else {
-        		    	// 1일 미만인 경우
-        		          const currentDate = new Date();
-        		          const endOfDay = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate(), 23, 59, 59);
-        		          const remainingTime = endOfDay.getTime() - currentDate.getTime();
-        		          const remainingHours = Math.floor(remainingTime / (60 * 60 * 1000));
-        		          const remainingMinutes = Math.floor((remainingTime % (60 * 60 * 1000)) / (60 * 1000));
-        		          const remainingSeconds = Math.floor((remainingTime % (60 * 1000)) / 1000);
-        		          return remainingHours+"시간";
-        		        }
-        		},
 		    },
 		    methods: {
 				// postNo 설정		    	
@@ -610,12 +637,44 @@
 					
 				},
 				
+				// 남은 시간 설정
+                getTimeDiff() {
+                      const startDate = new Date(this.fundDetail.postStart);
+                      const endDate = new Date(this.fundDetail.postEnd);
+                      console.log(this.fundDetail);
+                      const currentDate = new Date();
+                      const fundState = this.fundDetail.fundState;
+                      const timeDiff = endDate.getTime() - startDate.getTime();
+                      
+                      // 마간기간이 남은 경우
+                      if(timeDiff >= 0){
+                          // 1일 이상인 경우
+                          if (timeDiff >= 24 * 60 * 60 * 1000) {
+                            return Math.ceil(timeDiff / (24 * 60 * 60 * 1000))+"일 남음";
+                          } 
+                          // 당일인 경우
+                          else {
+                              return "오늘 마감";
+                          }
+                      }
+                      // 이미 마감된 경우
+                      else {
+                    	  return fundState;
+                      }
+                },
+                
+                // 멤버 프로필 이미지 불러오기
+                async fetchMemberImage() {
+                	const resp = await axios.get("http://localhost:8080/rest")
+                }
+                
+				
 				// 로그인 체크
-				checkLogin() {
-					if(memberId == "") {
-						loginModal = true;
-					}
-				}
+// 				checkLogin() {
+// 					if(memberId == "") {
+// 						loginModal = true;
+// 					}
+// 				}
 		    },
 		    created() {
 		    	  this.setPostNo();
@@ -625,7 +684,7 @@
 		    	  this.loadReplies();
 		    	  this.loadTagNames();
 		    	  this.checkFundLike();
-		    	  this.checkLogin();
+		    	  
 		    	},
 		    mounted() {
 		    	}

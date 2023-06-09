@@ -122,7 +122,7 @@
 				<div class="d-flex">
 					<!-- 펀딩 글 작성 -->
 					<div class="d-flex justify-content-center align-items-center">
-						<button class="btn-purple1" @click="startFunding">글 작성</button>
+						<button class="btn-custom btn-purple1" @click="startFunding">프로젝트 올리기</button>
 						<!-- 정렬 -->
 						<button v-if="dateSort" class="btn-purple1 ms-1" @click="sortByDate">최신순</button>
 						<button v-else class="btn-purple1 ms-1" @click="sortByDate">오래된순</button>
@@ -138,7 +138,7 @@
                  
                    <div class="funding-item" v-for="(funding, index) in fundings" :key="index"
                                               v-on:click="link(funding)">
-                     <img :src="getImageUrl(funding)" alt="Funding Image">
+                     <img :src="getImageUrl(funding)" alt="Funding Image" style="height:200px">
                      <h3 class="title">{{ funding.fundTitle }}</h3>
                      <p class="description">{{ funding.fundShortTitle }}</p>
                      <div class="progress-bar">
@@ -269,12 +269,14 @@
                     getTimeDiff(funding) {
                           const startDate = new Date(funding.postStart);
                           const endDate = new Date(funding.postEnd);
+                          console.log(startDate);
+                          console.log(endDate);
                           const currentDate = new Date();
                           const fundState = funding.fundState;
                           const timeDiff = endDate.getTime() - startDate.getTime();
                           
                           // 마간기간이 남은 경우
-                          if(timeDiff > 0){
+                          if(timeDiff >= 0){
 	                          // 1일 이상인 경우
 	                          if (timeDiff >= 24 * 60 * 60 * 1000) {
 	                            return Math.ceil(timeDiff / (24 * 60 * 60 * 1000))+"일 남음";

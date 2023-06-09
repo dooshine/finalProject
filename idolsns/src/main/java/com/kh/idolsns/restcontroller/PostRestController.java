@@ -24,6 +24,7 @@ import com.kh.idolsns.dto.FreePostDto;
 import com.kh.idolsns.dto.MapDto;
 import com.kh.idolsns.dto.PostDto;
 import com.kh.idolsns.dto.PostImageDto;
+import com.kh.idolsns.dto.PostShowDto;
 import com.kh.idolsns.dto.SchedulePostDto;
 import com.kh.idolsns.dto.TagDto;
 import com.kh.idolsns.dto.TogetherPostDto;
@@ -105,8 +106,8 @@ public class PostRestController {
     
     
     //아티스트페이지 상세조회
-    @GetMapping("/tag/{tagName}")
-    public List<PostShowVO> selectList(@PathVariable String tagName){
+    @GetMapping("/{tagName}")
+    public List<PostShowDto> selectList(@PathVariable String tagName){
    	      return postShowRepo.selectList(tagName);
   }
 

@@ -103,6 +103,7 @@ public class InterceptorConfiguration implements WebMvcConfigurer{
         		//"/rest/post/reply/**"
         );
 
+
         //[3] 관리자 전용 검사 인터셉터
         registry.addInterceptor(adminInterceptor)
                 .addPathPatterns(
