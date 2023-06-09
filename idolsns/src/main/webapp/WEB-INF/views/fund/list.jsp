@@ -119,19 +119,33 @@
       
         <div id="app">
                <div class="custom-container">
-				<div class="d-flex">
+			
+				
+				
+					<div class="rounded bg-light p-3" style="width:100%; height:300px;">
+						
+						<div class="font-bold" style="font-size:30px;">아이돌의 펀딩을 받아봅시다
+						</div>
+						<button class="custom-btn btn-round btn-purple1" @click="startFunding">프로젝트 올리기</button>
+					</div>
+				
+				
+				
 					<!-- 펀딩 글 작성 -->
-					<div class="d-flex justify-content-center align-items-center">
-						<button class="btn-custom btn-purple1" @click="startFunding">프로젝트 올리기</button>
-						<!-- 정렬 -->
+					<div class="d-flex align-items-center mt-4">
+					
+		             	<!-- 검색창 -->
+	               	<div class="search-box w-35 ms-auto me-4">
+                    <input class="search-input" type="text" v-model="searchQuery" placeholder="검색창" 
+                    @keyup.enter="fetchOrderedFundingList">
+                </div>
+             
+		                
+		                	<!-- 정렬 -->
 						<button v-if="dateSort" class="btn-purple1 ms-1" @click="sortByDate">최신순</button>
 						<button v-else class="btn-purple1 ms-1" @click="sortByDate">오래된순</button>
 					</div>
-	             	<!-- 검색창 -->
-	               	<div class="search-box w-35 ms-auto me-4">
-	                    <input class="search-input" type="text" v-model="searchQuery" @keyup.enter="fetchOrderedFundingList">
-	                </div>
-               	</div>
+	             	
                	
                	<!-- 펀딩 리스트 -->
                  <div class="funding-list justify-content-center mt-4">
