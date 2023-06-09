@@ -230,10 +230,10 @@
 			<!-- 태그 출력 -->
 			<div class="row mt-3">
 				<div class="col">
-					<button class="btn btn-primary ms-1" v-for="(tag, i) in fundDetail.tagNames"
+					<div class="fixed-tag ms-1" v-for="(tag, i) in fundDetail.tagNames"
 								@click="tagLink(i)">
 					{{ tag }}
-					</button>
+					</div>
 				</div>
 			</div>
 		
@@ -396,7 +396,7 @@
 		        <textarea type="text" v-model="replyObj.replyContent" placeholder="글을 작성해주세요" required></textarea>
 		    </div>
 		    <div class="submit-icon">
-		    	<button type="submit" style="none;">
+		    	<button type="submit">
 			        <i class="fa-sharp fa-solid fa-pen font-purple1"></i>
 		    	</button>
 		    </div>
@@ -425,16 +425,8 @@
       	</div>
      </div>
      
-	</div>             
-<<<<<<< HEAD
-=======
-	
-				
-	
-	</div>		
-				
-			
->>>>>>> refs/remotes/origin/main
+	</div>        
+</div>
 			
     <script src="https://unpkg.com/vue@3.2.36"></script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>

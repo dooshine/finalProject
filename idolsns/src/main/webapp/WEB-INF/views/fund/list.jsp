@@ -135,25 +135,17 @@
 					<div class="d-flex align-items-center mt-4">
 					
 		             	<!-- 검색창 -->
-		               	<div class="search-box w-30" style="width:30%">
-		                    <input class="search-input" type="text" v-model="searchQuery" placeholder="검색창" @keyup.enter="searchFunding">
-		                </div>
+	               	<div class="search-box w-35 ms-auto me-4">
+                    <input class="search-input" type="text" v-model="searchQuery" placeholder="검색창" 
+                    @keyup.enter="fetchOrderedFundingList">
+                </div>
+             
 		                
 		                	<!-- 정렬 -->
 						<button v-if="dateSort" class="btn-purple1 ms-1" @click="sortByDate">최신순</button>
-<<<<<<< HEAD
-						<button v-else class="btn-purple1 ms-1" @click="sortByDate">오랜된순</button>
-					
-		                
-=======
 						<button v-else class="btn-purple1 ms-1" @click="sortByDate">오래된순</button>
 					</div>
-	             	<!-- 검색창 -->
-	               	<div class="search-box w-35 ms-auto me-4">
-	                    <input class="search-input" type="text" v-model="searchQuery" @keyup.enter="fetchOrderedFundingList">
->>>>>>> refs/remotes/origin/main
-	                </div>
-               
+	             	
                	
                	<!-- 펀딩 리스트 -->
                  <div class="funding-list justify-content-center mt-4">
