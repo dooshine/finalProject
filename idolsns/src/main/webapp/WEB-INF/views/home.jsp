@@ -153,11 +153,11 @@
 			<div class="col-1 col-md-1 col-lg-1 d-flex align-items-center justify-content-center p-0">
 					<!-- 세션이 프로필 사진이 있는 경우 -->  
 					<img v-if="sessionMemberAttachmentNo && sessionMemberAttachmentNo != null"
-						class="rounded-circle img-fluid" style="max-width: 100%; aspect-ratio: 1/1;"
+						class="rounded-circle img-fluid" style="max-width: 100%; min-width: 100%; aspect-ratio: 1/1;"
 						:src="getAttachmentUrl(sessionMemberAttachmentNo)">
 					
 					<!-- 세션이 프로필 사진이 없는 경우 -->
-					<img v-else class="rounded-circle img-fluid" style="max-width: 100%; aspect-ratio: 1/1;"
+					<img v-else class="rounded-circle img-fluid" style="max-width: 100%; min-width: 100%; aspect-ratio: 1/1;"
 						src="static/image/profileDummy.png">
 			</div>
 			<div
