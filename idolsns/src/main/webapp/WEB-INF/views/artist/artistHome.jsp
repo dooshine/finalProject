@@ -249,6 +249,7 @@
 
     		        // 검색된 장소 위치를 기준으로 지도 범위를 재설정합니다
     		        this.map.setBounds(bounds);
+					this.showMap(this.postShowDto[0].mapName,this.postShowDto[0].mapPlace);
     		    } 
     		},
     	 
@@ -419,7 +420,7 @@
 	     		var ps = new kakao.maps.services.Places();
 	     		
 	     		const filterArray = this.postShowDto.map(dto=>dto.mapName).filter(data=>data!==null);
-	     		console.log(filterArray);
+	     		console.table(filterArray);
 	     		
 	     		ps.keywordSearch(filterArray,(data, status, pagination)=>{
 	     			console.log(data,status,pagination);
@@ -427,7 +428,7 @@
 	     				this.displayMarker({x:data.x, y:data.y});
 	     			}
 	     		});
-	
+			this.showMap(this.postShowDto[0].mapName,this.postShowDto[0].mapPlace);
 			      		
 			//ps.keywordSearch(this.keyword,showMapPlacesSearchCB);
 	     		

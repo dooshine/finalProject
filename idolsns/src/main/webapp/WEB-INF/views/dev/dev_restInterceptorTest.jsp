@@ -31,8 +31,9 @@
                     console.log(response.data);
                 })
                 .catch((error)=>{
-                    if(error.response.status === 401){
+                    if(error.response.status === 500){
                         console.log("로그인이 안됐심더");
+                        window.location.href="http://naver.com";
                     }
                 });
         }

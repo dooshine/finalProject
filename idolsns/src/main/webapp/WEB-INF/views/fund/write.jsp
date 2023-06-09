@@ -40,6 +40,7 @@
 							$("form").prepend(input);
 
 							var imgNode = $("<img>").attr("src", "http://localhost:8080/rest/attachment/download/"+response.attachmentNo);
+							imgNode.attr('width','100%');
 							$("[name=postContent]").summernote('insertNode', imgNode.get(0));
 						},
 						error:function(){}
@@ -64,11 +65,22 @@
 			
 			 width:100%;
 			 
+<<<<<<< HEAD
 			 }
 			 
 			 
 			 
 			 
+=======
+			.title {
+	   			font-weight:bold;
+		   	}
+		   	
+			/* 	summernote block url access */
+		   	.note-group-image-url {
+			  display: none;
+			}
+>>>>>>> refs/remotes/origin/main
 	
 	</style>
 	
@@ -89,7 +101,44 @@
 	    <div style="padding-left:1em; padding-right:1em;">
 
 
+<<<<<<< HEAD
 	<form action="write3" method="post" enctype="multipart/form-data"> 
+=======
+	<form action="write3" method="post" enctype="multipart/form-data"> <!--  -->
+
+	<div class="input-group mb-3">
+	    <span class="input-group-text" id="inputGroup-sizing-default">제목</span>
+	  <input type="text" name="fundTitle" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default">
+	</div>
+	
+	<div class="input-group mb-3">
+	    <span class="input-group-text" id="inputGroup-sizing-default">한줄 소개</span>
+	  <input type="text" name="fundShortTitle" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default">
+	</div>
+	
+	<div class="input-group mb-3">
+	    <span class="input-group-text" id="inputGroup-sizing-default">시작일</span>
+	  <input type="date" name="postStart" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" 
+	  			:min="minDate" v-model="postStart">
+	</div>
+	
+	<div class="input-group mb-3">
+	    <span class="input-group-text" id="inputGroup-sizing-default">종료일</span>
+	  <input type="date" name="postEnd" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default"
+	  			:min="minDateEnd" v-model="postEnd">
+	</div>
+	
+	<div class="input-group mb-3">
+	    <span class="input-group-text" id="inputGroup-sizing-default">목표 금액</span>
+	  <input type="text" name="fundGoal" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default">
+	</div>
+	
+	
+	<div class="input-group mb-3">
+	  <textarea name="postContent" class="form-control" aria-label="With textarea"></textarea>
+	</div>
+	
+>>>>>>> refs/remotes/origin/main
 
 
 
@@ -131,8 +180,23 @@
 		</div>
 		
 
+<<<<<<< HEAD
 
 
+=======
+	<div class="input-group mb-5 row">
+	
+	  <div class="input-group-prepend col-4 d-flex justify-content-center align-items-center">
+	    <span class="input-group-text " @click="selectFile">대표 이미지(1개)</span>
+	  </div>
+	  
+	  <div class="custom-file col-6">
+	  	<img :src="previewURL" style="width:200px; height: 200px;"/>
+	    <input type="file" name="attach" class="custom-file-input" id="inputGroupFile01" accept=".gif, .jpg, .png"
+	    			ref="fileInput" style="display:none;" @change="handleMainImagePreview">
+	  </div>
+	</div>
+>>>>>>> refs/remotes/origin/main
 	<!-- 고정태그 입력 시 목록 불러오기 -->
 
 	    <div class="input-group mb-3">
@@ -150,8 +214,13 @@
 	    </div>
 	    <div class="row">
 	        <div class="col">
+<<<<<<< HEAD
 	            <div class="fixed-tag" v-for="(newFixedTag, i) in newFixedTagList"
 	            				@click="deleteTag(i)">{{ newFixedTag }}</div>
+=======
+	            <button class="btn btn-primary ms-1" v-for="(newFixedTag, i) in newFixedTagList"
+	            				@click="deleteTag(i)">{{ newFixedTag }}</button>
+>>>>>>> refs/remotes/origin/main
 	        </div>
 	    </div>
 
@@ -184,7 +253,12 @@
    	          	      findFixedTagName: "",
          	          findFixedTagList: [],
          	          newFixedTagList: [],
-         	         el: '#app',
+         	          previewURL: "/static/image/profileDummy.png",
+         	          el: '#app',
+         	          minDate: "",
+         	          minDateEnd: "",
+         	          postStart: "",
+         	          posrtEnd: "",
             	   }
 	            	},
             	computed: {
@@ -208,21 +282,51 @@
                     	this.newFixedTagList.splice(i, 1);
                     },
                     async insertFixedTagList() {
+                    	if (this.findFixedTagName === "") {
+                            // findFixedTagName이 비어있는 경우 데이터 전송하지 않음
+                            return;
+                        }
+                    	
                     	const url = "/rest/fund/tag";
                     	const resp = axios.post(url, this.newFixedTagList)
                     },
                     selectFile() {
                     	this.$refs.fileInput.click();
-                    }
+                    },
+                    // 대표사진 미리보기
+                    handleMainImagePreview(){
+                        // 업로드 파일
+                        const file = event.target.files[0];
+
+                        this.previewURL = URL.createObjectURL(file);
+                    },
+                    
+                    // 종료일
+                    updateEndDateMin() {
+					    if (this.postStart) {
+					      const minDateEnd = new Date(this.postStart);
+					      minDateEnd.setDate(minDateEnd.getDate());
+					      this.minDateEnd = minDateEnd.toISOString().split("T")[0];
+					    }
+					  }
                     
 	           	},
 	           	watch: {
 	           		findFixedTagName:_.throttle(function(){
 	                    //this == 뷰 인스턴스
 	                    this.loadFindFixedTagList();
-	        }, 250),
+	        			}, 250),
+	        			
+	        		// 종료일 update
+        			postStart(newDate) {
+        			    this.updateEndDateMin();
+        			  }
+	        	
 	            },
 	            mounted() {
+	            	const today = new Date().toISOString().split("T")[0];
+	            	this.minDate = today;
+	            	this.updateEndDateMin();
 	            },
 	           	created() {
 	           	}

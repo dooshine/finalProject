@@ -52,6 +52,30 @@
 	font-size: 10px;
 }
 
+.fs-18px {
+	font-size: 18px;
+}
+
+.fs-17px {
+	font-size: 17px;
+}
+
+.fs-16px {
+	font-size: 16px;
+}
+
+.fs-15px {
+	font-size: 15px;
+} 
+
+.fs-14px {
+	font-size: 14px;
+}
+
+.fs-13px {
+	font-size: 13px;
+}
+
 .fs-12px {
 	font-size: 12px;
 }
@@ -60,12 +84,27 @@
 	font-size: 11px;
 }
 
+.fs-10px {
+	font-size: 10px;
+}
+.fs-9px {
+	font-size: 9px;
+}
+.fs-8px {
+	font-size: 8px;
+}
+.fs-7px {
+	font-size: 7px;
+}
+.fs-6px {
+	font-size: 6px;
+}
 .h-20 {
 	height: 20px;
 }
 
 .reply-text {
-	font-size: 5px;
+	font-size: 14px;
 }
 
 .post-modal {
@@ -111,11 +150,17 @@
 	<!----------- 글쓰기 버튼 ------------>
 	<div class="bg-white mb-4 p-4 rounded-4" v-if="memberId!=null">
 		<div class="row mt-1">
-			<div
-				class="col-1 col-md-1 col-lg-1 d-flex align-items-center justify-content-center p-0">
-				<img class="rounded-circle img-fluid"
-					src="static/image/profileDummy.png">
+			<div class="col-1 col-md-1 col-lg-1 d-flex align-items-center justify-content-center p-0">
+					<!-- 세션이 프로필 사진이 있는 경우 -->  
+					<img v-if="sessionMemberAttachmentNo && sessionMemberAttachmentNo != null"
+						class="rounded-circle img-fluid"
+						:src="getAttachmentUrl(sessionMemberAttachmentNo)" style="max-width: 100%; aspect-ratio: 1/1;">
+					
+					<!-- 세션이 프로필 사진이 없는 경우 -->
+					<img v-else class="rounded-circle img-fluid"
+						src="static/image/profileDummy.png" style="max-width: 100%; aspect-ratio: 1/1;">
 			</div>
+			
 			<div
 				class="col-11 col-md-11 col-lg-11 d-flex align-items-center justify-content-center">
 				<button type="button"
@@ -306,7 +351,7 @@
 					<div class="row mt-3">
 						<div class="col">
 							<button
-								class="custom-btn btn-purple1 btn-sm rounded-pill mx-2 fixed-tag"
+								class="custom-btn btn-purple1 btn-sm rounded-pill mx-2 my-2 fixed-tag"
 								v-for="(newFixedTag, i) in newFixedTagList">{{
 								newFixedTag }}</button>
 						</div>
@@ -388,31 +433,48 @@
 
 				<!-- body -->
 				<div class="modal-body">
-					<div class="row mt-3">
+					<!-- 지도 구간 -->
+					<div class="row" v-if="address!=''">
+						<div class="text-secondary text-start fs-15px">
+							<i class="ms-2 fa-solid fa-location-dot"></i>&nbsp;{{placeName}} ({{address}})	
+						</div>
+					</div>
+					<!--         -->
+					<div class="row">
 						<div class="col">
 							<button
-								class="custom-btn btn-purple1 btn-sm rounded-pill mx-2 fixed-tag">
+								class="custom-btn btn-purple1 btn-sm rounded-pill mx-2 my-2 fixed-tag">
 								{{postType}}</button>
 							<button
-								class="custom-btn btn-purple1 btn-sm rounded-pill mx-2 fixed-tag"
+								class="custom-btn btn-purple1 btn-sm rounded-pill mx-2 my-2 fixed-tag"
 								v-for="(newFixedTag, i) in newFixedTagList">{{
 								newFixedTag }}</button>
 						</div>
 					</div>
-					<textarea class="col-12 post border border-secondary rounded-2"
+					<textarea class="col-12 mt-2 post border border-secondary rounded-2"
 						style="height: 200px;" placeholder=" 글 작성란"></textarea>
-						
-					<!-- 사진 보여주는 구간 -->
-					<div id="preview" contenteditable="true" class="ratio ratio-1x1"></div>
-					<!-- 사진 보여주는 구간 -->
+					
+					
 					<div class="row">	
 						<h6 class="all-tag text font-purple1 my-2"></h6>
 					</div>
+					
+					
+					<!-- 사진 보여주는 구간 -->
+					<div id="preview" contenteditable="true"></div>
+					<!-- 사진 보여주는 구간 -->
+					
 				</div>
 
 				<!-- footer -->
 				<div class="modal-footer">
 					<div class="col-5 col-md-5 col-lg-5 text-start">
+<!-- 						<label class="fakeBtn d-flex align-items-center justify-content-center me-2"> -->
+<!-- 				            		<i class="ti ti-photo-up"></i> -->
+<!-- 				            		d-none -->
+<!-- 				            		<input class="form-control picInput d-none" type="file" accept=".png, .jpg, .gif" @change="sendPic" /> -->
+<!-- 				        </label> -->
+
 						<input type="file" class="fs-6" id="fileInput" multiple>
 					</div>
 					<div class="col-6 col-md-6 col-lg-6 text-end fs-4">
@@ -470,10 +532,10 @@
 				<div class="modal-footer justify-content-end">
 					<div class="col-7 col-md-7 col-lg-7">
 						<div class="row text-start">
-							<span class="placeName fs-12px"></span>
+							<span class="placeName fs-15px"></span>
 						</div>
 						<div class="row text-start">
-							<span class="address fs-12px"></span>
+							<span class="address fs-15px"></span>
 						</div>
 					</div>
 
@@ -483,7 +545,7 @@
 							<div class="col-7">
 								<button type="button"
 									class="custom-btn btn-round btn-purple1 btn-sm bttest"
-									data-bs-target="#modal3" data-bs-toggle="modal">글쓰기</button>
+									data-bs-target="#modal3" @click="setMapPlace()" data-bs-toggle="modal">글쓰기</button>
 							</div>
 
 							<div class="col-5">
@@ -690,8 +752,127 @@
 			</div>
 		</div>
 	</div>
+	
+	<!-- 유저 신고 모달 -->
+	<div class="modal" tabindex="-1" role="dialog" id="reportMember"
+		data-bs-backdrop="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
 
-	<!-- 	    <button type="button" onclick="relayout();" class="btn btn-white btn-outline-dark rounded-pill col-12 " data-bs-target="#modalmap" data-bs-toggle="modal">지도 테스트 모달</button> -->
+				<!-- header -->
+				<div class="modal-header">
+					
+				</div>
+
+				<!-- body -->
+				<div class="modal-body my-3">
+					<div class="row">
+						<div class="text-center mb-2">
+							<h6>신고 사유를 선택하세요</h6>
+						</div>
+						<div class="text-center mb-1">
+							<button class="custom-btn btn-round btn-purple1-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#reportConfirm" @click="setReportReason('부적절한 컨텐츠 게시')">부적절한 컨텐츠 게시</button>
+						</div>
+						<div class="text-center mb-1">
+							<button class="custom-btn btn-round btn-purple1-secondary btn-sm " data-bs-toggle="modal" data-bs-target="#reportConfirm" @click="setReportReason('선정/폭력성')">선정/폭력성</button>
+						</div>
+						<div class="text-center mb-1">						
+							<button class="custom-btn btn-round btn-purple1-secondary btn-sm " data-bs-toggle="modal" data-bs-target="#reportConfirm" @click="setReportReason('스팸/광고')">스팸/광고</button>
+						</div>
+						<div class="text-center mb-1">
+							<button class="custom-btn btn-round btn-purple1-secondary btn-sm " data-bs-toggle="modal" data-bs-target="#reportConfirm" @click="setReportReason('거짓 또는 사기')">거짓 또는 사기</button>
+						</div>
+						<div class="text-center mb-1">
+							<button class="custom-btn btn-round btn-purple1-secondary btn-sm " data-bs-toggle="modal" data-bs-target="#reportConfirm" @click="setReportReason('테스트리폿사유')">테스트리폿사유</button>
+						</div>
+					</div>
+					<br>
+					<div class="row ">
+						
+					</div>
+				</div>
+
+				<!-- footer -->
+				<div class="modal-footer"></div>
+
+			</div>
+		</div>
+	</div>
+	
+	<!-- 유저 신고 확인 목달  -->
+	<div class="modal" tabindex="-1" role="dialog" id="reportConfirm"
+		data-bs-backdrop="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+
+				<!-- header -->
+				<div class="modal-header">
+					
+				</div>
+
+				<!-- body -->
+				<div class="modal-body my-3">
+					<div class="row">
+						<div class="text-center mb-5">
+							<h6>신고 사유가 맞습니까?</h6>
+						</div>
+						<div class="text-center mb-5">
+							<h4 class="font-purple1" >{{reportReason}}</h4>
+						</div>
+						<div class="text-center mb-2">
+							<button class="mx-2 custom-btn btn-round btn-purple1 btn-sm" data-bs-toggle="modal" data-bs-target="#reportEnd" @click="reportMember()">네</button>
+							<button class="mx-2 custom-btn btn-round btn-purple1-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#reportMember">아니오</button>
+						</div>
+					</div>
+				</div>
+
+				<!-- footer -->
+				<div class="modal-footer"></div>
+
+			</div>
+		</div>
+	</div>
+	
+	<!-- 유저 신고 확인 목달  -->
+	<div class="modal" tabindex="-1" role="dialog" id="reportEnd"
+		data-bs-backdrop="static">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+
+				<!-- header -->
+				<div class="modal-header">
+					
+				</div>
+
+				<!-- body -->
+				<div class="modal-body my-3">
+					<div class="row">
+						<div class="text-center mb-5">
+							<h5>{{reportMemberId}}유저에 대한 신고가 접수 되었습니다.</h5>
+						</div>
+						<div class="row  mb-5">
+							<div class="text-end col-5">
+								<h5>사유 : </h5>
+							</div>
+							<div class="text-start col-7">
+								<h5 class="font-purple1" >{{reportReason}}</h5>
+							</div>
+						</div>
+						<div class="text-center mb-2">
+							<button class="mx-2 custom-btn btn-round btn-purple1" data-bs-dismiss="modal" @click="fetchPosts()" >네</button>							
+						</div>
+					</div>
+				</div>
+
+				<!-- footer -->
+				<div class="modal-footer"></div>
+
+			</div>
+		</div>
+	</div>
+	
+	
+<!-- 	<button type="button" onclick="relayout();" class="btn btn-white btn-outline-dark rounded-pill col-12 " data-bs-target="#modalmap" data-bs-toggle="modal">지도 테스트 모달</button> -->
 	<!--------------- 게시물들 반복구간 ------------->
 	<div v-for="(post, index) in posts" :key="index">
 
@@ -699,9 +880,14 @@
 		<div class="mb-2 custom-container">
 			<!-- 프로필 사진과 아이디 -->
 			<div class="row mt-1">
-				<div
-					class="col-1 col-md-1 col-lg-1 d-flex align-items-center justify-content-center">
-					<img class="rounded-circle img-fluid"
+				<div class="col-1 col-md-1 col-lg-1 d-flex align-items-center justify-content-center">
+					<!-- 프로필 사진이 있는 경우 -->
+					<img v-if="post.attachmentNo && post.attachmentNo != null"
+						class="rounded-circle img-fluid"
+						:src="getAttachmentUrl(post.attachmentNo)">
+					
+					<!-- 프로필 사진이 없는 경우 -->
+					<img v-else class="rounded-circle img-fluid"
 						src="static/image/profileDummy.png">
 				</div>
 				<div class="col-5 col-md-5 col-lg-5 align-middle justify-content-center">
@@ -783,7 +969,7 @@
 									<div class="col-1"></div>
 									<div class="col-11 ms-2">
 										<div class="custom-hr my-2 me-4"></div>
-										<h6>유저 신고 하기</h6>
+										<h6 data-bs-toggle="modal" data-bs-target="#reportMember" @click="reportModal(post.memberId)">유저 신고 하기</h6>
 									</div>
 								</div>
 								<div class="row">
@@ -1067,7 +1253,13 @@
 									<!-- 댓글 프로필 이미지 -->
 									<div class="col-1">
 										<div class="row mt-2 text-center">
-											<img class="img-fluid rounded-circle "
+											<!-- 프로필 사진이 있는 경우 -->
+											<img v-if="reply.attachmentNo && reply.attachmentNo != null"
+												class="rounded-circle img-fluid"
+												:src="getAttachmentUrl(reply.attachmentNo)">
+											
+											<!-- 프로필 사진이 없는 경우 -->
+											<img v-else class="rounded-circle img-fluid"
 												src="static/image/profileDummy.png">
 										</div>
 									</div>
@@ -1084,8 +1276,8 @@
 											class="row grey-f5f5f5 rounded-3 text-left"
 											:style="{ width: (reply.replyId.length * 12 + 30) + 'px' }">
 											<div class="row mt-2"></div>
-											<h6 class="mr-1 fs-12px fw-bold">{{reply.replyId}}</h6>
-											<h6 class="mr-1 fs-11px lh-lg">{{reply.replyContent}}</h6>
+											<h6 class="mr-1 fw-bold">{{reply.memberNick}}</h6>
+											<h6 class="mr-1 lh-lg">{{reply.replyContent}}</h6>
 											<div class="row mb-1"></div>
 										</div>
 
@@ -1094,8 +1286,8 @@
 											style="max-width: 100%"
 											:style="{width: (reply.replyContent.length * 11 +30) + 'px' }">
 											<div class="row mt-2"></div>
-											<h6 class="mr-1 fs-12px fw-bold">{{reply.replyId}}</h6>
-											<h6 class="mr-1 fs-11px lh-lg">{{reply.replyContent}}</h6>
+											<h6 class="mr-1 fw-bold">{{reply.memberNick}}</h6>
+											<h6 class="mr-1 lh-lg">{{reply.replyContent}}</h6>
 											<div class="row mb-1"></div>
 										</div>
 
@@ -1131,7 +1323,13 @@
 											<div class="col-1"></div>
 											<div class="col-1">
 												<div class="row my-2 text-center">
-													<img class="img-fluid rounded-circle"
+													<!-- 대댓글 프로필 사진이 있는 경우 -->
+													<img v-if="rereply.attachmentNo && rereply.attachmentNo != null"
+														class="rounded-circle img-fluid"
+														:src="getAttachmentUrl(rereply.attachmentNo)">
+													
+													<!-- 대댓글 프로필 사진이 없는 경우 -->
+													<img v-else class="rounded-circle img-fluid"
 														src="static/image/profileDummy.png">
 												</div>
 											</div>
@@ -1145,8 +1343,8 @@
 													class="row grey-f5f5f5 rounded-3 text-left"
 													:style="{ width: (rereply.replyId.length * 12 +30) + 'px' }">
 													<div class="row mt-2"></div>
-													<h6 class="mr-1 fs-12px fw-bold">{{rereply.replyId}}</h6>
-													<h6 class="mr-1 fs-11px lh-lg">{{rereply.replyContent}}</h6>
+													<h6 class="mr-1 fw-bold">{{rereply.memberNick}}</h6>
+													<h6 class="mr-1 lh-lg">{{rereply.replyContent}}</h6>
 													<div class="row mb-1"></div>
 												</div>
 												<!-- 대댓글 내용이 아이디보다 길면 -->
@@ -1154,8 +1352,8 @@
 													style="max-width: 100%"
 													:style="{ width: (rereply.replyContent.length * 11 +30) + 'px' }">
 													<div class="row mt-2"></div>
-													<h6 class="mr-1 fs-12px fw-bold">{{rereply.replyId}}</h6>
-													<h6 class="mr-1 fs-11px lh-lg">{{rereply.replyContent}}</h6>
+													<h6 class="mr-1 fw-bold">{{rereply.memberNick}}</h6>
+													<h6 class="mr-1 lh-lg">{{rereply.replyContent}}</h6>
 													<div class="row mb-1"></div>
 												</div>
 
@@ -1187,7 +1385,13 @@
 									<div class="row">
 										<div class="col-1"></div>
 										<div class="col-1">
-											<img class="img-fluid rounded-circle "
+											<!-- 대댓글 작성 시, 프로필 사진이 있는 경우 -->  
+											<img v-if="sessionMemberAttachmentNo && sessionMemberAttachmentNo != null"
+												class="rounded-circle img-fluid"
+												:src="getAttachmentUrl(sessionMemberAttachmentNo)">
+											
+											<!-- 프로필 사진이 없는 경우 -->
+											<img v-else class="rounded-circle img-fluid"
 												src="static/image/profileDummy.png">
 										</div>
 										<div class="col-10 mt-1">
@@ -1236,9 +1440,17 @@
 										<!-- 댓글 프로필 이미지 -->
 										<div class="col-1">
 											<div class="row mt-2 text-center">
-												<img class="img-fluid rounded-circle "
+												<!-- 프로필 사진이 있는 경우 -->
+												<img v-if="reply.attachmentNo && reply.attachmentNo != null"
+													class="rounded-circle img-fluid"
+													:src="getAttachmentUrl(reply.attachmentNo)">
+												
+												<!-- 프로필 사진이 없는 경우 -->
+												<img v-else class="rounded-circle img-fluid"
 													src="static/image/profileDummy.png">
 											</div>
+											
+											
 										</div>
 
 										<!-- 댓글 상자 -->
@@ -1253,8 +1465,8 @@
 												class="row grey-f5f5f5 rounded-3 text-left"
 												:style="{ width: (reply.replyId.length * 12 + 30) + 'px' }">
 												<div class="row mt-2"></div>
-												<h6 class="mr-1 fs-12px fw-bold">{{reply.replyId}}</h6>
-												<h6 class="mr-1 fs-11px lh-lg">{{reply.replyContent}}</h6>
+												<h6 class="mr-1 fw-bold">{{reply.memberNick}}</h6>
+												<h6 class="mr-1 lh-lg">{{reply.replyContent}}</h6>
 												<div class="row mb-1"></div>
 											</div>
 
@@ -1263,8 +1475,8 @@
 												style="max-width: 100%"
 												:style="{width: (reply.replyContent.length * 11 +30) + 'px' }">
 												<div class="row mt-2"></div>
-												<h6 class="mr-1 fs-12px fw-bold">{{reply.replyId}}</h6>
-												<h6 class="mr-1 fs-11px lh-lg">{{reply.replyContent}}</h6>
+												<h6 class="mr-1 fw-bold">{{reply.memberNick}}</h6>
+												<h6 class="mr-1 lh-lg">{{reply.replyContent}}</h6>
 												<div class="row mb-1"></div>
 											</div>
 
@@ -1302,7 +1514,13 @@
 												<div class="col-1"></div>
 												<div class="col-1">
 													<div class="row my-2 text-center">
-														<img class="img-fluid rounded-circle"
+														<!-- 대댓글 프로필 사진이 있는 경우 -->
+														<img v-if="rereply.attachmentNo && rereply.attachmentNo != null"
+															class="rounded-circle img-fluid"
+															:src="getAttachmentUrl(rereply.attachmentNo)">
+														
+														<!-- 대댓글 프로필 사진이 없는 경우 -->
+														<img v-else class="rounded-circle img-fluid"
 															src="static/image/profileDummy.png">
 													</div>
 												</div>
@@ -1316,7 +1534,7 @@
 														class="row grey-f5f5f5 rounded-3 text-left"
 														:style="{ width: (rereply.replyId.length * 12 +30) + 'px' }">
 														<div class="row mt-2"></div>
-														<h6 class="mr-1 fs-12px fw-bold">{{rereply.replyId}}</h6>
+														<h6 class="mr-1 fs-12px fw-bold">{{rereply.memberNick}}</h6>
 														<h6 class="mr-1 fs-11px lh-lg">{{rereply.replyContent}}</h6>
 														<div class="row mb-1"></div>
 													</div>
@@ -1325,7 +1543,7 @@
 														style="max-width: 100%"
 														:style="{ width: (rereply.replyContent.length * 11 +30) + 'px' }">
 														<div class="row mt-2"></div>
-														<h6 class="mr-1 fs-12px fw-bold">{{rereply.replyId}}</h6>
+														<h6 class="mr-1 fs-12px fw-bold">{{rereply.memberNick}}</h6>
 														<h6 class="mr-1 fs-11px lh-lg">{{rereply.replyContent}}</h6>
 														<div class="row mb-1"></div>
 													</div>
@@ -1359,7 +1577,13 @@
 										<div class="row">
 											<div class="col-1"></div>
 											<div class="col-1">
-												<img class="img-fluid rounded-circle "
+												<!-- 대댓글 작성 시, 프로필 사진이 있는 경우 -->  
+												<img v-if="sessionMemberAttachmentNo && sessionMemberAttachmentNo != null"
+													class="rounded-circle img-fluid"
+													:src="getAttachmentUrl(sessionMemberAttachmentNo)">
+												
+												<!-- 프로필 사진이 없는 경우 -->
+												<img v-else class="rounded-circle img-fluid"
 													src="static/image/profileDummy.png">
 											</div>
 											<div class="col-10 mt-1">
@@ -1402,7 +1626,13 @@
 					<!-- 댓글 작성창  -->
 					<div class="row" v-if="replyFlagList[index]">
 						<div class="col-1">
-							<img class="rounded-circle img-fluid"
+							<!-- 대댓글 작성 시, 프로필 사진이 있는 경우 -->  
+							<img v-if="sessionMemberAttachmentNo && sessionMemberAttachmentNo != null"
+								class="rounded-circle img-fluid"
+								:src="getAttachmentUrl(sessionMemberAttachmentNo)">
+							
+							<!-- 프로필 사진이 없는 경우 -->
+							<img v-else class="rounded-circle img-fluid"
 								src="static/image/profileDummy.png">
 						</div>
 						<div class="col-11 mt-1">
@@ -1530,8 +1760,20 @@
                 	// 로그인 맴버 팔로우 목록 조회
                 	memberFollowObj: {},
                 	
-                	// 
+                	// 게시글 타입
                 	postType: null,
+                	
+                	// 지도 타입
+                	placeName: '',
+                	address: '',
+                	
+                	// 신고 아이디, 신고 사요
+                	reportMemberId: null,
+                	reportReason: null,
+                	
+                	// 세션 맴버 첨부파일 번호
+                	sessionMemberAttachmentNo: null,
+                	
                 };
             },
             computed:{
@@ -1766,9 +2008,44 @@
                     this.loadMemberFollowInfo();
                   	this.fetchPosts();
                 },
-        		
-        		
                 // 팔로우 관련 비동기 처리-----------------------------------
+                
+                // 유저 신고 관련 처리 ------------------------------------
+                // 유저 신고하기 버튼 클릭, 
+                reportModal(reportMemberId){
+                	this.reportMemberId = reportMemberId;
+                	this.hidePostModal();   
+                },
+                
+             	// 유저 신고 사유 선택--------------------------
+                setReportReason(reportReason){
+                	this.reportReason = reportReason; 
+                	             	
+                },
+                
+                // 유저 신고 생성--------------------------
+                async reportMember(){
+                	if(this.memberId ===null && this.reportMemberId ===null){
+                		return;
+                	}
+                	let reportDto = {
+                		memberId: this.memberId,
+                		reportTargetType: "회원",
+                		reportTargetPrimaryKey: this.reportMemberId,
+                		reportFor: this.reportReason
+                	};
+                	console.log(this.reportDto);
+                	
+                	const url = "http://localhost:8080/rest/report/";
+                	try{
+                		const resp = await axios.post(url, reportDto);
+                	}
+                	catch(error){
+                		console.log(error);
+                	}
+                },
+             	// 유저 신고 관련 처리 ------------------------------------
+                
                 
              	// 좋아요 관련 비동기 처리-----------------------------------
              	// 아이디 접속해 있고, 좋아요 클릭시에 실행
@@ -1955,6 +2232,12 @@
              	},
              	// 게시글 수정----
              	
+             	setMapPlace(){
+             		this.placeName = document.querySelector('.placeName').innerText;
+             		console.log("하하"+this.placeName);
+             		this.address = document.querySelector('.address').innerText;
+             		console.log("호호"+this.address);
+             	},             	
              	
             	// 모달창 클릭 시 지도 정보 불러오기-------------------------
             	showMap(keyword1,keyword2){
@@ -2049,6 +2332,16 @@
                         this.findFixedTagList = [];                		
                 	}                    
                 },
+                
+                // 세션 아이디의 프로필 이미지 불러오기
+                async getSessionMemberAttachmentNo(){
+                	if(this.memberId !=null)
+                	{
+                		const resp = await axios.get("http://localhost:8080/rest/post/sessionAttachmentNo/");	
+                		this.sessionMemberAttachmentNo = resp.data;
+                		return this.sessionMemberAttachmentNo; 
+                	}
+                },
             },
             watch:{
             	percent(){
@@ -2090,6 +2383,8 @@
             	// 게시글 불러오기            	
             	this.fetchPosts();
             	this.setId();
+            	//created()에 추가
+            	this.getSessionMemberAttachmentNo();
             	this.loadMemberFollowInfo();
             	
             	

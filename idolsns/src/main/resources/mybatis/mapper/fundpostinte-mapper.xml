@@ -72,12 +72,31 @@
 	 
 	 <!-- 태그&펀딩제목 검색해서 무한스크롤 페이징 목록 -->
 	<select id="selectListWithTag" resultType="FundListWithTagDto">
+		<bind name="orderListExist" value="orderList != null and orderList.size() >0"/>
+		<bind name="searchKeywordExist" value="searchKeyword != null and !searchKeyword.equals('')"/>
+		
 		<include refid="topNheader"/>	 		
 			select * from fundlist_with_tag
-		  	where instr(fund_title, #{searchKeyword}) > 0
-					  or
-					 instr(tag_name, #{searchKeyword}) > 0
-		  	order by post_time desc	 	 	
+			
+		  	<where>
+		  		<!-- 검색어 유무 -->
+		  		<if test="searchKeywordExist">
+		  			instr(fund_title, #{searchKeyword}) > 0
+						or
+					instr(tag_name, #{searchKeyword}) > 0
+						or
+					instr(member_id, #{searchKeyword}) > 0
+		  		</if>
+		  	</where> 
+		  	
+		  	<!-- 정렬조건 유무 -->
+		  	<if test="orderListExist">
+		  		order by
+		  		<foreach collection="orderList" item="order" separator=",">
+		  			${order}
+		  		</foreach>
+		  	</if>
+		  	
 		<include refid="topNfooter"/> 
 	</select>
 	
@@ -92,7 +111,7 @@
 	 
 	<!-- 무한스크롤 페이징 목록 -->
 	 <select id="infinite" resultType="FundPostImageDto">
-		<include refid="topNheader"/>	 		
+		<include refid="topNheader"/>
 			select * from fundpostimage_view
 		  	order by post_time desc
 		<include refid="topNfooter"/>
