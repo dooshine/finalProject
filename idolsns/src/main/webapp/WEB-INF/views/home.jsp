@@ -160,6 +160,7 @@
 					<img v-else class="rounded-circle img-fluid"
 						src="static/image/profileDummy.png" style="max-width: 100%; aspect-ratio: 1/1;">
 			</div>
+			
 			<div
 				class="col-11 col-md-11 col-lg-11 d-flex align-items-center justify-content-center">
 				<button type="button"
