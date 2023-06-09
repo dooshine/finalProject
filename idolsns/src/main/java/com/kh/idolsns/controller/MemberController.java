@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -38,6 +39,7 @@ import com.kh.idolsns.repo.AttachmentRepo;
 import com.kh.idolsns.repo.MemberFollowCntRepo;
 import com.kh.idolsns.repo.MemberProfileImageRepo;
 import com.kh.idolsns.repo.MemberRepo;
+import com.kh.idolsns.service.FollowService;
 import com.kh.idolsns.service.emailService;
 
 @Controller
@@ -73,6 +75,9 @@ public class MemberController {
 	
 	@Autowired
 	private PasswordEncoder encoder;
+	
+	@Autowired
+	private FollowService followService;
 	
 	private File dir;
 	@PostConstruct
@@ -303,6 +308,34 @@ public class MemberController {
 	    return result;
 	}
 	
+	 // 회원 팔로우여부 확인
+    @GetMapping("/checkFollowMember")
+    @ResponseBody
+    public boolean checkFollowMember(@ModelAttribute FollowDto followDto, HttpSession session,
+    																		@RequestParam String Id){
+        // 회원 아이디 설정
+        String memberId = (String)session.getAttribute("memberId");
+        followDto.setMemberId(memberId);
+        // 팔로우 타입 설정
+        followDto.setFollowTargetType("회원");
+        followDto.setFollowTargetPrimaryKey(Id);
+        return followService.checkFollow(followDto);
+    }
+    
+    // 팔로우(회원) 생성
+    @GetMapping("/follow")
+    @ResponseBody
+    public void createFollowMember(@RequestBody FollowDto followDto, HttpSession session, @RequestParam String Id){
+        // 회원 아이디
+        String memberId = (String)session.getAttribute("memberId");
+        followDto.setMemberId(memberId);
+        // 팔로우 회원찾기 설정
+        followDto.setFollowTargetType("회원");
+        followDto.setFollowTargetPrimaryKey(Id);
+        // 회원 팔로우 생성
+        followService.createFollow(followDto);
+    }
+	
 	//회원탈퇴
 	@GetMapping("/exit")
 	public String exit(HttpSession session) {
@@ -323,9 +356,7 @@ public class MemberController {
 			
 			memberRepo.exitDate(memberId);
 			
-				memberRepo.memberExit(memberId);
-			
-			
+			memberRepo.memberExit(memberId);
 			
 			session.removeAttribute("memberId");
 			session.removeAttribute("memberLevel");

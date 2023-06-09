@@ -2,6 +2,7 @@
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
+<%-- <div style="position:fixed;top:150px;right:150px;z-index:9999999;">admin : ${requestScope.admin}</div> --%>
 
             </div>
 
@@ -12,10 +13,12 @@
 		}*/
 	</style>
 	<!-- 일반페이지 일때 -->
-			<div class="col-3 py-4 calendar-area px-0">
-				<!-- 캘린더 영역 -->
-			 	<jsp:include page="/WEB-INF/views/template/calendar.jsp"></jsp:include>
-			</div>
+	<c:if test="${!admin && !notFound}">
+		<div class="col-3 py-4 calendar-area px-0">
+			<!-- 캘린더 영역 -->
+		 	<jsp:include page="/WEB-INF/views/template/calendar.jsp"></jsp:include>
+		</div>
+	</c:if>
 	
 
 
