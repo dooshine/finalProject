@@ -91,7 +91,7 @@
 		}
 	   
 	    
-	    	td {
+	    td {
 			vertical-align: middle;
 		}
 	   

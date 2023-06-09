@@ -230,10 +230,10 @@
 			<!-- 태그 출력 -->
 			<div class="row mt-3">
 				<div class="col">
-					<button class="btn btn-primary ms-1" v-for="(tag, i) in fundDetail.tagNames"
+					<div class="fixed-tag ms-1" v-for="(tag, i) in fundDetail.tagNames"
 								@click="tagLink(i)">
 					{{ tag }}
-					</button>
+					</div>
 				</div>
 			</div>
 		
@@ -425,13 +425,8 @@
       	</div>
      </div>
      
-	</div>             
-	
-				
-	
-	</div>		
-				
-			
+	</div>        
+</div>
 			
     <script src="https://unpkg.com/vue@3.2.36"></script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
