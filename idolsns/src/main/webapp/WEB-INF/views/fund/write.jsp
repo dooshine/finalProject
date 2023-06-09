@@ -96,7 +96,7 @@
 
 
 		<div class="input-group mb-3">
-		  <input type="file" class="form-control" id="inputGroupFile02">
+		  <input type="file" class="form-control" id="inputGroupFile02" accept=".gif, .jpg, .png">
 		  <label class="input-group-text" for="inputGroupFile02" @click="selectFile">대표 이미지(1개, 최적 해상도 450*400)</label>
 		</div>
 		
