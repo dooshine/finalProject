@@ -323,22 +323,35 @@
  	 <hr>
  	 
 	  	<!-- 새댓글 폼 -->
-	<form @submit.prevent="addReply" class="reply-form">
-	    <div>
-	        <input type="hidden" v-model="replyObj.replyId" required>
-	        <input type="hidden" v-model="replyObj.postNo" required>
-	    </div>
-	    <div>
-	        <textarea type="text" v-model="replyObj.replyContent" placeholder="글을 작성해주세요" required></textarea>
-	    </div>
-	    <div class="submit-icon">
-	    	<button type="submit" style="none;">
-		        <i class="fa-sharp fa-solid fa-pen font-purple1"></i>
-	    	</button>
-	    </div>
-	</form>
-    	
-	</div>
+		<form @submit.prevent="addReply" class="reply-form">
+		    <div>
+		        <input type="hidden" v-model="replyObj.replyId" required>
+		        <input type="hidden" v-model="replyObj.postNo" required>
+		    </div>
+		    <div>
+		        <textarea type="text" v-model="replyObj.replyContent" placeholder="글을 작성해주세요" required></textarea>
+		    </div>
+		    <div class="submit-icon">
+		    	<button type="submit" style="none;">
+			        <i class="fa-sharp fa-solid fa-pen font-purple1"></i>
+		    	</button>
+		    </div>
+		</form>
+	
+	<!-- 로그인 모달 -->
+<!--       <div v-if="loginModal" class="custom-modal"> -->
+<!--          <div class="custom-modal-body"> -->
+<!--             <div class="text-center mb-3"> -->
+<!--                <i class="ti ti-alert-triangle"></i> -->
+<!--             </div> -->
+<!--             <div class="text-center">로그인이 필요한 기능입니다</div> -->
+<!--             <div class="d-flex justify-content-center mt-4"> -->
+<!--                <button class="custom-btn btn-round btn-purple1-secondary me-2 w-100" >로그인</button> -->
+<!--                <button class="custom-btn btn-round btn-purple1 w-100" >취소</button> -->
+<!--             </div> -->
+<!--          </div> -->
+<!--      </div> -->
+     
 	</div>             
 	
 				
@@ -403,6 +416,9 @@
 			   	
 			   	// 좋아요 유무
 			   	isLiked : false,
+			   	
+			   	// 로그인 모달
+			   	loginModal: false,
 		      };
 		    },
 		    computed: {
@@ -476,7 +492,8 @@
 	              },
 	            // 작성한 comment 서버로 전송
                 async addReply() {
-	            	if(this.replyObj.replyId == "") return;
+	              this.checkLogin();  
+	              if(this.replyObj.replyId == "") return;
 	              this.replyObj.postNo = this.fundDetail.postNo;
 				  const resp = await axios.post("http://localhost:8080/rest/reply/fund", 
 						  										this.replyObj);
@@ -591,8 +608,14 @@
 // 					console.log(resp.data);
 				
 					
+				},
+				
+				// 로그인 체크
+				checkLogin() {
+					if(memberId == "") {
+						loginModal = true;
+					}
 				}
-		      	
 		    },
 		    created() {
 		    	  this.setPostNo();
@@ -602,6 +625,7 @@
 		    	  this.loadReplies();
 		    	  this.loadTagNames();
 		    	  this.checkFundLike();
+		    	  this.checkLogin();
 		    	},
 		    mounted() {
 		    	}
