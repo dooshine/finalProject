@@ -51,6 +51,16 @@ public class InterceptorConfiguration implements WebMvcConfigurer{
                 "/member/**",
                 //"/admin/**",
                 // "/board/**",
+                // "/rest/follow/**",               
+        		"/rest/post/**", // PostRestController전체 memberInterceptor 처리
+        		"/rest/attachment/upload2/**",
+        		"/rest/post/reply/delete/**",
+        		"/rest/post/rereply/**",
+        		"/rest/post/reply/redelete/**",
+                "/chat/**",
+                "/calendar/**",
+        		"/rest/point/**",
+        		
                 // "/rest/follow/**",              
         		"/point/**",
         		"/fund/**"
@@ -77,7 +87,8 @@ public class InterceptorConfiguration implements WebMvcConfigurer{
                  
                  
                  "/fund/list",
-                 "/fund/detail"
+                 "/fund/detail",
+                 "/fund/order"
                  
                 // "/board/list",
                 // "/board/detail"
@@ -100,7 +111,7 @@ public class InterceptorConfiguration implements WebMvcConfigurer{
 //                        "/rest/post/reply/**",
 //                        "/rest/reply/fund/**"
                 );
-
+        
         // //[4] 작성자 본인 및 관리자 검사 인터셉터
         // registry.addInterceptor(postManageInterceptor)
         //         .addPathPatterns("/board/edit", "/board/delete");
