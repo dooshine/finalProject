@@ -274,7 +274,16 @@ public class PostRestController {
 //    public PostWithNickDto selectOne(@PathVariable Long postNo){
 //        return postWithNickRepo.selectOne(postNo);
 //    }
-
+//    @GetMapping()
+//    public String sessionMemberAttachmentNo{
+//    	
+//    	return null;
+//    }
+    @GetMapping("/sessionAttachmentNo")
+    public Integer sessionMemberAttachmentNo(HttpSession session) {
+    	String memberId = (String) session.getAttribute("memberId");
+    	return postShowRepo.selectSessionMemberAttachmentNo(memberId);    	
+    }
     // 게시물 전체 목록 조회 
     @GetMapping("/all")
     public List<PostShowVO> allList(){
@@ -377,5 +386,7 @@ public class PostRestController {
     	return postRepo.delete(postNo);
         
     }
+    
+    
 
 }

@@ -123,10 +123,15 @@
 	<!----------- 글쓰기 버튼 ------------>
 	<div class="bg-white mb-4 p-4 rounded-4" v-if="memberId!=null">
 		<div class="row mt-1">
-			<div
-				class="col-1 col-md-1 col-lg-1 d-flex align-items-center justify-content-center p-0">
-				<img class="rounded-circle img-fluid"
-					src="static/image/profileDummy.png">
+			<div class="col-1 col-md-1 col-lg-1 d-flex align-items-center justify-content-center p-0">
+					<!-- 세션이 프로필 사진이 있는 경우 -->  
+					<img v-if="sessionMemberAttachmentNo && sessionMemberAttachmentNo != null"
+						class="rounded-circle img-fluid"
+						:src="getAttachmentUrl(sessionMemberAttachmentNo)">
+					
+					<!-- 세션이 프로필 사진이 없는 경우 -->
+					<img v-else class="rounded-circle img-fluid"
+						src="static/image/profileDummy.png">
 			</div>
 			<div
 				class="col-11 col-md-11 col-lg-11 d-flex align-items-center justify-content-center">
@@ -839,7 +844,7 @@
 	</div>
 	
 	
-	<button type="button" onclick="relayout();" class="btn btn-white btn-outline-dark rounded-pill col-12 " data-bs-target="#modalmap" data-bs-toggle="modal">지도 테스트 모달</button>
+<!-- 	<button type="button" onclick="relayout();" class="btn btn-white btn-outline-dark rounded-pill col-12 " data-bs-target="#modalmap" data-bs-toggle="modal">지도 테스트 모달</button> -->
 	<!--------------- 게시물들 반복구간 ------------->
 	<div v-for="(post, index) in posts" :key="index">
 
@@ -847,9 +852,14 @@
 		<div class="mb-2 custom-container">
 			<!-- 프로필 사진과 아이디 -->
 			<div class="row mt-1">
-				<div
-					class="col-1 col-md-1 col-lg-1 d-flex align-items-center justify-content-center">
-					<img class="rounded-circle img-fluid"
+				<div class="col-1 col-md-1 col-lg-1 d-flex align-items-center justify-content-center">
+					<!-- 프로필 사진이 있는 경우 -->
+					<img v-if="post.attachmentNo && post.attachmentNo != null"
+						class="rounded-circle img-fluid"
+						:src="getAttachmentUrl(post.attachmentNo)">
+					
+					<!-- 프로필 사진이 없는 경우 -->
+					<img v-else class="rounded-circle img-fluid"
 						src="static/image/profileDummy.png">
 				</div>
 				<div class="col-5 col-md-5 col-lg-5 align-middle justify-content-center">
@@ -1215,7 +1225,13 @@
 									<!-- 댓글 프로필 이미지 -->
 									<div class="col-1">
 										<div class="row mt-2 text-center">
-											<img class="img-fluid rounded-circle "
+											<!-- 프로필 사진이 있는 경우 -->
+											<img v-if="reply.attachmentNo && reply.attachmentNo != null"
+												class="rounded-circle img-fluid"
+												:src="getAttachmentUrl(reply.attachmentNo)">
+											
+											<!-- 프로필 사진이 없는 경우 -->
+											<img v-else class="rounded-circle img-fluid"
 												src="static/image/profileDummy.png">
 										</div>
 									</div>
@@ -1232,7 +1248,7 @@
 											class="row grey-f5f5f5 rounded-3 text-left"
 											:style="{ width: (reply.replyId.length * 12 + 30) + 'px' }">
 											<div class="row mt-2"></div>
-											<h6 class="mr-1 fs-12px fw-bold">{{reply.replyId}}</h6>
+											<h6 class="mr-1 fs-12px fw-bold">{{reply.memberNick}}</h6>
 											<h6 class="mr-1 fs-11px lh-lg">{{reply.replyContent}}</h6>
 											<div class="row mb-1"></div>
 										</div>
@@ -1242,7 +1258,7 @@
 											style="max-width: 100%"
 											:style="{width: (reply.replyContent.length * 11 +30) + 'px' }">
 											<div class="row mt-2"></div>
-											<h6 class="mr-1 fs-12px fw-bold">{{reply.replyId}}</h6>
+											<h6 class="mr-1 fs-12px fw-bold">{{reply.memberNick}}</h6>
 											<h6 class="mr-1 fs-11px lh-lg">{{reply.replyContent}}</h6>
 											<div class="row mb-1"></div>
 										</div>
@@ -1279,7 +1295,13 @@
 											<div class="col-1"></div>
 											<div class="col-1">
 												<div class="row my-2 text-center">
-													<img class="img-fluid rounded-circle"
+													<!-- 대댓글 프로필 사진이 있는 경우 -->
+													<img v-if="rereply.attachmentNo && rereply.attachmentNo != null"
+														class="rounded-circle img-fluid"
+														:src="getAttachmentUrl(rereply.attachmentNo)">
+													
+													<!-- 대댓글 프로필 사진이 없는 경우 -->
+													<img v-else class="rounded-circle img-fluid"
 														src="static/image/profileDummy.png">
 												</div>
 											</div>
@@ -1293,7 +1315,7 @@
 													class="row grey-f5f5f5 rounded-3 text-left"
 													:style="{ width: (rereply.replyId.length * 12 +30) + 'px' }">
 													<div class="row mt-2"></div>
-													<h6 class="mr-1 fs-12px fw-bold">{{rereply.replyId}}</h6>
+													<h6 class="mr-1 fs-12px fw-bold">{{rereply.memberNick}}</h6>
 													<h6 class="mr-1 fs-11px lh-lg">{{rereply.replyContent}}</h6>
 													<div class="row mb-1"></div>
 												</div>
@@ -1302,7 +1324,7 @@
 													style="max-width: 100%"
 													:style="{ width: (rereply.replyContent.length * 11 +30) + 'px' }">
 													<div class="row mt-2"></div>
-													<h6 class="mr-1 fs-12px fw-bold">{{rereply.replyId}}</h6>
+													<h6 class="mr-1 fs-12px fw-bold">{{rereply.memberNick}}</h6>
 													<h6 class="mr-1 fs-11px lh-lg">{{rereply.replyContent}}</h6>
 													<div class="row mb-1"></div>
 												</div>
@@ -1335,7 +1357,13 @@
 									<div class="row">
 										<div class="col-1"></div>
 										<div class="col-1">
-											<img class="img-fluid rounded-circle "
+											<!-- 대댓글 작성 시, 프로필 사진이 있는 경우 -->  
+											<img v-if="sessionMemberAttachmentNo && sessionMemberAttachmentNo != null"
+												class="rounded-circle img-fluid"
+												:src="getAttachmentUrl(sessionMemberAttachmentNo)">
+											
+											<!-- 프로필 사진이 없는 경우 -->
+											<img v-else class="rounded-circle img-fluid"
 												src="static/image/profileDummy.png">
 										</div>
 										<div class="col-10 mt-1">
@@ -1384,9 +1412,17 @@
 										<!-- 댓글 프로필 이미지 -->
 										<div class="col-1">
 											<div class="row mt-2 text-center">
-												<img class="img-fluid rounded-circle "
+												<!-- 프로필 사진이 있는 경우 -->
+												<img v-if="reply.attachmentNo && reply.attachmentNo != null"
+													class="rounded-circle img-fluid"
+													:src="getAttachmentUrl(reply.attachmentNo)">
+												
+												<!-- 프로필 사진이 없는 경우 -->
+												<img v-else class="rounded-circle img-fluid"
 													src="static/image/profileDummy.png">
 											</div>
+											
+											
 										</div>
 
 										<!-- 댓글 상자 -->
@@ -1401,7 +1437,7 @@
 												class="row grey-f5f5f5 rounded-3 text-left"
 												:style="{ width: (reply.replyId.length * 12 + 30) + 'px' }">
 												<div class="row mt-2"></div>
-												<h6 class="mr-1 fs-12px fw-bold">{{reply.replyId}}</h6>
+												<h6 class="mr-1 fs-12px fw-bold">{{reply.memberNick}}</h6>
 												<h6 class="mr-1 fs-11px lh-lg">{{reply.replyContent}}</h6>
 												<div class="row mb-1"></div>
 											</div>
@@ -1411,7 +1447,7 @@
 												style="max-width: 100%"
 												:style="{width: (reply.replyContent.length * 11 +30) + 'px' }">
 												<div class="row mt-2"></div>
-												<h6 class="mr-1 fs-12px fw-bold">{{reply.replyId}}</h6>
+												<h6 class="mr-1 fs-12px fw-bold">{{reply.memberNick}}</h6>
 												<h6 class="mr-1 fs-11px lh-lg">{{reply.replyContent}}</h6>
 												<div class="row mb-1"></div>
 											</div>
@@ -1450,7 +1486,13 @@
 												<div class="col-1"></div>
 												<div class="col-1">
 													<div class="row my-2 text-center">
-														<img class="img-fluid rounded-circle"
+														<!-- 대댓글 프로필 사진이 있는 경우 -->
+														<img v-if="rereply.attachmentNo && rereply.attachmentNo != null"
+															class="rounded-circle img-fluid"
+															:src="getAttachmentUrl(rereply.attachmentNo)">
+														
+														<!-- 대댓글 프로필 사진이 없는 경우 -->
+														<img v-else class="rounded-circle img-fluid"
 															src="static/image/profileDummy.png">
 													</div>
 												</div>
@@ -1464,7 +1506,7 @@
 														class="row grey-f5f5f5 rounded-3 text-left"
 														:style="{ width: (rereply.replyId.length * 12 +30) + 'px' }">
 														<div class="row mt-2"></div>
-														<h6 class="mr-1 fs-12px fw-bold">{{rereply.replyId}}</h6>
+														<h6 class="mr-1 fs-12px fw-bold">{{rereply.memberNick}}</h6>
 														<h6 class="mr-1 fs-11px lh-lg">{{rereply.replyContent}}</h6>
 														<div class="row mb-1"></div>
 													</div>
@@ -1473,7 +1515,7 @@
 														style="max-width: 100%"
 														:style="{ width: (rereply.replyContent.length * 11 +30) + 'px' }">
 														<div class="row mt-2"></div>
-														<h6 class="mr-1 fs-12px fw-bold">{{rereply.replyId}}</h6>
+														<h6 class="mr-1 fs-12px fw-bold">{{rereply.memberNick}}</h6>
 														<h6 class="mr-1 fs-11px lh-lg">{{rereply.replyContent}}</h6>
 														<div class="row mb-1"></div>
 													</div>
@@ -1507,7 +1549,13 @@
 										<div class="row">
 											<div class="col-1"></div>
 											<div class="col-1">
-												<img class="img-fluid rounded-circle "
+												<!-- 대댓글 작성 시, 프로필 사진이 있는 경우 -->  
+												<img v-if="sessionMemberAttachmentNo && sessionMemberAttachmentNo != null"
+													class="rounded-circle img-fluid"
+													:src="getAttachmentUrl(sessionMemberAttachmentNo)">
+												
+												<!-- 프로필 사진이 없는 경우 -->
+												<img v-else class="rounded-circle img-fluid"
 													src="static/image/profileDummy.png">
 											</div>
 											<div class="col-10 mt-1">
@@ -1550,7 +1598,13 @@
 					<!-- 댓글 작성창  -->
 					<div class="row" v-if="replyFlagList[index]">
 						<div class="col-1">
-							<img class="rounded-circle img-fluid"
+							<!-- 대댓글 작성 시, 프로필 사진이 있는 경우 -->  
+							<img v-if="sessionMemberAttachmentNo && sessionMemberAttachmentNo != null"
+								class="rounded-circle img-fluid"
+								:src="getAttachmentUrl(sessionMemberAttachmentNo)">
+							
+							<!-- 프로필 사진이 없는 경우 -->
+							<img v-else class="rounded-circle img-fluid"
 								src="static/image/profileDummy.png">
 						</div>
 						<div class="col-11 mt-1">
@@ -1685,8 +1739,13 @@
                 	placeName: '',
                 	address: '',
                 	
+                	// 신고 아이디, 신고 사요
                 	reportMemberId: null,
                 	reportReason: null,
+                	
+                	// 세션 맴버 첨부파일 번호
+                	sessionMemberAttachmentNo: null,
+                	
                 };
             },
             computed:{
@@ -2245,6 +2304,16 @@
                         this.findFixedTagList = [];                		
                 	}                    
                 },
+                
+                // 세션 아이디의 프로필 이미지 불러오기
+                async getSessionMemberAttachmentNo(){
+                	if(this.memberId !=null)
+                	{
+                		const resp = await axios.get("http://localhost:8080/rest/post/sessionAttachmentNo/");	
+                		this.sessionMemberAttachmentNo = resp.data;
+                		return this.sessionMemberAttachmentNo; 
+                	}
+                },
             },
             watch:{
             	percent(){
@@ -2286,6 +2355,7 @@
             	// 게시글 불러오기            	
             	this.fetchPosts();
             	this.setId();
+            	this.getSessionMemberAttachmentNo();
             	this.loadMemberFollowInfo();
             	
             	

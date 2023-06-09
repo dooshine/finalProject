@@ -232,4 +232,8 @@
     </select>
 	<!-- resultMap에서 사용할 select구문들 -->
 	
+	<select id="selectSessionMemberAttachmentNo" resultType="Integer">
+		select attachment_no from member_profile_image where member_id = #{memberId} 
+	</select>
+	
 </mapper> 

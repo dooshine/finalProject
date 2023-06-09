@@ -59,4 +59,9 @@ public class ReplyRepoImpl implements ReplyRepo{
 		sqlSession.delete("reply.deleteByPostNo",postNo);		
 	}
 
+	@Override
+	public String replyNick(String replyId) {		
+		return sqlSession.selectOne("reply.selectReplyNick",replyId);
+	}
+
 }

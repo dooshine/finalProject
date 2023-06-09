@@ -52,7 +52,7 @@ public class PostShowVO {
 	private Long likeCount;
 	// ----------------------------------
 	// 댓글 List형태로 받기
-	private List<ReplyDto> replyList; 
+	private List<ReplyShowVO> replyList; 
 	//-----------------------------------
 
 	
