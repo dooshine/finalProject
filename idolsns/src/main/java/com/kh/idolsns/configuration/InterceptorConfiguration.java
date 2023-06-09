@@ -49,8 +49,8 @@ public class InterceptorConfiguration implements WebMvcConfigurer{
 		registry.addInterceptor(memberInterceptor)
         .addPathPatterns(
                 "/member/**",           
-              "/point/**",
-              "/fund/**"
+        		"/point/**",
+        		"/fund/**"
         )       
         .excludePathPatterns(
                  "/member/join",

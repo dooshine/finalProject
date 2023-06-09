@@ -128,7 +128,7 @@
 
 
 <!-- 	<div class="container-fluid" id="app" test> -->
-<div class="container-fluid" id="app" >
+<div class="container-fluid" id="app">
 <!-- 	<button class="custom-btn btn-purple1-secondary" @click="changeCustom">커스텀모달</button> -->
 <!-- 	<div v-if="customOn" class="custom-modal" id="deleteAlertModal"> -->
 <!-- 		<div class="custom-modal-body"> -->
@@ -153,14 +153,13 @@
 			<div class="col-1 col-md-1 col-lg-1 d-flex align-items-center justify-content-center p-0">
 					<!-- 세션이 프로필 사진이 있는 경우 -->  
 					<img v-if="sessionMemberAttachmentNo && sessionMemberAttachmentNo != null"
-						class="rounded-circle img-fluid"
-						:src="getAttachmentUrl(sessionMemberAttachmentNo)" style="max-width: 100%; aspect-ratio: 1/1;">
+						class="rounded-circle img-fluid" style="max-width: 100%; aspect-ratio: 1/1;"
+						:src="getAttachmentUrl(sessionMemberAttachmentNo)">
 					
 					<!-- 세션이 프로필 사진이 없는 경우 -->
-					<img v-else class="rounded-circle img-fluid"
-						src="static/image/profileDummy.png" style="max-width: 100%; aspect-ratio: 1/1;">
+					<img v-else class="rounded-circle img-fluid" style="max-width: 100%; aspect-ratio: 1/1;"
+						src="static/image/profileDummy.png">
 			</div>
-			
 			<div
 				class="col-11 col-md-11 col-lg-11 d-flex align-items-center justify-content-center">
 				<button type="button"
@@ -879,15 +878,15 @@
 		<!-- 글 박스 루프 1개-->
 		<div class="mb-2 custom-container">
 			<!-- 프로필 사진과 아이디 -->
-			<div class="row mt-1">
+			<div class="row mt-1">			
 				<div class="col-1 col-md-1 col-lg-1 d-flex align-items-center justify-content-center">
 					<!-- 프로필 사진이 있는 경우 -->
 					<img v-if="post.attachmentNo && post.attachmentNo != null"
-						class="rounded-circle img-fluid"
+						class="rounded-circle img-fluid" style="max-width: 100%; aspect-ratio: 1/1;"
 						:src="getAttachmentUrl(post.attachmentNo)">
 					
 					<!-- 프로필 사진이 없는 경우 -->
-					<img v-else class="rounded-circle img-fluid"
+					<img v-else class="rounded-circle img-fluid" style="max-width: 100%; aspect-ratio: 1/1;"
 						src="static/image/profileDummy.png">
 				</div>
 				<div class="col-5 col-md-5 col-lg-5 align-middle justify-content-center">
@@ -1242,7 +1241,7 @@
 
 
 					<!-- 댓글, 대댓글 보여주는 창-->
-					<div v-if="post.replyList.length >= 1">
+					<div v-if="post.replyList.length && post.replyList.length >= 1">
 
 						<!-- 댓글이 다섯개 이하인 경우 -->
 						<div v-if="5 >= post.replyList.length ">
@@ -1250,16 +1249,16 @@
 								<!-- 댓글 표시 -->
 								<div class="row" v-if="reply.replyNo == reply.replyGroupNo">
 
-									<!-- 댓글 프로필 이미지 -->
-									<div class="col-1">
+									<!-- 댓글 프로필 이미지 -->북마크1
+									<div class="col-1 ">
 										<div class="row mt-2 text-center">
 											<!-- 프로필 사진이 있는 경우 -->
 											<img v-if="reply.attachmentNo && reply.attachmentNo != null"
-												class="rounded-circle img-fluid"
+												class="rounded-circle img-fluid" style="max-width: 100%; aspect-ratio: 1/1;"
 												:src="getAttachmentUrl(reply.attachmentNo)">
 											
 											<!-- 프로필 사진이 없는 경우 -->
-											<img v-else class="rounded-circle img-fluid"
+											<img v-else class="rounded-circle img-fluid" style="max-width: 100%; aspect-ratio: 1/1;"
 												src="static/image/profileDummy.png">
 										</div>
 									</div>
@@ -1325,11 +1324,11 @@
 												<div class="row my-2 text-center">
 													<!-- 대댓글 프로필 사진이 있는 경우 -->
 													<img v-if="rereply.attachmentNo && rereply.attachmentNo != null"
-														class="rounded-circle img-fluid"
+														class="rounded-circle img-fluid" style="max-width: 100%; aspect-ratio: 1/1;"
 														:src="getAttachmentUrl(rereply.attachmentNo)">
 													
 													<!-- 대댓글 프로필 사진이 없는 경우 -->
-													<img v-else class="rounded-circle img-fluid"
+													<img v-else class="rounded-circle img-fluid" style="max-width: 100%; aspect-ratio: 1/1;"
 														src="static/image/profileDummy.png">
 												</div>
 											</div>
@@ -1387,11 +1386,11 @@
 										<div class="col-1">
 											<!-- 대댓글 작성 시, 프로필 사진이 있는 경우 -->  
 											<img v-if="sessionMemberAttachmentNo && sessionMemberAttachmentNo != null"
-												class="rounded-circle img-fluid"
+												class="rounded-circle img-fluid" style="max-width: 100%; aspect-ratio: 1/1;"
 												:src="getAttachmentUrl(sessionMemberAttachmentNo)">
 											
 											<!-- 프로필 사진이 없는 경우 -->
-											<img v-else class="rounded-circle img-fluid"
+											<img v-else class="rounded-circle img-fluid" style="max-width: 100%; aspect-ratio: 1/1;"
 												src="static/image/profileDummy.png">
 										</div>
 										<div class="col-10 mt-1">
@@ -1429,7 +1428,7 @@
 
 
 						<!-- 댓글이 다섯 개 초과인 경우 -->
-						<div v-else-if="post.replyList.length >5">
+						<div v-else-if="post.replyList.length && post.replyList.length >5">
 							<div v-for="(reply,replyIdx) in post.replyList" :key="replyIdx">
 								<!-- 댓글이 다섯 개 초과인 경우중, 댓글이 5개 이하 이거나 글 인덱스의 전체보기 버튼이 눌렸을 때, -->
 								<div v-if="4 >= replyIdx || replyAllList[index] ">
@@ -1442,11 +1441,11 @@
 											<div class="row mt-2 text-center">
 												<!-- 프로필 사진이 있는 경우 -->
 												<img v-if="reply.attachmentNo && reply.attachmentNo != null"
-													class="rounded-circle img-fluid"
+													class="rounded-circle img-fluid" style="max-width: 100%; aspect-ratio: 1/1;"
 													:src="getAttachmentUrl(reply.attachmentNo)">
 												
 												<!-- 프로필 사진이 없는 경우 -->
-												<img v-else class="rounded-circle img-fluid"
+												<img v-else class="rounded-circle img-fluid" style="max-width: 100%; aspect-ratio: 1/1;"
 													src="static/image/profileDummy.png">
 											</div>
 											
@@ -1516,11 +1515,11 @@
 													<div class="row my-2 text-center">
 														<!-- 대댓글 프로필 사진이 있는 경우 -->
 														<img v-if="rereply.attachmentNo && rereply.attachmentNo != null"
-															class="rounded-circle img-fluid"
+															class="rounded-circle img-fluid" style="max-width: 100%; aspect-ratio: 1/1;"
 															:src="getAttachmentUrl(rereply.attachmentNo)">
 														
 														<!-- 대댓글 프로필 사진이 없는 경우 -->
-														<img v-else class="rounded-circle img-fluid"
+														<img v-else class="rounded-circle img-fluid" style="max-width: 100%; aspect-ratio: 1/1;"
 															src="static/image/profileDummy.png">
 													</div>
 												</div>
@@ -1579,11 +1578,11 @@
 											<div class="col-1">
 												<!-- 대댓글 작성 시, 프로필 사진이 있는 경우 -->  
 												<img v-if="sessionMemberAttachmentNo && sessionMemberAttachmentNo != null"
-													class="rounded-circle img-fluid"
+													class="rounded-circle img-fluid" style="max-width: 100%; aspect-ratio: 1/1;"
 													:src="getAttachmentUrl(sessionMemberAttachmentNo)">
 												
 												<!-- 프로필 사진이 없는 경우 -->
-												<img v-else class="rounded-circle img-fluid"
+												<img v-else class="rounded-circle img-fluid" style="max-width: 100%; aspect-ratio: 1/1;"
 													src="static/image/profileDummy.png">
 											</div>
 											<div class="col-10 mt-1">
@@ -1628,11 +1627,11 @@
 						<div class="col-1">
 							<!-- 대댓글 작성 시, 프로필 사진이 있는 경우 -->  
 							<img v-if="sessionMemberAttachmentNo && sessionMemberAttachmentNo != null"
-								class="rounded-circle img-fluid"
+								class="rounded-circle img-fluid" style="max-width: 100%; aspect-ratio: 1/1;"
 								:src="getAttachmentUrl(sessionMemberAttachmentNo)">
 							
 							<!-- 프로필 사진이 없는 경우 -->
-							<img v-else class="rounded-circle img-fluid"
+							<img v-else class="rounded-circle img-fluid" style="max-width: 100%; aspect-ratio: 1/1;"
 								src="static/image/profileDummy.png">
 						</div>
 						<div class="col-11 mt-1">
@@ -1658,7 +1657,7 @@
 						</div>
 					</div>
 					<!-- 댓글 더보기 버튼 -->
-					<div v-if="post.replyList.length >5">
+					<div v-if="post.replyList.length &&  post.replyList.length >5">
 						<h6 class="mt-2 fs-11px text-secondary"
 							v-if="!replyAllList[index]" @click="showReplyMoreThanFive(index)">댓글
 							더보기 ({{post.replyList.length -5}}개의 댓글)</h6>
