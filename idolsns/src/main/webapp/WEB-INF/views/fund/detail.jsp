@@ -249,14 +249,15 @@
 	        <div v-if="reply.replyNo == reply.replyGroupNo" class="row">
 	        	<!-- 프로필 이미지 -->
           		<div class="col-1">
-       				<img class="img-fluid rounded-circle" src="/static/image/profileDummy.png">
+          			<img v-if="reply.attachmentNo && reply.attachmentNo !=null" class="img-fluid rounded-circle" :src="getAttachmentUrl(reply.attachmentNo)"> 
+       				<img v-else class="img-fluid rounded-circle" src="/static/image/profileDummy.png">
           		</div>
           		
           		<div class="col-10 align-items-center">
           			<!-- 작성자면 작성자 표시 -->
 	        		<div v-if="reply.replyId == fundDetail.memberId">
 	        			<div class="d-flex">
-						    <div>{{ reply.replyId }}</div>
+						    <div>{{ reply.memberNick }}</div>
 	        				<div class="author-badge font-purple2">
 							    <div class="">작성자</div>
 						  	</div>
@@ -264,7 +265,7 @@
 	        		</div>
 	        		<!-- 작성자가 아니면 -->
 	        		<div v-else>
-	        			{{ reply.replyId }}
+	        			{{ reply.memberNick }}
 	        		</div>
 	        		
 	        		<!-- 수정 폼 -->
@@ -494,6 +495,8 @@
 			   	// 세션 memberId
 			   	memberId: memberId,
 			   	
+			   	// 세션 프로필 이미지 첨부파일 번호 
+			   	sessionMemberAttachmentNo: null,
 		      };
 		    },
 		    computed: {
@@ -695,6 +698,21 @@
                       }
                 },
                 
+                // 이미지 불러오기 
+                getAttachmentUrl(attachmentNo) {      
+                    return "http://localhost:8080/rest/attachment/download/"+attachmentNo;
+                },
+                
+                // 세션 아이디의 프로필 이미지 불러오기 메소드에 추가
+                async getSessionMemberAttachmentNo(){
+                   if(this.memberId !=null)
+                   {
+                      const resp = await axios.get("http://localhost:8080/rest/post/sessionAttachmentNo/");   
+                      this.sessionMemberAttachmentNo = resp.data;
+                      return this.sessionMemberAttachmentNo; 
+                   }
+                },
+                
                 // 멤버 프로필 이미지 불러오기
                 async fetchMemberImage() {
                 	const resp = await axios.get("http://localhost:8080/rest")
@@ -709,6 +727,8 @@
 						this.loginModal = true;
 						return false
 					}
+                	// 되어있으면
+					else return true;
 				},
 				
 				// 로그인 페이지로
@@ -724,6 +744,7 @@
 		    	  this.loadReplies();
 		    	  this.loadTagNames();
 		    	  this.checkFundLike();
+	              this.getSessionMemberAttachmentNo();
 		    	},
 		    mounted() {
 		    	}
