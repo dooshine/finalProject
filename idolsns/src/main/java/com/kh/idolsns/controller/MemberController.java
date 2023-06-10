@@ -127,21 +127,20 @@ public class MemberController {
 			return "redirect:login";
 		}
 		
-		if(!userDto.getMemberPw().equals(findDto.getMemberPw())) {
-			attr.addAttribute("mode", "error");
-			attr.addAttribute("msg", "아이디 또는 비밀번호를 잘못입력하였습니다.");
-			return "redirect:login";
+		if (!encoder.matches(userDto.getMemberPw(), findDto.getMemberPw())) {
+		    attr.addAttribute("mode", "error");
+		    attr.addAttribute("msg", "아이디 또는 비밀번호를 잘못입력하였습니다.");
+		    return "redirect:login";
 		}
+
 		
 		session.setAttribute("memberId", findDto.getMemberId());
 		session.setAttribute("memberLevel", findDto.getMemberLevel());
 		
 		String memberId = findDto.getMemberId();
 		if(!(findDto.getMemberExitDate() == null)) {
-			memberRepo.cancelExit(memberId	);
-			String alertMessage = "회원 탈퇴가 취소되었습니다!";
-		    attr.addAttribute("mode", "cancel");
-		    attr.addAttribute("mmssgg", alertMessage);
+			memberRepo.cancleExit(memberId	);
+		    attr.addAttribute("mode", "cancle");
 		    return "redirect:login";
 		}
 		
@@ -172,6 +171,31 @@ public class MemberController {
 		model.addAttribute("memberDto", memberDto);
 		return "member/mypage";
 	}
+	
+	// 6.10 해당 맴버가 좋아요한 글 페이지
+	@GetMapping("/mypage1/{memberId}")
+	public String mypage1(@PathVariable String memberId, HttpSession session, Model model) {
+		MemberDto memberDto = memberRepo.selectOne(memberId);
+		System.out.println(memberDto);
+		model.addAttribute("memberDto", memberDto);
+		
+		String pageMemberId = memberId; 
+		model.addAttribute("pageMemberId",pageMemberId); // 누구의 페이지인지 알려주기 위한 model
+		return "member/mypage1";
+	}
+	
+	// 6.10 해당 맴버가 작성한 글 페이지
+	@GetMapping("/mypage2/{memberId}")
+	public String mypage2(@PathVariable String memberId, HttpSession session, Model model) {
+		MemberDto memberDto = memberRepo.selectOne(memberId);
+		System.out.println(memberDto);
+		model.addAttribute("memberDto", memberDto);
+
+		String pageMemberId = memberId; 
+		model.addAttribute("pageMemberId",pageMemberId); // 누구의 페이지인지 알려주기 위한 model
+		return "member/mypage2";
+	}
+	
 	
 	//내페이지 or 남의페이지 구분
 	@GetMapping("/mypage")
@@ -349,11 +373,6 @@ public class MemberController {
 		String memberId = (String) session.getAttribute("memberId");
 		MemberDto memberDto = memberRepo.selectOne(memberId);
 		
-		if(!memberDto.getMemberPw().equals(memberPw)) {
-			attr.addAttribute("mode", "error");
-			return "redirect:exit";
-		}
-			
 			memberRepo.exitDate(memberId);
 			
 			memberRepo.memberExit(memberId);
@@ -363,7 +382,18 @@ public class MemberController {
 			
 			return "redirect:exitFinish";
 		
+	}
+	
+	@GetMapping("/exitPw")
+	@ResponseBody
+	public String exitPw(HttpSession session, @RequestParam String memberPw) {
+		String memberId = (String) session.getAttribute("memberId");
+		MemberDto memberDto = memberRepo.selectOne(memberId);
+		if(!encoder.matches(memberPw, memberDto.getMemberPw())) {
+			return "N";
+		}
 		
+		return "Y";
 	}
 	
 	@GetMapping("/exitFinish")
@@ -385,15 +415,24 @@ public class MemberController {
 		String memberId = (String) session.getAttribute("memberId");
 		MemberDto memberDto = memberRepo.selectOne(memberId);
 		
-		if(!memberDto.getMemberPw().equals(currentPw)) {
-			attr.addAttribute("mode", "error");
-			attr.addAttribute("msg", "잘못된 비밀번호 입니다.");
-			return "redirect:password";
-		}
-		
-		memberRepo.updatePw(memberId, changePw);
+		// 새로운 비밀번호를 암호화
+	    String encryptedPassword = encoder.encode(changePw);
+	    memberRepo.updatePw(memberId, encryptedPassword);
 		
 		return "redirect:passwordFinish";
+	}
+	
+	@GetMapping("/passwordCheck")
+	@ResponseBody
+	public String passwordCheck(HttpSession session, @RequestParam String currentPw) {
+		String memberId = (String) session.getAttribute("memberId");
+		MemberDto memberDto = memberRepo.selectOne(memberId);
+		
+		if(!encoder.matches(currentPw, memberDto.getMemberPw())) {
+			return "N";
+		}
+		
+		return "Y";
 	}
 	
 	@GetMapping("/passwordFinish")
@@ -508,7 +547,8 @@ public class MemberController {
 		
 		String newPassword = emailService.CreatePassword();
 		emailService.sendEmailPassword(memberEmail, newPassword);
-		memberRepo.editPassword(memberEmail, newPassword);
+		String encryptedPassword = encoder.encode(newPassword);
+		memberRepo.editPassword(memberEmail, encryptedPassword);
 		return newPassword;
 	}
 	
