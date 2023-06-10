@@ -71,7 +71,7 @@ public class InterceptorConfiguration implements WebMvcConfigurer{
                  "/member/emailDuplicatedCheck",
                  "/member/emailSend",
                  "/member/sendEmailPassword",
-                 
+                 "/member/mypage1",
                  
                  "/fund/list",
                  "/fund/detail",

@@ -172,6 +172,31 @@ public class MemberController {
 		return "member/mypage";
 	}
 	
+	// 6.10 해당 맴버가 좋아요한 글 페이지
+	@GetMapping("/mypage1/{memberId}")
+	public String mypage1(@PathVariable String memberId, HttpSession session, Model model) {
+		MemberDto memberDto = memberRepo.selectOne(memberId);
+		System.out.println(memberDto);
+		model.addAttribute("memberDto", memberDto);
+		
+		String pageMemberId = memberId; 
+		model.addAttribute("pageMemberId",pageMemberId); // 누구의 페이지인지 알려주기 위한 model
+		return "member/mypage1";
+	}
+	
+	// 6.10 해당 맴버가 작성한 글 페이지
+	@GetMapping("/mypage2/{memberId}")
+	public String mypage2(@PathVariable String memberId, HttpSession session, Model model) {
+		MemberDto memberDto = memberRepo.selectOne(memberId);
+		System.out.println(memberDto);
+		model.addAttribute("memberDto", memberDto);
+
+		String pageMemberId = memberId; 
+		model.addAttribute("pageMemberId",pageMemberId); // 누구의 페이지인지 알려주기 위한 model
+		return "member/mypage2";
+	}
+	
+	
 	//내페이지 or 남의페이지 구분
 	@GetMapping("/mypage")
 	@ResponseBody

@@ -1,36 +1,62 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-	pageEncoding="UTF-8"%>
-<jsp:include page="/WEB-INF/views/template/header.jsp"></jsp:include>
+    pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>   
+<jsp:include page="/WEB-INF/views/template/header.jsp"></jsp:include> 
 
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>마이페이지</title>
+    <!-- 폰트어썸 cdn -->
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css">
+    <!-- jquery cdn -->
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <!-- 뷰 cdn -->
+    <script src="https://unpkg.com/vue@3.2.26"></script>
+    <!-- axios -->
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <!-- lodash -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.21/lodash.min.js"></script>
+    <!-- moment -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
+    <!-- 부트스트랩 css(공식) -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css">
 
-
-<!------- 카카오 지도 관련-------->
-<!-- 카카오 api 키 등록 -->
-<script
-	src="//dapi.kakao.com/v2/maps/sdk.js?appkey=047888df39ba653ff171c5d03dc23d6a&libraries=services"></script>
-<!-- 맵 관련 css -->
-<link rel="stylesheet" type="text/css"
-	href="${pageContext.request.contextPath}/static/css/map.css">
-<!------- 카카오 지도 관련-------->
-
-<!-- tabler 아이콘 -->
-<link rel="stylesheet"
-	href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
-
-<!-- swiper cdn -->
-<link rel="stylesheet"
-	href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css" />
-<script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
-
-
-<style>
-/*@media screen and (max-width:992px) {
-		  	.col-6 {
-		    width: 100%; 
-		  }
-    	}*/
-
-/*   이미지 스와이핑 창 스타일 */
+    <!-- custom 테스트 css -->
+    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/static/css/test.css">
+    <!-- tabler 아이콘 -->
+   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+    <!-- toastify -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+      <!-- swiper cdn -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css"/>
+	<script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
+	<!------- 카카오 지도 관련-------->
+	<!-- 카카오 api 키 등록 -->
+	<script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=047888df39ba653ff171c5d03dc23d6a&libraries=services"></script>
+	<!-- 맵 관련 css -->
+	<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/static/css/map.css">
+	<!------- 카카오 지도 관련-------->
+   <style>
+      .profile-image-wrapper {
+          position: relative;
+          display: inline-block;
+      }
+      
+      .profile-image {
+          width: 200px;
+          height: 200px;
+          border-radius: 100%;
+          transition: filter 0.3s;
+      }
+      
+      .profile-image:hover {
+          filter: brightness(50%);
+	}
 .swiper {
 	width: 600px;
 	height: 600px;
@@ -121,449 +147,180 @@
 	/* 		  border-color: black; /* 테두리 색상 지정 */
 	border-style: solid;
 }
-</style>
-
-
-
-
-
-<!-- 	<div class="container-fluid" id="app" test> -->
-<div class="container-fluid" id="app">
-<!-- 	<button class="custom-btn btn-purple1-secondary" @click="changeCustom">커스텀모달</button> -->
-<!-- 	<div v-if="customOn" class="custom-modal" id="deleteAlertModal"> -->
-<!-- 		<div class="custom-modal-body"> -->
-<!-- 			<div class="text-center mb-3"> -->
-<!-- 				<i class="ti ti-alert-triangle"></i> -->
-<!-- 			</div> -->
-<!-- 			<div class="text-center">삭제한 일정은 복구할 수 -->
-<!-- 				없습니다.zzzzzzzzzzzzzzzzzzzzzzzzzzz</div> -->
-<!-- 			<div class="text-center">일정을 정말 삭제하시겠습니까?</div> -->
-<!-- 			<div class="d-flex justify-content-center mt-4"> -->
-<!-- 				<button -->
-<!-- 					class="custom-btn btn-round btn-purple1-secondary me-2 w-100" -->
-<!-- 					id="delete-schedule">삭제</button> -->
-<!-- 				<button class="custom-btn btn-round btn-purple1 w-100" -->
-<!-- 					@click="changeCustom" id="delete-cancel">취소</button> -->
-<!-- 			</div> -->
-<!-- 		</div> -->
-<!-- 	</div> -->
-	<!----------- 글쓰기 버튼 ------------>
-	<div class="bg-white mb-4 p-4 rounded-4" v-if="memberId!=null">
-		<div class="row mt-1">
-			<div class="col-1 col-md-1 col-lg-1 d-flex align-items-center justify-content-center p-0">
-					<!-- 세션이 프로필 사진이 있는 경우 -->  
-					<img v-if="sessionMemberAttachmentNo && sessionMemberAttachmentNo != null"
-						class="rounded-circle img-fluid" style="max-width: 100%; min-width: 100%; aspect-ratio: 1/1;"
-						:src="getAttachmentUrl(sessionMemberAttachmentNo)">
-					
-					<!-- 세션이 프로필 사진이 없는 경우 -->
-					<img v-else class="rounded-circle img-fluid" style="max-width: 100%; min-width: 100%; aspect-ratio: 1/1;"
-						src="static/image/profileDummy.png">
-			</div>
-			<div
-				class="col-11 col-md-11 col-lg-11 d-flex align-items-center justify-content-center">
-				<button type="button"
-					class="custom-btn btn-round btn-purple1-secondary me-2 w-100"
-					data-bs-target="#modal1" data-bs-toggle="modal">${memberId}님
-					무슨 생각을 하고 계신가요?</button>
-			</div>
-
-		</div>
-	</div>
-	<!----------- 글쓰기 버튼 ------------>
-
-	<!-- 지도 테스트 모달 버튼 (클릭 시 지도 relayout함수 호출 -> 안하면 지도 이미지 깨짐)-->
-<!-- 		    <button type="button" onclick="relayout();" class="btn btn-white btn-outline-dark rounded-pill col-12 " data-bs-target="#modalmap" data-bs-toggle="modal">지도 테스트 모달</button> -->
-
-	<!----------------------------------- 단계별 모달창 구성------------------------------------------------->
-	<!-- 1. 카테고리 선택 -->
-	<div class="modal" tabindex="-1" role="dialog" id="modal1"
-		data-bs-backdrop="static">
-		<!-- static이면 모달창 외부 클릭해도 안꺼짐 -->
-		<div class="modal-dialog" role="document">
-			<div class="modal-content">
-
-				<!-- header -->
-				<div class="modal-header">
-					<h5 class="modal-title">
-						<i class="fa-solid fa-xmark fa-lg grey" data-bs-dismiss="modal"></i>
-					</h5>
-				</div>
-
-				<!-- body -->
-				<div class="modal-body">
-					<!-- 태그 버튼 선택 -->
-
-					<p class="text-center">무엇에 대한 글인가요?(카테고리 설정)</p>
-					<div class="row justify-content-center">
-						<button type="button"
-							class="col-3 custom-btn btn-round btn-purple1 btn-sm modal2 rounded-pill"
-							data-bs-target="#modalfixed" @click="setPostType('자유')" data-bs-toggle="modal">자유</button>
-						&nbsp;&nbsp;
-						<button type="button"
-							class="col-3 custom-btn btn-round btn-purple1 btn-sm modal2 rounded-pill"
-							data-bs-target="#modal1-1" @click="setPostType('행사일정')" data-bs-toggle="modal">행사일정</button>
-						&nbsp;&nbsp;
-						<button type="button"
-							class="col-3 custom-btn btn-round btn-purple1 btn-sm modal2 rounded-pill"
-							data-bs-target="#modal1-2" @click="setPostType('같이가요')" data-bs-toggle="modal">같이가요</button>
-					</div>
-				</div>
-
-				<!-- footer -->
-				<div class="modal-footer">
-					<br>
-					<!--                         <button type="button" class="btn btn-secondary btn-sm" -->
-					<!--                                 data-bs-dismiss="modal">닫기</button> -->
-				</div>
-
-			</div>
-		</div>
-	</div>
-
-	<!-- 1-1. 행사일정 기간 -->
-	<div class="modal" tabindex="-1" role="dialog" id="modal1-1"
-		data-bs-backdrop="static">
-		<!-- static이면 모달창 외부 클릭해도 안꺼짐 -->
-		<div class="modal-dialog" role="document">
-			<div class="modal-content">
-
-				<!-- header -->
-				<div class="modal-header">
-					<h5 class="modal-title">
-						<i class="fa-solid fa-xmark fa-lg grey" data-bs-dismiss="modal"></i>
-					</h5>
-				</div>
-
-				<!-- body -->
-				<div class="modal-body">
-					<!-- 태그 버튼 선택 -->
-					<p class="text-center">행사일정의 시작, 종료 날짜 및 시간을 선택하세요</p>
-					<div class="row justify-content-center">
-						<div class="col-1"></div>
-						<h6 class="col-5 text-center">시작 날짜 및 시간</h6>
-						<input type="datetime-local" id="schedule-start" class="col-5">
-						<div class="col-1"></div>
-					</div>
-					<br>
-					<div class="row justify-content-center">
-						<div class="col-1"></div>
-						<h6 class="col-5 text-center">종료 날짜 및 시간</h6>
-						<input type="datetime-local" id="schedule-end" class="col-5">
-						<div class="col-1"></div>
-					</div>
-				</div>
-
-				<!-- footer -->
-				<div class="modal-footer">
-					<button type="button"
-						class="custom-btn btn-round btn-purple1 btn-sm"
-						data-bs-target="#modalfixed" data-bs-toggle="modal">다음</button>
-					<!--                         <button type="button" class="btn btn-secondary btn-sm" -->
-					<!--                                 data-bs-dismiss="modal">닫기</button> -->
-				</div>
-
-			</div>
-		</div>
-	</div>
-
-	<!-- 1-2. 같이가요 기간 -->
-	<div class="modal" tabindex="-1" role="dialog" id="modal1-2"
-		data-bs-backdrop="static">
-		<!-- static이면 모달창 외부 클릭해도 안꺼짐 -->
-		<div class="modal-dialog" role="document">
-			<div class="modal-content">
-
-				<!-- header -->
-				<div class="modal-header">
-					<h5 class="modal-title">
-						<i class="fa-solid fa-xmark fa-lg grey" data-bs-dismiss="modal"></i>
-					</h5>
-				</div>
-
-				<!-- body -->
-				<div class="modal-body">
-					<!-- 태그 버튼 선택 -->
-					<p class="text-center">같이가요의 시작, 종료 날짜 및 시간을 선택하세요</p>
-					<div class="row justify-content-center">
-						<div class="col-1"></div>
-						<h6 class="col-5 text-center">시작 날짜</h6>
-						<input type="datetime-local" id="together-start" class="col-5">
-						<div class="col-1"></div>
-					</div>
-					<br>
-					<div class="row justify-content-center">
-						<div class="col-1"></div>
-						<h6 class="col-5 text-center">종료 날짜</h6>
-						<input type="datetime-local" id="together-end" class="col-5">
-						<div class="col-1"></div>
-					</div>
-				</div>
-
-				<!-- footer -->
-				<div class="modal-footer">
-					<button type="button"
-						class="custom-btn btn-round btn-purple1 btn-sm"
-						data-bs-target="#modalfixed" data-bs-toggle="modal">다음</button>
-					<!--                         <button type="button" class="btn btn-secondary btn-sm" -->
-					<!--                                 data-bs-dismiss="modal">닫기</button> -->
-				</div>
-
-			</div>
-		</div>
-	</div>
-
-	<!-- 2-0.  고정 태그 창 -->
-	<div class="modal" tabindex="-1" role="dialog" id="modalfixed"
-		data-bs-backdrop="static">
-		<div class="modal-dialog" role="document">
-			<div class="modal-content">
-
-				<!-- header -->
-				<div class="modal-header">
-					<h5 class="modal-title">
-						<i class="fa-solid fa-xmark fa-lg grey" data-bs-dismiss="modal"></i>
-					</h5>
-				</div>
-
-				<!-- body -->
-				<div class="modal-body">
-					<p class="text-center">글에 적용할 고정 태그를 입력해주세요</p>
-					<div class="row text-center">
-						<div class="col-2"></div>
-						<input type="text" class="col-8" placeholder="태그를 입력하세요"
-							@input="findFixedTagName = $event.target.value"
-							v-model="findFixedTagName">
-						<div class="col-2"></div>
-						<!--                         	<div class="col-1"></div> -->
-						<!--                         	<button class="col-2 tag-btn">입력</button> -->
-					</div>
-					<div class="row">
-						<div class="mb-1" v-for="(findFixedTag, i) in findFixedTagList"
-							:key="i">
-							<button
-								class="custom-btn btn-purple1-secondary btn-sm rounded-pill mx-2"
-								@click="addNewFixedTag(findFixedTag)">{{ findFixedTag
-								}}</button>
-						</div>
-					</div>
-					<div class="row mt-3">
-						<div class="col">
-							<button
-								class="custom-btn btn-purple1 btn-sm rounded-pill mx-2 my-2 fixed-tag"
-								v-for="(newFixedTag, i) in newFixedTagList">{{
-								newFixedTag }}</button>
-						</div>
-					</div>
-
-					<div class="row">
-						<h6 class="all-tag text font-purple1"></h6>
-					</div>
-				</div>
-
-				<!-- footer -->
-				<div class="modal-footer">
-					<button type="button"
-						class="custom-btn btn-round btn-purple1 btn-sm fixed-tag-end"
-						data-bs-target="#modal2" data-bs-toggle="modal">자유태그 작성하기
-					</button>
-					<!--                         <button type="button" class="btn btn-secondary btn-sm" -->
-					<!--                                 data-bs-dismiss="modal">닫기</button> -->
-				</div>
-
-			</div>
-		</div>
-	</div>
-
-
-	<!-- 2.  태그 창 (첫번 째 창에서 다음 버튼이 클릭 되었을 때, 비동기로 현존하는 이벤트 태그들을 가져옴)-->
-	<div class="modal" tabindex="-1" role="dialog" id="modal2"
-		data-bs-backdrop="static">
-		<div class="modal-dialog" role="document">
-			<div class="modal-content">
-
-				<!-- header -->
-				<div class="modal-header">
-					<h5 class="modal-title">
-						<i class="fa-solid fa-xmark fa-lg grey" data-bs-dismiss="modal"></i>
-					</h5>
-				</div>
-
-				<!-- body -->
-				<div class="modal-body">
-					<p class="text-center">글에 적용할 자유 태그를 입력해주세요</p>
-					<div class="row text-center">
-						<div class="col-1"></div>
-						<input type="text" class="tag-input col-7" placeholder="태그를 입력하세요">
-						<div class="col-1"></div>
-						<button
-							class="col-2 custom-btn btn-round btn-purple1 btn-sm tag-btn">입력</button>
-					</div>
-					<div class="row">
-						<h6 class="all-tag text font-purple1 my-2"></h6>
-					</div>
-				</div>
-
-				<!-- footer -->
-				<div class="modal-footer">
-					<button type="button"
-						class="custom-btn btn-round btn-purple1 btn-sm"
-						data-bs-target="#modal3" data-bs-toggle="modal">글작성하기</button>
-					<!--                         <button type="button" class="btn btn-secondary btn-sm" -->
-					<!--                                 data-bs-dismiss="modal">닫기</button> -->
-				</div>
-
-			</div>
-		</div>
-	</div>
-
-	<!-- 3. 글 및 파일 업로드 창 (두 번째 창에서 다음 버튼이 클릭 되었을 때, 비동기로 현존하는 아이돌 태그들을 가져옴)-->
-	<div class="modal" tabindex="-1" role="dialog" id="modal3"
-		data-bs-backdrop="static">
-		<div class="modal-dialog" role="document">
-			<div class="modal-content">
-
-				<!-- header -->
-				<div class="modal-header">
-					<h5 class="modal-title">
-						<i class="fa-solid fa-xmark fa-lg grey" data-bs-dismiss="modal"></i>
-					</h5>
-				</div>
-
-				<!-- body -->
-				<div class="modal-body">
-					<!-- 지도 구간 -->
-					<div class="row" v-if="address!=''">
-						<div class="text-secondary text-start fs-15px">
-							<i class="ms-2 fa-solid fa-location-dot"></i>&nbsp;{{placeName}} ({{address}})	
-						</div>
-					</div>
-					<!--         -->
-					<div class="row">
-						<div class="col">
-							<button
-								class="custom-btn btn-purple1 btn-sm rounded-pill mx-2 my-2 fixed-tag">
-								{{postType}}</button>
-							<button
-								class="custom-btn btn-purple1 btn-sm rounded-pill mx-2 my-2 fixed-tag"
-								v-for="(newFixedTag, i) in newFixedTagList">{{
-								newFixedTag }}</button>
-						</div>
-					</div>
-					<textarea class="col-12 mt-2 post border border-secondary rounded-2"
-						style="height: 200px;" placeholder=" 글 작성란"></textarea>
-					
-					
-					<div class="row">	
-						<h6 class="all-tag text font-purple1 my-2"></h6>
-					</div>
-					
-					
-					<!-- 사진 보여주는 구간 -->
-					<div id="preview" contenteditable="true"></div>
-					<!-- 사진 보여주는 구간 -->
-					
-				</div>
-
-				<!-- footer -->
-				<div class="modal-footer">
-					<div class="col-5 col-md-5 col-lg-5 text-start">
-<!-- 						<label class="fakeBtn d-flex align-items-center justify-content-center me-2"> -->
-<!-- 				            		<i class="ti ti-photo-up"></i> -->
-<!-- 				            		d-none -->
-<!-- 				            		<input class="form-control picInput d-none" type="file" accept=".png, .jpg, .gif" @change="sendPic" /> -->
-<!-- 				        </label> -->
-
-						<input type="file" class="fs-6" id="fileInput" multiple>
-					</div>
-					<div class="col-6 col-md-6 col-lg-6 text-end fs-4">
-						<button type="button"
-							class="custom-btn btn-round btn-purple1 btn-sm write-finish mx-2"
-							data-bs-dismiss="modal">작성완료</button>
-						<button type="button"
-							class="custom-btn btn-round btn-purple1 btn-sm"
-							data-bs-target="#modalmap" onclick="relayout();"
-							data-bs-toggle="modal">지도정보삽입</button>
-						<!--                         <button type="button" class="btn btn-secondary btn-sm" -->
-						<!--                                 data-bs-dismiss="modal">닫기</button> -->
-					</div>
-
-
-				</div>
-
-			</div>
-		</div>
-	</div>
-
-	<!-- 4. 지도 정보 및 업로드 창 -->
-	<div class="modal" tabindex="-1" role="dialog" id="modalmap"
-		data-bs-backdrop="static">
-		<div class="modal-dialog" role="document">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h6>지역을 검색하고 선택하세요 ex) 이레빌딩 or 선유동2로</h6>
-				</div>
-
-				<div class="modal-body row">
-					<div class="col-1"></div>
-					<div class="map_wrap col-10">
-						<div id="map"
-							style="width: 100%; height: 100%; position: relative; overflow: visible; align-content: center;"></div>
-
-						<div id="menu_wrap" class="bg_white">
-							<div class="option">
-								<div>
-									<!-- <form onsubmit="searchPlaces(); return false;"> -->
-									키워드 : <input type="text" id="keyword" size="15">
-									<button type="button" onclick="searchPlaces();">검색하기</button>
-									<!-- </form> -->
-								</div>
-							</div>
-							<ul id="placesList"></ul>
-							<div id="pagination"></div>
-						</div>
-					</div>
-
-					<div class="col-1"></div>
-				</div>
-				<br>
-				<!-- footer -->
-				<div class="modal-footer justify-content-end">
-					<div class="col-7 col-md-7 col-lg-7">
-						<div class="row text-start">
-							<span class="placeName fs-15px"></span>
-						</div>
-						<div class="row text-start">
-							<span class="address fs-15px"></span>
-						</div>
-					</div>
-
-
-					<div class="col-4 col-md-4 col-lg-4 ">
-						<div class="row text-end">
-							<div class="col-7">
-								<button type="button"
-									class="custom-btn btn-round btn-purple1 btn-sm bttest"
-									data-bs-target="#modal3" @click="setMapPlace()" data-bs-toggle="modal">글쓰기</button>
-							</div>
-
-							<div class="col-5">
-								<button type="button"
-									class=" custom-btn btn-round btn-purple1-secondary btn-sm"
-									data-bs-dismiss="modal">닫기</button>
-							</div>
-
-						</div>
-
-					</div>
-				</div>
-
-			</div>
-		</div>
-	</div>
-
-
-	<!-- 게시글 지도 게시 모달창 (게시글에서 위치나 지도 마크 클릭 시 모달 띠우기)-->
+   </style>
+</head>
+<body>
+   
+   <div class="container rounded p-3" style="background-color:white">
+   	   <!-- 전체 컨테이너 내부-->
+	   <div id="app">
+	   	  <!-- 뷰 내부-->
+	      <br><br>
+	      <div class="container">
+	      <!-- 컨테이너 내부 -->
+	      
+		         <div class="row" >
+		            <div class="col-4" >
+		                  <img :src="memberProfileImageObj !== ''  && memberProfileImageObj.attachmentNo !== undefined ? '/download/?attachmentNo='+memberProfileImageObj.attachmentNo :  ' /static/image/profileDummy.png' "
+		                  style="width: 200px; height: 200px; border-radius: 100%;">
+		            </div>
+		            <div class="col-3">
+		            	<h3 style="margin-top:120px;">{{memberNick}}</h3>
+		               <h6 class="font-gray1">@{{memberId}}</h6>
+		            </div>
+		            <div class="col-5 text-right" style="margin-top: 150px;">
+					    <div class="row" v-if="mypage">
+					        <div class="d-flex justify-content-end">
+					            <button type="button" class="custom-btn btn-round btn-purple1" v-on:click="showModal">프로필 수정</button>
+					            <i class="fa-solid fa-gear ml-2" v-on:click="showSettingsModal" style="margin-top: 3px; margin-left : 5px; font-size:30px"></i>
+					        </div>
+					    </div>
+		
+		
+		            	<div class="row" v-if="!mypage && follow">
+		            		<button type ="button" class="custom-btn btn-round btn-purple2" v-on:click="followMember(memberId)">팔로우 취소</button>
+		            	</div>
+		            	<div class="row" v-if="!mypage && !follow">
+			               <button type = "button" class="custom-btn btn-round btn-purple1" v-on:click = "followMember(memberId)">팔로우</button>
+		            	</div>
+		            </div>
+		         </div>
+		         
+		         <br>
+		         <div class="row">
+		            <div class="col-4 " style="display: flex; justify-content: space-between; flex-direction: column; align-items: center;" 
+		               v-on:click="showFollowModal">
+		               <span >팔로우</span>
+		               <span>{{ MemberFollowCnt }}명</span>
+		            </div>
+		            <div class="col-4 " style="display: flex; justify-content: space-between; flex-direction: column; align-items: center;"
+		               v-on:click="showFollowerModal">
+		               <span>팔로워</span>
+		               <span>{{ MemberFollowerCnt }}명</span>
+		            </div>
+		            <div class="col-4 " style="display: flex; justify-content: space-between; flex-direction: column; align-items: center;"
+		               v-on:click="showPageModal">
+		               <span>페이지</span>
+		               <span>{{ MemberPageCnt }}명</span>
+		            </div>
+		         </div>
+		         
+		          <div class="modal" tabindex = "-1" role="dialog" id="settingsModal" data-bs-backdrop="static" ref="settingsModal">
+		            <div class="modal-dialog" role="document">
+		               <div class="modal-content   ">
+		                  <div class="modal-header">
+		                     <i class="fa-solid fa-xmark" style="color: #bcc0c8;" data-bs-dismiss="modal" aria-label="Close"></i>
+		                  </div>
+		                  <div class="modal-body ">
+		                  	<div class="row">
+			                     <i class="fa-solid fa-lock" @click="goToPassword()">비밀번호 변경</i>
+		                  	</div>
+		                  	<div class="row">
+			                     <i class="fa-solid fa-pen-to-square" @click="goToLogout()">로그아웃</i>
+		                  	</div>
+		                  	<div class="row">
+			                     <i class="fa-sharp fa-solid fa-circle-minus " @click="goToExit()">회원탈퇴</i>
+		                  	</div>
+		                  </div>
+		               </div>
+		            </div>
+		         </div>	
+		         
+		         <div class="modal" tabindex = "-1" role="dialog" id="modal" data-bs-backdrop="static" ref="modal">
+		            <div class="modal-dialog" role="document">
+		               <div class="modal-content   ">
+		                  <div class="modal-header">
+		                     <i class="fa-solid fa-xmark" style="color: #bcc0c8;" data-bs-dismiss="modal" aria-label="Close"></i>
+		                  </div>
+		                  <div class="modal-body text-center">
+		                     <img :src="previewURL"
+		                        class="profile-image" @click="openFileInput">
+		                     <input type="file" ref="fileInput" style="display: none;"@change="uploadFile($event)">
+		                     
+		                     <h3>
+		                           <span v-if="!editingNickname">{{ memberNick }}</span>
+		                           <input v-else type="text" v-model="editedNickname" class="form-control" placeholder="새로운 닉네임"
+		                              :class="{'is-invalid':editedNickname !== '' && (!memberNickValid || nickDuplicated) }" @blur="nickDuplicatedCheck(memberNick)">
+		                           <div class="invalid-feedback">{{memberNickMessage}}</div>
+		                           <i v-if="!editingNickname" class="fa-solid fa-pen-to-square" style="font-size: 14px; margin-left: 10px; cursor: pointer;" @click="editingNickname=true"></i>
+		                          <i v-else class="fa-solid fa-check" style="font-size: 14px; margin-left: 10px; cursor: pointer;" @click="nickDuplicated || !memberNickValid ? null : updateNickname(memberNick)"></i>
+		                       </h3>
+		                     <h5>@{{memberId}}</h5>
+		                  </div>
+		               </div>
+		            </div>
+		         </div>
+		         
+		         <div class="modal" tabindex = "-1" role="dialog" id="followModal" data-bs-backdrop="static" ref="followModal">
+		            <div class="modal-dialog" role="document">
+		               <div class="modal-content   ">
+		                  <div class="modal-header">
+		                     <i class="fa-solid fa-xmark" style="color: #bcc0c8;" data-bs-dismiss="modal" aria-label="Close"></i>
+		                  </div>
+		                  <div class="modal-body text-left">
+		                     <div v-for="(board,index) in FollowListProfile"  :key="index">
+		                     <img :src="getAttachmentUrl(board.attachmentNo)" class="profile-image" style="width:54px; height:54px;">
+		                     <a :href="'/member/mypage/' + board.followTargetPrimaryKey">
+							    <span>{{board.followTargetPrimaryKey}}</span>
+							</a>
+		                    <button @click="deleteFollow(board.followNo)">팔로잉</button>
+		                     </div>
+		                  </div>
+		               </div>
+		            </div>
+		         </div>	
+		        
+		         
+		         <div class="modal" tabindex = "-1" role="dialog" id="followerModal" data-bs-backdrop="static" ref="followerModal">
+		            <div class="modal-dialog" role="document">
+		               <div class="modal-content   ">
+		                  <div class="modal-header">
+		                     <i class="fa-solid fa-xmark" style="color: #bcc0c8;" dat   a-bs-dismiss="modal" aria-label="Close"></i>
+		                  </div>
+		                  <div class="modal-body text-left">
+		                     <div v-for="(board,index) in FollowerListProfile"  :key="index">
+		                     <img :src="getAttachmentUrl(board.attachmentNo)" class="profile-image" style="width:54px; height:54px;">
+		                     <a :href="'/member/mypage/' + board.memberId">
+		                    <span> {{board.memberId}}</span>
+		                    </a>
+		                    <button @click="deleteFollow(board.followNo)">팔로잉</button>
+		                     </div>
+		                  </div>
+		               </div>
+		            </div>
+		         </div>
+		         
+		         <div class="modal" tabindex = "-1" role="dialog" id="pageModal" data-bs-backdrop="static" ref="pageModal">
+		            <div class="modal-dialog" role="document">
+		               <div class="modal-content   ">
+		                  <div class="modal-header">
+		                     <i class="fa-solid fa-xmark" style="color: #bcc0c8;" data-bs-dismiss="modal" aria-label="Close"></i>
+		                  </div>
+		                  <div class="modal-body text-left">
+		                     <div v-for="(board,index) in PageListProfile"  :key="index">
+		                    <img :src="getAttachmentUrl(board.attachmentNo)" class="profile-image" style="width:54px; height:54px;">
+		                    <a :href="'/artist/' + board.followTergetPrimarykey">
+		                    <span> {{board.followTargetPrimaryKey}}</span>
+		                    </a>
+		                    <button @click="deleteFollow(board.followNo)">팔로잉</button>
+		                     </div>
+		                  </div>
+		               </div>
+		            </div>
+		         </div>
+	         
+	         <hr>
+	
+    <div class="row">         
+         <div class="col-6 text-center">
+            <i class="fa-sharp fa-regular fa-heart "  @click="toLikePage()"></i>
+         </div>
+         <div class="col-6 text-center" >
+            <i class="fa-solid fa-list font-purple1"></i>
+         </div>         
+    </div>
+	
+    <!-- 게시글 지도 게시 모달창 (게시글에서 위치나 지도 마크 클릭 시 모달 띠우기)-->
 	<div class="modal" tabindex="-1" role="dialog" id="showMap"
 		data-bs-backdrop="static">
 		<div class="modal-dialog" role="document">
@@ -1674,146 +1431,523 @@
 			<!-- 글 내용 -->
 
 
+		<!-- 글 박스 하나 내부 -->
 		</div>
-		<!-- 글 박스 루프 1개-->
-
-	</div>
-	<!--------------- 게시물들 반복구간 ------------->
-</div>
-
-
-
-
-
-<!-- Vue.createApp구간 -->
-<script>
-        Vue.createApp({
+		
+	
+	 <!-- 전체 글 반복 for문 내부 -->	
+	 </div>
+	 
+	         
+     <!-- 컨테이너 내부 -->
+   	 </div>
+  <!-- 뷰 app 내부 -->
+  </div>
+<!-- 전체 컨테이너 내부 -->
+</div>   
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+      <script>
+         Vue.createApp({
             data(){
-                return {
-					// 처음 마운트 될때 
-                	firstMountFlag : false,               
-                	 
-                	// 게시글 VO를 저장할 배열
-                	posts: [],
-                	
-                	// 지도에 주소 표시하는 문자열
-                	showMapName: '',
-                	showMapPlace: '',
-                	
-                	// 좋아요 게시글 인덱스 배열
-                	postLikeIndexList: [], 
-                	
-                	// 댓글 작성 여부 체크용 배열
-                	replyFlagList: [],
-                	
-                	// 댓글 작성 글자 
-                	replyContent: '',
-                	
-                	// 댓글 전체 표시 체크용 배열
-                	replyAllList: [],
-                	
-                	// 대댓글 위치 특정용 임시 postNo, replyNo
-                	tempPostNo:null ,
-                	tempReplyNo:null ,
-                	
-                	// 대댓글 작성 글자
-                	rereplyContent: '', 
-                	
-                	// 무한 페이징 영역
-                	percent:0,
-                	
-                	// 목록을 위한 데이터
-                	page:1, 
-                	finish:false,
-                	
-                	// 게시글 모달 버튼 클릭 시, 보여줄 모달 번호
-                	postModalIndex: null,
-                	
-                	// 안전장치
-                	loading:false,
-                	
-                	// 입력시 고정태그 불러오기
-                	findFixedTagName: "",
-                	findFixedTagList: [],
-                	newFixedTagList: [],                	
-                	
-                	// 세션 맴버아이디
-                	memberId:null,
-                	
-                	// 모달 이미지 URL
-                	modalImageUrl:null,
-                	modalImageUrlList:[],
-                	
-                	// 게시글 삭제 시 확인 용모달
-                	deletePostNo: null,                	               	
-                	
-                	// 게시글 수정 용 post
-                	updatePost: null,
-                	customOn: false,
-                	
-                	// 검색 주소
-                	searchUrl: null,
-                	
-                	 
-                	// 로그인 맴버 팔로우 목록 조회
-                	memberFollowObj: {},
-                	
-                	// 게시글 타입
-                	postType: null,
-                	
-                	// 지도 타입
-                	placeName: '',
-                	address: '',
-                	
-                	// 신고 아이디, 신고 사요
-                	reportMemberId: null,
-                	reportReason: null,
-                	
-                	// 세션 맴버 첨부파일 번호
-                	sessionMemberAttachmentNo: null,
-                	
-                };
-            },
-            computed:{
-            
-            },
+               return{
+                  memberNick:"",
+                  modal:null,
+                  followModal:null,
+                  followerModal:null,
+                  pageModal:null,
+                  settingsModal:null,
+                  memberProfileImageObj: {},
+                  editedNickname:"",
+                  editingNickname:false,
+                  nickDuplicated:false,
+                  MemberFollowCnt:0,
+                  MemberFollowerCnt:0,
+                  MemberPageCnt:0,
+                  FollowMemberList:[],
+                  FollowerMemberList:[],
+                  FollowPageList:[],
+                  page : 1,
+                  file : null,
+                  attachment: "",
+                  previewURLList:[], 
+                  artistViewList:[],
+                  previewURL: "",
+                  //팔로우 리스트 멤버별 프로필
+                  FollowListProfile : [],
+                  //팔로워 리스트 멤버별 프로필
+                  FollowerListProfile : [],
+                  //페이지 리스트 멤버별 프로필
+                  PageListProfile:[],
+                  
+                  targetMemberFollowObj: {},
+                  
+                  //내페이지 or 남의페이지
+                  mypage:false,
+                  //팔로우 여부
+                  follow : true,
+               
+                  
+               // ---------------주영 추가 구문 
+               // 처음 마운트 될때 
+              	firstMountFlag : false,               
+              	 
+              	// 게시글 VO를 저장할 배열
+              	posts: [],
+              	
+              	// 지도에 주소 표시하는 문자열
+              	showMapName: '',
+              	showMapPlace: '',
+              	
+              	// 좋아요 게시글 인덱스 배열
+              	postLikeIndexList: [], 
+              	
+              	// 댓글 작성 여부 체크용 배열
+              	replyFlagList: [],
+              	
+              	// 댓글 작성 글자 
+              	replyContent: '',
+              	
+              	// 댓글 전체 표시 체크용 배열
+              	replyAllList: [],
+              	
+              	// 대댓글 위치 특정용 임시 postNo, replyNo
+              	tempPostNo:null ,
+              	tempReplyNo:null ,
+              	
+              	// 대댓글 작성 글자
+              	rereplyContent: '', 
+              	
+              	// 무한 페이징 영역
+              	percent:0,
+              	
+              	// 목록을 위한 데이터
+              	page:1, 
+              	finish:false,
+              	
+              	// 게시글 모달 버튼 클릭 시, 보여줄 모달 번호
+              	postModalIndex: null,
+              	
+              	// 안전장치
+              	loading:false,
+              	
+              	// 입력시 고정태그 불러오기
+              	findFixedTagName: "",
+              	findFixedTagList: [],
+              	newFixedTagList: [],                	
+              	
+              	// 세션 맴버아이디
+              	memberId:null,
+              	// 어느 아이디 페이진지
+              	pageMemberId:null,
+              	// 모달 이미지 URL
+              	modalImageUrl:null,
+              	modalImageUrlList:[],
+              	
+              	// 게시글 삭제 시 확인 용모달
+              	deletePostNo: null,                	               	
+              	
+              	// 게시글 수정 용 post
+              	updatePost: null,
+              	customOn: false,
+              	
+              	// 검색 주소
+              	searchUrl: null,
+              	
+              	 
+              	// 로그인 맴버 팔로우 목록 조회
+              	memberFollowObj: {},
+              	
+              	// 게시글 타입
+              	postType: null,
+              	
+              	// 지도 타입
+              	placeName: '',
+              	address: '',
+              	
+                //글쓴이 아이디
+            	writeMemberId: null,
+              	
+              	// 신고 아이디, 신고 사요
+              	reportMemberId: null,
+              	reportReason: null,
+              	
+              	// 세션 맴버 첨부파일 번호
+              	sessionMemberAttachmentNo: null,
+
+				followObj: {
+					memberId: memberId,
+					followTargetType: "",
+					followTargetPrimaryKey: "",
+				},
+				// ---------------주영 추가 구문 
+               };
+            },      
             methods:{
-            	changeCustom()
-            	{
-            		this.customOn = !this.customOn;
-            	},
-            	
-            	
-            	// 무한 페이징 게시글 불러오기 1페이지당 10개씩 매 페이지 별로 불러옴,
-            	async fetchPosts(){
-            		
-            		// 페이지가 1페이지고(10개의 게시물만 보이고), 최초 mounted가 실행된 이후에 새로 호출 되었을 경우,
-            		// 아예 페이지 새로 고침
-            		if(this.page == 2 && this.firstMountFlag)
-            		{
-            			location.reload();	
-            		}
-            		
-                    if(this.loading == true) return;//로딩중이면
-                    if(this.finish == true) return;//다 불러왔으면
-                    
-                    this.loading = true;
-                    
-                    // 1페이지 부터 현재 페이지 까지 전부 가져옴 
-                    const resp = await axios.get("http://localhost:8080/rest/post/pageReload/"+this.page);
-	                this.posts = resp.data;
-	                this.getLikePostIndex(this.posts);
-	                this.getReplyAllList(this.posts);
-	                this.page++;
-	                
-	                this.loading=false;
-	                
-	                if(resp.data.length < 10){
-	                	this.finish = true;
-	                }
-	                this.firstMountFlag = true;
-            	},
-            	
+               openFileInput() {
+                     this.$refs.fileInput.click();
+                   },
+               async profile() {
+                  const response = await axios.get("/member/profile",{
+                	  params : {
+                		  memberId : this.memberId
+                	  }
+                  });
+                  const {memberId, memberNick} = response.data;
+                  
+                  this.memberId = memberId;
+                  this.memberNick=memberNick;
+                  console.log("아이디 : "+this.memberId);
+                  console.log("닉네임 : "+this.memberNick);
+               },
+               
+               async followCnt() {
+                  const response = await axios.get("/member/followCnt",{
+                	  params : {
+                		  memberId : this.memberId
+                	  }
+                  });
+                  const{MemberFollowCnt, MemberFollowerCnt, MemberPageCnt} = response.data;
+                  
+                  this.MemberFollowCnt = MemberFollowCnt;
+                  this.MemberFollowerCnt = MemberFollowerCnt;
+                  this.MemberPageCnt = MemberPageCnt;
+               },
+               
+               async followList() {
+                  const response = await axios.get("/member/followList/"+this.memberId);
+                  const{FollowMemberList, FollowerMemberList, FollowPageList} = response.data;
+                  
+                  this.FollowMemberList = FollowMemberList;
+                  this.FollowerMemberList = FollowerMemberList;
+                  this.FollowPageList = FollowPageList;
+                  console.log("팔로우리스트 : "+this.FollowMemberList);
+               },
+               
+               showModal(){
+                  if(this.modal == null) return;
+                  this.modal.show();
+               },
+               hideModal(){
+                  if(this.modal == null) return;
+                  this.modal.hide();
+               },
+               
+               showFollowModal() {
+                  if(this.followModal == null) return;
+                  this.followModal.show();
+               },
+               hideFollowModal() {
+                  if(this.followModal == null) return;
+                  this.followModal.hide();
+               },
+               
+               showFollowerModal() {
+                  if(this.followerModal == null) return;
+                  this.followerModal.show();
+               },
+               hideFollowerModal() {
+                  if(this.followerModal == null) return;
+                  this.followerModal.hide();
+               },
+               
+               showPageModal() {
+                  if(this.pageModal == null) return;
+                  this.pageModal.show();
+               },
+               hidePageModal() {
+                  if(this.pageModal == null) return;
+                  this.pageModal.hide();
+               },
+               
+               showSettingsModal() {
+            	   if(this.settingsModal == null) return;
+                   this.settingsModal.show();
+               },
+               hideSettingsModal() {
+            	   if(this.settingsModal == null) return;
+                   this.settingsModal.hide();
+               },
+               
+               async profileImage() {
+                   const response = await axios.get("/member/profileImage",{
+                	   params : {
+                		   memberId : this.memberId
+                	   }
+                   });
+                   
+                   this.memberProfileImageObj = response.data;
+                   console.log("this.memberProfileImageObj : "+this.memberProfileImageObj);
+                   const attachmentNo = this.memberProfileImageObj.attachmentNo;   
+                      console.log("attachmentNo : " +attachmentNo);
+                      const url = "/rest/attachment/download/"+attachmentNo;
+                   this.previewURL = url;                   
+                },
+               
+               
+               async nickDuplicatedCheck(memberNick) {
+
+                       const resp = await axios.get("/member/nickDuplicatedCheck", {
+                           params : {
+                               memberNick : this.editedNickname
+                           }
+                       });
+                       if(resp.data === "N") {
+                           this.nickDuplicated = true;
+                       }
+                       else {
+                           this.nickDuplicated = false;
+                       }
+                     },
+               
+               async updateNickname(memberNick) {
+                  const response = await axios.get("/member/nickname",{
+                     params:{
+                        memberNick : this.editedNickname
+                     }
+                  });
+                        if (this.nickDuplicated === true) {
+                           return;
+                        }
+                        
+                        this.memberNick = this.editedNickname;
+                        this.editingNickname = false;
+                  Toastify({
+                           text: "변경 완료",
+                           duration: 1000,
+                           newWindow: false,
+                           close: true,
+                           gravity: "bottom", // `top` or `bottom`
+                           position: "right", // `left`, `center` or `right`
+                           style: {
+                               background: "linear-gradient(to right, #84FAB0, #8FD3F4)",
+                           },
+                           // onClick: function(){} // Callback after click
+                       }).showToast();
+               },
+               
+               pagePlus(){
+                  if(this.page == 1) {
+                  this.page++;
+                  }
+                  return;
+               },
+               pageMinus() {
+                  if(this.page == 2) {
+                  this.page--;
+                  }
+                  return;
+               },
+               
+               // 파일 업로드 시 프로필 사진 변경
+                  handleFileUpload(event) {
+                      // 업로드 파일
+                      const file = event.target.files[0];
+                      // 첨부사진 임시보관
+                      this.attachment = file;
+                      // 사진 미리보기 구현
+                       this.previewURL = URL.createObjectURL(file);
+                  },
+
+                  // 대표페이지 프로필 사진 설정
+                  async uploadFile(event) {
+                     // 업로드 파일
+                     const file = event.target.files[0];
+                     
+                     // 첨부사진 임시보관
+                     this.attachment = file;
+                     
+                     // 사진 미리보기 구현
+                       this.previewURL = URL.createObjectURL(file);
+                     
+                      // URL
+                      const url = "http://localhost:8080/rest/member/memberProfile";
+
+                      // 폼데이터 생성
+                      const formData = new FormData();
+                      formData.append('attachment', this.attachment);
+                      formData.append('memberId', this.memberId);
+
+                      // 대표페이지 프로필사진 설정
+                      const resp = await axios.post(url, formData);
+                      
+                      alert("대표페이지 프로필사진 설정완료!");
+                  },
+                  
+                  //팔로우 리스트 멤버별 프로필 조회
+                  async followListProfile() {
+                	  const response =await axios.get("/member/followListProfile",{
+                		  params :{
+                			  memberId : this.memberId
+                		  }
+                	  });
+                	  this.FollowListProfile.push(...response.data);
+                	  
+                	  console.log("로그인 :  " +this.memberId);
+                  },
+                  
+                  //팔로워 리스트 멤버별 프로필 조회
+                  async followerListProfile() {
+					  const response = await axios.get("/member/followerListProfile", {
+					    params: {
+					    	followTargetPrimaryKey: this.memberId
+					    }
+					  });
+					  this.FollowerListProfile = response.data;
+					},
+					
+					//페이지 리스트 멤버별 프로필 조회
+	                  async pageListProfile() {
+						const response = await axios.get("/member/pageListProfile",{
+							params : {
+								memberId : this.memberId
+							}
+						});
+
+						  this.PageListProfile.push(...response.data);
+						  console.log(" this.PageListProfile : "+ this.PageListProfile);
+						},
+                  
+                  //프로필 리스트 팔로우 취소
+				async deleteFollow(followNo) {
+					const response = await axios.get("/member/deleteFollow",{
+						params : {followNo:followNo}
+					});
+					if (response.data.success) {
+					    // 삭제 성공 시, FollowListProfile에서 해당 항목을 제거합니다.
+					    this.FollowListProfile = this.FollowListProfile.filter(item => item.followNo !== followNo);
+					  }
+				},
+				
+				//비밀번호 변경페이지로 이동
+				goToPassword() {
+			        window.location.href = '/member/password';
+			    },
+			    
+			    //로그아웃
+			    goToLogout() {
+			    	window.location.href = '/member/logout';
+			    },
+			    
+			    //회원탈퇴 페이지로 이동
+			    goToExit() {
+			    	window.location.href = '/member/exit';
+			    },
+			    
+			    //페이지 확인
+			    async mypageCheck() {
+			    	const response = await axios.get("/member/mypage")
+			    	if(response.data === this.memberId) {
+			    		this.mypage = true;
+			    	}
+			    	else {
+				    	this.mypage = false;
+			    	}
+			    },
+			    // 회원 팔로우 버튼
+		        async followMember(targetMemberId){
+		            if(this.follow){
+		                if(!confirm(targetMemberId + "님 팔로우를 취소하시겠습니까?")) return;
+		                this.setFollowMemberObj(targetMemberId);
+		                await this.deleteMemberFollow();
+		            } else {
+		                this.setFollowMemberObj(targetMemberId);
+		                await this.createFollow();
+		            }
+		            await this.loadMemberFollowInfo();
+					this.followCheck();
+					this.followCnt();
+		        },
+
+				// 대표페이지 팔로우 생성
+				async createFollow(){
+					// 팔로우 생성 url
+					const url = "http://localhost:8080/rest/follow/";
+					await axios.post(url, this.followObj);
+					// [develope] 
+				},
+				// 대표페이지 팔로우 취소
+				async deleteMemberFollow(){
+					// 팔로우 생성 url
+					const url = "http://localhost:8080/rest/follow/";
+					await axios.delete(url, {
+						data: this.followObj,
+					});
+					// [develope]
+				},
+
+
+		        // 회원 팔로우 대상 설정
+		        setFollowMemberObj (followMemberId){
+		            // 팔로우 대상 유형
+		            this.followObj.followTargetType = "회원";
+		            // 팔로우 대상 PK
+		            this.followObj.followTargetPrimaryKey = followMemberId;
+		        },
+			    
+			    //팔로우 여부 
+			    async followCheck() {
+			    	const response = await axios.get("/member/checkFollowMember", {
+			    		params : {
+							Id : this.memberId
+						}
+			    	});
+			    	console.log(response.data);
+			    	if(response.data == true) {
+			    		this.follow = true;
+			    	}	
+			    	else { 
+			    		this.follow = false;
+			    	}
+			    },
+			    
+			    //팔로우
+			    async memberFollowNew() {
+			    	const response = await axios.get("/member/follow", {
+			    		params : {
+							Id : this.memberId
+						}
+			    	});
+			    	this.followCheck();
+			    },
+                  
+
+
+
+               // 주영 복붙 부분 
+               // 무한 페이징 게시글 불러오기 1페이지당 10개씩 매 페이지 별로 불러옴,!!!좋아요한글!!!
+              	async fetchPosts(){
+
+              		// 페이지가 1페이지고(10개의 게시물만 보이고), 최초 mounted가 실행된 이후에 새로 호출 되었을 경우,
+              		// 아예 페이지 새로 고침
+              		if(this.page == 2 && this.firstMountFlag)
+              		{
+              			location.reload();	
+              		}
+                	  
+                	  
+                      if(this.loading == true) return;//로딩중이면
+                      if(this.finish == true) return;//다 불러왔으면
+                      
+                      this.loading = true;
+                      // 1페이지 부터 현재 페이지 까지 전부 가져옴 
+	                  var writePostData ={
+	                    		page: this.page,
+	                    		writeMemberId: this.memberId
+	                   };
+                                            
+	                  const resp = await axios.post("http://localhost:8080/rest/post/pageReload/memberWritePost",writePostData);
+  	                 this.posts = resp.data;
+  	                 this.getLikePostIndex(this.posts);
+	                 this.getReplyAllList(this.posts);
+  	                 this.page++;
+  	                
+  	                 this.loading=false;
+  	                
+  	                 if(resp.data.length < 10){
+  	                 	this.finish = true;
+  	                 }
+  	              	 this.firstMountFlag = true;
+              	},
             	// 무한 스크롤용 페치 
             	async fetchScroll(){
             		if(this.loading == true) return;//로딩중이면
@@ -1834,8 +1968,11 @@
 	                	this.finish = true;
 	                }
             	},
-            	
-            	// 게시글 작성 시 글타입을 표현하기 위한 함수
+              	
+             // 무한 페이징 게시글 불러오기 1페이지당 10개씩 매 페이지 별로 불러옴,!!!내가쓴글!!!
+
+             
+             // 게시글 작성 시 글타입을 표현하기 위한 함수
             	setPostType(type){
             		this.postType = type;
             		console.log(this.postType);
@@ -2300,6 +2437,13 @@
             		    });
             		}
             	},
+            	
+            	toLikePage(){ // 좋아요 페이지로
+            		let pageMemberId = this.pageMemberId;          		        
+            		const url = 'http://localhost:8080/member/mypage1/'+this.pageMemberId;
+            		window.location.href = url;
+            		
+            	},
             	setId(){ // 아이디 세팅
             		const memberId = '${memberId}';
                 	if (memberId && memberId.trim() !== '') {
@@ -2312,7 +2456,15 @@
                 		    // 예: 오류 메시지 표시, 다른 로직 실행 등
                 	}            		
             	},
-            	
+            	setPageMemberId(){
+            		const pageMemberId  = '${pageMemberId}';
+            		if (pageMemberId&& pageMemberId !== null){
+            			this.pageMemberId = pageMemberId;
+            		}
+            		else{
+            			this.pageMemberId = null;
+            		}
+            	},
             	async loadFindFixedTagList(){
                     if(this.findFixedTagName.length == 0) return;
 
@@ -2340,6 +2492,29 @@
                 		return this.sessionMemberAttachmentNo; 
                 	}
                 },
+              	setLikedMemberId(){
+              		const likedMemberId = '${likedMemberId}';
+              		if(likedMemberId && likedMemberId.trim() !== ''){
+              			this.likedMemberId = likedMemberId;
+         
+              		}
+              		else{
+              			this.likedMemberId = null;
+              		}
+              	},
+              	setWriteMemberId(){
+            		const writeMemberId = '${writeMemberId}';
+            		if(writeMemberId && writeMemberId.trim() !== ''){
+            			this.writeMemberId = writeMemberId;
+       
+            		}
+            		else{
+            			this.writeMemberId = null;
+            		}
+            	},
+              	
+
+
             },
             watch:{
             	percent(){
@@ -2353,51 +2528,83 @@
         		}, 250),
             	
             },
-            mounted() {
-                //윈도우 전체에 스크롤 이벤트를 설정(Vue가 아닌 JS 사용)
-                //- 주의할 점은 스크롤 이벤트는 발생빈도가 엄청나다는 것
-                //- 쓰로틀링, 디바운스 등으로 억제시킬 필요가 있음
-                //- this를 통일시키기 위해 화살표 함수(arrow function)를 사용
-            	 window.addEventListener("scroll", _.throttle(()=>{
-                     //console.log("스크롤 이벤트");
-                     //console.log(this);
-
-                     //스크롤은 몇 % 위치에 있는가? 를 알고 싶다면
-                     //- 전체 문서의 높이(document.body.clientHeight)
-                     //- 현재 스크롤의 위치(window.scrollY)
-                     //- 브라우저의 높이(window.innerHeight)
-                     //- ScreenFull.js나 Rallax.js 등 라이브러리 사용 가능
-                     const height = document.body.clientHeight - window.innerHeight;
-                     const current = window.scrollY;
-                     const percent = (current / height) * 100;
-                     //console.log("percent = " + Math.round(percent));
-                     
-                     //data의 percent를 계산된 값으로 갱신
-                     this.percent = Math.round(percent);
-                 }, 250));
-            	
+            computed:{
+                memberNickValid(){
+                          const regex = /^[가-힣0-9a-z!@#$.-_]{1,10}$/;
+                          return regex.test(this.editedNickname);
+                      },
+                      memberNickMessage(){
+                        
+                    	
+                    	  if(this.editedNickname.length == 0) {
+                    		  return "닉네임을 입력하세요";
+                    	  }
+                        else if(this.memberNickValid && !this.nickDuplicated) {
+                              return "사용 가능한 닉네임입니다.";
+                          }
+                          else if(this.nickDuplicated) {
+                              return "이미 사용중인 닉네임입니다.";
+                          }
+                          else{
+                              return "한글, 영문, 숫자, 특수문자 등을 사용하여 1~16자로 작성하세요.";
+                          }
+                      },
             },
             created(){
-            	// 게시글 불러오기            	likedPostData 
-            	this.fetchPosts();
-            	this.setId();
-            	//created()에 추가
-            	this.getSessionMemberAttachmentNo();
-            	this.loadMemberFollowInfo();
-            	
-            	
+            this.setId();
+            this.setPageMemberId();
+            this.profileImage();
+       		this.pageListProfile();
+       		this. mypageCheck();
+       		this.followCheck();
+               
+            // 게시글 불러오기
+            this.fetchPosts();
+           	
+           	this.setLikedMemberId();           	
+           	this.getSessionMemberAttachmentNo();
+        	this.loadMemberFollowInfo();
             },
-        }).mount("#app");
-    </script>
+            
+            mounted() {
+               this.profile();
+               this.followList();
+               this.followListProfile();
+           	   this.followerListProfile();
+           
+               this.followCnt();
+               this.modal = new bootstrap.Modal(this.$refs.modal);
+               this.followModal = new bootstrap.Modal(this.$refs.followModal);
+               this.followerModal = new bootstrap.Modal(this.$refs.followerModal);
+               this.pageModal = new bootstrap.Modal(this.$refs.pageModal);
+               this.settingsModal = new bootstrap.Modal(this.$refs.settingsModal);
+               
+               //윈도우 전체에 스크롤 이벤트를 설정(Vue가 아닌 JS 사용)
+               //- 주의할 점은 스크롤 이벤트는 발생빈도가 엄청나다는 것
+               //- 쓰로틀링, 디바운스 등으로 억제시킬 필요가 있음
+               //- this를 통일시키기 위해 화살표 함수(arrow function)를 사용
+           	 window.addEventListener("scroll", _.throttle(()=>{
+                    //console.log("스크롤 이벤트");
+                    //console.log(this);
 
+                    //스크롤은 몇 % 위치에 있는가? 를 알고 싶다면
+                    //- 전체 문서의 높이(document.body.clientHeight)
+                    //- 현재 스크롤의 위치(window.scrollY)
+                    //- 브라우저의 높이(window.innerHeight)
+                    //- ScreenFull.js나 Rallax.js 등 라이브러리 사용 가능
+                    const height = document.body.clientHeight - window.innerHeight;
+                    const current = window.scrollY;
+                    const percent = (current / height) * 100;
+                    //console.log("percent = " + Math.round(percent));
+                    
+                    //data의 percent를 계산된 값으로 갱신
+                    this.percent = Math.round(percent);
+                }, 250));
+            },
+         }).mount("#app");
+         <!--algPggg-->
+      </script>
+      
+</body>    
 
-<!-- 이미지 스와이핑 창 -->
-<script
-	src="${pageContext.request.contextPath}/static/js/swiping-image.js"></script>
-<!-- 게시글 작성 ajax -->
-<script src="${pageContext.request.contextPath}/static/js/async-post.js"></script>
-<!-- 카카오 API구현 JS -->
-<script src="${pageContext.request.contextPath}/static/js/post-map.js"></script>
-
-
-<jsp:include page="/WEB-INF/views/template/footer.jsp"></jsp:include>
+<jsp:include page="/WEB-INF/views/template/footer.jsp"></jsp:include> 
