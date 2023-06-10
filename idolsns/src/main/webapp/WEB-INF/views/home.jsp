@@ -2399,4 +2399,5 @@
 <!-- 카카오 API구현 JS -->
 <script src="${pageContext.request.contextPath}/static/js/post-map.js"></script>
 
+
 <jsp:include page="/WEB-INF/views/template/footer.jsp"></jsp:include>

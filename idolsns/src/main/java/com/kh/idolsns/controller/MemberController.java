@@ -127,21 +127,20 @@ public class MemberController {
 			return "redirect:login";
 		}
 		
-		if(!userDto.getMemberPw().equals(findDto.getMemberPw())) {
-			attr.addAttribute("mode", "error");
-			attr.addAttribute("msg", "아이디 또는 비밀번호를 잘못입력하였습니다.");
-			return "redirect:login";
+		if (!encoder.matches(userDto.getMemberPw(), findDto.getMemberPw())) {
+		    attr.addAttribute("mode", "error");
+		    attr.addAttribute("msg", "아이디 또는 비밀번호를 잘못입력하였습니다.");
+		    return "redirect:login";
 		}
+
 		
 		session.setAttribute("memberId", findDto.getMemberId());
 		session.setAttribute("memberLevel", findDto.getMemberLevel());
 		
 		String memberId = findDto.getMemberId();
 		if(!(findDto.getMemberExitDate() == null)) {
-			memberRepo.cancelExit(memberId	);
-			String alertMessage = "회원 탈퇴가 취소되었습니다!";
-		    attr.addAttribute("mode", "cancel");
-		    attr.addAttribute("mmssgg", alertMessage);
+			memberRepo.cancleExit(memberId	);
+		    attr.addAttribute("mode", "cancle");
 		    return "redirect:login";
 		}
 		
@@ -374,11 +373,6 @@ public class MemberController {
 		String memberId = (String) session.getAttribute("memberId");
 		MemberDto memberDto = memberRepo.selectOne(memberId);
 		
-		if(!memberDto.getMemberPw().equals(memberPw)) {
-			attr.addAttribute("mode", "error");
-			return "redirect:exit";
-		}
-			
 			memberRepo.exitDate(memberId);
 			
 			memberRepo.memberExit(memberId);
@@ -388,7 +382,18 @@ public class MemberController {
 			
 			return "redirect:exitFinish";
 		
+	}
+	
+	@GetMapping("/exitPw")
+	@ResponseBody
+	public String exitPw(HttpSession session, @RequestParam String memberPw) {
+		String memberId = (String) session.getAttribute("memberId");
+		MemberDto memberDto = memberRepo.selectOne(memberId);
+		if(!encoder.matches(memberPw, memberDto.getMemberPw())) {
+			return "N";
+		}
 		
+		return "Y";
 	}
 	
 	@GetMapping("/exitFinish")
@@ -410,15 +415,24 @@ public class MemberController {
 		String memberId = (String) session.getAttribute("memberId");
 		MemberDto memberDto = memberRepo.selectOne(memberId);
 		
-		if(!memberDto.getMemberPw().equals(currentPw)) {
-			attr.addAttribute("mode", "error");
-			attr.addAttribute("msg", "잘못된 비밀번호 입니다.");
-			return "redirect:password";
-		}
-		
-		memberRepo.updatePw(memberId, changePw);
+		// 새로운 비밀번호를 암호화
+	    String encryptedPassword = encoder.encode(changePw);
+	    memberRepo.updatePw(memberId, encryptedPassword);
 		
 		return "redirect:passwordFinish";
+	}
+	
+	@GetMapping("/passwordCheck")
+	@ResponseBody
+	public String passwordCheck(HttpSession session, @RequestParam String currentPw) {
+		String memberId = (String) session.getAttribute("memberId");
+		MemberDto memberDto = memberRepo.selectOne(memberId);
+		
+		if(!encoder.matches(currentPw, memberDto.getMemberPw())) {
+			return "N";
+		}
+		
+		return "Y";
 	}
 	
 	@GetMapping("/passwordFinish")
@@ -533,7 +547,8 @@ public class MemberController {
 		
 		String newPassword = emailService.CreatePassword();
 		emailService.sendEmailPassword(memberEmail, newPassword);
-		memberRepo.editPassword(memberEmail, newPassword);
+		String encryptedPassword = encoder.encode(newPassword);
+		memberRepo.editPassword(memberEmail, encryptedPassword);
 		return newPassword;
 	}
 	

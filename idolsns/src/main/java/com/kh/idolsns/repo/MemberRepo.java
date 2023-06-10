@@ -38,7 +38,7 @@ public interface MemberRepo {
 	boolean editPassword(String memberEmail, String memberPw);
 	boolean deleteMemberProc(String memberId);
 	boolean exitDate(String memberId);
-	boolean cancelExit(String memberId);
+	boolean cancleExit(String memberId);
 	void clean();
 	void memberExit(String memberId);
 	int memberExitFind(String memberId);
