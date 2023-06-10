@@ -82,6 +82,13 @@ public class FundRepoImpl implements FundRepo{
    }
 
 
+
+	@Override
+	public int likeCount(Long postNo) {
+		return sqlSession.selectOne("fund.likeCount", postNo);
+	}
+
+
       
 
    

@@ -61,16 +61,30 @@
            padding: 10px;
            border: 1px solid #ccc;
            border-radius: 5px;
-           
-           
+           overflow: hidden;
+           /* 하트 고정 */
+           position: relative;
+         }
+         
+         .heart-icon {
+         	position: absolute;
+         	top: 175px; 
+         	right: 20px;
+         	transform: scale(1.1); /* 하트 크기 조정 */
+         	color: #6A53FB;
          }
          
          
          .funding-item img {
+           transition: transform 0.3s;
            width: 100%;
            border-radius: 5px;
-           
            }
+         
+         /* 펀딩 목록 hover시 이미지 확대 */
+		 .funding-item img:hover{
+			transform: scale(1.1);
+		  }
          
          .funding-item .title {
             margin: 10px 0;
@@ -128,6 +142,7 @@
 		   justify-content: center;
 		   z-index: 9999;
 		}
+		
       </style>
       
         <div id="app">
@@ -180,8 +195,19 @@
                  <div class="funding-list justify-content-center mt-4">
                  
                    <div class="funding-item" v-for="(funding, index) in fundings" :key="index"
-                                              v-on:click="link(funding)">
-                     <img :src="getImageUrl(funding)" alt="Funding Image" style="height:200px">
+                                              @click="link(funding)" >
+                     <img :src="getImageUrl(funding)" alt="Funding Image" style="height:200px;">
+                     
+                     <!-- 좋아요 -->
+                     <span class="heart-icon" v-if="postLikeIndexList.includes(index)">
+					      <i class="fs-4 ti ti-heart-filled" @click="checkLike(funding.postNo, index); $event.stopPropagation()"></i> 
+                     </span>
+                     <span class="heart-icon" v-else>
+					      <i class="fs-4 ti ti-heart" @click="checkLike(funding.postNo, index); $event.stopPropagation()"></i> 
+                     </span>
+                     <!-- 좋아요 끝! -->
+					    
+                     
                      <h3 class="title">{{ funding.fundTitle }}</h3>
                      <p class="description">{{ funding.fundShortTitle }}</p>
                      <div class="progress-bar">
@@ -201,6 +227,8 @@
                    </div>
                    
                  </div>
+                 <!-- 펀딩 리스트 끝! -->
+                 
                </div>
                
                <!-- 로그인 모달 -->
@@ -253,6 +281,9 @@
     			   	
     			   	// 세션 memberId
     			   	memberId: memberId,
+    			   	
+    			 	// 좋아요 게시글 인덱스 배열
+                	postLikeIndexList: [], 
                 	 
                   };
                   },
@@ -284,26 +315,28 @@
 		                  // searchQueryTemp에 이전 검색어 저장
 // 		                  this.searchQueryTemp = this.searchQuery;
 		                       
-		                  const resp = await axios.get("http://localhost:8080/rest/fund/page/"+this.searchPage,
-		                        {
-		                	  params: {
-		                		  	// 검색어
-		                        	searchKeyword : this.searchQuery,
-		                        	// 정렬 조건
-		                        	orderList : this.orderList
-		                        },
-		                        paramsSerializer: params => {
-		                    		return new URLSearchParams(params).toString();
-		                    	}
-		                        });     
-		                  this.fundings.push(...resp.data);
-		                  console.log(resp.data);
-		                  this.searchPage++;
-		                  
-		                  // 데이터가 12개 미만이면 더 읽을게 없다
-		                       if(resp.data.length < 12){
-		                           this.finish = true;
-		                          }
+                  const resp = await axios.get("http://localhost:8080/rest/fund/page/"+this.searchPage,
+                        {
+                	  params: {
+                		  	// 검색어
+                        	searchKeyword : this.searchQuery,
+                        	// 정렬 조건
+                        	orderList : this.orderList
+                        },
+                        paramsSerializer: params => {
+                    		return new URLSearchParams(params).toString();
+                    	}
+                        });     
+               	  this.fundings.push(...resp.data);
+               	  
+               	  this.getLikePostIndex(this.fundings);
+                  console.log(resp.data);
+                  this.searchPage++;
+                  
+                  // 데이터가 12개 미만이면 더 읽을게 없다
+                       if(resp.data.length < 12){
+                           this.finish = true;
+                          }
                    },
                    
                    async fetchOrderedFundingList(){
@@ -329,6 +362,24 @@
 		                       if(resp.data.length < 12){
 		                           this.finish = true;
 		                          }
+                   },
+                   
+                // postNo를 List로 송신하고 좋아요 되있는 index 번호를 수신
+                   getLikePostIndex(fundings){
+                   	postNoList = [];
+                   	fundings.forEach(function(funding){
+                   		postNoList.push(funding.postNo); 
+                   	})
+                   	
+               		axios.get('http://localhost:8080/rest/fund/like/index/'+postNoList)
+               			.then(response => {               			
+               			this.postLikeIndexList = response.data;  
+               			console.log("postLikeIndexList--------"+this.postLikeIndexList);
+               		})
+               		.catch(error => {
+               			console.error(error);
+               		})
+                   	              		
                    },
                     
                     // 남은 시간 설정
@@ -363,7 +414,7 @@
                        window.location.href = "/fund/detail?postNo="+funding.postNo;;
                     },
                     getImageUrl(funding) {
-                     const imageUrl = "/rest/attachment/download/" + funding.attachmentNo;
+                       const imageUrl = "/rest/attachment/download/" + funding.attachmentNo;
                        return imageUrl;
                        },
                        
@@ -419,6 +470,51 @@
     				linkToLogin() {
     					window.location.href="/member/login";
     				},
+    				
+    				// 좋아요 체크 후 추가&삭제
+    				async checkLike(funding) {
+    					// 로그인이 안되어 있으면
+    					if(!this.checkLogin()) return;
+    					
+    					const postNo = funding.postNo;
+    					axios.get('http://localhost:8080/rest/post/like/'+postNo)
+                		.then(response => {
+                			console.log("checkLike = " +response.data);
+                			this.checkFundLike();
+                			
+                				
+                		})
+                		.catch(error => {
+                			console.error(error);
+                		})
+    					
+    				},
+    				// 좋아요 체크
+    				async checkFundLike() {
+    					const postNo = this.fundDetail.postNo;
+    					const resp = await axios.get("http://localhost:8080/rest/post/like/check/"+postNo);
+    					this.fundings.isLiked = resp.data;
+    				},
+    				// 아이디 접속해 있고, 좋아요 클릭시에 실행
+                 	checkLike(postNo,index){
+                    	axios.get('http://localhost:8080/rest/post/like/'+postNo)
+                    		.then(response => {
+                    			console.log(response.data);
+                    			// 응답이 좋아요면
+                    			if(response.data== 'Like'){
+                    				this.postLikeIndexList.push(index);                			
+                    			}
+                    			// 응답이 좋아요 취소면
+                    			else if(response.data=='disLike'){
+                    				this.postLikeIndexList.splice(this.postLikeIndexList.indexOf(index),1);
+                    			}
+                    			
+                    				
+                    		})
+                    		.catch(error => {
+                    			console.error(error);
+                    		})
+                    },
     				
                  },
                  watch: {
