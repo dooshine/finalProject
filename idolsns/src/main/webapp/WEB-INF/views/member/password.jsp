@@ -5,7 +5,7 @@
 	<br><br>
 	<div class="container" id = app>
 	<div class="col-6 custom-container" style="background-color:white; margin-left: 300px;">
-		<form action="password" method="post" autocomplete="off" @submit.prevent="submitForm">
+		<form action="password" method="post" autocomplete="off" @submit="submitForm">
 			<div class="row center">
 				<h1 class="font-purple1">비밀번호 변경</h1>
 			</div>
@@ -44,7 +44,7 @@
                 };
             },
             methods:{
-            	submitForm() {
+            	submitForm(event) {
                     if (this.allValid()) {
                         // 폼 제출 허용
                         return true;
@@ -54,12 +54,17 @@
                     }
                  },
                  async passwordCheck() {
-                	 const response = await axios.get("/member/passwordCheck");
-                	 if(this.currentPw == response.data) {
+                	 const response = await axios.get("/member/passwordCheck",{
+                		 params :{
+                			 currentPw : this.currentPw
+                		 }
+                	 });
+                	 if(response.data == "Y") {
                 		 this.pwCheck = true;
                 	 }
                 	 
                  }
+                 
             },
             computed:{
             	currentPwMessage() {

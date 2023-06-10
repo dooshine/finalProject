@@ -74,6 +74,7 @@
             		  });
  						if(resp.data === "N"){
  							this.idCheck = true; //아이디가 있다.
+ 							this.message = "	"
  						}  
  						else{
  							this.idCheck = false; //존재하는 아이디가 없다.
