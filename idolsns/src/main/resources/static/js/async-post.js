@@ -278,8 +278,8 @@
 //					      break; // 반복문 종료
 //					    }						
 					    if (isImage(file)) {
-//					      const img = $('<img>').attr('src', URL.createObjectURL(file)).attr('width', '100').attr('height', '100');
-					      const img = $('<img>').attr('src', URL.createObjectURL(file)).addClass('w-50');
+					      const img = $('<img>').attr('src', URL.createObjectURL(file)).attr('width', '100').attr('height', '100');
+//					      const img = $('<img>').attr('src', URL.createObjectURL(file)).addClass('w-50');
 					      preview.append(img);
 					      imageCount++;
 					    } else if (isVideo(file)) {
@@ -287,6 +287,14 @@
 					      preview.append(video);
 					      videoCount++;
 					    }
+					    else{
+						  alert('파일은 이미지, 비디오 파일만 업로드 가능합니다.');
+						  preview.empty();
+						  $("#fileInput").val(null);
+						  break;
+							
+						}
+					    
 					    if(i==(MAX_FILES)){
 							alert('파일은 최대 5개까지만 업로드 가능합니다.');
 							preview.empty();

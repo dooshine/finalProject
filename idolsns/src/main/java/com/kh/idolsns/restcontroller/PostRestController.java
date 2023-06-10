@@ -24,6 +24,7 @@ import com.kh.idolsns.dto.FreePostDto;
 import com.kh.idolsns.dto.MapDto;
 import com.kh.idolsns.dto.PostDto;
 import com.kh.idolsns.dto.PostImageDto;
+import com.kh.idolsns.dto.PostShowDto;
 import com.kh.idolsns.dto.SchedulePostDto;
 import com.kh.idolsns.dto.TagDto;
 import com.kh.idolsns.dto.TogetherPostDto;
@@ -105,8 +106,8 @@ public class PostRestController {
     
     
     //아티스트페이지 상세조회
-    @GetMapping("/tag/{tagName}")
-    public List<PostShowVO> selectList(@PathVariable String tagName){
+    @GetMapping("/{tagName}")
+    public List<PostShowDto> selectList(@PathVariable String tagName){
    	      return postShowRepo.selectList(tagName);
   }
 
@@ -274,7 +275,16 @@ public class PostRestController {
 //    public PostWithNickDto selectOne(@PathVariable Long postNo){
 //        return postWithNickRepo.selectOne(postNo);
 //    }
-
+//    @GetMapping()
+//    public String sessionMemberAttachmentNo{
+//    	
+//    	return null;
+//    }
+    @GetMapping("/sessionAttachmentNo")
+    public Integer sessionMemberAttachmentNo(HttpSession session) {
+    	String memberId = (String) session.getAttribute("memberId");
+    	return postShowRepo.selectSessionMemberAttachmentNo(memberId);    	
+    }
     // 게시물 전체 목록 조회 
     @GetMapping("/all")
     public List<PostShowVO> allList(){
@@ -377,5 +387,7 @@ public class PostRestController {
     	return postRepo.delete(postNo);
         
     }
+    
+    
 
 }

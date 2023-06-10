@@ -369,6 +369,12 @@ scrollbar-width: none;
 	text-overflow: ellipsis;
 	word-break: break-all;
 }
+.hide-overflow {
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	word-break: break-all;
+}
 
 .profileImg {
 	border-radius: 100px;

@@ -1,5 +1,6 @@
 package com.kh.idolsns.dto;
 import java.sql.Date;
+import java.sql.Timestamp;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,6 +17,6 @@ public class ChatRoomDto {
 	private String chatRoomName2;
 	private Date chatRoomStart;
 	private char chatRoomType;
-	private Date chatRoomLast;
+	private Timestamp chatRoomLast;
 	
 }

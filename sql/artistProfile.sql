@@ -24,3 +24,11 @@ CREATE OR REPLACE VIEW testView AS
             on A.attachment_no = MP.attachment_no
         inner join member M
             on MP.member_id = M.member_id;
+
+
+-- ######################## 대표페이지 프로필 constraint ########################
+-- 대표페이지 프로필 PRIMARY KEY
+ALTER TABLE artist_profile ADD 
+PRIMARY KEY (ARTIST_NO, ATTACHMENT_NO);
+
+-- ######################## 대표페이지 프로필 constraint 끝 ########################

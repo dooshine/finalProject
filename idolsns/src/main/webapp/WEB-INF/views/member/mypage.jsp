@@ -85,28 +85,34 @@
    <div id="app">
       <br><br>
       <div class="container">
-         <div class="row" style="margin-left:30px">
-            <div>
-               <img :src="memberProfileImageObj !== ''  && memberProfileImageObj.attachmentNo !== undefined ? '/download/?attachmentNo='+memberProfileImageObj.attachmentNo :  ' /static/image/profileDummy.png' "
+         <div class="row" >
+            <div class="col-4" >
+                  <img :src="memberProfileImageObj !== ''  && memberProfileImageObj.attachmentNo !== undefined ? '/download/?attachmentNo='+memberProfileImageObj.attachmentNo :  ' /static/image/profileDummy.png' "
                   style="width: 200px; height: 200px; border-radius: 100%;">
+            </div>
+            <div class="col-3">
+            	<h3 style="margin-top:120px;">{{memberNick}}</h3>
+               <h6 class="font-gray1">@{{memberId}}</h6>
+            </div>
+            <div class="col-5 text-right" style="margin-top: 150px;">
+			    <div class="row" v-if="mypage">
+			        <div class="d-flex justify-content-end">
+			            <button type="button" class="custom-btn btn-round btn-purple1" v-on:click="showModal">프로필 수정</button>
+			            <i class="fa-solid fa-gear ml-2" v-on:click="showSettingsModal" style="margin-top: 3px; margin-left : 5px; font-size:30px"></i>
+			        </div>
+			    </div>
+
+
+            	<div class="row" v-if="!mypage && follow">
+            		<button type ="button" class="custom-btn btn-round btn-purple2" v-on:click="followMember(memberId)">팔로우 취소</button>
+            	</div>
+            	<div class="row" v-if="!mypage && !follow">
+	               <button type = "button" class="custom-btn btn-round btn-purple1" v-on:click = "followMember(memberId)">팔로우</button>
+            	</div>
             </div>
          </div>
          
-         <div class="row">
-            <div class="col-8">
-               <h3>{{memberNick}}</h3>
-               <h5>@{{memberId}}</h5>
-            </div>
-            <div class="col-4 text-right">
-            	<div class="row" v-if="mypage">
-	               <button type = "button" class="btn btn-primary mt-4" v-on:click = "showModal">프로필 수정</button>
-    	           <i class="fa-solid fa-gear" v-on:click="showSettingsModal"></i>
-            	</div>
-            	<div class="row" v-if="!mypage">
-	               <button type = "button" class="btn btn-primary mt-4" v-on:click = "showModal">팔로우</button>
-            	</div>
-            </div>
-         </div>
+         <br>
          <div class="row">
             <div class="col-4 " style="display: flex; justify-content: space-between; flex-direction: column; align-items: center;" 
                v-on:click="showFollowModal">
@@ -156,13 +162,14 @@
                      <img :src="previewURL"
                         class="profile-image" @click="openFileInput">
                      <input type="file" ref="fileInput" style="display: none;"@change="uploadFile($event)">
+                     
                      <h3>
                            <span v-if="!editingNickname">{{ memberNick }}</span>
                            <input v-else type="text" v-model="editedNickname" class="form-control" placeholder="새로운 닉네임"
-                              :class="{'is-invalid':editedNickname !== '' && (!memberNickValid || nickDuplicated)}" @blur="nickDuplicatedCheck(memberNick)">
+                              :class="{'is-invalid':editedNickname !== '' && (!memberNickValid || nickDuplicated) }" @blur="nickDuplicatedCheck(memberNick)">
                            <div class="invalid-feedback">{{memberNickMessage}}</div>
                            <i v-if="!editingNickname" class="fa-solid fa-pen-to-square" style="font-size: 14px; margin-left: 10px; cursor: pointer;" @click="editingNickname=true"></i>
-                           <i v-else class="fa-solid fa-check" style="font-size: 14px; margin-left: 10px; cursor: pointer;" @click="updateNickname(memberNick)"></i>
+                          <i v-else class="fa-solid fa-check" style="font-size: 14px; margin-left: 10px; cursor: pointer;" @click="nickDuplicated || !memberNickValid ? null : updateNickname(memberNick)"></i>
                        </h3>
                      <h5>@{{memberId}}</h5>
                   </div>
@@ -1104,7 +1111,9 @@
                   targetMemberFollowObj: {},
                   
                   //내페이지 or 남의페이지
-                  mypage:true,
+                  mypage:false,
+                  //팔로우 여부
+                  follow : true,
                   
                // 게시글 VO를 저장할 배열
               	posts: [],
@@ -1157,6 +1166,12 @@
               	
               	modalImageUrlList:[],
               	
+
+				followObj: {
+					memberId: memberId,
+					followTargetType: "",
+					followTargetPrimaryKey: "",
+				},
                };
             },      
             methods:{
@@ -1421,29 +1436,37 @@
 			    	}
 			    },
 			    // 회원 팔로우 버튼
-		        async followMember(memberSearch){
-		            // 1. 회원 로그인 확인
-		            // if(memberId === ""){
-		            //     if(confirm("로그인 한 회원만 사용할 수 있는 기능입니다. 로그인 하시겠습니까?")) {
-		            //         window.location.href = contextPath + "/member/login";
-		            //     }
-		            // }
-
-		            // artistEngNameLower
-		            // 2. toggle 팔로우 삭제, 팔로우 생성
-		            const isFollowingMember = memberSearch.isFollowMember;
-		            if(isFollowingMember){
-		                if(!confirm(this.fullName(memberSearch.memberId, memberSearch.memberNick) + "님 팔로우를 취소하시겠습니까?")) return;
-		                this.setFollowMemberObj(memberSearch.memberId);
-		                await this.deleteFollow();
+		        async followMember(targetMemberId){
+		            if(this.follow){
+		                if(!confirm(targetMemberId + "님 팔로우를 취소하시겠습니까?")) return;
+		                this.setFollowMemberObj(targetMemberId);
+		                await this.deleteMemberFollow();
 		            } else {
-		                this.setFollowMemberObj(memberSearch.memberId);
+		                this.setFollowMemberObj(targetMemberId);
 		                await this.createFollow();
 		            }
-
 		            await this.loadMemberFollowInfo();
-		            this.loadMemberSearchList();
+					this.followCheck();
+					this.followCnt();
 		        },
+
+				// 대표페이지 팔로우 생성
+				async createFollow(){
+					// 팔로우 생성 url
+					const url = "http://localhost:8080/rest/follow/";
+					await axios.post(url, this.followObj);
+					// [develope] 
+				},
+				// 대표페이지 팔로우 취소
+				async deleteMemberFollow(){
+					// 팔로우 생성 url
+					const url = "http://localhost:8080/rest/follow/";
+					await axios.delete(url, {
+						data: this.followObj,
+					});
+					// [develope]
+				},
+
 
 		        // 회원 팔로우 대상 설정
 		        setFollowMemberObj (followMemberId){
@@ -1452,6 +1475,32 @@
 		            // 팔로우 대상 PK
 		            this.followObj.followTargetPrimaryKey = followMemberId;
 		        },
+			    
+			    //팔로우 여부 
+			    async followCheck() {
+			    	const response = await axios.get("/member/checkFollowMember", {
+			    		params : {
+							Id : this.memberId
+						}
+			    	});
+			    	console.log(response.data);
+			    	if(response.data == true) {
+			    		this.follow = true;
+			    	}	
+			    	else { 
+			    		this.follow = false;
+			    	}
+			    },
+			    
+			    //팔로우
+			    async memberFollowNew() {
+			    	const response = await axios.get("/member/follow", {
+			    		params : {
+							Id : this.memberId
+						}
+			    	});
+			    	this.followCheck();
+			    },
                   
 
 
@@ -1853,7 +1902,11 @@
                       },
                       memberNickMessage(){
                         
-                          if(this.memberNickValid && !this.nickDuplicated) {
+                    	
+                    	  if(this.editedNickname.length == 0) {
+                    		  return "닉네임을 입력하세요";
+                    	  }
+                        else if(this.memberNickValid && !this.nickDuplicated) {
                               return "사용 가능한 닉네임입니다.";
                           }
                           else if(this.nickDuplicated) {
@@ -1868,6 +1921,7 @@
                this.profileImage();
        		this.pageListProfile();
        		this. mypageCheck();
+       		this.followCheck();
                
             // 게시글 불러오기
            	this.setId();

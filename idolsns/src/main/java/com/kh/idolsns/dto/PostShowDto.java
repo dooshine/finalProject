@@ -15,6 +15,7 @@ public class PostShowDto {
 	private long tagNo; 
 	private String tagType;
 	private String tagName;
+	private String mapName;
 	private String mapPlace;
 	private String fundTitle;
 

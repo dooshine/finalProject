@@ -25,6 +25,9 @@ public class PostShowService {
 	private PostShowRepo postShowRepo; 
 	
 	@Autowired
+	private ReplyShowService replyShowService;
+	
+	@Autowired
 	private TagRepo tagRepo;
 	
 	@Autowired
@@ -75,7 +78,7 @@ public class PostShowService {
 			//	log.debug("postShowVO is {}", postShowVO); 
 			
 			// 댓글 가져오기 
-			postShowVO.setReplyList(replyRepo.getRepliesByPostNo(postNo));
+			postShowVO.setReplyList(replyShowService.showReplyList(postNo));
 		
 		}
 		return postShowList;
@@ -110,7 +113,7 @@ public class PostShowService {
 			//	log.debug("postShowVO is {}", postShowVO); 
 			
 			// 댓글 가져오기 
-			postShowVO.setReplyList(replyRepo.getRepliesByPostNo(postNo));
+			postShowVO.setReplyList(replyShowService.showReplyList(postNo));
 			
 		}
 		
@@ -156,7 +159,7 @@ public class PostShowService {
 			//	log.debug("postShowVO is {}", postShowVO); 
 			
 			// 댓글 가져오기 
-			postShowVO.setReplyList(replyRepo.getRepliesByPostNo(postNo));
+			postShowVO.setReplyList(replyShowService.showReplyList(postNo));
 //			System.out.println("게시글 번호가 "+postNo+"번인 게시글의 답글 리스트는 다음과 같습니다. replyList는 "+replyRepo.getRepliesByPostNo(postNo));
 		}
 		
@@ -190,7 +193,7 @@ public class PostShowService {
 			postShowVO.setLikeCount(postLikeRepo.count(postNo));
 			
 			// 댓글 가져오기 
-			postShowVO.setReplyList(replyRepo.getRepliesByPostNo(postNo));
+			postShowVO.setReplyList(replyShowService.showReplyList(postNo));
 		}
 		
 		return postShowList;
@@ -225,7 +228,7 @@ public class PostShowService {
 			postShowVO.setLikeCount(postLikeRepo.count(postNo));
 			
 			// 댓글 가져오기 
-			postShowVO.setReplyList(replyRepo.getRepliesByPostNo(postNo));
+			postShowVO.setReplyList(replyShowService.showReplyList(postNo));
 		}
 		
 		return postShowList;
@@ -260,7 +263,7 @@ public class PostShowService {
 			postShowVO.setLikeCount(postLikeRepo.count(postNo));
 			
 			// 댓글 가져오기 
-			postShowVO.setReplyList(replyRepo.getRepliesByPostNo(postNo));
+			postShowVO.setReplyList(replyShowService.showReplyList(postNo));
 		}
 		
 		return postShowList;

@@ -3,7 +3,11 @@ create table artist (
     -- 대표페이지 번호(PK)
     artist_no number primary key,
     -- 대표페이지 이름
-    artist_name varchar2(30) not null unique
+    artist_name varchar2(30) not null unique,
+    -- 대표페이지 영어이름
+    artist_eng_name varchar2(30) not null unique,
+    -- 대표페이지 영어이름(소문자, 띄어쓰기 제거)
+    artist_eng_name_lower varchar2(30) not null unique
 );
 
 
@@ -59,3 +63,34 @@ create table artist_profile(
     artist_no references artist(artist_no) on delete cascade primary key,
     attachment_no references attachment(attachment_no) on delete cascade
 );
+
+
+
+
+-- ######################## 대표페이지 constraint ########################
+-- 대표페이지 이름: [한글, 띄어쓰기] 1~10자, 최소 한글 1글자
+ALTER TABLE artist
+ADD 
+check (
+  regexp_like(artist_name, '^[[:space:]가-힣]{1,10}$')
+  and 
+  regexp_like(artist_name, '[가-힣]{1,}')
+);
+
+-- 대표페이지 영어이름 [영어 대소문자, 띄어쓰기] 1~30자, 최소 영어 1글자
+ALTER TABLE artist
+ADD 
+check (
+  regexp_like(artist_eng_name, '^[[:space:]A-Za-z]{1,30}$')
+  and
+  regexp_like(artist_eng_name, '[A-Za-z]+')
+);
+
+-- 대표페이지 영어식별이름 [영어 소문자] 1~30자
+ALTER TABLE artist
+ADD 
+check (
+  regexp_like(artist_eng_name_lower, '^[a-z]{1,30}$')
+);
+
+-- ######################## 대표페이지 constraint 끝 #######################
