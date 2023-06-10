@@ -8,7 +8,7 @@
 			<div class="col-6 custom-container" style="background-color:white; margin-left: 300px;">
 			
 			<div class="row page">
-            <form action="join" method="post" autocomplete="off" @submit.prevent="submitForm">	
+            <form action="join" method="post" autocomplete="off" @submit="submitForm">	
             
             <!-- 약관동의 페이지 -->
             <div v-show="page==1">
@@ -279,14 +279,14 @@
                 	 this.page--; 
                   },
 				
-                  submitForm() {
-                      if (this.allValid() && this.keyValid) {
+                  submitForm(event) {
+                      if (this.keyValid && this.allValid) {
                           // 폼 제출 허용
                           return true;
                       } else {
                           // 폼 제출 막기
                           event.preventDefault();
-                      }
+                      }	
                    },
             },
             computed:{
@@ -380,7 +380,7 @@
                     }
                 },
                 allValid(){
-                    return this.memberIdValid
+                    return (this.memberIdValid
                                 && this.memberPwValid
                                 && this.memberPwReValid
                                 && this.memberNickValid
@@ -388,7 +388,7 @@
                                 && !this.idDuplicated
                                 && !this.nickDuplicated
                                 && !this.emailDuplicated
-                                && this.agree;
+                                && this.agree);
                 },
                 
              

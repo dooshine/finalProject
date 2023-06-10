@@ -86,8 +86,12 @@
                  },
                  
                  async exitPw() {
-                	 const response = await axios.get("/member/exitPw")
-                	 if(response.data == this.password) {
+                	 const response = await axios.get("/member/exitPw",{
+                		 params :{
+                			 memberPw : this.password
+                		 }
+                	 });
+                	 if(response.data == "Y") {
                 		 this.pwCheck = true;
                 	 }
                  },

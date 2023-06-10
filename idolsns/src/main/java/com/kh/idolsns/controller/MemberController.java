@@ -127,11 +127,12 @@ public class MemberController {
 			return "redirect:login";
 		}
 		
-		if(!userDto.getMemberPw().equals(findDto.getMemberPw())) {
-			attr.addAttribute("mode", "error");
-			attr.addAttribute("msg", "아이디 또는 비밀번호를 잘못입력하였습니다.");
-			return "redirect:login";
+		if (!encoder.matches(userDto.getMemberPw(), findDto.getMemberPw())) {
+		    attr.addAttribute("mode", "error");
+		    attr.addAttribute("msg", "아이디 또는 비밀번호를 잘못입력하였습니다.");
+		    return "redirect:login";
 		}
+
 		
 		session.setAttribute("memberId", findDto.getMemberId());
 		session.setAttribute("memberLevel", findDto.getMemberLevel());
@@ -360,10 +361,14 @@ public class MemberController {
 	
 	@GetMapping("/exitPw")
 	@ResponseBody
-	public String exitPw(HttpSession session) {
+	public String exitPw(HttpSession session, @RequestParam String memberPw) {
 		String memberId = (String) session.getAttribute("memberId");
 		MemberDto memberDto = memberRepo.selectOne(memberId);
-		return memberDto.getMemberPw();
+		if(!encoder.matches(memberPw, memberDto.getMemberPw())) {
+			return "N";
+		}
+		
+		return "Y";
 	}
 	
 	@GetMapping("/exitFinish")
@@ -385,10 +390,6 @@ public class MemberController {
 		String memberId = (String) session.getAttribute("memberId");
 		MemberDto memberDto = memberRepo.selectOne(memberId);
 		
-		if(!memberDto.getMemberPw().equals(currentPw)) {
-			attr.addAttribute("mode", "error");
-			return "redirect:password";
-		}
 		// 새로운 비밀번호를 암호화
 	    String encryptedPassword = encoder.encode(changePw);
 	    memberRepo.updatePw(memberId, encryptedPassword);
@@ -398,12 +399,16 @@ public class MemberController {
 	
 	@GetMapping("/passwordCheck")
 	@ResponseBody
-	public String passwordCheck(HttpSession session) {
+	public String passwordCheck(HttpSession session, @RequestParam String currentPw) {
 		String memberId = (String) session.getAttribute("memberId");
 		MemberDto memberDto = memberRepo.selectOne(memberId);
-		return memberDto.getMemberPw();
+		
+		if(!encoder.matches(currentPw, memberDto.getMemberPw())) {
+			return "N";
+		}
+		
+		return "Y";
 	}
-	
 	
 	@GetMapping("/passwordFinish")
 	public String passwordFinish() {
@@ -517,7 +522,8 @@ public class MemberController {
 		
 		String newPassword = emailService.CreatePassword();
 		emailService.sendEmailPassword(memberEmail, newPassword);
-		memberRepo.editPassword(memberEmail, newPassword);
+		String encryptedPassword = encoder.encode(newPassword);
+		memberRepo.editPassword(memberEmail, encryptedPassword);
 		return newPassword;
 	}
 	
