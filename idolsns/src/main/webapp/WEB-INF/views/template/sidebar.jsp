@@ -49,13 +49,20 @@
 	<div class= "nav flex-column ps-3">
         <a href="${pageContext.request.contextPath}/">
         	<i class="fa-solid fa-house" :class="{selected: asideTab === '홈'}"><span class="ps-2 aside-name-tag"> 홈</span></i></a>
-        <a href="#" @click="toggleMyArtist">
+		<%-- 내 아이돌(비로그인-로그인모달 at footer) --%>
+		<a href="#" v-if="memberId===''" data-bs-toggle="modal" data-bs-target="#loginModal">
         	<i class="ti ti-star-filled" :class="{selected: asideTab === '대표페이지'}"><span class="ps-2 aside-name-tag"> 내 아이돌</span></i></a>
+		<%-- 내 아이돌(로그인-펼치기) --%>
+		<a href="#" v-else @click="toggleMyArtist">
+			<i class="ti ti-star-filled" :class="{selected: asideTab === '대표페이지'}"><span class="ps-2 aside-name-tag"> 내 아이돌</span></i></a>
 		<div v-if="toggleFollowPageList">
 			<a class="d-flex" :href="'/artist/'+followPage.artistEngNameLower" v-for="(followPage, i) in memberFollowObj.followPageList" :key="i">
 				<img class="ms-3 rounded-circle" :src="followPage.profileSrc" style="height: 30px; width: 30px;">
 				<div class="ms-2 aside-name-tag" :class="{selected: isPage(followPage.artistEngNameLower) }">{{fullName(followPage.artistName, followPage.artistEngName)}}</div>
 			</a>
+			<div v-if="memberFollowObj.followPageList.length===0">
+				팔로우 한 대표페이지가 없습니다
+			</div>
 		</div>
         <a href="${pageContext.request.contextPath}/fund/list">
         	<!-- <i class="fa-solid fa-comments-dollar" :class="{selected: asideTab === '펀딩'}"> 펀딩</i></a> -->
@@ -66,7 +73,6 @@
 	<!-- 어사이드 푸터 -->
 	<div id="aside-footer" class="mt-auto ps-4 pb-4">
 		<span style="color: #7f7f7f">
-		<!-- <span style="background-color: forestgreen;"> -->
 			개인정보처리방침 · 약관 · STARLINK © 2023
 		</span>
 	</div>
@@ -81,6 +87,9 @@
 		  memberFollowObj: {},
 		  toggleFollowPageList: false,
 		  asideTab: "",
+
+		  // 로그인 회원 아이디
+		  memberId: memberId,
 		};
 	  },
 	  computed: {
