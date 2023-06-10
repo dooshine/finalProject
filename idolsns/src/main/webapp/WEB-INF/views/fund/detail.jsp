@@ -716,7 +716,6 @@
 				
 				// 로그인 체크
 				checkLogin() {
-                	console.log("checkLogin executed");
                 	// 로그인이 안되어 있으면
 					if(this.memberId == "") {
 						this.loginModal = true;

@@ -115,6 +115,19 @@
          .info .col .label {
             font-size: 0.9em;
             }
+            
+         /* 로그인 모달 스타일*/
+	      .custom-modal-wrapper {
+		   position: fixed;
+		   top: 0;
+		   left: 0;
+		   width: 100%;
+		   height: 100%;
+		   display: flex;
+		   align-items: center;
+		   justify-content: center;
+		   z-index: 9999;
+		}
       </style>
       
         <div id="app">
@@ -190,6 +203,22 @@
                  </div>
                </div>
                
+               <!-- 로그인 모달 -->
+		      <div v-if="loginModal" class="custom-modal-wrapper">
+		      	<div class="custom-modal">
+		         <div class="custom-modal-body" style="width: 300px;">
+		            <div class="text-center mb-3">
+		               <i class="ti ti-alert-triangle"></i>
+		            </div>
+		            <div class="text-center">로그인이 필요한 기능입니다</div>
+		            <div class="d-flex justify-content-center mt-4">
+		               <button class="custom-btn btn-round btn-purple1-secondary me-2 w-100" @click="linkToLogin">로그인</button>
+		               <button class="custom-btn btn-round btn-purple1 w-100" @click="loginModal = false">취소</button>
+		            </div>
+		         </div>
+		      	</div>
+		     </div>
+               
             </div>   
                  
       <script src="https://unpkg.com/vue@3.2.36"></script>
@@ -218,6 +247,12 @@
                 	
                 	// 시간순 정렬 버튼
                 	dateSort: false,
+                	
+                	// 로그인 모달
+    			   	loginModal: false,
+    			   	
+    			   	// 세션 memberId
+    			   	memberId: memberId,
                 	 
                   };
                   },
@@ -262,6 +297,7 @@
 		                    	}
 		                        });     
 		                  this.fundings.push(...resp.data);
+		                  console.log(resp.data);
 		                  this.searchPage++;
 		                  
 		                  // 데이터가 12개 미만이면 더 읽을게 없다
@@ -285,7 +321,7 @@
 		                    		return new URLSearchParams(params).toString();
 		                    	}
 		                        });
-// 		                  console.log(resp.data)
+// 		                  console.log(resp.data);
 		                  this.fundings = [...resp.data];
 		                  this.searchPage++;
 		                  
@@ -299,8 +335,8 @@
                     getTimeDiff(funding) {
                           const startDate = new Date(funding.postStart);
                           const endDate = new Date(funding.postEnd);
-                          console.log(startDate);
-                          console.log(endDate);
+//                           console.log(startDate);
+//                           console.log(endDate);
                           const currentDate = new Date();
                           const fundState = funding.fundState;
                           const timeDiff = endDate.getTime() - startDate.getTime();
@@ -338,6 +374,8 @@
                       
                       // 펀딩 글쓰기로 이동
                       startFunding() {
+                    	  // if not logged in
+                    	  if(!this.checkLogin()) return;
                     	  window.location.href = "/fund/write";
                       },
                       
@@ -362,9 +400,26 @@
 //                     	            this.fetchFundingList();
                     	        }
                     	    }
-                    	    console.log(this.orderList);
-                    	    console.log(this.fundings);
-                      }
+//                     	    console.log(this.orderList);
+//                     	    console.log(this.fundings);
+                      },
+                      
+                   // 로그인 체크
+      				checkLogin() {
+                      	// 로그인이 안되어 있으면
+      					if(this.memberId == "") {
+      						this.loginModal = true;
+      						return false
+      					}
+                      	// 되어있으면
+      					else return true;
+      				},
+      				
+      				// 로그인 페이지로
+    				linkToLogin() {
+    					window.location.href="/member/login";
+    				},
+    				
                  },
                  watch: {
                    // percent가 변하면 percent의 값을 읽어와서 80% 이상인지 판정
@@ -396,7 +451,6 @@
                    },100));
                },
                  created() {
-//                     this.loadFundPostImageList();
                     this.fetchFundingList();
                  }
            }).mount("#app");
