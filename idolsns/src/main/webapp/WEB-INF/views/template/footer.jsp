@@ -110,7 +110,12 @@
 					
 					// 새 메세지 알림 여부
 					newChatNoti: false,
-					chatRoomNoList: []
+					chatRoomNoList: [],
+
+
+					// 대표페이지
+					showArtistHeader: false,
+					artistTab: "feed",
 				};
 			},
 			methods: {
@@ -937,6 +942,25 @@
 					this.targetId = this.messageList[index].memberId;
 					window.location.href = `${pageContext.request.contextPath}/member/mypage/${targetId}`;
 				}*/
+
+
+
+
+				// ######################## 대표페이지 헤더 ########################
+				// 대표페이지 판별
+				isArtistPage(){
+					// 대표페이지 regex
+					const artistPageRegex = /^\/artist\/.*$/gm;
+					const pathname = window.location.pathname;
+					if(artistPageRegex.test(pathname)){
+						this.showArtistHeader = true;
+					}
+				},
+				// 대표페이지 헤더 탭 변경
+				changeArtistPage(tab){
+					this.artistTab = tab;
+				},
+				// ######################## 대표페이지 헤더 끝########################
 				
 			},
 			computed: {
@@ -959,6 +983,8 @@
 				if(this.memberId != "" && memberId != ""){
 					this.connect();
 				}
+
+				this.isArtistPage();
 			},
 			mounted() {
 				// 사용자가 이 탭을 보고있는지 확인

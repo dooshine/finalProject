@@ -175,6 +175,19 @@
 			color: white;
 			font-size: 18px;
 		}
+
+
+		#artist-header {
+			height: 40px; 
+			background-color: #6a53fb; 
+			color: hsla(0,0%,100%,.5)
+		}
+		.artist-header-tab-active {
+			color: white;
+		}
+		.artist-header-tab:not(.artist-header-tab-active):hover {
+			color: hsla(0,0%,100%,.85)
+		}
     </style>
 </head>
 
@@ -186,8 +199,8 @@
         <header>
    
         	<div id="header-area" style="position: relative;">
-				<nav class="navbar navbar-light back-white px-4" style="box-shadow: 0px 3px 4px rgba(3, 21, 17, 0.1);">
-				  	<div class="container-fluid">
+				<nav class="navbar navbar-light back-white p-0" style="box-shadow: 0px 3px 4px rgba(3, 21, 17, 0.1);">
+				  	<div class="container-fluid px-4" style="padding-top: 0.5rem; padding-bottom: 0.5rem;">
 				  		<div class="col-3">
 					    	<a class="navbar-brand" href="/"><img src="/static/image/logo.png" style="width:130px;"></a>
 					    </div>
@@ -228,7 +241,28 @@
 				</div> -->
 				    	</div>
 				  	</div>
+
+
+
+					<%-- ######################## 대표페이지 헤더 ######################## --%>
+					<div v-if="showArtistHeader" class="w-100" id="artist-header">
+						<div class="offset-3 w-50">
+							<div class="d-flex justify-content-center">
+								<div class="font-bold px-4 py-2 artist-header-tab" :class="{'artist-header-tab-active': artistTab==='feed'}" @click="changeArtistPage('feed')">
+									게시물
+								</div>
+								<div class="font-bold px-4 py-2 artist-header-tab" :class="{'artist-header-tab-active': artistTab==='map'}" @click="changeArtistPage('map')">
+									지도
+								</div>
+								<div class="font-bold px-4 py-2 artist-header-tab" :class="{'artist-header-tab-active': artistTab==='fund'}" @click="changeArtistPage('fund')">
+									후원
+								</div>
+							</div>
+						</div>
+					</div>
+					<%-- ######################## 대표페이지 헤더 끝######################## --%>
 				</nav>
+				
 				<!---------------------------------------- 채팅 메인 모달 ---------------------------------------->
 				<div class="customModal chatMainModal" v-if="chatMainModal == true">
 					<div class="customModalHeader d-flex align-items-center justify-content-between">
@@ -680,32 +714,9 @@
 	     			 	</div>                           					 	
 					</div>
 	           	</div>
+
 			</div>
         	<!----------------------------------------------- 헤더 끝 ----------------------------------------------->
-            <%-- 
-			<div class="row" style="position: fixed !important; top: 80px; z-index: 99999999999;">
-				<!-- (개발)로그인 버튼 -->
-				<div class="col-4">
-					<button><a href="/dev/login?memberId=testuser1">testuser1</a></button>
-					<button><a href="/dev/login?memberId=testuser2">testuser2</a></button>
-					<button><a href="/dev/login?memberId=testuser3">testuser3</a></button>
-					<button><a href="/dev/login?memberId=adminuser1">adminuser3</a></button>
-				</div>
-				<div class="offset-5 col-3">
-					<!--<c:if test="${memberId == null}">
-						<a href="${pageContext.request.contextPath}/member/login">로그인</a>
-						<a href="${pageContext.request.contextPath}/member/join">회원가입</a>
-					</c:if>
-					<c:if test="${memberId != null}">
-						<a href="${pageContext.request.contextPath}/member/logout">로그아웃</a>
-						<a href="${pageContext.request.contextPath}/member/mypage">마이페이지</a>
-					</c:if>-->
-					<c:if test="${memberLevel == '관리자'}">
-						<a href="${pageContext.request.contextPath}/admin/">관리자 페이지</a>
-					</c:if>
-				</div>
-            </div>
-			--%>
         </header>
           <!-- <hr> -->
 
