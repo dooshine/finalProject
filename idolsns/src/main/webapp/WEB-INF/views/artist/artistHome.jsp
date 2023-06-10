@@ -56,11 +56,47 @@
   }
 
 
-
+  
+  #artist-header {
+	position: fixed;
+	left: 0px;
+	top: 55px;
+	width: 100%;
+	z-index: 2000;
+	height: 40px; 
+	background-color: #6a53fb; 
+	color: hsla(0,0%,100%,.5)
+  }
+  .artist-header-tab-active {
+  	color: white;
+  }
+  .artist-header-tab:not(.artist-header-tab-active):hover {
+  	color: hsla(0,0%,100%,.85)
+  }
 </style>
 
 <!-- 제어영역 설정 -->
-<div id="app">
+<div id="artist-body">
+	<%-- ######################## 대표페이지 헤더 ######################## --%>
+	<div v-if="showArtistHeader" class="w-100" id="artist-header">
+		<div class="offset-3 w-50">
+			<div class="d-flex justify-content-center">
+				<div class="font-bold px-4 py-2 artist-header-tab" :class="{'artist-header-tab-active': artistTab==='feed'}" @click="changeArtistPage('feed')">
+					게시물
+				</div>
+				<div class="font-bold px-4 py-2 artist-header-tab" :class="{'artist-header-tab-active': artistTab==='map'}" @click="changeArtistPage('map')">
+					지도
+				</div>
+				<div class="font-bold px-4 py-2 artist-header-tab" :class="{'artist-header-tab-active': artistTab==='fund'}" @click="changeArtistPage('fund')">
+					후원
+				</div>
+			</div>
+		</div>
+	</div>
+	<%-- ######################## 대표페이지 헤더 끝######################## --%>
+
+	
+	<%-- ######################## 본문 ######################## --%>
 	<div class="custom-container">
 	    <!-- # 대표페이지 프로필 -->
 	    <div class="my-5 mx-5 d-flex">
@@ -90,7 +126,6 @@
 	            <div class="row mb-2 justify-content-end" >
 	                <button class="custom-btn btn-round" style="width:150px;" 
 	                :class="{'btn-purple1':!isFollowingArtist, 'btn-purple1-secondary': isFollowingArtist}"  v-text="isFollowingArtist?'팔로우취소':'팔로우하기'" @click="followPage">팔로우하기</button>
-	                <!-- <button  :class="{'btn-primary':!isFollowMemberList[i], 'btn-secondary': isFollowMemberList[i]}" v-text="isFollowMemberList[i]?'팔로우취소':'팔로우하기'" @click="followMember(member.memberId, i)"></button> -->
 	            </div>
 	            <div class="row justify-content-end">
 	                <button class="custom-btn btn-round btn-gray" style="width:150px;">글쓰기</button>
@@ -99,88 +134,112 @@
 	    </div>
 	
 	
-	    <hr class="m-0">
+	    <div class="custom-hr"></div>
 	
 	
-	    <!-- # 지도 -->
-	    <div class="row px-5 pt-5 mb-4">
-	        <!-- [Component] 지도 -->
-	        <div class="col border custom-container mh-300 me-3 p-4">
-	            <div class="arti_title">🗺️지도</div>
-				 <div class="row">
-	                <div class="col container pt-3 px-4">
-	          			
-						<div id="mapShow" class="border" style="width: 100%; height: 300px;"></div>
+
+
+	    <%-- ######################## 지도 content ######################## --%>
+		<div v-if="artistTab === 'map'">
+			<div class="row px-5 pt-5 mb-4">
+				<!-- [Component] 지도 -->
+				<div class="col border custom-container mh-300 me-3 p-4">
+					<div class="arti_title">🗺️지도</div>
+					 <div class="row">
+						<div class="col container pt-3 px-4">
+							  
+							<div id="mapShow" class="border" style="width: 100%; height: 300px;"></div>
+								
 							
+						</div>  
+					  </div>	
+				</div>
+				<!-- [Component] 성지순례 목록글 -->
+				<div class="col border custom-container mh-300 p-4">
+					<div class="row">
+						<div class="col">
+							<div class="arti_title">📍성지순례</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col container pt-3 px-4">
+							 <div v-for="post in postShowDto" :key="post.tagName">
+								<template v-if="post.mapName !== null">
+									<div @click="showMap(post.mapName,post.mapPlace)" data-bs-target="#showMap" data-bs-toggle="modal">
+									 <i class="fa-solid fa-location-dot me-1" :class="{'active-icon': selectedIcon === post.mapName}"></i>
+									 {{ post.mapName }}
+									</div>
+								</template>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<%-- ######################## 지도 content 끝 ######################## --%>
+
+
+
+
+		<%-- ######################## 같이가요 ######################## --%>
+		<div v-if="artistTab === 'feed'">
+			<!-- # 같이가요, 펀딩 -->
+			<div class="row px-5">
+				<!-- [Component] 같이가요 -->
+				<div class="col border custom-container mh-300 me-3 p-4">
+					<div class="row">
+						<div class="col">
+							<div class="arti_title">👭같이가요</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col container pt-3 px-4">
+							<div v-for="post in postShowDto" :key="post.tagName">
+								<template v-if="post.postType == '같이가요'">
+									{{ post.postContent }}
+								</template>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<%-- ######################## 같이가요 끝 ######################## --%>
+
+
+
+
+		<%-- ######################## 펀딩 ######################## --%>
+		<div v-if="artistTab === 'fund	'">
+			<!-- # 같이가요, 펀딩 -->
+			<div class="row px-5">
+				<!-- [Component] 펀딩 -->
+				<div class="col border custom-container mh-300 p-4">
+					<div class="row">
+						<div class="col">
+							<div class="arti_title">📢후원하기</div>
+							<!-- 🎉📣📣 -->
+						</div>
+					</div>
+					<div class="row">
+						<div class="col container pt-3 px-4">
+					<div v-for="post in postShowDto" :key="post.tagName">
+								<template v-if="post.fundTitle !== null">
+								<a :href="`${pageContext.request.contextPath}/fund/detail?postNo=${post.postNo}`">
+									{{ post.fundTitle }}
+								</a>
+								</template>
+							</div>
+					
 						
-				    </div>  
-		      	</div>	
-	        </div>
-	        <!-- [Component] 성지순례 목록글 -->
-	        <div class="col border custom-container mh-300 p-4">
-	            <div class="row">
-	                <div class="col">
-	                    <div class="arti_title">📍성지순례</div>
-	                </div>
-	            </div>
-	            <div class="row">
-	                <div class="col container pt-3 px-4">
-	                 	<div v-for="post in postShowDto" :key="post.tagName">
-						    <template v-if="post.mapName !== null">
-						    	<div @click="showMap(post.mapName,post.mapPlace)" data-bs-target="#showMap" data-bs-toggle="modal">
-						         <i class="fa-solid fa-location-dot me-1" :class="{'active-icon': selectedIcon === post.mapName}"></i>
-						         {{ post.mapName }}
-						        </div>
-						    </template>
 						</div>
-		            </div>
-		        </div>
-		    </div>
-		   </div>
-		
-	    <!-- # 같이가요, 펀딩 -->
-	    <div class="row px-5">
-	        <!-- [Component] 같이가요 -->
-	        <div class="col border custom-container mh-300 me-3 p-4">
-	            <div class="row">
-	                <div class="col">
-	                    <div class="arti_title">👭같이가요</div>
-	                </div>
-	            </div>
-	            <div class="row">
-	                <div class="col container pt-3 px-4">
-	                    <div v-for="post in postShowDto" :key="post.tagName">
-						    <template v-if="post.postType == '같이가요'">
-						    	{{ post.postContent }}
-						    </template>
-						</div>
-	                </div>
-	            </div>
-	        </div>
-	        <!-- [Component] 펀딩 -->
-	        <div class="col border custom-container mh-300 p-4">
-	            <div class="row">
-	                <div class="col">
-	                    <div class="arti_title">📢후원하기</div>
-	                    <!-- 🎉📣📣 -->
-	                </div>
-	            </div>
-	            <div class="row">
-	             <div class="col container pt-3 px-4">
-	            <div v-for="post in postShowDto" :key="post.tagName">
-						    <template v-if="post.fundTitle !== null">
-                			<a :href="`${pageContext.request.contextPath}/fund/detail?postNo=${post.postNo}`">
-						        {{ post.fundTitle }}
-						    </a>
-						    </template>
-						</div>
-	            
-	               
-	                </div>
-	            </div>
-	        </div>
-	    </div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<%-- ######################## 펀딩 끝 ######################## --%>
 	</div>
+
 </div>
 
 
@@ -218,6 +277,12 @@
             isFollowingArtist: false,
             
             map:null,
+
+
+			
+			// 대표페이지 헤더
+			showArtistHeader: false,
+			artistTab: "feed",
         };
       },
       computed: {
@@ -481,7 +546,41 @@
   		        infowindow.open(this.map, marker);
   		    });
   		},
-      	
+
+
+		// ######################## 대표페이지 헤더 ########################
+		// 대표페이지 판별
+		isArtistPage(){
+			// 대표페이지 regex
+			const artistPageRegex = /^\/artist\/.*$/gm;
+			const pathname = window.location.pathname;
+			if(artistPageRegex.test(pathname)){
+				this.showArtistHeader = true;
+			}
+		},
+		// 대표페이지 헤더 탭 변경
+		changeArtistPage(tab){
+			this.artistTab = tab;
+
+			if(tab === "map"){
+
+				// 카카오맵 API 로드
+			const script = document.createElement('script');
+    	  script.type = 'text/javascript';
+    	  script.src = 'https://dapi.kakao.com/v2/maps/sdk.js?appkey=047888df39ba653ff171c5d03dc23d6a&autoload=false';
+    	  script.onload = () => {
+    	    kakao.maps.load(() => {
+    	      this.loadArtist();
+    	      this.loadMemberFollowInfo();
+    	      
+    	    });
+    	  };
+
+    	  document.head.appendChild(script);
+			}
+			
+		},
+		// ######################## 대표페이지 헤더 끝########################
      
       },
       mounted(){  
@@ -516,7 +615,11 @@
         // this.followBtn();
 
       },
-    }).mount('#app')
+
+	  created(){
+		this.isArtistPage();
+	  }
+    }).mount('#artist-body')
 </script>
 
 

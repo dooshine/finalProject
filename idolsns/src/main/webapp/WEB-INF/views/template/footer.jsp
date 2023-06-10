@@ -113,9 +113,6 @@
 					chatRoomNoList: [],
 
 
-					// 대표페이지
-					showArtistHeader: false,
-					artistTab: "feed",
 				};
 			},
 			methods: {
@@ -943,24 +940,6 @@
 					window.location.href = `${pageContext.request.contextPath}/member/mypage/${targetId}`;
 				}*/
 
-
-
-
-				// ######################## 대표페이지 헤더 ########################
-				// 대표페이지 판별
-				isArtistPage(){
-					// 대표페이지 regex
-					const artistPageRegex = /^\/artist\/.*$/gm;
-					const pathname = window.location.pathname;
-					if(artistPageRegex.test(pathname)){
-						this.showArtistHeader = true;
-					}
-				},
-				// 대표페이지 헤더 탭 변경
-				changeArtistPage(tab){
-					this.artistTab = tab;
-				},
-				// ######################## 대표페이지 헤더 끝########################
 				
 			},
 			computed: {
@@ -984,7 +963,7 @@
 					this.connect();
 				}
 
-				this.isArtistPage();
+				
 			},
 			mounted() {
 				// 사용자가 이 탭을 보고있는지 확인
@@ -1100,15 +1079,11 @@
 							// 헤더버튼 요소 선택
 						function focusInputNoti() {
 							var notiMarkEle = $(".notiMark");
-							// notiMarkEle.css("background", "forestgreen");
 							notiMarkEle.hide();
-							// console.log("포커스");
 						}
 						function rollbackViewNoti() {
 							var notiMarkEle = $(".notiMark");
-							// notiMarkEle.css("background", "forestgreen");
 							notiMarkEle.show();
-							// console.log("블러");
 						}
 
 						function registerEvent() {

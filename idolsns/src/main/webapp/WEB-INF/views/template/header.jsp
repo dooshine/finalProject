@@ -177,17 +177,6 @@
 		}
 
 
-		#artist-header {
-			height: 40px; 
-			background-color: #6a53fb; 
-			color: hsla(0,0%,100%,.5)
-		}
-		.artist-header-tab-active {
-			color: white;
-		}
-		.artist-header-tab:not(.artist-header-tab-active):hover {
-			color: hsla(0,0%,100%,.85)
-		}
     </style>
 </head>
 
@@ -241,26 +230,6 @@
 				</div> -->
 				    	</div>
 				  	</div>
-
-
-
-					<%-- ######################## 대표페이지 헤더 ######################## --%>
-					<div v-if="showArtistHeader" class="w-100" id="artist-header">
-						<div class="offset-3 w-50">
-							<div class="d-flex justify-content-center">
-								<div class="font-bold px-4 py-2 artist-header-tab" :class="{'artist-header-tab-active': artistTab==='feed'}" @click="changeArtistPage('feed')">
-									게시물
-								</div>
-								<div class="font-bold px-4 py-2 artist-header-tab" :class="{'artist-header-tab-active': artistTab==='map'}" @click="changeArtistPage('map')">
-									지도
-								</div>
-								<div class="font-bold px-4 py-2 artist-header-tab" :class="{'artist-header-tab-active': artistTab==='fund'}" @click="changeArtistPage('fund')">
-									후원
-								</div>
-							</div>
-						</div>
-					</div>
-					<%-- ######################## 대표페이지 헤더 끝######################## --%>
 				</nav>
 				
 				<!---------------------------------------- 채팅 메인 모달 ---------------------------------------->
