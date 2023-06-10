@@ -53,3 +53,56 @@
     border-color: red;
     background-image: url("../image/invalid.png");
 }
+
+.container {
+	margin-top: 20px;
+}
+.container-rounded {
+ 	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.textarea {
+ 	width: 100%;
+ 	height: 6.25em;
+	border: none;
+	resize: none;
+}
+
+.profile-image-wrapper {
+          position: relative;
+          display: inline-block;
+      }
+      
+      .profile-image {
+          width: 200px;
+          height: 200px;
+          border-radius: 100%;
+          transition: filter 0.3s;
+      }
+      
+      .profile-image:hover {
+          filter: brightness(50%);
+	}
+	/*   이미지 스와이핑 창 스타일 */
+    	.swiper { 
+		width: 600px;
+		height: 600px;
+		}
+		
+    	.address{
+    	font-size:10px;
+    	}
+    	.grey{
+    	color: grey;
+    	}
+    	.fs-7{
+    	font-size: 10px;
+    	}
+    	.h-20{
+    	height: 20px;
+    	}
+    	.reply-text{
+    	font-size: 5px;
+    	}

@@ -138,10 +138,8 @@ public class MemberController {
 		
 		String memberId = findDto.getMemberId();
 		if(!(findDto.getMemberExitDate() == null)) {
-			memberRepo.cancelExit(memberId	);
-			String alertMessage = "회원 탈퇴가 취소되었습니다!";
-		    attr.addAttribute("mode", "cancel");
-		    attr.addAttribute("mmssgg", alertMessage);
+			memberRepo.cancleExit(memberId	);
+		    attr.addAttribute("mode", "cancle");
 		    return "redirect:login";
 		}
 		
@@ -349,11 +347,6 @@ public class MemberController {
 		String memberId = (String) session.getAttribute("memberId");
 		MemberDto memberDto = memberRepo.selectOne(memberId);
 		
-		if(!memberDto.getMemberPw().equals(memberPw)) {
-			attr.addAttribute("mode", "error");
-			return "redirect:exit";
-		}
-			
 			memberRepo.exitDate(memberId);
 			
 			memberRepo.memberExit(memberId);
@@ -363,7 +356,14 @@ public class MemberController {
 			
 			return "redirect:exitFinish";
 		
-		
+	}
+	
+	@GetMapping("/exitPw")
+	@ResponseBody
+	public String exitPw(HttpSession session) {
+		String memberId = (String) session.getAttribute("memberId");
+		MemberDto memberDto = memberRepo.selectOne(memberId);
+		return memberDto.getMemberPw();
 	}
 	
 	@GetMapping("/exitFinish")
@@ -387,14 +387,23 @@ public class MemberController {
 		
 		if(!memberDto.getMemberPw().equals(currentPw)) {
 			attr.addAttribute("mode", "error");
-			attr.addAttribute("msg", "잘못된 비밀번호 입니다.");
 			return "redirect:password";
 		}
-		
-		memberRepo.updatePw(memberId, changePw);
+		// 새로운 비밀번호를 암호화
+	    String encryptedPassword = encoder.encode(changePw);
+	    memberRepo.updatePw(memberId, encryptedPassword);
 		
 		return "redirect:passwordFinish";
 	}
+	
+	@GetMapping("/passwordCheck")
+	@ResponseBody
+	public String passwordCheck(HttpSession session) {
+		String memberId = (String) session.getAttribute("memberId");
+		MemberDto memberDto = memberRepo.selectOne(memberId);
+		return memberDto.getMemberPw();
+	}
+	
 	
 	@GetMapping("/passwordFinish")
 	public String passwordFinish() {
