@@ -223,7 +223,7 @@
 							-->
 						<div class="w-10">
 							<select class="form-select">
-								<option selected>정렬</option>
+								<option disabled>정렬</option>
 							  	<option value="new">최신순</option>
 							  	<option	value="old">오래된순</option>
 							  	<option value="likes">좋아요순</option>
@@ -342,26 +342,9 @@
                },
                methods: {
             	   
-            	   // # 펀딩 리스트 불러오기
-                   async fetchFundingList() {
-                 	  
-		                  // funding 리스트 초기화
-// 		                  if(!this.initFundings || this.searchQueryTemp != this.searchQuery) {
-// 		                     this.fundings = [];
-// 		                     this.initFundings = true; 
-// 		                     this.finish = false; // 검색어가 다르면 초기화
-// 		                  }
-	                      // 다 불러왔으면
-// 	                      if(this.finish == true) return; 
-		                  
-		                  // 다른 검색어로 검색했을때
-// 		                  if(this.searchQueryTemp != this.searchQuery) {
-// 		                     this.searchPage = 1;
-// 		                  }
-		                  
-		                  // searchQueryTemp에 이전 검색어 저장
-// 		                  this.searchQueryTemp = this.searchQuery;
-		                       
+           	   	// # 펀딩 리스트 불러오기
+                  async fetchFundingList() {
+           	   		
                   const resp = await axios.get("http://localhost:8080/rest/fund/page/"+this.searchPage,
                         {
                 	  params: {
