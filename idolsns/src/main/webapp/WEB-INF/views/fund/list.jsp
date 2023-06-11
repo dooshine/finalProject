@@ -190,19 +190,21 @@
 		
 			
 			
-				<div class="d-flex rounded bg-light p-3" style="width:100%; height:300px; float: none; margin: 0 auto;">
+		<div class="d-flex col rounded-4 bg-light p-3 mt-3 mb-3" style="width:100%; height:300px; float: none;
+			background-image: url('/static/image/fund_main.jpg'); background-size: cover; background-position: center;">
+			    <div class="mx-5" style="display: flex; flex-direction: column; justify-content: center; align-items: left; text-align: left;">
+			        <div class="font-bold" style="font-size:35px; color:white;">
+			            내 손으로 만드는 아이돌 이벤트!
+			        </div>
+			        <!-- 펀딩 글 작성 -->
+			        <div class="mt-3">
+			        <button class="custom-btn btn-round btn-purple1" style="font-size:20px;" @click="startFunding">
+			        	프로젝트 올리기
+			        </button>
+			        </div>
+		    </div>
+		</div>
 						
-					<div style="float:none; margin:100 auto;">
-						<div class="font-bold" style="font-size:30px; float: none; margin: 0 auto;">
-						내 손으로 만드는 아이돌 이벤트!</div>
-						
-						<!-- 펀딩 글 작성 -->
-						<button class="custom-btn btn-round btn-purple1" @click="startFunding">프로젝트 올리기</button>
-				
-					</div>
-				</div>
-			
-				
 				
 			
 					<div class="d-flex justify-content-between mt-4 px-2">
