@@ -631,7 +631,7 @@
 				            		<!-- d-none -->
 				            		<input class="form-control picInput d-none" type="file" accept=".png, .jpg, .gif" @change="sendPic" />
 				            	</label>
-				            	<button type="button" @click="sendMessage" :disabled="text.length < 1 || text.length > 300" 
+				            	<button type="button" @click="sendMessage" :disabled="textCount < 1 || textCount > 300" 
 				            				class="hide-style fakeBtn d-flex align-items-center justify-content-center">
 				            		<i class="ti ti-send" style="margin-right: 2px; margin-top: 1px;"></i>
 				            	</button>

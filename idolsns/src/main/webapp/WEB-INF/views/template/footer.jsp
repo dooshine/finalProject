@@ -582,7 +582,7 @@
 				},
 				findMemberByIdInRoom() {
 					let findId = "";
-					//console.log("findMemberByIdInRoom memberId: " + findId);
+					let member = "";
 					//console.log("this.roomInfo.chatRoomName1: " + this.roomInfo.chatRoomName1);
 					if(this.roomInfo.chatRoomName1 != this.memberId) {
 						findId = this.roomInfo.chatRoomName1;
@@ -590,9 +590,14 @@
 					else if(this.roomInfo.chatRoomName2 != this.memberId) {
 						findId = this.roomInfo.chatRoomName2;
 					}
-					const member = this.followProfileList.find(function(member) {
-						return member.memberId === findId;
-					})
+					if (this.chatMemberList.some(member => member.memberId === memberId)) {
+						member = this.chatMemberList.find(member => member.memberId === findId);
+					}
+					else {
+					    member = this.followProfileList.find(member => member.memberId === findId);
+					}
+					
+					console.log("findId: " + findId);
 					if(member) {						
 						return {
 							memberNick: member.memberNick,
