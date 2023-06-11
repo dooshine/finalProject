@@ -1287,7 +1287,7 @@
 											v-if="reply.replyContent.length &lt; reply.replyId.length"
 											style="max-width: 100%"
 											class="row grey-f5f5f5 rounded-3 text-left"
-											:style="{ width: (reply.replyId.length * 12 + 30) + 'px' }">
+											:style="{ width: (reply.replyId.length * 15 + 30) + 'px' }">
 											<div class="row mt-2"></div>
 											<h6 class="mr-1 fw-bold">{{reply.memberNick}}</h6>
 											<h6 class="mr-1 lh-lg">{{reply.replyContent}}</h6>
@@ -1297,7 +1297,7 @@
 										<!-- 댓글 내용이 아이디보다 길면 -->
 										<div v-else class="row grey-f5f5f5 rounded-3 text-left"
 											style="max-width: 100%"
-											:style="{width: (reply.replyContent.length * 11 +30) + 'px' }">
+											:style="{width: (reply.replyContent.length * 15 +30) + 'px' }">
 											<div class="row mt-2"></div>
 											<h6 class="mr-1 fw-bold">{{reply.memberNick}}</h6>
 											<h6 class="mr-1 lh-lg">{{reply.replyContent}}</h6>
@@ -1354,7 +1354,7 @@
 													v-if="rereply.replyContent && rereply.replyId && rereply.replyContent.length &lt; rereply.replyId.length"
 													style="max-width: 100%"
 													class="row grey-f5f5f5 rounded-3 text-left"
-													:style="{ width: (rereply.replyId.length * 12 +30) + 'px' }">
+													:style="{ width: (rereply.replyId.length * 15 +30) + 'px' }">
 													<div class="row mt-2"></div>
 													<h6 class="mr-1 fw-bold">{{rereply.memberNick}}</h6>
 													<h6 class="mr-1 lh-lg">{{rereply.replyContent}}</h6>
@@ -1363,7 +1363,7 @@
 												<!-- 대댓글 내용이 아이디보다 길면 -->
 												<div v-else class="row grey-f5f5f5 rounded-3 text-left"
 													style="max-width: 100%"
-													:style="{ width: (rereply.replyContent.length * 11 +30) + 'px' }">
+													:style="{ width: (rereply.replyContent.length * 15 +30) + 'px' }">
 													<div class="row mt-2"></div>
 													<h6 class="mr-1 fw-bold">{{rereply.memberNick}}</h6>
 													<h6 class="mr-1 lh-lg">{{rereply.replyContent}}</h6>
@@ -1372,7 +1372,8 @@
 
 												<!-- 대댓글창 아이콘 -->
 												<div class="row d-flex flex-nowrap text-start">
-													<h6 class="col-1 mt-1 reply-text text-secondary">{{getTimeDifference(rereply.replyTime)}}</h6>
+													<h6 class="col-1 mt-1 reply-text text-secondary"
+														style="white-space: nowrap">{{getTimeDifference(rereply.replyTime)}}</h6>
 													<h6 class="col-1 mt-1 reply-text text-secondary"
 														@click="showRereplyInput(post.postNo,reply.replyNo),hideReplyInput()"
 														style="white-space: nowrap; cursor: pointer;">댓글 달기</h6>
@@ -1475,7 +1476,7 @@
 												v-if="reply.replyContent.length &lt; reply.replyId.length"
 												style="max-width: 100%"
 												class="row grey-f5f5f5 rounded-3 text-left"
-												:style="{ width: (reply.replyId.length * 12 + 30) + 'px' }">
+												:style="{ width: (reply.replyId.length * 15 + 30) + 'px' }">
 												<div class="row mt-2"></div>
 												<h6 class="mr-1 fw-bold">{{reply.memberNick}}</h6>
 												<h6 class="mr-1 lh-lg">{{reply.replyContent}}</h6>
@@ -1485,7 +1486,7 @@
 											<!-- 댓글 내용이 아이디보다 길면 -->
 											<div v-else class="row grey-f5f5f5 rounded-3 text-left"
 												style="max-width: 100%"
-												:style="{width: (reply.replyContent.length * 11 +30) + 'px' }">
+												:style="{width: (reply.replyContent.length * 15 +30) + 'px' }">
 												<div class="row mt-2"></div>
 												<h6 class="mr-1 fw-bold">{{reply.memberNick}}</h6>
 												<h6 class="mr-1 lh-lg">{{reply.replyContent}}</h6>
@@ -1544,7 +1545,7 @@
 														v-if="rereply.replyContent.length &lt; rereply.replyId.length"
 														style="max-width: 100%"
 														class="row grey-f5f5f5 rounded-3 text-left"
-														:style="{ width: (rereply.replyId.length * 12 +30) + 'px' }">
+														:style="{ width: (rereply.replyId.length * 15 +30) + 'px' }">
 														<div class="row mt-2"></div>
 														<h6 class="mr-1 fs-12px fw-bold">{{rereply.memberNick}}</h6>
 														<h6 class="mr-1 fs-11px lh-lg">{{rereply.replyContent}}</h6>
@@ -1553,7 +1554,7 @@
 													<!-- 대댓글 내용이 아이디보다 길면 -->
 													<div v-else class="row grey-f5f5f5 rounded-3 text-left"
 														style="max-width: 100%"
-														:style="{ width: (rereply.replyContent.length * 11 +30) + 'px' }">
+														:style="{ width: (rereply.replyContent.length * 15 +30) + 'px' }">
 														<div class="row mt-2"></div>
 														<h6 class="mr-1 fs-12px fw-bold">{{rereply.memberNick}}</h6>
 														<h6 class="mr-1 fs-11px lh-lg">{{rereply.replyContent}}</h6>
@@ -1838,12 +1839,6 @@
             
             },
             methods:{
-            	changeCustom()
-            	{
-            		this.customOn = !this.customOn;
-            	},
-            	
-            	
             	// 무한 페이징 게시글 불러오기 1페이지당 10개씩 매 페이지 별로 불러옴,
             	async fetchPosts(){
             		
@@ -2502,8 +2497,7 @@
 
 
 <!-- 이미지 스와이핑 창 -->
-<script
-	src="${pageContext.request.contextPath}/static/js/swiping-image.js"></script>
+<script src="${pageContext.request.contextPath}/static/js/swiping-image.js"></script>
 <!-- 게시글 작성 ajax -->
 <script src="${pageContext.request.contextPath}/static/js/async-post.js"></script>
 <!-- 카카오 API구현 JS -->

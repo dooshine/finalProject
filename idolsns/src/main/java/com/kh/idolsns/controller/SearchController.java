@@ -15,6 +15,13 @@ public class SearchController {
         model.addAttribute("query", q);
         return "search/searchPost";
     }
+    
+    // 6.11 새로 생성한 검색
+    @GetMapping("/post1")
+    public String searchPost1(@RequestParam String q, Model model){
+        model.addAttribute("query", q);
+        return "search/searchPost1";
+    }
 
     @GetMapping("/artist")
     public String searchArtist(@RequestParam String q, Model model){
