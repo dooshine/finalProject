@@ -11,25 +11,18 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.kh.idolsns.constant.NotiConstant;
 import com.kh.idolsns.constant.WebSocketConstant;
 import com.kh.idolsns.dto.ChatJoinDto;
 import com.kh.idolsns.dto.ChatMessageDto;
-import com.kh.idolsns.dto.ChatNotiDto;
 import com.kh.idolsns.dto.ChatReadDto;
-import com.kh.idolsns.dto.MemberSimpleProfileDto;
-import com.kh.idolsns.dto.NotiDto;
 import com.kh.idolsns.repo.AttachmentRepo;
 import com.kh.idolsns.repo.ChatJoinRepo;
 import com.kh.idolsns.repo.ChatMessageRepo;
-import com.kh.idolsns.repo.ChatNotiRepo;
 import com.kh.idolsns.repo.ChatReadRepo;
 import com.kh.idolsns.repo.ChatRoomRepo;
-import com.kh.idolsns.repo.NotiRepo;
 import com.kh.idolsns.vo.ChatMemberVO;
 import com.kh.idolsns.vo.ChatMessageReceiveVO;
 import com.kh.idolsns.vo.ChatMessageVO;
-import com.kh.idolsns.vo.ChatRoomProcessVO;
 import com.kh.idolsns.vo.ChatRoomVO;
 import lombok.extern.slf4j.Slf4j;
 
@@ -64,6 +57,7 @@ public class ChatServiceImpl implements ChatService {
 	public void createRoom(int chatRoomNo) {
 		if(roomExist(chatRoomNo)) return;
 		chatRooms.put(chatRoomNo, new ChatRoomVO());
+		//log.debug("chatrooms after create: " + chatRooms);
 	}
 	
 	// 방 제거 - 확인해보기
@@ -86,7 +80,6 @@ public class ChatServiceImpl implements ChatService {
 		ChatRoomVO chatRoom = chatRooms.get(chatRoomNo);
 		// 입장
 		chatRoom.enter(member);
-		//log.debug("chatRooms: " + chatRooms);
 	}
 	
 	// 참여중인 방 퇴장
@@ -233,7 +226,6 @@ public class ChatServiceImpl implements ChatService {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
-	// 수정
 	@Override
 	public void connectHandler(WebSocketSession session) {
 		ChatMemberVO member = new ChatMemberVO(session);
@@ -260,6 +252,7 @@ public class ChatServiceImpl implements ChatService {
 		if(!member.isMember()) return;
 		// 메세지 수신 -> type을 분석하고 해당 타입에 맞는 처리
 		ChatMessageReceiveVO receiveVO = mapper.readValue(message.getPayload(), ChatMessageReceiveVO.class);
+		//ChatRoomProcessVO processVO = mapper.readValue(message.getPayload(), ChatRoomProcessVO.class);
 		// 채팅 메세지인 경우
 		if(receiveVO.getType() == WebSocketConstant.CHAT) {
 			// 채팅방 찾기
@@ -346,48 +339,19 @@ public class ChatServiceImpl implements ChatService {
 		}
 		// 새 방 생성인 경우
 		else if(receiveVO.getType() == WebSocketConstant.NEW_ROOM) {
-			ChatRoomProcessVO processVO = mapper.readValue(message.getPayload(), ChatRoomProcessVO.class);
-			int chatRoomNo = chatRoomService.createChatRoom(processVO);
+			int chatRoomNo = chatRoomService.createChatRoom(receiveVO);
+			receiveVO.setChatRoomNo(chatRoomNo);
 			//log.debug("new roomNo: " + chatRoomNo);
-			chatRooms.put(chatRoomNo, new ChatRoomVO());
-			ChatRoomVO chatRoom = chatRooms.get(chatRoomNo);
-			chatRoom.enter(member);
-			this.broadcastNewRoom(chatRoomNo, message);
+			//chatRooms.put(chatRoomNo, new ChatRoomVO());
+			//createRoom(chatRoomNo);
+			join(member, chatRoomNo);
+			//ChatRoomVO chatRoom = chatRooms.get(chatRoomNo);
+			//chatRoom.enter(member);
+			String json = mapper.writeValueAsString(receiveVO);
+			TextMessage jsonMessage = new TextMessage(json);
 			//log.debug("chatRooms after create: " + chatRooms);
+			this.broadcastNewRoom(chatRoomNo, jsonMessage);
 		}
-		// 새 메세지 알림인 경우
-		/*else if(receiveVO.getType() == WebSocketConstant.NEW_MSG) {
-			// 채팅방 번호
-			int chatRoomNo  = receiveVO.getChatRoomNo();
-			// 보낸 회원 아이디
-			String memberId = receiveVO.getMemberId();
-			// 채팅방 참여자 목록 (아이디, 닉넴, 프사)
-			List<MemberSimpleProfileTempDto> receiverList = receiveVO.getReceiverList();
-			// 아이디만 뽑은 목록 (발신자 아이디 제외하고 수신자 아이디만 추출)
-			List<String> receiverIdList = new ArrayList<>();
-			for(int i = 0; i<receiverList.size(); i++) {
-				if(!receiverList.get(i).getMemberId().equals(memberId)) {
-					receiverIdList.add(receiverList.get(i).getMemberId());
-				}
-			}
-			// 알림 테이블, 채팅 알림 테이블에 저장
-			for(int i=0; i<receiverIdList.size(); i++) {
-				log.debug("receiverId: " + receiverIdList.get(i));
-				int notiNo = notiRepo.sequence();
-				NotiDto notiDto = NotiDto.builder()
-						.notiNo(notiNo)
-						.memberId(receiverIdList.get(i))
-						.notiType(NotiConstant.WEEZ)
-					.build();
-				notiRepo.insert(notiDto);
-				ChatNotiDto chatNotiDto = ChatNotiDto.builder()
-							.chatRoomNo(chatRoomNo)
-							.notiNo(notiNo)
-							.memberId(receiverIdList.get(i))
-						.build();
-				chatNotiRepo.insert(chatNotiDto);
-			}
-		}*/
 	}
 
 }

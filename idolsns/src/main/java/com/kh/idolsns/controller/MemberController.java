@@ -3,6 +3,7 @@ package com.kh.idolsns.controller;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.annotation.PostConstruct;
@@ -12,7 +13,6 @@ import javax.servlet.http.HttpSession;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -29,8 +30,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.kh.idolsns.configuration.CustomEmailProperties;
 import com.kh.idolsns.configuration.CustomFileuploadProperties;
 import com.kh.idolsns.dto.AttachmentDto;
+import com.kh.idolsns.dto.FollowDto;
 import com.kh.idolsns.dto.MemberDto;
-import com.kh.idolsns.dto.MemberExitDto;
 import com.kh.idolsns.dto.MemberFollowCntDto;
 import com.kh.idolsns.dto.MemberFollowInfoDto;
 import com.kh.idolsns.dto.MemberProfileImageDto;
@@ -38,6 +39,7 @@ import com.kh.idolsns.repo.AttachmentRepo;
 import com.kh.idolsns.repo.MemberFollowCntRepo;
 import com.kh.idolsns.repo.MemberProfileImageRepo;
 import com.kh.idolsns.repo.MemberRepo;
+import com.kh.idolsns.service.FollowService;
 import com.kh.idolsns.service.emailService;
 
 @Controller
@@ -73,6 +75,9 @@ public class MemberController {
 	
 	@Autowired
 	private PasswordEncoder encoder;
+	
+	@Autowired
+	private FollowService followService;
 	
 	private File dir;
 	@PostConstruct
@@ -122,21 +127,20 @@ public class MemberController {
 			return "redirect:login";
 		}
 		
-		if(!userDto.getMemberPw().equals(findDto.getMemberPw())) {
-			attr.addAttribute("mode", "error");
-			attr.addAttribute("msg", "아이디 또는 비밀번호를 잘못입력하였습니다.");
-			return "redirect:login";
+		if (!encoder.matches(userDto.getMemberPw(), findDto.getMemberPw())) {
+		    attr.addAttribute("mode", "error");
+		    attr.addAttribute("msg", "아이디 또는 비밀번호를 잘못입력하였습니다.");
+		    return "redirect:login";
 		}
+
 		
 		session.setAttribute("memberId", findDto.getMemberId());
 		session.setAttribute("memberLevel", findDto.getMemberLevel());
 		
 		String memberId = findDto.getMemberId();
 		if(!(findDto.getMemberExitDate() == null)) {
-			memberRepo.cancelExit(memberId	);
-			String alertMessage = "회원 탈퇴가 취소되었습니다!";
-		    attr.addAttribute("mode", "cancel");
-		    attr.addAttribute("mmssgg", alertMessage);
+			memberRepo.cancleExit(memberId	);
+		    attr.addAttribute("mode", "cancle");
 		    return "redirect:login";
 		}
 		
@@ -160,34 +164,70 @@ public class MemberController {
 	}
 	
 	//마이페이지
-	@GetMapping("/mypage")
-	public String mypage(HttpSession session, Model model) {
-		String memberId = (String) session.getAttribute("memberId");
+	@GetMapping("/mypage/{memberId}")
+	public String mypage(@PathVariable String memberId, HttpSession session, Model model) {
 		MemberDto memberDto = memberRepo.selectOne(memberId);
+		System.out.println(memberDto);
 		model.addAttribute("memberDto", memberDto);
 		return "member/mypage";
+	}
+	
+	// 6.10 해당 맴버가 좋아요한 글 페이지
+	@GetMapping("/mypage1/{memberId}")
+	public String mypage1(@PathVariable String memberId, HttpSession session, Model model) {
+		MemberDto memberDto = memberRepo.selectOne(memberId);
+		System.out.println(memberDto);
+		model.addAttribute("memberDto", memberDto);
+		
+		String pageMemberId = memberId; 
+		model.addAttribute("pageMemberId",pageMemberId); // 누구의 페이지인지 알려주기 위한 model
+		return "member/mypage1";
+	}
+	
+	// 6.10 해당 맴버가 작성한 글 페이지
+	@GetMapping("/mypage2/{memberId}")
+	public String mypage2(@PathVariable String memberId, HttpSession session, Model model) {
+		MemberDto memberDto = memberRepo.selectOne(memberId);
+		System.out.println(memberDto);
+		model.addAttribute("memberDto", memberDto);
+
+		String pageMemberId = memberId; 
+		model.addAttribute("pageMemberId",pageMemberId); // 누구의 페이지인지 알려주기 위한 model
+		return "member/mypage2";
+	}
+	
+	
+	//내페이지 or 남의페이지 구분
+	@GetMapping("/mypage")
+	@ResponseBody
+	public String mypage(HttpSession session) {
+		String memberId = (String) session.getAttribute("memberId");
+		return memberId;
 	}
 	
 	//마이페이지 - 아이디, 닉네임 조회
 	@GetMapping("/profile")
 	@ResponseBody
-	public Map<String, String> profile(HttpSession session) {
-		String memberId = (String) session.getAttribute("memberId");
+	public MemberDto profile(HttpSession session ,@RequestParam String memberId) {
+//		String memberId = (String) session.getAttribute("memberId");
 		
-		MemberDto memberDto = memberRepo.emailExist(memberId);
+//		MemberDto memberDto = memberRepo.emailExist(memberId);
+//		
+//		Map<String, String> result = new HashMap<>();
+//		result.put("memberId", memberDto.getMemberId());
+//		result.put("memberNick", memberDto.getMemberNick());
 		
-		Map<String, String> result = new HashMap<>();
-		result.put("memberId", memberDto.getMemberId());
-		result.put("memberNick", memberDto.getMemberNick());
+		MemberDto memberDto = memberRepo.selectOne(memberId);
+		System.out.println(memberDto);
 		
-		return result;
+		return memberDto;
 	}
 	
 	//마이페이지 - 프로필 사진 조회
 	@GetMapping("/profileImage")
 	@ResponseBody
-	public MemberProfileImageDto memberProfileExist(HttpSession session) {
-		String memberId = (String) session.getAttribute("memberId");
+	public MemberProfileImageDto memberProfileExist(HttpSession session, @RequestParam String memberId) {
+//		String memberId = (String) session.getAttribute("memberId");
 		MemberProfileImageDto memberProfileImageDto = memberProfileImageRepo.MemberImageExist(memberId);
 		return memberProfileImageDto;
 	}
@@ -263,8 +303,8 @@ public class MemberController {
 	//마이페이지 - 팔로우 수 조회
 	@GetMapping("/followCnt")
 	@ResponseBody
-	public Map<String, Object> follwCnt(HttpSession session) {
-		String memberId = (String) session.getAttribute("memberId");
+	public Map<String, Object> follwCnt(HttpSession session, @RequestParam String memberId) {
+//		String memberId = (String) session.getAttribute("memberId");
 		MemberFollowCntDto memberFollowCntDto =  memberFollowCntRepo.followCnt(memberId);
 		
 		Map<String, Object> result = new HashMap<>();
@@ -292,6 +332,34 @@ public class MemberController {
 	    return result;
 	}
 	
+	 // 회원 팔로우여부 확인
+    @GetMapping("/checkFollowMember")
+    @ResponseBody
+    public boolean checkFollowMember(@ModelAttribute FollowDto followDto, HttpSession session,
+    																		@RequestParam String Id){
+        // 회원 아이디 설정
+        String memberId = (String)session.getAttribute("memberId");
+        followDto.setMemberId(memberId);
+        // 팔로우 타입 설정
+        followDto.setFollowTargetType("회원");
+        followDto.setFollowTargetPrimaryKey(Id);
+        return followService.checkFollow(followDto);
+    }
+    
+    // 팔로우(회원) 생성
+    @GetMapping("/follow")
+    @ResponseBody
+    public void createFollowMember(@RequestBody FollowDto followDto, HttpSession session, @RequestParam String Id){
+        // 회원 아이디
+        String memberId = (String)session.getAttribute("memberId");
+        followDto.setMemberId(memberId);
+        // 팔로우 회원찾기 설정
+        followDto.setFollowTargetType("회원");
+        followDto.setFollowTargetPrimaryKey(Id);
+        // 회원 팔로우 생성
+        followService.createFollow(followDto);
+    }
+	
 	//회원탈퇴
 	@GetMapping("/exit")
 	public String exit(HttpSession session) {
@@ -305,23 +373,27 @@ public class MemberController {
 		String memberId = (String) session.getAttribute("memberId");
 		MemberDto memberDto = memberRepo.selectOne(memberId);
 		
-		if(!memberDto.getMemberPw().equals(memberPw)) {
-			attr.addAttribute("mode", "error");
-			return "redirect:exit";
-		}
-			
 			memberRepo.exitDate(memberId);
 			
-				memberRepo.memberExit(memberId);
-			
-			
+			memberRepo.memberExit(memberId);
 			
 			session.removeAttribute("memberId");
 			session.removeAttribute("memberLevel");
 			
 			return "redirect:exitFinish";
 		
+	}
+	
+	@GetMapping("/exitPw")
+	@ResponseBody
+	public String exitPw(HttpSession session, @RequestParam String memberPw) {
+		String memberId = (String) session.getAttribute("memberId");
+		MemberDto memberDto = memberRepo.selectOne(memberId);
+		if(!encoder.matches(memberPw, memberDto.getMemberPw())) {
+			return "N";
+		}
 		
+		return "Y";
 	}
 	
 	@GetMapping("/exitFinish")
@@ -343,14 +415,24 @@ public class MemberController {
 		String memberId = (String) session.getAttribute("memberId");
 		MemberDto memberDto = memberRepo.selectOne(memberId);
 		
-		if(!memberDto.getMemberPw().equals(currentPw)) {
-			attr.addAttribute("mode", "error");
-			return "redirect:password";
-		}
-		
-		memberRepo.updatePw(memberId, changePw);
+		// 새로운 비밀번호를 암호화
+	    String encryptedPassword = encoder.encode(changePw);
+	    memberRepo.updatePw(memberId, encryptedPassword);
 		
 		return "redirect:passwordFinish";
+	}
+	
+	@GetMapping("/passwordCheck")
+	@ResponseBody
+	public String passwordCheck(HttpSession session, @RequestParam String currentPw) {
+		String memberId = (String) session.getAttribute("memberId");
+		MemberDto memberDto = memberRepo.selectOne(memberId);
+		
+		if(!encoder.matches(currentPw, memberDto.getMemberPw())) {
+			return "N";
+		}
+		
+		return "Y";
 	}
 	
 	@GetMapping("/passwordFinish")
@@ -465,8 +547,37 @@ public class MemberController {
 		
 		String newPassword = emailService.CreatePassword();
 		emailService.sendEmailPassword(memberEmail, newPassword);
-		memberRepo.editPassword(memberEmail, newPassword);
+		String encryptedPassword = encoder.encode(newPassword);
+		memberRepo.editPassword(memberEmail, encryptedPassword);
 		return newPassword;
-		
+	}
+	
+	//팔로우 리스트 멤버별 프로필 조회
+	@GetMapping("/followListProfile")
+	@ResponseBody
+	public List<FollowDto> followListProfile(@RequestParam String memberId) {
+		return memberRepo.followListProfile(memberId);
+	}
+	
+	//팔로워 리스트 멤버별 프로필 조회
+	@GetMapping("/followerListProfile")
+	@ResponseBody
+	public List<FollowDto> followerListProfile(@RequestParam String followTargetPrimaryKey) {
+		return memberRepo.followerListProfile(followTargetPrimaryKey);
+	}
+	
+	//페이지 리스트 멤버별 프로필 조회
+	@GetMapping("/pageListProfile")
+	@ResponseBody
+	public List<FollowDto> pageListProfile(@RequestParam String memberId) {
+		return memberRepo.pageListProfile(memberId);
+	}
+	
+	//프로필 리스트 팔로우 취소
+	@GetMapping("/deleteFollow")
+	@ResponseBody
+	public String deleteFollow(@RequestParam long followNo) {
+		memberRepo.deleteFollow(followNo);
+		return null;
 	}
 }

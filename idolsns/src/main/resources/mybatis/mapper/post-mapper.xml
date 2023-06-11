@@ -10,6 +10,7 @@
 <mapper namespace="post">
 
 
+
 	   
     <resultMap type="PostShowVO" id="psvo">
 		<!-- FundPostImageDto (fund_post + post + fund_main_image) -->
@@ -49,17 +50,30 @@
 	</resultMap>
 	
     
-    
-    
-    
-    
-    
-    
-    
-    
+ 
+	<select id = "sortTag" resultType="PostShowDto">
 
+		 select
+		    p.post_no, 
+		    p.member_id, 
+		    p.post_time, 
+		    p.post_type, 
+		    p.post_content,
+		    f.fund_title,
+		    t.tag_no, 
+		    t.tag_name, 
+		    t.tag_type,
+		    m.map_name,
+		    m.map_place
+		from 
+		    post p
+		    left join fund_post f on p.post_no = f.post_no
+		    left join map m on p.post_no = m.post_no
+		    left join tag t on p.post_no = t.post_no
+		WHERE t.tag_name = #{tagName}
+		order by p.post_no desc
 
-
+	</select>
 
 
     <!-- 통합게시물 시퀀스 생성 -->
@@ -71,7 +85,7 @@
         insert into post 
         (post_no, member_id, post_type, post_time, post_content) 
         values
-        (#{postNo}, #{memberId}, #{postType}, sysdate, #{postContent})
+        (#{postNo}, #{memberId}, #{postType}, systimestamp, #{postContent})
     </insert>
     <!-- 통합게시물 1개 조회 -->
     <select id="selectOne" resultType="PostDto">

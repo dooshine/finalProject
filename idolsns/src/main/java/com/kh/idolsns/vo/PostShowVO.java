@@ -1,12 +1,12 @@
 package com.kh.idolsns.vo;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.List;
 
 import com.kh.idolsns.dto.PostDto;
 import com.kh.idolsns.dto.PostImageDto;
 import com.kh.idolsns.dto.PostShowDto;
-import com.kh.idolsns.dto.ReplyDto;
 import com.kh.idolsns.dto.TagDto;
 
 import lombok.Data;
@@ -22,7 +22,7 @@ public class PostShowVO {
     // 통합게시물 글종류
     private String postType;
     // 통합게시물 작성시간
-    private Date postTime;
+    private Timestamp postTime;
     // 통합게시물 내용
     private String postContent;
     // -----------------------------------    
@@ -38,6 +38,7 @@ public class PostShowVO {
 	// -----------------------------------
 	// 위치 정보
 	private String mapPlace;
+	private String mapName;
 	// ----------------------------------
 	// 태그 정보,게시물 이미지는 DTO List형태로 받기
 	private List<String> freeTagList;
@@ -52,8 +53,9 @@ public class PostShowVO {
 	private Long likeCount;
 	// ----------------------------------
 	// 댓글 List형태로 받기
-	private List<ReplyDto> replyList; 
-	
+	private List<ReplyShowVO> replyList; 
+	//-----------------------------------
+
 	
 	
 	

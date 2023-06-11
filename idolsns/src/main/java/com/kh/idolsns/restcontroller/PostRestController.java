@@ -1,13 +1,9 @@
 package com.kh.idolsns.restcontroller;
 
 
-import java.lang.reflect.Array;
 import java.sql.Date;
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import javax.servlet.http.HttpSession;
 
@@ -16,38 +12,37 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.kh.idolsns.dto.TagDto;
-import com.kh.idolsns.dto.TogetherPostDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kh.idolsns.dto.FreePostDto;
 import com.kh.idolsns.dto.FundDto;
 import com.kh.idolsns.dto.MapDto;
 import com.kh.idolsns.dto.PostDto;
 import com.kh.idolsns.dto.PostImageDto;
-import com.kh.idolsns.dto.ReplyDto;
+import com.kh.idolsns.dto.PostShowDto;
 import com.kh.idolsns.dto.SchedulePostDto;
-import com.kh.idolsns.repo.TagRepo;
-import com.kh.idolsns.repo.TogetherPostRepo;
-import com.kh.idolsns.service.PostShowService;
-import com.kh.idolsns.vo.PostShowVO;
+import com.kh.idolsns.dto.TagDto;
+import com.kh.idolsns.dto.TogetherPostDto;
 import com.kh.idolsns.repo.AttachmentRepo;
 import com.kh.idolsns.repo.FreePostRepo;
 import com.kh.idolsns.repo.MapRepo;
 import com.kh.idolsns.repo.PostImageRepo;
 import com.kh.idolsns.repo.PostLikeRepo;
 import com.kh.idolsns.repo.PostRepo;
+import com.kh.idolsns.repo.PostShowRepo;
 import com.kh.idolsns.repo.PostWithNickRepo;
 import com.kh.idolsns.repo.ReplyRepo;
 import com.kh.idolsns.repo.SchedulePostRepo;
+import com.kh.idolsns.repo.TagRepo;
+import com.kh.idolsns.repo.TogetherPostRepo;
+import com.kh.idolsns.service.PostShowService;
+import com.kh.idolsns.vo.PostShowVO;
 
 @CrossOrigin
 @RestController
@@ -85,6 +80,10 @@ public class PostRestController {
     @Autowired
     private PostImageRepo postImageRepo;
     
+    @Autowired
+    private PostShowRepo postShowRepo; 
+    
+    
     // 게시글 게시 service
     @Autowired
     private PostShowService postShowService;
@@ -104,6 +103,18 @@ public class PostRestController {
     // 같기아요
     @Autowired
     private TogetherPostRepo togetherPostRepo;    
+    
+    
+    
+    //아티스트페이지 상세조회
+    @GetMapping("/{tagName}")
+    public List<PostShowDto> selectList(@PathVariable String tagName){
+   	      return postShowRepo.selectList(tagName);
+  }
+
+    
+    
+    
     
     // 통합게시물 등록
     @PostMapping("/")
@@ -279,7 +290,16 @@ public class PostRestController {
 //    public PostWithNickDto selectOne(@PathVariable Long postNo){
 //        return postWithNickRepo.selectOne(postNo);
 //    }
-
+//    @GetMapping()
+//    public String sessionMemberAttachmentNo{
+//    	
+//    	return null;
+//    }
+    @GetMapping("/sessionAttachmentNo")
+    public Integer sessionMemberAttachmentNo(HttpSession session) {
+    	String memberId = (String) session.getAttribute("memberId");
+    	return postShowRepo.selectSessionMemberAttachmentNo(memberId);    	
+    }
     // 게시물 전체 목록 조회 
     @GetMapping("/all")
     public List<PostShowVO> allList(){
@@ -332,7 +352,7 @@ public class PostRestController {
     
     // 통합게시물 수정
     @PutMapping("/")
-    public boolean update(@ModelAttribute PostDto postDto){
+    public boolean update(@RequestBody PostDto postDto){
         return postRepo.update(postDto);
     }
 
@@ -382,5 +402,7 @@ public class PostRestController {
     	return postRepo.delete(postNo);
         
     }
+    
+    
 
 }

@@ -1,5 +1,6 @@
 package com.kh.idolsns.repo;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -13,6 +14,7 @@ import com.kh.idolsns.dto.FundPostImageDto;
 import com.kh.idolsns.dto.PostImageDto;
 import com.kh.idolsns.dto.TagDto;
 import com.kh.idolsns.vo.FundDetailVO;
+import com.kh.idolsns.vo.FundSearchVO;
 
 @Repository
 public class FundPostImageRepoImpl implements FundPostImageRepo{
@@ -43,8 +45,8 @@ public class FundPostImageRepoImpl implements FundPostImageRepo{
 
 	@Override
 	public List<FundPostImageDto> selectListByPaging(int page, String searchKeyword) {
-		int end = page * 10;
-		int begin = end - 9;
+		int end = page * 12;
+		int begin = end - 11;
 		Map<String, Object> param = Map.of("begin", begin, "end", end,
 													"searchKeyword", searchKeyword);
 		return sqlSession.selectList("fundpostinte.infiniteWithKeyword", param);
@@ -52,8 +54,8 @@ public class FundPostImageRepoImpl implements FundPostImageRepo{
 
 	@Override
 	public List<FundPostImageDto> selectListByPaging(int page) {
-		int end = page * 10;
-		int begin = end - 9;
+		int end = page * 12;
+		int begin = end - 11;
 		Map<String, Object> param = Map.of("begin", begin, "end", end);
 		return sqlSession.selectList("fundpostinte.infinite", param);
 	}
@@ -64,11 +66,15 @@ public class FundPostImageRepoImpl implements FundPostImageRepo{
 	}
 
 	@Override
-	public List<FundListWithTagDto> selectListWithTag(int page, String searchKeyword) {
-		int end = page * 10;
-		int begin = end - 9;
-		Map<String, Object> param = Map.of("begin", begin, "end", end,
-													"searchKeyword", searchKeyword);
+	public List<FundListWithTagDto> selectListWithTag(int page, FundSearchVO vo) {
+		// 12개씩 보여주기
+		int end = page * 12;
+		int begin = end - 11;
+		Map<String, Object> param = new HashMap<>();
+	    param.put("begin", begin);
+	    param.put("end", end);
+	    param.put("searchKeyword", vo.getSearchKeyword());
+	    param.put("orderList", vo.getOrderList());
 		return sqlSession.selectList("fundpostinte.selectListWithTag", param);
 	}
 

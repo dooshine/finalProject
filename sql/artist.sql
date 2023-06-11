@@ -3,7 +3,11 @@ create table artist (
     -- 대표페이지 번호(PK)
     artist_no number primary key,
     -- 대표페이지 이름
-    artist_name varchar2(30) not null unique
+    artist_name varchar2(30) not null unique,
+    -- 대표페이지 영어이름
+    artist_eng_name varchar2(30) not null unique,
+    -- 대표페이지 영어이름(소문자, 띄어쓰기 제거)
+    artist_eng_name_lower varchar2(30) not null unique
 );
 
 

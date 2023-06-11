@@ -9,6 +9,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>스타링크</title>
+    <!-- favicon -->
+	<link rel="icon" href="/static/image/favicon.ico">
+    <title>스타링크</title>
     <!-- 폰트어썸 cdn -->
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css">
     <!-- tabler 아이콘 -->
@@ -37,11 +40,15 @@
     <!-- custom 테스트 css -->
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/static/css/test.css">
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/static/css/component.css">
+    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/static/css/doo.css">
     
     <!-- 폰트css -->
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/static/css/load.css" />
     <!-- doo-css -->
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/static/css/doo.css" />
+     <!-- toastify -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 
 	
 	
@@ -456,16 +463,16 @@
 
 <body style="background-color: #f5f5f5;">
     <main>
-    	<!----------------------------------------------- 헤더 시작 ----------------------------------------------->
-        <header>
-        	<div id="header-area">
-				<nav class="navbar navbar-expand-md navbar-light back-white" style="box-shadow: 0px 3px 4px rgba(3, 21, 17, 0.1);">
-				  	<div class="container-fluid d-flex justify-content-center">
-				  		<div class="text-center">
-					    	<a class="navbar-brand" href="/"><img src="/static/image/logo2.jpg" style="width:130px;"></a>
-					    </div>
-				  	</div>
-				</nav>
+<header style="height: 100px;">
+   <div id="header-area" style="height: 57.06px;">
+      <nav class="navbar navbar-expand-md navbar-light back-white" style="box-shadow: 0px 3px 4px rgba(3, 21, 17, 0.1); height: 100%;">
+         <div class="container-fluid d-flex justify-content-center align-items-center" style="height: 100%;">
+            <div class="text-center">
+               <a class="navbar-brand" href="/"><img src="/static/image/logo.png" style="width: 130px;"></a>
             </div>
-        </header>
+         </div>
+      </nav>
+   </div>
+</header>
+
                 

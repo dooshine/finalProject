@@ -1,5 +1,7 @@
 package com.kh.idolsns.service;
 
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,6 +23,9 @@ public class PostShowService {
 
 	@Autowired
 	private PostShowRepo postShowRepo; 
+	
+	@Autowired
+	private ReplyShowService replyShowService;
 	
 	@Autowired
 	private TagRepo tagRepo;
@@ -50,6 +55,7 @@ public class PostShowService {
 		
 		for(PostShowVO postShowVO : postShowList)
 		{	
+			
 			// 글번호 
 			postNo = postShowVO.getPostNo();
 			
@@ -72,7 +78,7 @@ public class PostShowService {
 			//	log.debug("postShowVO is {}", postShowVO); 
 			
 			// 댓글 가져오기 
-			postShowVO.setReplyList(replyRepo.getRepliesByPostNo(postNo));
+			postShowVO.setReplyList(replyShowService.showReplyList(postNo));
 		
 		}
 		return postShowList;
@@ -107,7 +113,7 @@ public class PostShowService {
 			//	log.debug("postShowVO is {}", postShowVO); 
 			
 			// 댓글 가져오기 
-			postShowVO.setReplyList(replyRepo.getRepliesByPostNo(postNo));
+			postShowVO.setReplyList(replyShowService.showReplyList(postNo));
 			
 		}
 		
@@ -118,11 +124,21 @@ public class PostShowService {
 	public List<PostShowVO> postShowByPagingReload(int page){
 		List<PostShowVO> postShowList = postShowRepo.selectListByPagingReload(page);
 		Long postNo = 0l;
+//		
+//		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		
 		for(PostShowVO postShowVO : postShowList)
 		{
 			// 글번호 
 			postNo = postShowVO.getPostNo();
+//			Timestamp ts = postShowVO.getPostTime();
+			
+			// 시간 재설정
+//			String formattedTime = dateFormat.format(postShowVO.getPostTime());
+//			Date parsedTime = dateFormat.parse(formattedTime)
+//			postShowVO.setPostTime();
+//			postShowVO.setPostTime((postShowVO.getPostTime()));
+//			System.out.println((postShowVO.getPostTime()));
 			
 			// 고정 태그 리스트
 			postShowVO.setFixedTagList(tagRepo.selectFixedTagAll(postNo));
@@ -143,7 +159,7 @@ public class PostShowService {
 			//	log.debug("postShowVO is {}", postShowVO); 
 			
 			// 댓글 가져오기 
-			postShowVO.setReplyList(replyRepo.getRepliesByPostNo(postNo));
+			postShowVO.setReplyList(replyShowService.showReplyList(postNo));
 //			System.out.println("게시글 번호가 "+postNo+"번인 게시글의 답글 리스트는 다음과 같습니다. replyList는 "+replyRepo.getRepliesByPostNo(postNo));
 		}
 		
@@ -177,7 +193,7 @@ public class PostShowService {
 			postShowVO.setLikeCount(postLikeRepo.count(postNo));
 			
 			// 댓글 가져오기 
-			postShowVO.setReplyList(replyRepo.getRepliesByPostNo(postNo));
+			postShowVO.setReplyList(replyShowService.showReplyList(postNo));
 		}
 		
 		return postShowList;
@@ -212,7 +228,7 @@ public class PostShowService {
 			postShowVO.setLikeCount(postLikeRepo.count(postNo));
 			
 			// 댓글 가져오기 
-			postShowVO.setReplyList(replyRepo.getRepliesByPostNo(postNo));
+			postShowVO.setReplyList(replyShowService.showReplyList(postNo));
 		}
 		
 		return postShowList;
@@ -222,7 +238,7 @@ public class PostShowService {
 	public List<PostShowVO> fixedTagPostShowByPagingReload(int page,String tagName){
 		
 		List<PostShowVO> postShowList = postShowRepo.selectFixedTagPostListByPagingReload(page, tagName);
-		
+
 		Long postNo = 0l;
 		
 		for(PostShowVO postShowVO : postShowList)
@@ -247,7 +263,7 @@ public class PostShowService {
 			postShowVO.setLikeCount(postLikeRepo.count(postNo));
 			
 			// 댓글 가져오기 
-			postShowVO.setReplyList(replyRepo.getRepliesByPostNo(postNo));
+			postShowVO.setReplyList(replyShowService.showReplyList(postNo));
 		}
 		
 		return postShowList;

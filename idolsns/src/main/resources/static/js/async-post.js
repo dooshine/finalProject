@@ -82,20 +82,21 @@
 					let postText = $(".post").val();					
 					// postDto에 삽입하기 위해 post로 송신할 JSON 객체생성
 					let postDto = {
-						memberId: "testuser1",
+						memberId: memberId,
 						postType: categori,
 						postContent: postText		
 					}
 					
 					
-					console.log(postDto)
 					
+					console.log(postDto+"보낸 데이터");
 					// 게시글을 비동기로 서버에 등록 
 					$.ajax({
 						  url: "http://localhost:8080/rest/post/",
 						  method: "post",
 						  data: postDto,
 						  success: function(postNo) {
+							
 							// 게시물 등록 성공 시에, 고정 태그 정보를 비동기로 서버에 등록
 						 	let fixedTagData ={
 								 fixedTag: fixedTag,
@@ -167,10 +168,11 @@
 							});														
 							
 							// 게시물 지도 등록
-							if(mapPlace!="기본"){
+							if(mapPlace!="기본" && mapName!="기본"){
 								let postDto = {
 									postNo : postNo,
-									mapPlace : mapPlace
+									mapPlace : mapPlace,
+									mapName : mapName
 								};
 								console.log(mapPlace);
 								$.ajax({
@@ -247,8 +249,11 @@
 				
 				// 파일이 선택될 때 마다 함수 실행
 				$('#fileInput').on('change', function() {
+					  imageCount = 0;
+					  videoCount = 0;
 					  const files = this.files;
-
+					
+					  preview.empty();
 					  const isImage = (file) => {
 					    return file['type'].includes('image');
 					  };
@@ -262,17 +267,19 @@
 					  console.log("파일길이는 : "+files.length)
 
 					  for (let i = 0; i < files.length; i++) {
+						 
 					    const file = files[i];
-					    if (imageCount >= MAX_FILES && isImage(file)) {
-					      alert('이미지 파일은 최대 5개까지만 업로드 가능합니다.');
-					      continue; // 다음 파일로 건너뛰기
-					    }
-					    if (videoCount > 0 && isVideo(file) && imageCount ==0) {
-					      alert('동영상 파일은 1개만 업로드 가능합니다.');
-					      break; // 반복문 종료
-					    }
+//					    if (imageCount >= MAX_FILES && isImage(file)) {
+//					      alert('이미지 파일은 최대 5개까지만 업로드 가능합니다.');
+//					      continue; // 다음 파일로 건너뛰기
+//					    }
+//					    if (videoCount > 0 && isVideo(file) && imageCount ==0) {
+//					      alert('동영상 파일은 1개만 업로드 가능합니다.');
+//					      break; // 반복문 종료
+//					    }						
 					    if (isImage(file)) {
 					      const img = $('<img>').attr('src', URL.createObjectURL(file)).attr('width', '100').attr('height', '100');
+//					      const img = $('<img>').attr('src', URL.createObjectURL(file)).addClass('w-50');
 					      preview.append(img);
 					      imageCount++;
 					    } else if (isVideo(file)) {
@@ -280,6 +287,21 @@
 					      preview.append(video);
 					      videoCount++;
 					    }
+					    else{
+						  alert('파일은 이미지, 비디오 파일만 업로드 가능합니다.');
+						  preview.empty();
+						  $("#fileInput").val(null);
+						  break;
+							
+						}
+					    
+					    if(i==(MAX_FILES)){
+							alert('파일은 최대 5개까지만 업로드 가능합니다.');
+							preview.empty();
+							$("#fileInput").val(null);
+							break;	
+						}
+					    
 					  }
 				});
 			});

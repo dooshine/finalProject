@@ -2,8 +2,8 @@ package com.kh.idolsns.repo;
 
 import java.util.List;
 
+import com.kh.idolsns.dto.FollowDto;
 import com.kh.idolsns.dto.MemberDto;
-import com.kh.idolsns.dto.MemberExitDto;
 
 
 public interface MemberRepo {
@@ -38,10 +38,18 @@ public interface MemberRepo {
 	boolean editPassword(String memberEmail, String memberPw);
 	boolean deleteMemberProc(String memberId);
 	boolean exitDate(String memberId);
-	boolean cancelExit(String memberId);
+	boolean cancleExit(String memberId);
 	void clean();
 	void memberExit(String memberId);
 	int memberExitFind(String memberId);
+	//팔로우 리스트 멤버별 프로필 조회
+	List<FollowDto> followListProfile(String memberId);
+	//팔로워 리스트 멤버별 프로필 조회
+	List<FollowDto> followerListProfile(String followTargetPrimaryKey);
+	//팔로워 리스트 멤버별 프로필 조회
+	List<FollowDto> pageListProfile(String memberId);
+	//팔로우 취소
+	boolean deleteFollow(long followNo);
 	
 	//중복 검사
 	int idDuplicatedCheck(String memberId);

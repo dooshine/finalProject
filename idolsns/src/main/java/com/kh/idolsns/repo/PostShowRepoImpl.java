@@ -7,6 +7,7 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.kh.idolsns.dto.PostShowDto;
 import com.kh.idolsns.vo.PostShowVO;
 
 @Repository
@@ -68,6 +69,16 @@ public class PostShowRepoImpl implements PostShowRepo{
 		
 		Map<String, Object> param = Map.of("begin", begin, "end", end,"tagName",tagName);
 		return sqlSession.selectList("postShow.fixedTagInfinite",param);
+	}
+
+	@Override
+	public List<PostShowDto> selectList(String tagName) {
+		return sqlSession.selectList("post.sortTag", tagName); 
+	}
+
+	@Override
+	public Integer selectSessionMemberAttachmentNo(String memberId) {		
+		return sqlSession.selectOne("postShow.selectSessionMemberAttachmentNo",memberId);
 	}
 }
 

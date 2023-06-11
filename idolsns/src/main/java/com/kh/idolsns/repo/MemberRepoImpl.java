@@ -8,6 +8,7 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.kh.idolsns.dto.FollowDto;
 import com.kh.idolsns.dto.MemberDto;
 import com.kh.idolsns.dto.MemberExitDto;
 
@@ -177,7 +178,7 @@ public class MemberRepoImpl implements MemberRepo{
 	}
 
 	@Override
-	public boolean cancelExit(String memberId) {
+	public boolean cancleExit(String memberId) {
 		return sqlSession.update("member.cancelExit", memberId) > 0;
 	}
 
@@ -189,6 +190,29 @@ public class MemberRepoImpl implements MemberRepo{
 	@Override
 	public void memberExit(String memberId) {
 		sqlSession.insert("member.memberExit", memberId);
+	}
+
+	//팔로우 리스트 멤버별 프로필 조회
+	@Override
+	public List<FollowDto> followListProfile(String memberId) {
+		return sqlSession.selectList("member.followListProfile" ,memberId);
+	}
+
+	//팔로워 리스트 멤버별 프로필 조회
+	@Override
+	public List<FollowDto> followerListProfile(String followTargetPrimaryKey) {
+		return sqlSession.selectList("member.followerListProfile", followTargetPrimaryKey);
+	}
+
+	@Override
+	public List<FollowDto> pageListProfile(String memberId) {
+		return sqlSession.selectList("member.PageListProfile", memberId);
+	}
+
+	//팔로우 리스트 삭제
+	@Override
+	public boolean deleteFollow(long followNo) {
+		return sqlSession.delete("member.deleteFollow", followNo) > 0;
 	}
 
 	

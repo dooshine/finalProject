@@ -83,30 +83,36 @@
 <body>
    <div class="container rounded p-3" style="background-color:white">
    <div id="app">
-      
+      <br><br>
       <div class="container">
-         <div class="row">
-            <a href="${pageContext.request.contextPath}/member/exit">회원탈퇴</a>
-            <a href="${pageContext.request.contextPath}/member/password">비밀번호 변경</a>
-            <a href="${pageContext.request.contextPath}/member/logout">로그아웃</a>
-         </div>
-         
-         <div class="row">
-            <div>
-               <img :src="memberProfileImageObj !== ''  && memberProfileImageObj.attachmentNo !== undefined ? '/download/?attachmentNo='+memberProfileImageObj.attachmentNo :  ' /static/image/profileDummy.png' "
+         <div class="row" >
+            <div class="col-4" >
+                  <img :src="memberProfileImageObj !== ''  && memberProfileImageObj.attachmentNo !== undefined ? '/download/?attachmentNo='+memberProfileImageObj.attachmentNo :  ' /static/image/profileDummy.png' "
                   style="width: 200px; height: 200px; border-radius: 100%;">
             </div>
+            <div class="col-3">
+            	<h3 style="margin-top:120px;">{{memberNick}}</h3>
+               <h6 class="font-gray1">@{{memberId}}</h6>
+            </div>
+            <div class="col-5 text-right" style="margin-top: 150px;">
+			    <div class="row" v-if="mypage">
+			        <div class="d-flex justify-content-end">
+			            <button type="button" class="custom-btn btn-round btn-purple1" v-on:click="showModal">프로필 수정</button>
+			            <i class="fa-solid fa-gear ml-2" v-on:click="showSettingsModal" style="margin-top: 3px; margin-left : 5px; font-size:30px"></i>
+			        </div>
+			    </div>
+
+
+            	<div class="row" v-if="!mypage && follow">
+            		<button type ="button" class="custom-btn btn-round btn-purple2" v-on:click="followMember(memberId)">팔로우 취소</button>
+            	</div>
+            	<div class="row" v-if="!mypage && !follow">
+	               <button type = "button" class="custom-btn btn-round btn-purple1" v-on:click = "followMember(memberId)">팔로우</button>
+            	</div>
+            </div>
          </div>
          
-         <div class="row">
-            <div class="col-8">
-               <h3>{{memberNick}}</h3>
-               <h5>@{{memberId}}</h5>
-            </div>
-            <div class="col-4 text-right">
-               <button type = "button" class="btn btn-primary mt-4" v-on:click = "showModal">프로필 수정</button>
-            </div>
-         </div>
+         <br>
          <div class="row">
             <div class="col-4 " style="display: flex; justify-content: space-between; flex-direction: column; align-items: center;" 
                v-on:click="showFollowModal">
@@ -125,6 +131,27 @@
             </div>
          </div>
          
+          <div class="modal" tabindex = "-1" role="dialog" id="settingsModal" data-bs-backdrop="static" ref="settingsModal">
+            <div class="modal-dialog" role="document">
+               <div class="modal-content   ">
+                  <div class="modal-header">
+                     <i class="fa-solid fa-xmark" style="color: #bcc0c8;" data-bs-dismiss="modal" aria-label="Close"></i>
+                  </div>
+                  <div class="modal-body ">
+                  	<div class="row">
+	                     <i class="fa-solid fa-lock" @click="goToPassword()">비밀번호 변경</i>
+                  	</div>
+                  	<div class="row">
+	                     <i class="fa-solid fa-pen-to-square" @click="goToLogout()">로그아웃</i>
+                  	</div>
+                  	<div class="row">
+	                     <i class="fa-sharp fa-solid fa-circle-minus " @click="goToExit()">회원탈퇴</i>
+                  	</div>
+                  </div>
+               </div>
+            </div>
+         </div>	
+         
          <div class="modal" tabindex = "-1" role="dialog" id="modal" data-bs-backdrop="static" ref="modal">
             <div class="modal-dialog" role="document">
                <div class="modal-content   ">
@@ -135,13 +162,14 @@
                      <img :src="previewURL"
                         class="profile-image" @click="openFileInput">
                      <input type="file" ref="fileInput" style="display: none;"@change="uploadFile($event)">
+                     
                      <h3>
                            <span v-if="!editingNickname">{{ memberNick }}</span>
                            <input v-else type="text" v-model="editedNickname" class="form-control" placeholder="새로운 닉네임"
-                              :class="{'is-invalid':editedNickname !== '' && (!memberNickValid || nickDuplicated)}" @blur="nickDuplicatedCheck(memberNick)">
+                              :class="{'is-invalid':editedNickname !== '' && (!memberNickValid || nickDuplicated) }" @blur="nickDuplicatedCheck(memberNick)">
                            <div class="invalid-feedback">{{memberNickMessage}}</div>
                            <i v-if="!editingNickname" class="fa-solid fa-pen-to-square" style="font-size: 14px; margin-left: 10px; cursor: pointer;" @click="editingNickname=true"></i>
-                           <i v-else class="fa-solid fa-check" style="font-size: 14px; margin-left: 10px; cursor: pointer;" @click="updateNickname(memberNick)"></i>
+                          <i v-else class="fa-solid fa-check" style="font-size: 14px; margin-left: 10px; cursor: pointer;" @click="nickDuplicated || !memberNickValid ? null : updateNickname(memberNick)"></i>
                        </h3>
                      <h5>@{{memberId}}</h5>
                   </div>
@@ -155,14 +183,19 @@
                   <div class="modal-header">
                      <i class="fa-solid fa-xmark" style="color: #bcc0c8;" data-bs-dismiss="modal" aria-label="Close"></i>
                   </div>
-                  <div class="modal-body text-center">
-                     <div v-for="board in FollowMemberList">
-                     {{board}}
+                  <div class="modal-body text-left">
+                     <div v-for="(board,index) in FollowListProfile"  :key="index">
+                     <img :src="getAttachmentUrl(board.attachmentNo)" class="profile-image" style="width:54px; height:54px;">
+                     <a :href="'/member/mypage/' + board.followTargetPrimaryKey">
+					    <span>{{board.followTargetPrimaryKey}}</span>
+					</a>
+                    <button @click="deleteFollow(board.followNo)">팔로잉</button>
                      </div>
                   </div>
                </div>
             </div>
-         </div>
+         </div>	
+        
          
          <div class="modal" tabindex = "-1" role="dialog" id="followerModal" data-bs-backdrop="static" ref="followerModal">
             <div class="modal-dialog" role="document">
@@ -170,9 +203,13 @@
                   <div class="modal-header">
                      <i class="fa-solid fa-xmark" style="color: #bcc0c8;" dat   a-bs-dismiss="modal" aria-label="Close"></i>
                   </div>
-                  <div class="modal-body text-center">
-                     <div v-for="board in FollowerMemberList">
-                        {{board}}
+                  <div class="modal-body text-left">
+                     <div v-for="(board,index) in FollowerListProfile"  :key="index">
+                     <img :src="getAttachmentUrl(board.attachmentNo)" class="profile-image" style="width:54px; height:54px;">
+                     <a :href="'/member/mypage/' + board.memberId">
+                    <span> {{board.memberId}}</span>
+                    </a>
+                    <button @click="deleteFollow(board.followNo)">팔로잉</button>
                      </div>
                   </div>
                </div>
@@ -185,9 +222,13 @@
                   <div class="modal-header">
                      <i class="fa-solid fa-xmark" style="color: #bcc0c8;" data-bs-dismiss="modal" aria-label="Close"></i>
                   </div>
-                  <div class="modal-body text-center">
-                     <div v-for="board in FollowPageList">
-                        {{board}}   
+                  <div class="modal-body text-left">
+                     <div v-for="(board,index) in PageListProfile"  :key="index">
+                    <img :src="getAttachmentUrl(board.attachmentNo)" class="profile-image" style="width:54px; height:54px;">
+                    <a :href="'/artist/' + board.followTergetPrimarykey">
+                    <span> {{board.followTargetPrimaryKey}}</span>
+                    </a>
+                    <button @click="deleteFollow(board.followNo)">팔로잉</button>
                      </div>
                   </div>
                </div>
@@ -1043,6 +1084,7 @@
                   followModal:null,
                   followerModal:null,
                   pageModal:null,
+                  settingsModal:null,
                   memberProfileImageObj: {},
                   editedNickname:"",
                   editingNickname:false,
@@ -1059,8 +1101,19 @@
                   previewURLList:[], 
                   artistViewList:[],
                   previewURL: "",
+                  //팔로우 리스트 멤버별 프로필
+                  FollowListProfile : [],
+                  //팔로워 리스트 멤버별 프로필
+                  FollowerListProfile : [],
+                  //페이지 리스트 멤버별 프로필
+                  PageListProfile:[],
                   
                   targetMemberFollowObj: {},
+                  
+                  //내페이지 or 남의페이지
+                  mypage:false,
+                  //팔로우 여부
+                  follow : true,
                   
                // 게시글 VO를 저장할 배열
               	posts: [],
@@ -1100,7 +1153,7 @@
               	newFixedTagList: [],                	
               	
               	// 세션 맴버아이디
-              	memberId:null,
+              	memberId:"${memberDto.memberId}",
               	
               	// 좋아요한 맴버의 아이디
               	likedMemberId: null,
@@ -1113,6 +1166,12 @@
               	
               	modalImageUrlList:[],
               	
+
+				followObj: {
+					memberId: memberId,
+					followTargetType: "",
+					followTargetPrimaryKey: "",
+				},
                };
             },      
             methods:{
@@ -1120,16 +1179,25 @@
                      this.$refs.fileInput.click();
                    },
                async profile() {
-                  const response = await axios.get("/member/profile");
+                  const response = await axios.get("/member/profile",{
+                	  params : {
+                		  memberId : this.memberId
+                	  }
+                  });
                   const {memberId, memberNick} = response.data;
                   
                   this.memberId = memberId;
                   this.memberNick=memberNick;
-                  
+                  console.log("아이디 : "+this.memberId);
+                  console.log("닉네임 : "+this.memberNick);
                },
                
                async followCnt() {
-                  const response = await axios.get("/member/followCnt");
+                  const response = await axios.get("/member/followCnt",{
+                	  params : {
+                		  memberId : this.memberId
+                	  }
+                  });
                   const{MemberFollowCnt, MemberFollowerCnt, MemberPageCnt} = response.data;
                   
                   this.MemberFollowCnt = MemberFollowCnt;
@@ -1138,12 +1206,13 @@
                },
                
                async followList() {
-                  const response = await axios.get("/member/followList");
+                  const response = await axios.get("/member/followList/"+this.memberId);
                   const{FollowMemberList, FollowerMemberList, FollowPageList} = response.data;
                   
                   this.FollowMemberList = FollowMemberList;
                   this.FollowerMemberList = FollowerMemberList;
                   this.FollowPageList = FollowPageList;
+                  console.log("팔로우리스트 : "+this.FollowMemberList);
                },
                
                showModal(){
@@ -1182,13 +1251,26 @@
                   this.pageModal.hide();
                },
                
+               showSettingsModal() {
+            	   if(this.settingsModal == null) return;
+                   this.settingsModal.show();
+               },
+               hideSettingsModal() {
+            	   if(this.settingsModal == null) return;
+                   this.settingsModal.hide();
+               },
+               
                async profileImage() {
-                   const response = await axios.get("/member/profileImage");
+                   const response = await axios.get("/member/profileImage",{
+                	   params : {
+                		   memberId : this.memberId
+                	   }
+                   });
                    
                    this.memberProfileImageObj = response.data;
-                   
+                   console.log("this.memberProfileImageObj : "+this.memberProfileImageObj);
                    const attachmentNo = this.memberProfileImageObj.attachmentNo;   
-                      console.log(attachmentNo);
+                      console.log("attachmentNo : " +attachmentNo);
                       const url = "/rest/attachment/download/"+attachmentNo;
                    this.previewURL = url;                   
                 },
@@ -1282,6 +1364,144 @@
                       
                       alert("대표페이지 프로필사진 설정완료!");
                   },
+                  
+                  //팔로우 리스트 멤버별 프로필 조회
+                  async followListProfile() {
+                	  const response =await axios.get("/member/followListProfile",{
+                		  params :{
+                			  memberId : this.memberId
+                		  }
+                	  });
+                	  this.FollowListProfile.push(...response.data);
+                	  
+                	  console.log("로그인 :  " +this.memberId);
+                  },
+                  
+                  //팔로워 리스트 멤버별 프로필 조회
+                  async followerListProfile() {
+					  const response = await axios.get("/member/followerListProfile", {
+					    params: {
+					    	followTargetPrimaryKey: this.memberId
+					    }
+					  });
+					  this.FollowerListProfile = response.data;
+					},
+					
+					//페이지 리스트 멤버별 프로필 조회
+	                  async pageListProfile() {
+						const response = await axios.get("/member/pageListProfile",{
+							params : {
+								memberId : this.memberId
+							}
+						});
+
+						  this.PageListProfile.push(...response.data);
+						  console.log(" this.PageListProfile : "+ this.PageListProfile);
+						},
+                  
+                  //프로필 리스트 팔로우 취소
+				async deleteFollow(followNo) {
+					const response = await axios.get("/member/deleteFollow",{
+						params : {followNo:followNo}
+					});
+					if (response.data.success) {
+					    // 삭제 성공 시, FollowListProfile에서 해당 항목을 제거합니다.
+					    this.FollowListProfile = this.FollowListProfile.filter(item => item.followNo !== followNo);
+					  }
+				},
+				
+				//비밀번호 변경페이지로 이동
+				goToPassword() {
+			        window.location.href = '/member/password';
+			    },
+			    
+			    //로그아웃
+			    goToLogout() {
+			    	window.location.href = '/member/logout';
+			    },
+			    
+			    //회원탈퇴 페이지로 이동
+			    goToExit() {
+			    	window.location.href = '/member/exit';
+			    },
+			    
+			    //페이지 확인
+			    async mypageCheck() {
+			    	const response = await axios.get("/member/mypage")
+			    	if(response.data === this.memberId) {
+			    		this.mypage = true;
+			    	}
+			    	else {
+				    	this.mypage = false;
+			    	}
+			    },
+			    // 회원 팔로우 버튼
+		        async followMember(targetMemberId){
+		            if(this.follow){
+		                if(!confirm(targetMemberId + "님 팔로우를 취소하시겠습니까?")) return;
+		                this.setFollowMemberObj(targetMemberId);
+		                await this.deleteMemberFollow();
+		            } else {
+		                this.setFollowMemberObj(targetMemberId);
+		                await this.createFollow();
+		            }
+		            await this.loadMemberFollowInfo();
+					this.followCheck();
+					this.followCnt();
+		        },
+
+				// 대표페이지 팔로우 생성
+				async createFollow(){
+					// 팔로우 생성 url
+					const url = "http://localhost:8080/rest/follow/";
+					await axios.post(url, this.followObj);
+					// [develope] 
+				},
+				// 대표페이지 팔로우 취소
+				async deleteMemberFollow(){
+					// 팔로우 생성 url
+					const url = "http://localhost:8080/rest/follow/";
+					await axios.delete(url, {
+						data: this.followObj,
+					});
+					// [develope]
+				},
+
+
+		        // 회원 팔로우 대상 설정
+		        setFollowMemberObj (followMemberId){
+		            // 팔로우 대상 유형
+		            this.followObj.followTargetType = "회원";
+		            // 팔로우 대상 PK
+		            this.followObj.followTargetPrimaryKey = followMemberId;
+		        },
+			    
+			    //팔로우 여부 
+			    async followCheck() {
+			    	const response = await axios.get("/member/checkFollowMember", {
+			    		params : {
+							Id : this.memberId
+						}
+			    	});
+			    	console.log(response.data);
+			    	if(response.data == true) {
+			    		this.follow = true;
+			    	}	
+			    	else { 
+			    		this.follow = false;
+			    	}
+			    },
+			    
+			    //팔로우
+			    async memberFollowNew() {
+			    	const response = await axios.get("/member/follow", {
+			    		params : {
+							Id : this.memberId
+						}
+			    	});
+			    	this.followCheck();
+			    },
+                  
 
 
 
@@ -1682,7 +1902,11 @@
                       },
                       memberNickMessage(){
                         
-                          if(this.memberNickValid && !this.nickDuplicated) {
+                    	
+                    	  if(this.editedNickname.length == 0) {
+                    		  return "닉네임을 입력하세요";
+                    	  }
+                        else if(this.memberNickValid && !this.nickDuplicated) {
                               return "사용 가능한 닉네임입니다.";
                           }
                           else if(this.nickDuplicated) {
@@ -1695,6 +1919,9 @@
             },
             created(){
                this.profileImage();
+       		this.pageListProfile();
+       		this. mypageCheck();
+       		this.followCheck();
                
             // 게시글 불러오기
            	this.setId();
@@ -1704,12 +1931,16 @@
             
             mounted() {
                this.profile();
-               this.followCnt();
                this.followList();
+               this.followListProfile();
+           		this.followerListProfile();
+           
+               this.followCnt();
                this.modal = new bootstrap.Modal(this.$refs.modal);
                this.followModal = new bootstrap.Modal(this.$refs.followModal);
                this.followerModal = new bootstrap.Modal(this.$refs.followerModal);
                this.pageModal = new bootstrap.Modal(this.$refs.pageModal);
+               this.settingsModal = new bootstrap.Modal(this.$refs.settingsModal);
                
                //윈도우 전체에 스크롤 이벤트를 설정(Vue가 아닌 JS 사용)
                //- 주의할 점은 스크롤 이벤트는 발생빈도가 엄청나다는 것

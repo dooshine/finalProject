@@ -1,4 +1,5 @@
 package com.kh.idolsns.restcontroller;
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -15,13 +16,11 @@ import com.kh.idolsns.dto.ChatJoinDto;
 import com.kh.idolsns.dto.ChatMessageDto;
 import com.kh.idolsns.dto.ChatReadDto;
 import com.kh.idolsns.dto.ChatRoomDto;
-import com.kh.idolsns.dto.MemberDto;
 import com.kh.idolsns.dto.MemberSimpleProfileDto;
 import com.kh.idolsns.repo.ChatJoinRepo;
 import com.kh.idolsns.repo.ChatMessageRepo;
 import com.kh.idolsns.repo.ChatReadRepo;
 import com.kh.idolsns.repo.ChatRoomRepo;
-import com.kh.idolsns.repo.MemberRepo;
 import com.kh.idolsns.repo.MemberSimpleProfileRepo;
 import com.kh.idolsns.service.ChatRoomService;
 import com.kh.idolsns.vo.ChatMemberJoinVO;
@@ -39,8 +38,6 @@ public class ChatRestController {
 	@Autowired
 	private ChatJoinRepo chatJoinRepo;
 	@Autowired
-	private MemberRepo memberRepo;
-	@Autowired
 	private ChatRoomService chatRoomService;
 	@Autowired
 	private ChatRoomRepo chatRoomRepo;
@@ -56,39 +53,6 @@ public class ChatRestController {
 		//log.debug("chatRoomNoList: " + chatRoomNoList);
 		if(!chatRoomNoList.isEmpty()) return chatRoomRepo.findRooms(chatRoomNoList);
 		else return Collections.emptyList();
-	}
-	
-	// 메세지 불러오기
-	@GetMapping("/message/{chatRoomNo}")
-	public List<ChatMessageVO> roomMessage(@PathVariable int chatRoomNo) {
-		List<ChatMessageDto> tempList = chatMessageRepo.messageList(chatRoomNo);
-		List<ChatMessageVO> list = new ArrayList<>();
-		for(ChatMessageDto chatMessageDto : tempList) {
-			//log.debug("dto attachmentNo: " + chatMessageDto.getAttachmentNo());
-			list.add(ChatMessageVO.builder()
-							.chatMessageNo(chatMessageDto.getChatMessageNo())
-							.chatRoomNo(chatRoomNo)
-							.memberId(chatMessageDto.getMemberId())
-							.chatMessageTime(chatMessageDto.getChatMessageTime().getTime())
-							.chatMessageContent(chatMessageDto.getChatMessageContent())
-							.attachmentNo(chatMessageDto.getAttachmentNo())
-							.chatMessageType(chatMessageDto.getChatMessageType())
-						.build()
-			);
-		}
-		return list;
-	}
-	
-	// 내 팔로워 목록 불러오기 (현재 팔로우 기능 부재로 전체 회원 목록 불러오는 것으로 대체)
-	@GetMapping("/chatRoom/follow")
-	public List<MemberDto> followList() {
-		return memberRepo.selectAll();
-	}
-	
-	// 채팅방 생성
-	@PostMapping("/chatRoom")
-	public void createRoom(@RequestBody ChatRoomProcessVO vo) {
-		chatRoomService.createChatRoom(vo);
 	}
 	
 	// 채팅방에 참여한 시간 내보내기
@@ -123,7 +87,7 @@ public class ChatRestController {
 		chatRoomService.inviteMember(vo);
 	}
 	
-	// 채팅방 참여자 목록 조회 - 수정
+	// 채팅방 참여자 목록 조회
 	@GetMapping("/chatRoom/chatMember/{chatRoomNo}")
 	public List<MemberSimpleProfileDto> loadChatMember(@PathVariable int chatRoomNo) {
 		List<ChatJoinDto> memberList = chatJoinRepo.findMembersByRoomNo(chatRoomNo);
@@ -144,24 +108,36 @@ public class ChatRestController {
 	@GetMapping("/message/noti/{memberId}")
 	public boolean loadChatNoti(@PathVariable String memberId) {
 		return chatReadRepo.newChatCount(memberId) > 0;
-		//return chatNotiRepo.myNotiList(memberId) > 0;
 	}
 	
 	// 채팅방 각각 새 메세지 알림 있는지 확인
-	/*@PostMapping("/message/noti")
-	public boolean chatNotiByRoom(@RequestBody ChatMemberJoinVO vo) {
-		return chatReadRepo.newChatCount(vo) > 0;
-	}*/
 	@PostMapping("/message/noti")
 	public List<ChatReadDto> chatNotiByRoom(@RequestBody ChatMemberJoinVO vo) {
 		return chatReadRepo.newChatByRoom(vo.getChatRoomNoList(), vo.getMemberId());
-		//return chatNotiRepo.roomNotiList(vo.getChatRoomNoList(), vo.getMemberId());
 	}
 	
-	// 한 채팅방에 대한 알림 번호 목록 찾기
-	/*@PostMapping("/message/roomNoti")
-	public List<Integer> chatNotiNoList(@RequestBody ChatMemberJoinVO vo) {
-		return chatNotiRepo.roomNotiNo(vo.getChatRoomNo(), vo.getMemberId());
-	}*/
+	// 메세지 불러오기
+	@PostMapping("/message")
+	public List<ChatMessageVO> roomMessage(@RequestBody ChatMessageDto dto) {
+		long chatJoin = chatJoinRepo.findJoinTime(dto.getChatRoomNo(), dto.getMemberId());
+		Date date = new Date(chatJoin);
+		dto.setChatMessageTime(date);
+		List<ChatMessageDto> tempList = chatMessageRepo.messageList(dto);
+		List<ChatMessageVO> list = new ArrayList<>();
+		for(ChatMessageDto chatMessageDto : tempList) {
+			//log.debug("dto attachmentNo: " + chatMessageDto.getAttachmentNo());
+			list.add(ChatMessageVO.builder()
+						.chatMessageNo(chatMessageDto.getChatMessageNo())
+						.chatRoomNo(dto.getChatRoomNo())
+						.memberId(chatMessageDto.getMemberId())
+						.chatMessageTime(chatMessageDto.getChatMessageTime().getTime())
+						.chatMessageContent(chatMessageDto.getChatMessageContent())
+						.attachmentNo(chatMessageDto.getAttachmentNo())
+						.chatMessageType(chatMessageDto.getChatMessageType())
+					.build()
+			);
+		}
+		return list;
+	}
 	
 }

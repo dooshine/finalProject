@@ -1,15 +1,21 @@
 package com.kh.idolsns.controller;
 
+import java.util.Map;
+
+import javax.security.auth.login.LoginException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.kh.idolsns.dto.MemberDto;
+import com.kh.idolsns.dto.TestDto;
 import com.kh.idolsns.repo.MemberRepo;
 
 @Controller
@@ -56,5 +62,31 @@ public class DevController {
     @GetMapping("/css")
     public String css(){
         return "/dev/dev_dooCss";
+    }
+
+
+    // test 예제
+    @GetMapping("/restInterceptorTest")
+    public String test(){
+        return "/dev/dev_restInterceptorTest";
+    }
+
+    // [테스트] 상태코드 전달하기
+    @GetMapping("/restInterceptor")
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> test(HttpSession session) throws LoginException{
+    // public ResponseEntity<TestDto> test(HttpSession session) throws LoginException{
+        String memberId = (String)session.getAttribute("memberId");
+
+        // (X) Interceptor로 간섭하지 않음
+        // if(memberId == null){
+        //     throw new LoginException();
+        // }
+        if(memberId == null){
+            return ResponseEntity.status(500).build();
+        } else {
+            return ResponseEntity.ok().body(Map.of("no", 1, "name", "김통깨"));
+            // return ResponseEntity.ok().body(TestDto.builder().no(1).name("김통깨").build());
+        }
     }
 }

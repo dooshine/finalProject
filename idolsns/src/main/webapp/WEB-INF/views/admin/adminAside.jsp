@@ -1,5 +1,6 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-  pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<!-- c태그 라이브러리 -->
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <style>
   .nav a {
@@ -28,50 +29,51 @@
 </style>
   
 <!-- aside -->
-<aside class ="col-12 py-4" id="aside-bar">
-	<div class= "nav flex-column">
-		<a href="${pageContext.request.contextPath}/admin/">
-			<i class="fa-solid fa-house" :class="{selected: asideTab === '관리자홈'}">
-				<span class="ps-2"> 관리자 홈</span>
-			</i>
-		</a>
-	  	<a href="${pageContext.request.contextPath}/admin/member">
-		  	<i class="fa-solid fa-user" :class="{selected: asideTab === '회원관리'}">
-				<span class="ps-2"> 회원 관리</span>
-			</i>
-		</a>
-	  	<a href="${pageContext.request.contextPath}/admin/report">
-		  	<i class="fa-solid fa-list" :class="{selected: asideTab === '신고관리'}">
-				<span class="ps-2"> 신고 관리</span>
-			</i>
-		</a>
-	  	<a href="${pageContext.request.contextPath}/admin/sanction">
-		  	<i class="fa-solid fa-list" :class="{selected: asideTab === '제재관리'}">
-				<span class="ps-2"> 제재 관리</span>
-			</i>
-		</a>
-	  	<a href="${pageContext.request.contextPath}/admin/tag">
-		  	<i class="fa-sharp fa-solid fa-tags" :class="{selected: asideTab === '태그관리'}">
-				<span class="ps-2"> 태그 관리</span>
-			</i>
-		</a>
-	  	<a href="${pageContext.request.contextPath}/admin/tagCnt">
-		  	<i class="fa-sharp fa-solid fa-tags" :class="{selected: asideTab === '태그별사용량조회'}">
-				<span class="ps-2"> 태그별 사용량 조회</span>
-			</i>
-		</a>
-	  	<a href="${pageContext.request.contextPath}/admin/fixedTag">
-		  	<i class="fa-sharp fa-solid fa-tags" :class="{selected: asideTab === '고정태그관리'}">
-				<span class="ps-2"> 고정태그 관리</span>
-			</i>
-		</a>
-	  	<a href="${pageContext.request.contextPath}/admin/artist">
-		  	<i class="fa-sharp fa-solid fa-star" :class="{selected: asideTab === '아티스트관리'}">
-				<span class="ps-2"> 아티스트 관리</span>
-			</i>
-		</a>
-</aside>
-
+<c:if test="${admin}">
+	<aside class ="col-12 py-4" id="aside-bar">
+		<div class= "nav flex-column">
+			<a href="${pageContext.request.contextPath}/admin/">
+				<i class="fa-solid fa-house" :class="{selected: asideTab === '관리자홈'}">
+					<span class="ps-2"> 관리자 홈</span>
+				</i>
+			</a>
+			<a href="${pageContext.request.contextPath}/admin/member">
+				<i class="fa-solid fa-user" :class="{selected: asideTab === '회원관리'}">
+					<span class="ps-2"> 회원 관리</span>
+				</i>
+			</a>
+			<a href="${pageContext.request.contextPath}/admin/report">
+				<i class="fa-solid fa-list" :class="{selected: asideTab === '신고관리'}">
+					<span class="ps-2"> 신고 관리</span>
+				</i>
+			</a>
+			<a href="${pageContext.request.contextPath}/admin/sanction">
+				<i class="fa-solid fa-list" :class="{selected: asideTab === '제재관리'}">
+					<span class="ps-2"> 제재 관리</span>
+				</i>
+			</a>
+			<a href="${pageContext.request.contextPath}/admin/tag">
+				<i class="fa-sharp fa-solid fa-tags" :class="{selected: asideTab === '태그관리'}">
+					<span class="ps-2"> 태그 관리</span>
+				</i>
+			</a>
+			<a href="${pageContext.request.contextPath}/admin/tagCnt">
+				<i class="fa-sharp fa-solid fa-tags" :class="{selected: asideTab === '태그별사용량조회'}">
+					<span class="ps-2"> 태그별 사용량 조회</span>
+				</i>
+			</a>
+			<a href="${pageContext.request.contextPath}/admin/fixedTag">
+				<i class="fa-sharp fa-solid fa-tags" :class="{selected: asideTab === '고정태그관리'}">
+					<span class="ps-2"> 고정태그 관리</span>
+				</i>
+			</a>
+			<a href="${pageContext.request.contextPath}/admin/artist">
+				<i class="fa-sharp fa-solid fa-star" :class="{selected: asideTab === '아티스트관리'}">
+					<span class="ps-2"> 아티스트 관리</span>
+				</i>
+			</a>
+	</aside>
+</c:if>
 
 <script>
   Vue.createApp({

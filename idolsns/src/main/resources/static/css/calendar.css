@@ -1,0 +1,158 @@
+@charset "UTF-8";
+
+/*
+	캘린더용 css
+	작성자: 진서영
+*/
+
+:root {
+	--fc-small-font-size: .85em;
+	--fc-page-bg-color: #fff;
+	--fc-neutral-bg-color: rgba(208, 208, 208, 0.3);
+	--fc-neutral-text-color: #808080;
+	--fc-border-color: #ddd;
+	
+	/*버튼 색*/			
+	--fc-button-text-color: #6a53fb;
+	--fc-button-bg-color: none;
+	--fc-button-border-color: none;
+	--fc-button-hover-bg-color: none;
+	--fc-button-hover-border-color: none;
+	--fc-button-active-bg-color: none;
+	--fc-button-active-border-color: none;
+	
+	--fc-event-bg-color: #6a53fb;
+	--fc-event-border-color: #6a53fb;
+	--fc-event-text-color: #fff;
+	--fc-event-selected-overlay-color: rgba(0, 0, 0, 0.25);
+	
+	--fc-more-link-bg-color: #d0d0d0;
+	--fc-more-link-text-color: inherit;
+	
+	--fc-event-resizer-thickness: 8px;
+	--fc-event-resizer-dot-total-width: 8px;
+	--fc-event-resizer-dot-border-width: 1px;
+	
+	--fc-non-business-color: rgba(215, 215, 215, 0.3);
+	--fc-bg-event-color: rgb(143, 223, 130);
+	--fc-bg-event-opacity: 0.3;
+	--fc-highlight-color: #f8f7fc;
+	--fc-today-bg-color: #f8f7fc;
+	--fc-now-indicator-color: red;
+}
+
+#calendar {
+	/*min-height: 750px !important;*/
+	/*height: auto !important;*/
+	margin: 0 auto;
+	background-color: white;
+	border: 0.3px solid #dee2e6;
+	border-radius: 5px;
+	padding: 16px;
+	position: fixed;
+    top: 90px;
+    margin-right: 24px;
+    /*width: auto;*/
+}
+
+/*요일*/
+.fc-col-header-cell-cushion {
+	text-decoration: none;
+	color: #000;
+}
+.fc-col-header-cell-cushion:hover {
+	text-decoration: none;
+	color:#000;
+}
+/*일자*/
+.fc-daygrid-day-number,
+.fc-daygrid-day-number:hover {
+	color: #000;
+	font-size:1em;
+	text-decoration: none;
+}
+/*일정시간*/
+.fc-daygrid-event > .fc-event-time{
+	color:#000;
+}
+/*시간제목*/
+.fc-daygrid-dot-event > .fc-event-title{
+	color:#000 !important;
+}
+/* 일요일 날짜색 */
+.fc-day-sun a,
+.fc-day-sun a:hover {
+	color: #6a53fb;
+	text-decoration: none;
+}
+
+/* 토요일 날짜색 */
+.fc-day-sat a,
+.fc-day-sat a:hover {
+	color: #6a53fb;
+	text-decoration: none;
+}
+
+.fc-daygrid-day-frame {
+	padding: 3px;
+}
+
+/* 이전, 다음 버튼 */
+.fc-button {
+	border: 0px !important;
+	box-shadow: none !important;
+}
+
+/* 달력 제목 */
+.fc-toolbar-title {
+	font-size: 1.3em !important;
+	font-weight: bold !important;
+}
+
+/* 캘린더 외 요소 디자인 */
+.custom-btn {
+	padding-top: 0.3em;
+	padding-bottom: 0.3em;
+}
+.ti-alert-triangle {
+	color: #6a53fb;
+	font-size: 3em;
+}
+.custom-modal {
+	z-index: 99999;
+}
+/*#detailCalendarModal {
+	position: relative;
+}*/
+#deleteAlertModal {
+	position: absolute;
+	top: 45%; 
+	left: 50%;
+	transform: translate(-50%, -45%);
+	z-index: 99999;
+}
+.display-none {
+	display: none;
+}
+#calendarMemo,
+#calendarMemoEdit {
+	/* 파폭 스크롤 커스텀 */
+	scrollbar-width: thin;
+	scrollbar-color: #c8c8c8 rgba(0,0,0,0);
+}
+/* 스크롤바 설정*/
+#calendarMemo::-webkit-scrollbar,
+#calendarMemoEdit::-webkit-scrollbar {
+    width: 5px;
+}
+/* 스크롤바 막대 설정*/
+#calendarMemo::-webkit-scrollbar-thumb,
+#calendarMemoEdit::-webkit-scrollbar-thumb {
+    background-color: #c8c8c8;
+    border-radius: 10px;    
+}
+/* 스크롤바 뒷 배경 설정*/
+#calendarMemo::-webkit-scrollbar-track,
+#calendarMemoEdit::-webkit-scrollbar-track {
+    background-color: rgba(0,0,0,0);
+}

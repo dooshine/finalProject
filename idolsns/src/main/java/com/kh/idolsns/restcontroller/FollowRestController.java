@@ -2,10 +2,12 @@ package com.kh.idolsns.restcontroller;
 
 import java.util.List;
 
+import javax.security.auth.login.LoginException;
 import javax.servlet.http.HttpSession;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,8 +22,12 @@ import com.kh.idolsns.dto.FollowDto;
 import com.kh.idolsns.dto.MemberFollowCntDto;
 import com.kh.idolsns.dto.MemberFollowInfoDto;
 import com.kh.idolsns.dto.MemberFollowProfileInfoDto;
+import com.kh.idolsns.dto.TestDto;
 import com.kh.idolsns.service.FollowService;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @CrossOrigin
 @RestController
 @RequestMapping("/rest/follow")
@@ -153,4 +159,7 @@ public class FollowRestController {
         MemberFollowProfileInfoDto dto = sqlSession.selectOne("follow.selectMemberFollowProfileInfo", memberId);
         return dto;
     }
+
+
+    
 }
