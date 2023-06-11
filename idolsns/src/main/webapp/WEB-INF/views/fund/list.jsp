@@ -75,16 +75,27 @@
          }
          
          
-         .funding-item img {
-           transition: transform 0.3s;
-           width: 100%;
-           border-radius: 5px;
-           }
+         /*펀딩 이미지 컨테이너*/
          
-         /* 펀딩 목록 hover시 이미지 확대 */
-		 .funding-item img:hover{
-			transform: scale(1.1);
-		  }
+         	.image-container {
+		/* 	  width: 300px; */
+			  height: 200px; 
+			  overflow: hidden;
+			}
+
+			.image-container img {
+			  width: 100%;
+			  height: 100%;
+			  object-fit: cover;
+			  transition: transform 0.3s;
+			  border-radius: 5px;
+			}
+
+			.funding-item:hover .image-container img {
+			  transform: scale(1.05);
+			}
+			         
+     
          
          .funding-item .title {
             margin: 10px 0;
@@ -146,19 +157,22 @@
       </style>
       
         <div id="app">
-               <div class="custom-container">
+        	<div class="custom-container">
+		
 			
-				
-				
-					<div class="rounded bg-light p-3" style="width:100%; height:300px;">
+			
+				<div class="d-flex rounded bg-light p-3" style="width:100%; height:300px; float: none; margin: 0 auto;">
 						
-						<div class="font-bold" style="font-size:30px;">아이돌의 펀딩을 받아봅시다
-						</div>
+					<div style="float:none; margin:100 auto;">
+						<div class="font-bold" style="font-size:30px; float: none; margin: 0 auto;">
+						내 손으로 만드는 아이돌 이벤트!</div>
 						
 						<!-- 펀딩 글 작성 -->
 						<button class="custom-btn btn-round btn-purple1" @click="startFunding">프로젝트 올리기</button>
-					</div>
 				
+					</div>
+				</div>
+			
 				
 				
 			
@@ -196,7 +210,9 @@
                  
                    <div class="funding-item" v-for="(funding, index) in fundings" :key="index"
                                               @click="link(funding)" >
-                     <img :src="getImageUrl(funding)" alt="Funding Image" style="height:200px;">
+                     <div class="image-container">
+                     	<img :src="getImageUrl(funding)" alt="Funding Image" style="height:200px;">
+                     </div>
                      
                      <!-- 좋아요 -->
                      <span class="heart-icon" v-if="postLikeIndexList.includes(index)">
