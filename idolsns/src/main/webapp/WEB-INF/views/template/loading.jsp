@@ -19,6 +19,7 @@
 			bottom: 0;
 			left: 0;
 			background-color: #f5f5f5;
+			z-index: 99999999;
 		}
 		.loading {
 	    	position: fixed;
