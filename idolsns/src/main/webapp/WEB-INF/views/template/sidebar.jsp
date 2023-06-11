@@ -60,7 +60,7 @@
 				<img class="ms-3 rounded-circle" :src="followPage.profileSrc" style="height: 30px; width: 30px;">
 				<div class="ms-2 aside-name-tag" :class="{selected: isPage(followPage.artistEngNameLower) }">{{fullName(followPage.artistName, followPage.artistEngName)}}</div>
 			</a>
-			<div v-if="memberFollowObj.followPageList.length===0">
+			<div v-if="memberFollowObj.followPageList===undefined">
 				팔로우 한 대표페이지가 없습니다
 			</div>
 		</div>
@@ -142,7 +142,10 @@
 				this.asideTab = "홈";
 			} else if(artistRegex.test(pathName)){
 				this.asideTab = "대표페이지";
-				this.toggleFollowPageList = true;
+				// 로그인 상태일 때만 펼치기
+				if(memberId !== '') {
+					this.toggleFollowPageList = true;
+				}
 			}
 		},
 
