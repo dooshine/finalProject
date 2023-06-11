@@ -89,4 +89,10 @@ public class DevController {
             // return ResponseEntity.ok().body(TestDto.builder().no(1).name("김통깨").build());
         }
     }
+    
+    // [테스트] 로딩 페이지
+    @GetMapping("/loading")
+    public String loading() {
+    	return "template/loading";
+    }
 }

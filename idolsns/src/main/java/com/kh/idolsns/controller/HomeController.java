@@ -48,9 +48,4 @@ public class HomeController {
     	return "post/postMain";
     }
     
-    // 임시 로딩 페이지
-    @GetMapping("/loading")
-    public String loading() {
-    	return "template/loading";
-    }
 }
