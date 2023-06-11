@@ -14,6 +14,7 @@ public interface WebSocketConstant {
 	int DATE = 10;
 	int NEW_ROOM = 11;
 	int NEW_MSG = 12;
+	int QUIET_LEAVE = 13;
 	
 	Integer WAITING_ROOM = -2;
 	

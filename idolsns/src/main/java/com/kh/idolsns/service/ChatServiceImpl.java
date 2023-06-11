@@ -119,10 +119,11 @@ public class ChatServiceImpl implements ChatService {
 	}
 	
 	// 메세지 전송
-	public void broadcastMsg(ChatMemberVO member, int chatRoomNo, TextMessage jsonMessage, long chatMessageNo, int chatMessageType) throws IOException {
+	public void broadcastMsg(ChatMemberVO member, int chatRoomNo, TextMessage jsonMessage, long chatMessageNo, int chatMessageType, String chatMessageContent) throws IOException {
 		if(!roomExist(chatRoomNo)) return;
 		ChatRoomVO chatRoom = chatRooms.get(chatRoomNo);
 		chatRoom.broadcast(jsonMessage);
+		if(chatMessageContent == null) return;
 		// 보낸 메세지 db 처리
 		// [1] 메세지 테이블에 저장
 		ChatMessageDto messageDto = new ChatMessageDto();
@@ -133,8 +134,8 @@ public class ChatServiceImpl implements ChatService {
 		// chatMessageContent에 내용만 빼서 저장
 		ObjectMapper objectMapper = new ObjectMapper();
 		JsonNode jsonNode = objectMapper.readTree(jsonMessage.getPayload());
-		String chatMessageContent = jsonNode.get("chatMessageContent").asText();
-		messageDto.setChatMessageContent(chatMessageContent);
+		String chatMessageContentText = jsonNode.get("chatMessageContent").asText();
+		messageDto.setChatMessageContent(chatMessageContentText);
 		chatMessageRepo.sendMessage(messageDto);
 		// [2] 채팅방 테이블 최종 메세지 시간 변경
 		chatRoomRepo.updateLast(chatRoomNo);
@@ -258,6 +259,7 @@ public class ChatServiceImpl implements ChatService {
 			// 채팅방 찾기
 			int chatRoomNo = receiveVO.getChatRoomNo();
 			int chatMessageType = receiveVO.getType();
+			String chatMessageContent = receiveVO.getChatMessageContent();
 			// 채팅방이 없거나, 대기실인 경우 매세지 전송 불가
 			if(chatRoomNo == -1) return;
 			if(chatRoomNo == WebSocketConstant.WAITING_ROOM) return;
@@ -266,7 +268,7 @@ public class ChatServiceImpl implements ChatService {
 			msg.setChatRoomNo(chatRoomNo);
 			msg.setMemberId(member.getMemberId());
 			msg.setChatMessageTime(System.currentTimeMillis());
-			msg.setChatMessageContent(receiveVO.getChatMessageContent());
+			msg.setChatMessageContent(chatMessageContent);
 			msg.setChatMessageType(chatMessageType);
 			// JSON으로 변환
 			// 메세지 번호 생성
@@ -274,7 +276,7 @@ public class ChatServiceImpl implements ChatService {
 			msg.setChatMessageNo(chatMessageNo);
 			String json = mapper.writeValueAsString(msg);
 			TextMessage jsonMessage = new TextMessage(json);
-			this.broadcastMsg(member, chatRoomNo, jsonMessage, chatMessageNo, chatMessageType);
+			this.broadcastMsg(member, chatRoomNo, jsonMessage, chatMessageNo, chatMessageType, chatMessageContent);
 		}
 		// 이미지 메세지인 경우
 		else if(receiveVO.getType() == WebSocketConstant.PIC) {
@@ -314,21 +316,22 @@ public class ChatServiceImpl implements ChatService {
 			chatRoom.enter(member);
 		}
 		// 채팅방 나가기, 초대인 경우
-		else if(receiveVO.getType() == WebSocketConstant.LEAVE || receiveVO.getType() == WebSocketConstant.INVITE || receiveVO.getType() == WebSocketConstant.DATE) {
+		else if(receiveVO.getType() == WebSocketConstant.LEAVE || receiveVO.getType() == WebSocketConstant.INVITE || receiveVO.getType() == WebSocketConstant.DATE || receiveVO.getType() == WebSocketConstant.QUIET_LEAVE) {
 			int chatRoomNo = receiveVO.getChatRoomNo();
 			int chatMessageType = receiveVO.getType();
-			if(chatMessageType == WebSocketConstant.LEAVE) this.exit(member, chatRoomNo);
+			String chatMessageContent = receiveVO.getChatMessageContent();
+			if(chatMessageType == WebSocketConstant.LEAVE || chatMessageType == WebSocketConstant.QUIET_LEAVE) this.exit(member, chatRoomNo);
 			ChatMessageVO msg = new ChatMessageVO();
 			msg.setChatRoomNo(chatRoomNo);
 			msg.setMemberId(member.getMemberId());
 			msg.setChatMessageTime(System.currentTimeMillis());
-			msg.setChatMessageContent(receiveVO.getChatMessageContent());
+			msg.setChatMessageContent(chatMessageContent);
 			msg.setChatMessageType(chatMessageType);
 			int chatMessageNo = chatMessageRepo.sequence();
 			msg.setChatMessageNo(chatMessageNo);
 			String json = mapper.writeValueAsString(msg);
 			TextMessage jsonMessage = new TextMessage(json);
-			this.broadcastMsg(member, chatRoomNo, jsonMessage, chatMessageNo, chatMessageType);
+			this.broadcastMsg(member, chatRoomNo, jsonMessage, chatMessageNo, chatMessageType, chatMessageContent);
 		}
 		// 채팅방 이름 변경인 경우
 		else if(receiveVO.getType() == WebSocketConstant.RENAME) {
