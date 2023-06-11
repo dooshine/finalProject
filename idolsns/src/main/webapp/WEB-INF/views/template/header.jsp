@@ -57,6 +57,13 @@
 	
 	<!-- 채팅 css -->
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/static/css/chat.css" />
+    
+    <!-- fullcalendar cdn -->
+	<script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js'></script>
+    <!-- 캘린더 스크립트 -->
+	<script src= "${pageContext.request.contextPath}/static/js/calendar.js"></script>
+	<!-- 캘린더 css -->
+    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/static/css/calendar.css" />
 
 
     <script>

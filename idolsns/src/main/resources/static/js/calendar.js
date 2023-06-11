@@ -53,6 +53,7 @@ function loadCalendar() {
 			startDate = arg.start;
 			endDate = arg.end;
 			//console.log("arg : " + arg.start);
+			// 일정 등록 모달 열기
 			$("#addCalendarModal").modal("show");
 			// 모달 열리자마자 제목으로 focus
 			$("#calendarTitle").focus();
@@ -225,7 +226,7 @@ function loadMemberCalendar() {
 	});
 }
 
-// 일정 등록
+// 일정 등록 - 캘린더에서
 function addSchedule() {
 	if(memberId === "") return;
 	const calendarTitle = $("#calendarTitle").val();
@@ -410,3 +411,11 @@ $(function() {
 	    window.location.href = contextPath + "/member/login";
 	});
 })
+
+// 게시물에서 일정추가
+/*$(function() {
+	$(".addSchedulePost").on("click", function() {
+		console.log("등록");
+		$("#addCalendarPostModal").modal("show");
+	});
+})*/
