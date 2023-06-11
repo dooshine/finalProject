@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
+000<%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>   
 <jsp:include page="/WEB-INF/views/template/header.jsp"></jsp:include> 
@@ -312,12 +312,12 @@
 	         <hr>
 	
     <div class="row">         
-         <div class="col-6 text-center">
-            <i class="fa-sharp fa-regular fa-heart "  @click="toLikePage()"></i>
-         </div>
          <div class="col-6 text-center" >
             <i class="fa-solid fa-list font-purple1"></i>
          </div>         
+         <div class="col-6 text-center">
+            <i class="fa-sharp fa-regular fa-heart "  @click="toLikePage()"></i>
+         </div>
     </div>
 	
     <!-- 게시글 지도 게시 모달창 (게시글에서 위치나 지도 마크 클릭 시 모달 띠우기)-->

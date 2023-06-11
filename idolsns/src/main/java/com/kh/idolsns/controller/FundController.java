@@ -92,7 +92,7 @@ public class FundController {
    
    
    // 펀딩게시물 등록
-   @PostMapping("/write3")
+   @PostMapping("/write")
    public String write3(
                      HttpSession session,
                      @ModelAttribute FundPostDto fundPostDto,
@@ -127,6 +127,7 @@ public class FundController {
       fundPostRepo.insert(fundPostDto);
       
       // # DB 저장
+      // main image
       if(!attach.isEmpty()) {
             int attachmentNo1 = attachmentRepo.sequence();   
             File target = new File(dir, String.valueOf(attachmentNo1));
@@ -146,6 +147,7 @@ public class FundController {
                   .build()
                   );
          }
+      // detail images
       if(attachmentNo != null) {
          for(int no : attachmentNo) {
             PostImageDto postImageDto = new PostImageDto();
