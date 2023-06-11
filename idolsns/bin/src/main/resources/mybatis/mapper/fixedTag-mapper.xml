@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ↑ XML 헤더(반드시 첫 번째 줄에 위치) -->
+
+<!-- dtd선언 -->
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- mapper -->
+<mapper namespace="fixedTag">
+    <!-- C 고정태그 생성 -->
+    <insert id="insertFixedTag">
+        insert into fixed_tag (fixed_tag_no, fixed_tag_name) values (fixed_tag_seq.nextval, #{fixedTagName})
+    </insert>
+
+    <!-- R 고정태그 목록 조회 -->
+    <select id="selectFixedTagList" resultType="FixedTagDto">
+        select * from fixed_tag
+        order by fixed_tag_no asc
+    </select>
+
+    <!-- R 고정태그 사용량 기반 조회 -->
+    <select id="selectFixedTagCntList" resultType="String">
+        select c.fixed_tag_name from (
+            select rownum rn, a.fixed_tag_name from (select * from fixed_tag where instr(fixed_tag_name, #{fixedTagName}) > 0) a
+            left join (
+                select * from tag_cnt where tag_type = '고정' 
+            ) b
+            on a.fixed_tag_name = b.tag_name
+            order by b.tag_cnt desc, fixed_tag_name asc
+        ) c
+        where c.rn between 1 and 5
+    </select>
+
+    <!-- R 고정태그 개별조회(name) -->
+    <select id="selectFixedTagByName" resultType="FixedTagDto">
+        select * from fixed_tag where fixed_tag_name = #{fixedTagName}
+    </select>
+
+    <!-- D 고정태그 삭제(No) -->
+    <delete id="deleteFixedTagByNo">
+        delete from fixed_tag where fixed_tag_no = #{fixedTagNo}
+    </delete>
+</mapper>

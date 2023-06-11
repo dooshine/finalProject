@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+<mapper namespace="chatRead">
+
+	<!-- 메세지가 전송되면 일단 저장 (읽은 시간은 null) -->
+	<insert id="saveMessage">
+		insert into chat_read(
+				chat_room_no, chat_message_no, chat_sender, chat_receiver
+			)
+		values(
+				#{chatRoomNo}, #{chatMessageNo}, #{chatSender}, #{chatReceiver}
+			)
+	</insert>
+	
+	<!-- 메세지 읽으면 삭제 -->
+	<delete id="readMessage">
+		delete chat_read 
+		where chat_room_no = #{chatRoomNo} and chat_receiver = #{chatReceiver}
+	</delete>
+	
+	<!-- 새 메세지 있는지 확인(전체 방) -->
+	<select id="newChatCount" resultType="int">
+		select count(*) from chat_read
+		where chat_receiver = #{memberId}
+	</select>
+	
+	<!-- 새 메세지 있는지 확인(개별 방) -->
+	<select id="newChatByRoom" resultType="ChatReadDto">
+		select * from chat_read
+		where chat_receiver = #{memberId} and chat_room_no in
+		<foreach collection="chatRoomNoList" item="chatRoomNo" open="(" close=")" separator=",">
+			#{chatRoomNo}
+		</foreach>
+	</select>
+	
+</mapper>
+    
