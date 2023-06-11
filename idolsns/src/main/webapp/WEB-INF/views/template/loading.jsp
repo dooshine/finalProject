@@ -1,38 +1,42 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<jsp:include page="/WEB-INF/views/template/header.jsp"></jsp:include>
-
-
-<style>
-</style>
-
-<div class="container-fluid" id="app">
 	
-</div>
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<!-- favicon -->
+	<link rel="icon" href="/static/image/favicon.ico">
+	<title>스타링크</title>
 
-<script>
-        Vue.createApp({
-            data(){
-                return {
-                	
-                };
-            },
-            computed:{
-            
-            },
-            methods:{
-            	
-            },
-            watch:{
-            	
-            },
-            mounted() {
-            	
-            },
-            created(){
-            	
-            },
-        }).mount("#app");
-    </script>
-
-<jsp:include page="/WEB-INF/views/template/footer.jsp"></jsp:include>
+	<style>
+		.loading-screen {
+			z-index: 9999999999;
+		}
+		.loading {
+	    	position: fixed;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%);         
+	    }
+	    .loading-footer {
+	    	position: fixed;
+	      	bottom: 15px;
+	      	left: 50%;
+	      	transform: translate(-50%, 0%);
+	      	font-size: 0.8em;
+	      	color: #7f7f7f;
+	    }
+	</style>
+</head>
+	
+<body style="background-color: #f5f5f5;">
+	<div class="loading-screen" style="background-color: #f5f5f5;">
+		<div>
+	        <img class="loading" src="${pageContext.request.contextPath}/static/image/loading.png" width="100px;">
+	    </div>
+	    <div class="loading-footer">STARLINK © 2023</div>
+    </div>
+</body>

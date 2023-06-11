@@ -47,4 +47,10 @@ public class HomeController {
 //    	postShowService.postShowOne(48l);    	
     	return "post/postMain";
     }
+    
+    // 임시 로딩 페이지
+    @GetMapping("/loading")
+    public String loading() {
+    	return "template/loading";
+    }
 }
