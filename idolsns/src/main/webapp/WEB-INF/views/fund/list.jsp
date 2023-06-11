@@ -32,12 +32,39 @@
         /*조건부 스타일 - 태블릿*/
         @media screen and (max-width:1200px) {
     
-        .col-6 {
-          width: 100%;
-        }
+	        .col-6 {
+	          width: 100%;
+	        }
             .funding-list > .funding-item  {
             width : 49%;
-           }
+           	}
+           
+         	#calendar {
+		  		display: none;
+		  	}
+			.col-3.calendar-area {
+				width: 0%;
+			}
+			.col-6.article {
+				width: 85%;
+			}
+			.col-3.left-aside {
+				width: 15%;
+			}
+			#aside-bar {
+				width: 15%;
+			}
+
+			.nav .aside-name-tag {
+				/* font-size: 0px; */
+				display: none;
+		  	}
+			.nav img {
+				margin-left: 0px !important;
+			}
+			.nav a {
+				text-align: center;
+			}   
        }
 
         /*조건부 스타일 - 모바일*/
@@ -48,7 +75,9 @@
         }
         
     }
-               
+    
+    
+   
          .funding-list {
            display: flex;
            flex-wrap: wrap;
