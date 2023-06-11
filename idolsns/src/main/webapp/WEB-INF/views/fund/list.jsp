@@ -390,7 +390,7 @@
 //                           console.log(endDate);
                           const currentDate = new Date();
                           const fundState = funding.fundState;
-                          const timeDiff = endDate.getTime() - startDate.getTime();
+                          const timeDiff = endDate.getTime() - currentDate.getTime();
                           
                           // 마간기간이 남은 경우
                           if(timeDiff >= 0){
@@ -472,23 +472,23 @@
     				},
     				
     				// 좋아요 체크 후 추가&삭제
-    				async checkLike(funding) {
-    					// 로그인이 안되어 있으면
-    					if(!this.checkLogin()) return;
+//     				async checkLike(funding) {
+//     					// 로그인이 안되어 있으면
+//     					if(!this.checkLogin()) return;
     					
-    					const postNo = funding.postNo;
-    					axios.get('http://localhost:8080/rest/post/like/'+postNo)
-                		.then(response => {
-                			console.log("checkLike = " +response.data);
-                			this.checkFundLike();
+//     					const postNo = funding.postNo;
+//     					axios.get('http://localhost:8080/rest/post/like/'+postNo)
+//                 		.then(response => {
+//                 			console.log("checkLike = " +response.data);
+//                 			this.checkFundLike();
                 			
                 				
-                		})
-                		.catch(error => {
-                			console.error(error);
-                		})
+//                 		})
+//                 		.catch(error => {
+//                 			console.error(error);
+//                 		})
     					
-    				},
+//     				},
     				// 좋아요 체크
     				async checkFundLike() {
     					const postNo = this.fundDetail.postNo;
@@ -497,6 +497,8 @@
     				},
     				// 아이디 접속해 있고, 좋아요 클릭시에 실행
                  	checkLike(postNo,index){
+    					// if not logged in
+    					if(!this.checkLogin()) return;
                     	axios.get('http://localhost:8080/rest/post/like/'+postNo)
                     		.then(response => {
                     			console.log(response.data);

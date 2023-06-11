@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import com.kh.idolsns.dto.FundDto;
 import com.kh.idolsns.dto.FundListWithTagDto;
 import com.kh.idolsns.dto.FundPostImageDto;
+import com.kh.idolsns.dto.FundWithNickDto;
 import com.kh.idolsns.dto.PostImageDto;
 import com.kh.idolsns.dto.TagDto;
 import com.kh.idolsns.vo.FundDetailVO;
@@ -76,6 +77,11 @@ public class FundPostImageRepoImpl implements FundPostImageRepo{
 	    param.put("searchKeyword", vo.getSearchKeyword());
 	    param.put("orderList", vo.getOrderList());
 		return sqlSession.selectList("fundpostinte.selectListWithTag", param);
+	}
+
+	@Override
+	public List<FundWithNickDto> selectFundWithNickList(Long postNo) {
+		return sqlSession.selectList("fundpostinte.fundRanking", postNo);
 	}
 
 	

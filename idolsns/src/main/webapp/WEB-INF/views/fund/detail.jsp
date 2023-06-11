@@ -17,19 +17,14 @@
           
     	}
     
-    
-    
         label {
         	color: gray;
 			width:100%;
 			font-size: 80%;
-		
 		}
 		
 		.fund_span {
 			font-size: 30px;
-		
-			
 		}
 		
 		td {
@@ -37,18 +32,6 @@
 		font-size: 90%;
 		}
 		
-          
-       
-    
-    
-       
-    
-   
-
-      .like-btn {
-        
-      }
-      
       .like-count {
         font-size: 14px;
         color: #777;
@@ -120,9 +103,11 @@
 	   justify-content: center;
 	   z-index: 9999;
 	}
-      
-      
-		
+	
+	.fund-sponsor:hover {
+		cursor: pointer;
+	}
+	
 
     </style>
     
@@ -149,9 +134,10 @@
 					<label class="mt-3">남은 시간</label>
 					<span class="fund_span">{{ getTimeDiff() }}</span>일
 		
-   
-					<label class="mt-3">후원자</label>
-					<span class="fund_span">{{ fundDetail.fundSponsorCount }}</span>명
+   					<div class="fund-sponsor" @click="sponsorModal = true"> 
+						<label class="mt-3">후원자</label>
+						<span class="fund_span">{{ fundDetail.fundSponsorCount }}</span>명
+   					</div>
 
 		
 	
@@ -187,7 +173,7 @@
 			
 			
 
-
+			<!-- 좋아요 -->
 			<div class="row mt-3" style="padding-left: 1em">
 			    <button class="btn btn-primary like-btn" @click="checkLike">
 			      <i v-if="isLiked" class="fs-4 ti ti-heart-filled"></i> 
@@ -195,6 +181,8 @@
 			      {{ likeCount }} 
 			    </button>
 			</div>
+			<!-- 좋아요 끝!-->
+			
 			
 			
 			<div class="row mt-3">
@@ -409,21 +397,54 @@
 	</div>
 	
 	
-	<!-- 로그인 모달 -->
-      <div v-if="loginModal" class="custom-modal-wrapper">
-      	<div class="custom-modal">
-         <div class="custom-modal-body" style="width: 300px;">
-            <div class="text-center mb-3">
-               <i class="ti ti-alert-triangle"></i>
-            </div>
-            <div class="text-center">로그인이 필요한 기능입니다</div>
-            <div class="d-flex justify-content-center mt-4">
-               <button class="custom-btn btn-round btn-purple1-secondary me-2 w-100" @click="linkToLogin">로그인</button>
-               <button class="custom-btn btn-round btn-purple1 w-100" @click="loginModal = false">취소</button>
-            </div>
-         </div>
-      	</div>
-     </div>
+	 <!-- 로그인 모달창 -->
+     <div v-if="loginModal" class="custom-modal-wrapper">
+     	<div class="custom-modal">
+        <div class="custom-modal-body" style="width: 300px;">
+           <div class="text-center mb-3">
+              <i class="ti ti-alert-triangle"></i>
+           </div>
+           <div class="text-center">로그인이 필요한 기능입니다</div>
+           <div class="d-flex justify-content-center mt-4">
+              <button class="custom-btn btn-round btn-purple1-secondary me-2 w-100" @click="linkToLogin">로그인</button>
+              <button class="custom-btn btn-round btn-purple1 w-100" @click="loginModal = false">취소</button>
+           </div>
+        </div>
+     	</div>
+    </div>
+    <!-- 로그인 모달창 끝! -->
+     
+    <!-- 후원자 모달창 -->
+    <div v-if="sponsorModal" class="custom-modal-wrapper">
+	   	<div class="custom-modal">
+	       <div class="custom-modal-body" >
+	          <div class="text-center mb-2" style="font-size: 30px;">후원자 랭킹</div>
+	          	<div v-if="fundVO.length == 0" class="row">
+	          		<span>아직 후원자가 없어요ㅠㅠ</span>
+	          	</div>
+	          	<div v-else v-for="(fund, index) in fundVO">
+		          	<div class="row">
+		          		<div class="col-2">
+							{{ fund.rank }}위        			
+		          		</div>
+		          		<div class="col-6">
+							{{ fund.memberNick }} ({{ fund.memberId }})	          			
+		          		</div>
+		          		<div class="col-3 d-flex justify-content-end">
+							{{ formatCurrency(fund.fundTotal) }}원         			
+		          		</div>
+		          		<div v-if="fund.rank < 4" class="col-1">
+		          			🎉
+		          		</div>
+		          	</div>
+	          </div>
+	          <div class="d-flex justify-content-center mt-4">
+	             <button class="custom-btn btn-round btn-purple1 w-50" @click="sponsorModal = false">확인</button>
+	          </div>
+	       </div>
+    	</div>
+    </div>
+    <!-- 후원자 모달창 끝! -->
      
 	</div>        
 </div>
@@ -458,6 +479,8 @@
 		          fundTotal: "",
 		          tagNames: [],
 		        },
+		        // 후원자 랭킹 데이터 배열
+		        fundVO: [],
 		        replies: [],
 		        // 댓글창 보여주기
 		        reReplies: [],
@@ -489,6 +512,9 @@
 			   	
 			   	// 로그인 모달
 			   	loginModal: false,
+			   	
+			   	// 후원자 모달
+			   	sponsorModal: false,
 			   	
 			   	// 세션 memberId
 			   	memberId: memberId,
@@ -527,6 +553,8 @@
         		async loadFundVO(){
 			    	const postNo = this.fundDetail.postNo;
 					const resp = await axios.get("http://localhost:8080/rest/fund/fundlist/"+postNo);	  
+					console.log("FundVO====="+resp.data.fundWithNickDtos);
+					this.fundVO = resp.data.fundWithNickDtos;
 					this.fundDetail.fundTotal = resp.data.fundTotal;
 					this.fundDetail.fundSponsorCount = resp.data.fundSponsorCount;
         		},
@@ -549,7 +577,7 @@
 	                const postNo = this.fundDetail.postNo; // 게시물 번호
 	                const resp = await axios.get("http://localhost:8080/rest/reply/fund/"+postNo);
 	                this.replies = resp.data; // Vue data에 저장
-	               	console.log(resp.data);
+// 	               	console.log(resp.data);
 	              },
 	            // 작성한 comment 서버로 전송
                 async addReply() {
@@ -655,15 +683,21 @@
 					const postNo = this.fundDetail.postNo;
 					axios.get('http://localhost:8080/rest/post/like/'+postNo)
             		.then(response => {
-            			console.log("checkLike = " +response.data);
-            			this.checkFundLike();
-            			
-            				
+//             			console.log("checkLike = " +response.data);
+            			// 응답이 좋아요면 좋아요 +1
+            			if(response.data== 'Like'){
+            				this.likeCount = this.likeCount + 1; 
+            				this.isLiked = true;
+            			}
+            			// 응답이 좋아요 취소면 좋아요 -1
+            			else if(response.data=='disLike'){
+            				this.likeCount = this.likeCount - 1;
+            				this.isLiked = false;
+            			}
             		})
             		.catch(error => {
             			console.error(error);
             		})
-					
 				},
 				
 				// 좋아요 체크
@@ -671,14 +705,6 @@
 					const postNo = this.fundDetail.postNo;
 					const resp = await axios.get("http://localhost:8080/rest/post/like/check/"+postNo);
 					this.isLiked = resp.data;
-					// 좋아요를 하면
-					if(resp.data){
-						this.likeCount = this.likeCount + 1;
-					}
-					// 좋아요를 취소하면
-					else {
-						this.likeCount = this.likeCount - 1;
-					}
 				},
 				
 				// 좋아요 수
@@ -692,10 +718,10 @@
                 getTimeDiff() {
                       const startDate = new Date(this.fundDetail.postStart);
                       const endDate = new Date(this.fundDetail.postEnd);
-                      console.log(this.fundDetail);
+//                       console.log(this.fundDetail);
                       const currentDate = new Date();
                       const fundState = this.fundDetail.fundState;
-                      const timeDiff = endDate.getTime() - startDate.getTime();
+                      const timeDiff = endDate.getTime() - currentDate.getTime();
                       
                       // 마간기간이 남은 경우
                       if(timeDiff >= 0){
@@ -758,9 +784,9 @@
 		    	  this.loadFundVO();
 		    	  this.loadReplies();
 		    	  this.loadTagNames();
+	              this.loadLikeCount();
 		    	  this.checkFundLike();
 	              this.getSessionMemberAttachmentNo();
-	              this.loadLikeCount();
 		    	},
 		    mounted() {
 		    	}

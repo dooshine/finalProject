@@ -53,6 +53,14 @@
 	<select id="fundByPostNo" resultType="FundDto" parameterType="Long">
 		select * from fund
 		where post_no=#{postNo}
+		order by fund_price desc
+	</select>
+	
+	<!-- Fund Ranking -->
+	<select id="fundRanking" resultType="FundWithNickDto" parameterType="Long">
+		select * from fund_ranking
+		where post_no=#{postNo}
+		order by fund_total desc
 	</select>
 	
 	<select id="attachByPostNo" resultType="PostImageDto" parameterType="Long">

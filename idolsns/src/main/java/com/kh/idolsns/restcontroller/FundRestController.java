@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpSession;
 
+import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,11 +19,11 @@ import org.springframework.web.bind.annotation.RestController;
 import com.kh.idolsns.dto.FundDto;
 import com.kh.idolsns.dto.FundListWithTagDto;
 import com.kh.idolsns.dto.FundPostImageDto;
+import com.kh.idolsns.dto.FundWithNickDto;
 import com.kh.idolsns.dto.PostImageDto;
 import com.kh.idolsns.dto.PostLikeDto;
 import com.kh.idolsns.dto.TagDto;
 import com.kh.idolsns.repo.FundPostImageRepo;
-import com.kh.idolsns.repo.FundPostRepo;
 import com.kh.idolsns.repo.FundRepo;
 import com.kh.idolsns.repo.PostLikeRepo;
 import com.kh.idolsns.vo.FundDetailVO;
@@ -38,13 +39,13 @@ public class FundRestController {
 	private FundRepo fundRepo;
 	
 	@Autowired
-	private FundPostRepo fundPostRepo;
-	
-	@Autowired
 	private FundPostImageRepo fundPostImageRepo;
 	
 	@Autowired
 	private PostLikeRepo postLikeRepo;
+	
+	@Autowired
+	private SqlSession sqlSession;
 	
 	// 펀딩게시물 목록 조회
 	@GetMapping("/")
@@ -59,8 +60,8 @@ public class FundRestController {
 		@ModelAttribute FundSearchVO vo) {
 		List<FundListWithTagDto> list = fundPostImageRepo.selectListWithTag(page, vo);
 		
-		System.out.println("----------------------vo----------------------"+vo);
-		System.out.println("----------------------list----------------------"+list);
+//		System.out.println("----------------------vo----------------------"+vo);
+//		System.out.println("----------------------list----------------------"+list);
 		return list;
 		}
 		
@@ -91,20 +92,29 @@ public class FundRestController {
 	// 후원한 total금액 & 후원자 
 	@GetMapping("/fundlist/{postNo}")
 	public FundVO fundList(@PathVariable Long postNo){
+		FundVO vo = new FundVO();
+		// FundWithNickDtos
+		List<FundWithNickDto> fundList = fundPostImageRepo.selectFundWithNickList(postNo);
+		// rank 설정
+		for(int i=0; i < fundList.size(); i++) {
+			// i번째에 i+1순위를 설정
+			fundList.get(i).setRank(i+1);
+		}
+		vo.setFundWithNickDtos(fundList);
 		
 		// total 금액
-		List<FundDto> fundList = fundPostImageRepo.selectFundList(postNo);
 		int fundTotal = 0;
-		for(FundDto dto : fundList) {
-			fundTotal += dto.getFundPrice();
+		for(FundWithNickDto dto : fundList) {
+			fundTotal += dto.getFundTotal();
 		}
 		
 		// 후원자 수
 		int sponsorCount = fundRepo.count(postNo);
 		
-		FundVO vo = new FundVO();
 		vo.setFundTotal(fundTotal);
 		vo.setFundSponsorCount(sponsorCount);
+		
+		System.out.println("-------------------FundVO-----------"+vo);
 		
 	    return vo;
 	}
@@ -146,7 +156,6 @@ public class FundRestController {
 	// 펀딩 좋아요 수
 	@GetMapping("/likeCount/{postNo}")
 	public int count(@PathVariable Long postNo){
-		System.out.println("likecount--------"+fundRepo.likeCount(postNo));
 		return fundRepo.likeCount(postNo);
 	}
 	
@@ -174,6 +183,14 @@ public class FundRestController {
 		}
 		
 		return response; 
+	}
+	
+	// 펀딩 글작성시 중복제목 검사
+	@GetMapping("/duplicateTitleCheck/{fundTitle}")
+	public boolean duplicateCheck(@PathVariable String fundTitle) {
+		Integer count = sqlSession.selectOne("fundPost.duplicateCheck", fundTitle);
+		System.out.println(count > 0);
+		return count > 0;
 	}
 }
 
