@@ -1778,12 +1778,6 @@
             
             },
             methods:{
-            	changeCustom()
-            	{
-            		this.customOn = !this.customOn;
-            	},
-            	
-            	
             	// 무한 페이징 게시글 불러오기 1페이지당 10개씩 매 페이지 별로 불러옴,
             	async fetchPosts(){
             		
@@ -2392,8 +2386,7 @@
 
 
 <!-- 이미지 스와이핑 창 -->
-<script
-	src="${pageContext.request.contextPath}/static/js/swiping-image.js"></script>
+<script src="${pageContext.request.contextPath}/static/js/swiping-image.js"></script>
 <!-- 게시글 작성 ajax -->
 <script src="${pageContext.request.contextPath}/static/js/async-post.js"></script>
 <!-- 카카오 API구현 JS -->
