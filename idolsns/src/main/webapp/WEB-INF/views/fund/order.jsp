@@ -8,14 +8,25 @@
     
     <style>
     
+           
           /*조건부 스타일 - 태블릿*/
-        @media screen and (max-width:1200px) {
+        @media screen and (max-width:992px) {
     
     	 .col-6 {
 		    width: 100%;
 		  }
           
     	}
+    
+    		}
+   		.table th {
+			background-color: #f8f7fc;
+			padding-left: 12px;
+		}
+		.table td {
+			padding-left: 12px;
+		}	   
+    	
     
     
     </style>
@@ -34,10 +45,9 @@
     		<div class="container border mt-5 d-flex" style="padding:1em;">
     			<img src="/download?attachmentNo=${fundMainImageDto.attachmentNo}" class="col-5">
     			
-    			<div class="col-7">
-    			${fundPostDto.fundTitle} <br>
-    			${fundPostDto.fundGoal}원 <br>
-    			<button class="btn btn-primary">메시지</button>
+    			<div class="col-7 p-3">
+    				<div class="font-bold" style="font-size:25px;">${fundPostDto.fundTitle}</div> 
+    				<div>${fundPostDto.fundShortTitle}</div>
     			</div>
     		
     		</div>
@@ -50,8 +60,8 @@
     		<hr style="background-color: black; height: 2px">
     	
 			<table class="table">
-				<tr>
-					<th>펀딩 상태</th>
+				<tr class="col-12">
+					<th class="col-3">펀딩 상태</th>
 					<td>${fundPostDto.fundState}</td>
 				</tr>
 
@@ -74,7 +84,7 @@
 			
 			
 			<div class="input-group mt-3 mb-3">
-			  <span class="input-group-text" id="inputGroup-sizing-default">후원 금액</span>
+			  <span class="input-group-text" id="inputGroup-sizing-default">후원 스타</span>
 			  <input type="number" name="fundPrice" class="form-control" 
 			    aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm"
 			    placeholder="후원 금액을 입력하세요" v-model="fundPrice" @input="validateFundPrice" min="0">
@@ -103,7 +113,7 @@
 		      </div>
 			
 			
-			  <button type="submit" class="custom-btn btn-purple1 mt-3 mb-5" 
+			  <button type="submit" class="custom-btn btn-purple1 btn-lg mt-3 mb-5" 
 			  style="width:100%" v-bind:disabled="!isCheckboxChecked">
 			  후원하기</button>
 			  

@@ -1,5 +1,7 @@
 package com.kh.idolsns.repo;
 
+import java.util.List;
+
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -31,4 +33,12 @@ public class MapRepoImpl implements MapRepo {
 		sqlSession.delete("map.delete",postNo); 
 	}
 
+	
+	
+	@Override
+	public List<String> selectAll(Long postNo) {
+	   return sqlSession.selectList("map.selectAll",postNo);
+	}
+	
+	
 }
