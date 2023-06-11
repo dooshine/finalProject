@@ -7,50 +7,50 @@
 <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.js"></script>
 
 <script type="text/javascript">
-    $(function(){
-        $('[name=postContent]').summernote({
-            placeholder: '내용을 입력해주세요',
-            tabsize: 4,
-            height: 600,
-            toolbar: [
-                ['style', ['style']],
-                ['font', ['bold', 'underline', 'clear']],
-                ['color', ['color']],
-                ['para', ['ul', 'ol', 'paragraph']],
-                ['table', ['table']],
-                ['insert', ['link', 'picture']]
-            ],
-            callbacks: {
-				onImageUpload: function(files) {
-					if(files.length != 1) return;
-					
-					const fd = new FormData();
-					fd.append("attach", files[0]);
-					
-					$.ajax({
-						url:"/rest/attachment/upload",
-						method:"post",
-						data:fd,
-						processData:false,
-						contentType:false,
-						success:function(response){
-							const input = $("<input>").attr("type", "hidden")
-														.attr("name", "attachmentNo")
-														.val(response.attachmentNo);
-							$("form").prepend(input);
+$(function(){
+    $('[name=postContent]').summernote({
+        placeholder: '내용을 입력해주세요',
+        tabsize: 4,
+        height: 600,
+        toolbar: [
+            ['style', ['style']],
+            ['font', ['bold', 'underline', 'clear']],
+            ['color', ['color']],
+            ['para', ['ul', 'ol', 'paragraph']],
+            ['table', ['table']],
+            ['insert', ['link', 'picture']]
+        ],
+        callbacks: {
+			onImageUpload: function(files) {
+				if(files.length != 1) return;
+				
+				const fd = new FormData();
+				fd.append("attach", files[0]);
+				
+				$.ajax({
+					url:"/rest/attachment/upload",
+					method:"post",
+					data:fd,
+					processData:false,
+					contentType:false,
+					success:function(response){
+						const input = $("<input>").attr("type", "hidden")
+													.attr("name", "attachmentNo")
+													.val(response.attachmentNo);
+						$("form").prepend(input);
 
-							var imgNode = $("<img>").attr("src", "http://localhost:8080/rest/attachment/download/"+response.attachmentNo);
-							imgNode.attr('width','100%');
-							$("[name=postContent]").summernote('insertNode', imgNode.get(0));
-						},
-						error:function(){}
-					});
-					
-				}
+						var imgNode = $("<img>").attr("src", "http://localhost:8080/rest/attachment/download/"+response.attachmentNo);
+						imgNode.attr('width','100%');
+						$("[name=postContent]").summernote('insertNode', imgNode.get(0));
+					},
+					error:function(){}
+				});
+				
 			}
-        });
-        
+		}
     });
+    
+});
 </script>
 
    <style>
@@ -76,11 +76,17 @@
 	
 	<script>
 		function checkTitleLength(input) {
-		  if (input.value.length > 10) {
-		    input.value = input.value.slice(0, 10); // 입력된 제목을 10글자까지로 잘라냄
+		  if (input.value.length > 15) {
+		    input.value = input.value.slice(0, 15); // 입력된 제목을 15글자까지로 잘라냄
 		  }
 		}
-		</script>
+		
+		function limitInputLength(input) {
+			  if (input.value.length > 20) {
+			    input.value = input.value.slice(0, 20); // 입력된 값을 20자로 자릅니다.
+			  }
+			}
+	</script>
 	
 	
 <div id="app">
@@ -91,35 +97,38 @@
 	    <div style="padding-left:1em; padding-right:1em;">
 
 
-	<form action="write3" method="post" enctype="multipart/form-data"> 
+	<form action="write" method="post" enctype="multipart/form-data"> 
 
 
 
 		<div class="input-group mb-3">
-		  <input type="file" class="form-control" id="inputGroupFile02">
+		  <input type="file" name="attach" class="form-control" id="inputGroupFile02" accept=".gif, .jpg, .png">
 		  <label class="input-group-text" for="inputGroupFile02" @click="selectFile">대표 이미지(1개, 최적 해상도 450*400)</label>
 		</div>
 		
 	
 		<div class="input-group mb-3">
 		    <span class="input-group-text" id="inputGroup-sizing-default">제목</span>
-		  <input type="text" name="fundTitle" placeholder="10글자 이내로 입력하세요"
+		  <input type="text" name="fundTitle" placeholder="15글자 이내로 입력하세요"
 		  class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default"  oninput="checkTitleLength(this)">
 		</div>
 		
 		<div class="input-group mb-3">
 		    <span class="input-group-text" id="inputGroup-sizing-default">한줄 소개</span>
-		  <input type="text" name="fundShortTitle" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default">
+		  <input type="text" name="fundShortTitle" placeholder="20글자 이내로 입력하세요" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default"
+		  			maxlength="20" oninput="limitInputLength(this)">
 		</div>
 		
 		<div class="input-group mb-3">
-		    <span class="input-group-text" id="inputGroup-sizing-default">시작일</span>
-		  <input type="date" name="postStart" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default">
+	    <span class="input-group-text" id="inputGroup-sizing-default">시작일</span>
+	  		<input type="date" name="postStart" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" 
+	  			:min="minDate" v-model="postStart">
 		</div>
 		
 		<div class="input-group mb-3">
 		    <span class="input-group-text" id="inputGroup-sizing-default">종료일</span>
-		  <input type="date" name="postEnd" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default">
+		  <input type="date" name="postEnd" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default"
+		  			:min="minDateEnd" v-model="postEnd">
 		</div>
 		
 		<div class="input-group mb-3">
@@ -225,13 +234,6 @@
                     },
                     selectFile() {
                     	this.$refs.fileInput.click();
-                    },
-                    // 대표사진 미리보기
-                    handleMainImagePreview(){
-                        // 업로드 파일
-                        const file = event.target.files[0];
-
-                        this.previewURL = URL.createObjectURL(file);
                     },
                     
                     // 종료일

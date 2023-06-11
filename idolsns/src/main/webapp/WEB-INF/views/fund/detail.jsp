@@ -192,7 +192,7 @@
 			    <button class="btn btn-primary like-btn" @click="checkLike">
 			      <i v-if="isLiked" class="fs-4 ti ti-heart-filled"></i> 
 			      <i v-else class="fs-4 ti ti-heart"></i> 
-			      <!-- {{ likeCount }}  -->
+			      {{ likeCount }} 
 			    </button>
 			</div>
 			
@@ -385,7 +385,7 @@
  	 <hr>
  	 
  	 <!-- 로그인이 되어있으면 -->
- 	<div v-if="memberId != '' ">
+<!--  	<div v-if="memberId != '' "> -->
 	  	<!-- 새댓글 폼 -->
 		<form @submit.prevent="addReply" class="reply-form">
 		    <div>
@@ -401,11 +401,11 @@
 		    	</button>
 		    </div>
 		</form>
- 	</div>
+<!--  	</div> -->
  	
  	<!-- 로그인이 안되어있으면 -->
 	<div v-else>
-		
+		<div></div>
 	</div>
 	
 	
@@ -484,6 +484,9 @@
 			   	// 좋아요 유무
 			   	isLiked : false,
 			   	
+			   	// 좋아요 수
+			   	likeCount: "",
+			   	
 			   	// 로그인 모달
 			   	loginModal: false,
 			   	
@@ -506,13 +509,13 @@
 			    // FundPostListDto 불러오기
 			    async loadFundPosts(){
 			    	const postNo = this.fundDetail.postNo;
-					const resp = await axios.get("http://localhost:8080/rest/fund/"+postNo)	  
+					const resp = await axios.get("http://localhost:8080/rest/fund/"+postNo);
 					this.fundDetail = { ...this.fundDetail, ...resp.data };
         		},
         		// postNo의 attachmentNo list 불러오기 
         		async loadAttachNos(){
         			const postNo = this.fundDetail.postNo;
-					const resp = await axios.get("http://localhost:8080/rest/fund/attaches/"+postNo)	  
+					const resp = await axios.get("http://localhost:8080/rest/fund/attaches/"+postNo);	  
 					this.fundDetail.attachmentNos.push(...resp.data);
         		},
         		async loadTagNames() {
@@ -523,13 +526,16 @@
 		       // fundTotal & fundSponsorCount 불러오기
         		async loadFundVO(){
 			    	const postNo = this.fundDetail.postNo;
-					const resp = await axios.get("http://localhost:8080/rest/fund/fundlist/"+postNo)	  
+					const resp = await axios.get("http://localhost:8080/rest/fund/fundlist/"+postNo);	  
 					this.fundDetail.fundTotal = resp.data.fundTotal;
 					this.fundDetail.fundSponsorCount = resp.data.fundSponsorCount;
         		},
         		
                 // 데이터 중 fund를 서버로 전송
 		      	order() {
+        		  // 로그인이 안되어 있으면
+				  if(!this.checkLogin()) return;
+        			
 		      	  const postNo = this.fundDetail.postNo; // Vue 데이터의 postNo 값을 사용
 		      	  window.location.href = "http://localhost:8080/fund/order?postNo=" + postNo;
 		      	},
@@ -627,11 +633,11 @@
 					this.reReplies[i] = false;
 				},
 				// 태그 클릭시 
-				tagLink(i){
-					console.log(this.fundDetail.tagNames[i]);
-					const url = ""
-					window.location.href = url;
-				},
+// 				tagLink(i){
+// 					console.log(this.fundDetail.tagNames[i]);
+// 					const url = ""
+// 					window.location.href = url;
+// 				},
 				// 모달 열기&닫기
 				showModal(i){
 					this.replies[i].modal = true;
@@ -643,10 +649,13 @@
 				
 				// 좋아요 체크 후 추가&삭제
 				async checkLike() {
+					// 로그인이 안되어 있으면
+					if(!this.checkLogin()) return;
+					
 					const postNo = this.fundDetail.postNo;
 					axios.get('http://localhost:8080/rest/post/like/'+postNo)
             		.then(response => {
-            			console.log(response.data);
+            			console.log("checkLike = " +response.data);
             			this.checkFundLike();
             			
             				
@@ -662,9 +671,21 @@
 					const postNo = this.fundDetail.postNo;
 					const resp = await axios.get("http://localhost:8080/rest/post/like/check/"+postNo);
 					this.isLiked = resp.data;
-					console.log(resp.data);
+					// 좋아요를 하면
+					if(resp.data){
+						this.likeCount = this.likeCount + 1;
+					}
+					// 좋아요를 취소하면
+					else {
+						this.likeCount = this.likeCount - 1;
+					}
+				},
 				
-					
+				// 좋아요 수
+				async loadLikeCount() {
+					const postNo = this.fundDetail.postNo;
+					const resp = await axios.get("http://localhost:8080/rest/fund/likeCount/"+postNo);
+					this.likeCount = resp.data;
 				},
 				
 				// 남은 시간 설정
@@ -716,7 +737,6 @@
 				
 				// 로그인 체크
 				checkLogin() {
-                	console.log("checkLogin executed");
                 	// 로그인이 안되어 있으면
 					if(this.memberId == "") {
 						this.loginModal = true;
@@ -740,6 +760,7 @@
 		    	  this.loadTagNames();
 		    	  this.checkFundLike();
 	              this.getSessionMemberAttachmentNo();
+	              this.loadLikeCount();
 		    	},
 		    mounted() {
 		    	}

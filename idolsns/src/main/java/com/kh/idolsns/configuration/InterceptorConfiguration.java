@@ -74,8 +74,7 @@ public class InterceptorConfiguration implements WebMvcConfigurer{
                  "/member/mypage1",
                  
                  "/fund/list",
-                 "/fund/detail",
-                 "/fund/order"
+                 "/fund/detail"
                  
         );
 
