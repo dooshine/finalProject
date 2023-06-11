@@ -70,6 +70,11 @@
    <select id="fundCount" resultType="int" parameterType="Long">
       select count(distinct member_id) from fund where post_no=#{postNo} 
    </select>
+   
+   <!-- 특정 postNo의 likeCount -->
+   <select id="likeCount" resultType="int" parameterType="Long">
+   	select count(distinct member_id) from post_like where post_no=#{postNo}
+   </select>
 
 
 </mapper>

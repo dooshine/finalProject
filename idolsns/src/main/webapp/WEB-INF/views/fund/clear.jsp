@@ -38,7 +38,7 @@
     		
     		
     		<div class="my-5 mb-5">
-    			<h2 class="font-bold" style="text-align: center;">00번째 후원자입니다 ㅊㅋㅊㅋ</h2>
+    			<h2 class="font-bold" style="text-align: center;">{{ fundDetail.fundSponsorCount }} 번째 후원자입니다 🎉</h2>
     		</div>
     		
 			<div class="p-4">
@@ -114,7 +114,9 @@
 	          fundTotal: "",
 	          fundTime: "",
 	          fundPrice: "",
+	          fundSponsorCount: "",
 	        },
+	        fundDto: [],
 	      };
 	    },
 	    methods: {
@@ -124,6 +126,7 @@
 	        this.fundDto = resp.data;
 	        this.fundDetail.postNo = resp.data.postNo;
 	        this.loadFundPosts(); // loadOrderDetail()에서 loadFundPosts()를 호출합니다.
+	        this.loadFundVO();
 
 	      },
 	      async loadFundPosts() {
@@ -134,11 +137,17 @@
 	      formatCurrency(value) {
 	        return value.toLocaleString();
 	      },
+	      async loadFundVO() {
+	    	  const postNo = this.fundDetail.postNo;
+	    	  const resp = await axios.get("http://localhost:8080/rest/fund/fundlist/"+postNo);
+	    	  this.fundDetail.fundSponsorCount = resp.data.fundSponsorCount;
+	      }
 	    },
 	    created() {
+	      this.loadFundPosts();
 	      this.fundNo = window.location.search.split("=")[1]; // URL에서 fundNo 값을 추출합니다.
 	      this.loadOrderDetail();
-	      this.loadFundPosts();
+	      this.loadFundVO();
 	    },
 	  }).mount("#app");
 	</script>
