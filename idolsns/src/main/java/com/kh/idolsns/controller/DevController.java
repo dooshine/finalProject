@@ -90,9 +90,10 @@ public class DevController {
         }
     }
     
-    // [테스트] 로딩 페이지
+ // [테스트] 로딩 페이지
     @GetMapping("/loading")
     public String loading() {
     	return "template/loading";
     }
+    
 }

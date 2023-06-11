@@ -197,7 +197,7 @@
 				  	<div class="container-fluid">
 				  		<div class="col-3">
 					    	<a class="navbar-brand" href="/"><img src="/static/image/logo.png" style="width:130px;"></a>
-					    	<!-- <a href="loading">(임시)로딩</a> -->
+					    	<!-- <a href="dev/loading">(임시)로딩</a> -->
 					    </div>
 				    	<div class="col-6 d-flex px-3" id="navbarSupportedContent">
 				      		<form action="/search/post" class="d-flex w-100" method="get">
