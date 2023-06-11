@@ -1717,14 +1717,14 @@
 							<label for="scheduleDatePost" class="startDatePost">날짜</label>
 						</div>
 		              	<div class="form-floating mb-3">
-							<input type="text" class="form-control" id="calendarTitlePost" placeholder="dd">
+							<input type="text" class="form-control" id="calendarTitlePost" placeholder="dd" @keyup.enter="moveFocusToMemo">
 							<label for="calendarTitlePost">일정 이름</label>
 							<div class="display-none invalidMessage">
 						    	1글자 이상, 30글자 이하로 입력할 수 있습니다.
 						    </div>
 						</div>
 		               	<div class="form-floating">
-							<textarea class="form-control" placeholder="Leave a comment here" id="calendarMemoPost" style="height: 100px; resize: none;"></textarea>
+							<textarea class="form-control" placeholder="Leave a comment here" id="calendarMemoPost" ref="memoTextArea" style="height: 100px; resize: none;"></textarea>
 							<label for="calendarMemoPost">메모</label>
 							<div class="display-none invalidMessage">
 						    	100글자 이하로 입력할 수 있습니다.
@@ -2440,7 +2440,10 @@
                		}
                		// 일정 등록 모달 닫기
                	    $("#addCalendarPostModal").modal("hide");
-                }
+                },
+                moveFocusToMemo() {
+                	document.getElementById("calendarMemoPost").focus();
+                },
             },
             watch:{
             	percent(){
