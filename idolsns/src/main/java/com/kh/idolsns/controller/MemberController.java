@@ -137,12 +137,12 @@ public class MemberController {
 		session.setAttribute("memberId", findDto.getMemberId());
 		session.setAttribute("memberLevel", findDto.getMemberLevel());
 		
-		String memberId = findDto.getMemberId();
-		if(!(findDto.getMemberExitDate() == null)) {
-			memberRepo.cancleExit(memberId	);
-		    attr.addAttribute("mode", "cancle");
-		    return "redirect:login";
-		}
+			String memberId = findDto.getMemberId();
+			if(!(findDto.getMemberExitDate() == null)) {
+				memberRepo.cancleExit(memberId	);
+			    attr.addAttribute("mode", "cancle");
+			    return "redirect:login";
+			}
 		
 		return "redirect:/";
 	}
@@ -152,7 +152,7 @@ public class MemberController {
 	@ResponseBody
 	public String goToLoginPage(HttpSession session) {
 		String memberId = (String) session.getAttribute("memberId");
-		return memberId;
+		  return memberId != null ? memberId : "";
 	}
 	
 	//로그아웃
@@ -203,7 +203,7 @@ public class MemberController {
 	public String mypage(HttpSession session) {
 		String memberId = (String) session.getAttribute("memberId");
 		return memberId;
-	}
+	}	
 	
 	//마이페이지 - 아이디, 닉네임 조회
 	@GetMapping("/profile")

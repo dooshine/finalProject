@@ -987,7 +987,7 @@
 				  if (memberId === "") {
 				    window.location.href = `${pageContext.request.contextPath}/member/login`;
 				  } else {
-				    window.location.href = `${pageContext.request.contextPath}/member/mypage2/${memberId}`;
+					  window.location.href = "${pageContext.request.contextPath}/member/mypage2/" + response.data;
 				  }
 				},
 				// 이미지 메세지 모달로 크게 보기위한 url 셋팅

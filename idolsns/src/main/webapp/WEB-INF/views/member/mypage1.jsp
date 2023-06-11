@@ -259,11 +259,20 @@
 		                  </div>
 		                  <div class="modal-body text-left">
 		                     <div v-for="(board,index) in FollowListProfile"  :key="index">
-		                     <img :src="getAttachmentUrl(board.attachmentNo)" class="profile-image" style="width:54px; height:54px;">
-		                     <a :href="'/member/mypage/' + board.followTargetPrimaryKey">
+		                     <div class="row align-items-center">
+		                     <div class="col-3">
+		                     <img :src="getAttachmentUrl(board.attachmentNo)" class="profile-image" style="width:54px; height:54px; margin-left:20px; margin-bottom:10px;">
+		                     </div>
+		                     <div class="col-3">
+		                     <a :href="'/member/mypage2/' + board.followTargetPrimaryKey"  style="color:black; font-size:20px; text-decoration:none;">
 							    <span>{{board.followTargetPrimaryKey}}</span>
 							</a>
-		                    <button @click="deleteFollow(board.followNo)">팔로잉</button>
+		                     </div>
+		                     <div class="col-3"></div>
+		                     <div class="col-3 ">
+		                    <button v-if="mypage" class="btn-round btn-purple1-secondary"  @click="deleteFollow(board.followNo, index)" style="margin-left:30px; padding: 10px 20px; font-size: 15px;">삭제</button>
+		                     </div>
+		                    </div>
 		                     </div>
 		                  </div>
 		               </div>
@@ -279,11 +288,20 @@
 		                  </div>
 		                  <div class="modal-body text-left">
 		                     <div v-for="(board,index) in FollowerListProfile"  :key="index">
-		                     <img :src="getAttachmentUrl(board.attachmentNo)" class="profile-image" style="width:54px; height:54px;">
-		                     <a :href="'/member/mypage/' + board.memberId">
-		                    <span> {{board.memberId}}</span>
-		                    </a>
-		                    <button @click="deleteFollow(board.followNo)">팔로잉</button>
+		                     <div class="row align-items-center">
+		                     <div class="col-3">
+		                     <img :src="getAttachmentUrl(board.attachmentNo)" class="profile-image" style="width:54px; height:54px; margin-left:20px; margin-bottom:10px;">
+		                     </div>
+		                     <div class="col-3">
+		                     <a :href="'/member/mypage2/' + board.memberId"  style="color:black; font-size:20px; text-decoration:none;">
+							    <span>{{board.memberId}}</span>
+							</a>
+		                     </div>
+		                     <div class="col-3"></div>
+		                     <div class="col-3 ">
+		                    <button v-if="mypage" class="btn-round btn-purple1-secondary" @click="deleteFollow(board.followNo)"  style="margin-left:30px; padding: 10px 20px; font-size: 15px;">삭제</button>
+		                     </div>
+		                    </div>
 		                     </div>
 		                  </div>
 		               </div>
@@ -298,11 +316,20 @@
 		                  </div>
 		                  <div class="modal-body text-left">
 		                     <div v-for="(board,index) in PageListProfile"  :key="index">
-		                    <img :src="getAttachmentUrl(board.attachmentNo)" class="profile-image" style="width:54px; height:54px;">
-		                    <a :href="'/artist/' + board.followTergetPrimarykey">
-		                    <span> {{board.followTargetPrimaryKey}}</span>
-		                    </a>
-		                    <button @click="deleteFollow(board.followNo)">팔로잉</button>
+		                     <div class="row align-items-center">
+		                     <div class="col-3">
+		                     <img :src="getAttachmentUrl(board.attachmentNo)" class="profile-image" style="width:54px; height:54px; margin-left:20px; margin-bottom:10px;">
+		                     </div>
+		                     <div class="col-3">
+		                    <a :href="'/artist/' + board.followTergetPrimarykey" style="color:black; font-size:20px; text-decoration:none;">
+		                    	<span> {{board.followTargetPrimaryKey}}</span>
+							</a>
+		                     </div>
+		                     <div class="col-3"></div>
+		                     <div class="col-3 ">
+		                    <button v-if="mypage" class="btn-round btn-purple1-secondary" @click="deleteFollow(board.followNo)"  style="margin-left:30px; padding: 10px 20px; font-size: 15px;">삭제</button>
+		                     </div>
+		                    </div>
 		                     </div>
 		                  </div>
 		               </div>
@@ -312,12 +339,12 @@
 	         <hr>
 	
     <div class="row">         
-         <div class="col-6 text-center">
-            <i class="fa-sharp fa-regular fa-heart font-purple1"></i>
-         </div>
          <div class="col-6 text-center" >
             <i class="fa-solid fa-list "  @click="toWritePage()"></i>
          </div>         
+         <div class="col-6 text-center">
+            <i class="fa-sharp fa-regular fa-heart font-purple1"></i>
+         </div>
     </div>
 	
     <!-- 게시글 지도 게시 모달창 (게시글에서 위치나 지도 마크 클릭 시 모달 띠우기)-->
@@ -1767,7 +1794,6 @@
                       // 대표페이지 프로필사진 설정
                       const resp = await axios.post(url, formData);
                       
-                      alert("대표페이지 프로필사진 설정완료!");
                   },
                   
                   //팔로우 리스트 멤버별 프로필 조회
@@ -1805,13 +1831,14 @@
 						},
                   
                   //프로필 리스트 팔로우 취소
-				async deleteFollow(followNo) {
+				async deleteFollow(followNo, index) {
 					const response = await axios.get("/member/deleteFollow",{
 						params : {followNo:followNo}
 					});
 					if (response.data.success) {
 					    // 삭제 성공 시, FollowListProfile에서 해당 항목을 제거합니다.
-					    this.FollowListProfile = this.FollowListProfile.filter(item => item.followNo !== followNo);
+// 					    this.FollowListProfile = this.FollowListProfile.filter(item => item.followNo !== followNo);
+					    this.FollowListProfile.splice(index, 1);
 					  }
 				},
 				
