@@ -13,7 +13,11 @@
 
 	<style>
 		.loading-screen {
-			z-index: 9999999999;
+			height: 100vh;
+			width: 100vw;
+			position: fixed;
+			bottom: 0;
+			left: 0;
 		}
 		.loading {
 	    	position: fixed;
@@ -32,11 +36,9 @@
 	</style>
 </head>
 	
-<body style="background-color: #f5f5f5;">
-	<div class="loading-screen" style="background-color: #f5f5f5;">
-		<div>
-	        <img class="loading" src="${pageContext.request.contextPath}/static/image/loading.png" width="100px;">
-	    </div>
-	    <div class="loading-footer">STARLINK © 2023</div>
+<div class="loading-screen" style="background-color: #f5f5f5;">
+	<div>
+        <img class="loading" src="${pageContext.request.contextPath}/static/image/loading.png" width="100px;">
     </div>
-</body>
+    <div class="loading-footer">STARLINK © 2023</div>
+</div>
