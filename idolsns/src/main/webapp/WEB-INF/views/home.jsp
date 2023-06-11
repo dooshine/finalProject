@@ -1732,7 +1732,7 @@
 					</div>
         		</div>
 		        <div class="modal-footer addCalendarModalFooter">
-			        <button type="button" class="custom-btn btn-purple1" @click="addSchedule">
+			        <button type="button" class="custom-btn btn-purple1 addSchedule-btn" @click="addSchedule">
 			            등록
 		            </button>
 		        </div>

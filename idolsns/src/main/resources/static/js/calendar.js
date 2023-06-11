@@ -282,7 +282,7 @@ function editSchedule() {
 
 // 글자수 체크
 $(function() {
-	// 일정 등록
+	// 일정 등록 - 캘린더
 	let addValid = {
 		titleValid: false,
 		memoValid:true,
@@ -319,6 +319,45 @@ $(function() {
 			.addClass(isValid ? "display-none" : "invalid-feedback");
 		addValid.disalbeBtn();
 	});
+	
+	// 일정 등록 - 게시물
+	let addPostValid = {
+		titleValid: false,
+		memoValid:true,
+		isAllValid: function() {
+			return this.titleValid && this.memoValid;
+		},
+		disalbeBtn: function() {
+			const addBtn = $(".addSchedule-btn");
+			if(this.isAllValid()) addBtn.removeAttr("disabled");
+			else addBtn.attr("disabled", "disabled");
+		}
+	}
+	// 일정 이름 검사
+	$("#calendarTitlePost").blur(function() {
+		let isValid = $(this).val().length <= 30 && $(this).val().length > 0;
+		addPostValid.titleValid = isValid;
+		$(this)
+			.removeClass("is-invalid")
+			.addClass(isValid ? "" : "is-invalid");
+		$(this).nextAll('.invalidMessage:first')
+			.removeClass("display-none invalid-feedback")
+			.addClass(isValid ? "display-none" : "invalid-feedback");
+		addPostValid.disalbeBtn();
+	});
+	// 메모 검사
+	$("#calendarMemoPost").blur(function() {
+		let isValid = $(this).val().length <= 100;
+		addPostValid.memoValid = isValid;
+		$(this)
+			.removeClass("is-invalid")
+			.addClass(isValid ? "" : "is-invalid");
+		$(this).nextAll('.invalidMessage:first')
+			.removeClass("display-none invalid-feedback")
+			.addClass(isValid ? "display-none" : "invalid-feedback");
+		addPostValid.disalbeBtn();
+	});
+	
 	// 일정 수정
 	let editValid = {
 		titleValid: true,
