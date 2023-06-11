@@ -32,8 +32,12 @@
 		font-size: 90%;
 		}
 		
+      .like-btn {
+   
+      }
+      
       .like-count {
-        font-size: 14px;
+        font-size: 5px;
         color: #777;
         
       }
@@ -112,20 +116,23 @@
     </style>
     
    	<div id="app">
-		<div class="container rounded p-5" style="background-color:white">
+		<div class="custom-container">
 			  
 		<div>
-			<h2 class="title text-center mt-5 mb-5">{{ fundDetail.fundTitle }}</h2>
+			<h2 class="font-bold text-center mt-5 mb-5">{{ fundDetail.fundTitle }}</h2>
 		</div>
 			
-			<div class="d-flex mt-5">
 			
-				<div class="mt-5">
-				<img :src="fundDetail.imageURL" alt="예시사진" style="width:450px; height:400px;">
+			<!-- 구역 -->
+			<div class="d-flex mt-5 px-3" style="background-color: #f5f5f5; border-radius:5px;">
+				<div class="col py-3">
+				  <div  style="width: 100%; height: 100%; position: relative;">
+				    <img :src="fundDetail.imageURL" alt="예시사진" style="width: 100%; height: 100%; object-fit: cover;">
+				  </div>
 				</div>
+
 			
-			
-				<div class="col mt-5" style="padding-left:2em; padding-right:2em;">
+				<div class="col py-3" style="padding-left:2em;">
 		
 					<label>모인 금액</label>
 					<span class="fund_span">{{ formatCurrency(fundDetail.fundTotal) }}</span>원
@@ -133,11 +140,11 @@
 			
 					<label class="mt-3">남은 시간</label>
 					<span class="fund_span">{{ getTimeDiff() }}</span>일
-		
-   					<div class="fund-sponsor" @click="sponsorModal = true"> 
+					
+					<div @click="sponsorModal = true">
 						<label class="mt-3">후원자</label>
-						<span class="fund_span">{{ fundDetail.fundSponsorCount }}</span>명
-   					</div>
+						<span class="fund_span fund-sponsor">{{ fundDetail.fundSponsorCount }}</span>명
+					</div>
 
 		
 	
@@ -148,8 +155,8 @@
 			    </button> -->
 			    
 			 
-			
-				<hr class="row mt-3 mb-3">
+			<hr class="mt-3 mb-3" style="height: 0.3px">
+				
 			
 			
 			
@@ -172,29 +179,24 @@
 			
 			
 			
-
-			<!-- 좋아요 -->
-			<div class="row mt-3" style="padding-left: 1em">
-			    <button class="btn btn-primary like-btn" @click="checkLike">
-			      <i v-if="isLiked" class="fs-4 ti ti-heart-filled"></i> 
-			      <i v-else class="fs-4 ti ti-heart"></i> 
-			      {{ likeCount }} 
-			    </button>
-			</div>
-			<!-- 좋아요 끝!-->
-			
-			
-			
-			<div class="row mt-3">
-				<button type="submit" class="btn btn-primary btn-lg " @click="order">
-				후원하기</button>
-			</div>	
+			<!-- 좋아요, 후원버튼 -->
+				<div class="mt-3 d-flex">
+					<div class="col-12">
+					    <button class="custom-btn btn-purple1-secondary col-3" style="vertical-align:middle; margin-right:0.5em;" @click="checkLike">
+					      	<i v-if="isLiked" class="fs-4 ti ti-heart-filled"></i> 
+					      	<i v-else class="fs-4 ti ti-heart"></i> 
+						      	<div class="like-count">
+						      		{{ likeCount }} 
+						    	</div>
+					    </button>
 					
-			
-			
+						<button type="submit" class="btn-purple1 custom-btn col-8"  style="font-size:25px; vertical-align:middle;"  @click="order">
+						후원하기</button>
+					</div>	
+				</div>			
 			</div>
 			
-			</div>
+		</div>
 		
 			
 			<hr>
@@ -217,7 +219,7 @@
 			
 			<!-- 태그 출력 -->
 			<div class="row mt-3">
-				<div class="col">
+				<div class="col d-flex">
 					<div class="fixed-tag ms-1" v-for="(tag, i) in fundDetail.tagNames"
 								@click="tagLink(i)">
 					{{ tag }}

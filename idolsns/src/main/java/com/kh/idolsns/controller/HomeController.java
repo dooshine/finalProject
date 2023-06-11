@@ -47,4 +47,5 @@ public class HomeController {
 //    	postShowService.postShowOne(48l);    	
     	return "post/postMain";
     }
+    
 }

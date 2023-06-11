@@ -32,12 +32,39 @@
         /*조건부 스타일 - 태블릿*/
         @media screen and (max-width:1200px) {
     
-        .col-6 {
-          width: 100%;
-        }
+	        .col-6 {
+	          width: 100%;
+	        }
             .funding-list > .funding-item  {
             width : 49%;
-           }
+           	}
+           
+         	#calendar {
+		  		display: none;
+		  	}
+			.col-3.calendar-area {
+				width: 0%;
+			}
+			.col-6.article {
+				width: 85%;
+			}
+			.col-3.left-aside {
+				width: 15%;
+			}
+			#aside-bar {
+				width: 15%;
+			}
+
+			.nav .aside-name-tag {
+				/* font-size: 0px; */
+				display: none;
+		  	}
+			.nav img {
+				margin-left: 0px !important;
+			}
+			.nav a {
+				text-align: center;
+			}   
        }
 
         /*조건부 스타일 - 모바일*/
@@ -48,7 +75,9 @@
         }
         
     }
-               
+    
+    
+   
          .funding-list {
            display: flex;
            flex-wrap: wrap;
@@ -75,16 +104,27 @@
          }
          
          
-         .funding-item img {
-           transition: transform 0.3s;
-           width: 100%;
-           border-radius: 5px;
-           }
+         /*펀딩 이미지 컨테이너*/
          
-         /* 펀딩 목록 hover시 이미지 확대 */
-		 .funding-item img:hover{
-			transform: scale(1.1);
-		  }
+         	.image-container {
+		/* 	  width: 300px; */
+			  height: 200px; 
+			  overflow: hidden;
+			}
+
+			.image-container img {
+			  width: 100%;
+			  height: 100%;
+			  object-fit: cover;
+			  transition: transform 0.3s;
+			  border-radius: 5px;
+			}
+
+			.funding-item:hover .image-container img {
+			  transform: scale(1.05);
+			}
+			         
+     
          
          .funding-item .title {
             margin: 10px 0;
@@ -146,20 +186,25 @@
       </style>
       
         <div id="app">
-               <div class="custom-container">
+        	<div class="custom-container">
+		
 			
-				
-				
-					<div class="rounded bg-light p-3" style="width:100%; height:300px;">
+			
+		<div class="d-flex col rounded-4 bg-light p-3 mt-3 mb-3" style="width:100%; height:300px; float: none;
+			background-image: url('/static/image/fund_main.jpg'); background-size: cover; background-position: center;">
+			    <div class="mx-5" style="display: flex; flex-direction: column; justify-content: center; align-items: left; text-align: left;">
+			        <div class="font-bold" style="font-size:35px; color:white;">
+			            내 손으로 만드는 아이돌 이벤트!
+			        </div>
+			        <!-- 펀딩 글 작성 -->
+			        <div class="mt-3">
+			        <button class="custom-btn btn-round btn-purple1" style="font-size:20px;" @click="startFunding">
+			        	프로젝트 올리기
+			        </button>
+			        </div>
+		    </div>
+		</div>
 						
-						<div class="font-bold" style="font-size:30px;">아이돌의 펀딩을 받아봅시다
-						</div>
-						
-						<!-- 펀딩 글 작성 -->
-						<button class="custom-btn btn-round btn-purple1" @click="startFunding">프로젝트 올리기</button>
-					</div>
-				
-				
 				
 			
 					<div class="d-flex justify-content-between mt-4 px-2">
@@ -196,7 +241,9 @@
                  
                    <div class="funding-item" v-for="(funding, index) in fundings" :key="index"
                                               @click="link(funding)" >
-                     <img :src="getImageUrl(funding)" alt="Funding Image" style="height:200px;">
+                     <div class="image-container">
+                     	<img :src="getImageUrl(funding)" alt="Funding Image" style="height:200px;">
+                     </div>
                      
                      <!-- 좋아요 -->
                      <span class="heart-icon" v-if="postLikeIndexList.includes(index)">

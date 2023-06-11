@@ -87,6 +87,12 @@ public class ChatRestController {
 		chatRoomService.inviteMember(vo);
 	}
 	
+	// 상대방이 나간 1대1 채팅방에 메세지 보낼 때 상대방 재 초대
+	@PostMapping("/chatRoom/reinvite")
+	public void reinviteMember(@RequestBody ChatRoomProcessVO vo) {
+		chatRoomService.reinviteMember(vo);
+	}
+	
 	// 채팅방 참여자 목록 조회
 	@GetMapping("/chatRoom/chatMember/{chatRoomNo}")
 	public List<MemberSimpleProfileDto> loadChatMember(@PathVariable int chatRoomNo) {
