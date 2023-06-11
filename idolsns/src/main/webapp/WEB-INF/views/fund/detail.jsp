@@ -228,7 +228,7 @@
 			
 			<!-- 태그 출력 -->
 			<div class="row mt-3">
-				<div class="col">
+				<div class="col d-flex">
 					<div class="fixed-tag ms-1" v-for="(tag, i) in fundDetail.tagNames"
 								@click="tagLink(i)">
 					{{ tag }}
