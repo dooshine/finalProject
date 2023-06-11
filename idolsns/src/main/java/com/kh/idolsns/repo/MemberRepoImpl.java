@@ -178,7 +178,7 @@ public class MemberRepoImpl implements MemberRepo{
 	}
 
 	@Override
-	public boolean cancelExit(String memberId) {
+	public boolean cancleExit(String memberId) {
 		return sqlSession.update("member.cancelExit", memberId) > 0;
 	}
 

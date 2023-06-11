@@ -26,10 +26,10 @@ public class ReplyShowServiceImpl implements ReplyShowService{
 			attachmentNo = sqlSession.selectOne("replyShow.selectReplyProfileImageNo",replyShowVO.getReplyId());
 			// 댓글 닉네임 설정
 			replyShowVO.setMemberNick(memberNick);
-			System.out.println("memberNick은"+memberNick);
+			
 			// 댓글 프로필 이미지 설정
 			replyShowVO.setAttachmentNo(attachmentNo);
-			System.out.println("attachmentNo는 "+attachmentNo);
+			
 			
 		}
 		

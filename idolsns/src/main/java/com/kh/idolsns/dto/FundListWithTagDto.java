@@ -20,7 +20,7 @@ public class FundListWithTagDto {
 	private Integer attachmentNo; // 없는 경우 null이 나오도록 처리
 	private int sponsorCount;
 	private int totalPrice;
-	private String tagName;
+	private String tagNames;
 	
 	
 	//이미지의 URL을 반환하는 메소드

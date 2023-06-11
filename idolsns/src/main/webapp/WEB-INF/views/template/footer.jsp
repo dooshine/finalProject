@@ -920,14 +920,12 @@
 				},
 				//유저버튼 - 로그인 or 마이페이지로 이동
 				async goToLoginPage() {
-					const response = await axios.get("/member/goToLoginPage");
-					console.log(response.data);
-					if(response.data == "") {
-						window.location.href = `${pageContext.request.contextPath}/member/login`;
-					}
-					else {
-						window.location.href = `${pageContext.request.contextPath}/member/mypage/${memberId}`;
-					}
+				  const response = await axios.get("/member/goToLoginPage");
+				  if (memberId === "") {
+				    window.location.href = `${pageContext.request.contextPath}/member/login`;
+				  } else {
+				    window.location.href = `${pageContext.request.contextPath}/member/mypage2/${memberId}`;
+				  }
 				},
 				// 이미지 메세지 모달로 크게 보기위한 url 셋팅
 				setModalImgURL(index) {
@@ -991,7 +989,7 @@
 				};
 
 
-				console.log("######################## 마운티드 발생 ########################");
+// 				console.log("######################## 마운티드 발생 ########################");
 				// ######################## 헤더 조정 ########################
 				var inputCompoEle = document.getElementById('navbarSupportedContent');
 				var inputEle = $(inputCompoEle).find("input[name=q]");

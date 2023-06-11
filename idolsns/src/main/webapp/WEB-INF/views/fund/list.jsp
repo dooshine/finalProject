@@ -61,16 +61,30 @@
            padding: 10px;
            border: 1px solid #ccc;
            border-radius: 5px;
-           
-           
+           overflow: hidden;
+           /* 하트 고정 */
+           position: relative;
+         }
+         
+         .heart-icon {
+         	position: absolute;
+         	top: 175px; 
+         	right: 20px;
+         	transform: scale(1.1); /* 하트 크기 조정 */
+         	color: #6A53FB;
          }
          
          
          .funding-item img {
+           transition: transform 0.3s;
            width: 100%;
            border-radius: 5px;
-           
            }
+         
+         /* 펀딩 목록 hover시 이미지 확대 */
+		 .funding-item img:hover{
+			transform: scale(1.1);
+		  }
          
          .funding-item .title {
             margin: 10px 0;
@@ -94,7 +108,7 @@
          
          .progress {
             height: 100%;
-            background-color: #2ecc71;
+            background-color: #6A53FB;
             }
          
          .info {
@@ -115,49 +129,123 @@
          .info .col .label {
             font-size: 0.9em;
             }
+            
+         /* 로그인 모달 스타일*/
+	      .custom-modal-wrapper {
+		   position: fixed;
+		   top: 0;
+		   left: 0;
+		   width: 100%;
+		   height: 100%;
+		   display: flex;
+		   align-items: center;
+		   justify-content: center;
+		   z-index: 9999;
+		}
+		
       </style>
       
         <div id="app">
                <div class="custom-container">
-				<div class="d-flex">
-					<!-- 펀딩 글 작성 -->
-					<div class="d-flex justify-content-center align-items-center">
-						<button class="btn-custom btn-purple1" @click="startFunding">프로젝트 올리기</button>
-						<!-- 정렬 -->
-						<button v-if="dateSort" class="btn-purple1 ms-1" @click="sortByDate">최신순</button>
-						<button v-else class="btn-purple1 ms-1" @click="sortByDate">오랜된순</button>
+			
+				
+				
+					<div class="rounded bg-light p-3" style="width:100%; height:300px;">
+						
+						<div class="font-bold" style="font-size:30px;">아이돌의 펀딩을 받아봅시다
+						</div>
+						
+						<!-- 펀딩 글 작성 -->
+						<button class="custom-btn btn-round btn-purple1" @click="startFunding">프로젝트 올리기</button>
 					</div>
-	             	<!-- 검색창 -->
-	               	<div class="search-box w-35 ms-auto me-4">
-	                    <input class="search-input" type="text" v-model="searchQuery" placeholder="검색창" @keyup.enter="searchFunding">
-	                </div>
-               	</div>
+				
+				
+				
+			
+					<div class="d-flex justify-content-between mt-4 px-2">
+					
+			             	<!-- 검색창 -->
+		               	<div class="search-box w-35 ms-auto me-4">
+		                    <input class="search-input" type="text" v-model="searchQuery" placeholder="검색창" 
+		                    @keyup.enter="fetchOrderedFundingList">
+	                	</div>
+	             
+			                
+			                	<!-- 정렬(성현)
+							<button v-if="dateSort" class="btn-purple1 ms-1" @click="sortByDate">최신순</button>
+							<button v-else class="btn-purple1 ms-1" @click="sortByDate">오래된순</button>
+							
+							-->
+						<div class="w-10">
+							<select class="form-select">
+								<option selected>정렬</option>
+							  	<option value="new">최신순</option>
+							  	<option	value="old">오래된순</option>
+							  	<option value="likes">좋아요순</option>
+							  	<option value="deadline">마감임박순</option>
+							</select>
+						</div>
+					
+					
+				
+				</div>
+	             	
                	
                	<!-- 펀딩 리스트 -->
                  <div class="funding-list justify-content-center mt-4">
                  
-                   <div class="funding-item" v-for="(funding, index) in fundings" :key="funding.memberId"
-                                              v-on:click="link(funding)">
-                     <img :src="getImageUrl(funding)" alt="Funding Image" style="height:200px">
+                   <div class="funding-item" v-for="(funding, index) in fundings" :key="index"
+                                              @click="link(funding)" >
+                     <img :src="getImageUrl(funding)" alt="Funding Image" style="height:200px;">
+                     
+                     <!-- 좋아요 -->
+                     <span class="heart-icon" v-if="postLikeIndexList.includes(index)">
+					      <i class="fs-4 ti ti-heart-filled" @click="checkLike(funding.postNo, index); $event.stopPropagation()"></i> 
+                     </span>
+                     <span class="heart-icon" v-else>
+					      <i class="fs-4 ti ti-heart" @click="checkLike(funding.postNo, index); $event.stopPropagation()"></i> 
+                     </span>
+                     <!-- 좋아요 끝! -->
+					    
+                     
                      <h3 class="title">{{ funding.fundTitle }}</h3>
                      <p class="description">{{ funding.fundShortTitle }}</p>
                      <div class="progress-bar">
-                       <div class="progress" :style="{ width: (funding.totalPrice / funding.fundGoal * 100).toFixed(1) + '%' }"></div>
+                       	<div class="progress" :style="{ width: (funding.totalPrice / funding.fundGoal * 100).toFixed(1) + '%' }"></div>
                      </div>
                      <div class="info">
-                       <div>
-                     <span style="font-weight:bold">
-                     {{ (funding.totalPrice / funding.fundGoal * 100).toFixed(1) }}
-                     </span>%
-                         <span class="fund_span">{{ formatCurrency(funding.totalPrice) }}</span>원
-                       </div>
-                       <div>
-                         <span class="value">{{ getTimeDiff(funding) }}</span>
-                       </div>
+	                       <div>
+		                     <span style="font-weight:bold">
+		                     {{ (funding.totalPrice / funding.fundGoal * 100).toFixed(1) }}
+		                     </span>%
+	                         <span class="fund_span">{{ formatCurrency(funding.totalPrice) }}</span>원
+	                       </div>
+	                       <div>
+	                         <span class="value">{{ getTimeDiff(funding) }}</span>
+	                       </div>
                      </div>
                    </div>
+                   
                  </div>
+                 <!-- 펀딩 리스트 끝! -->
+                 
                </div>
+               
+               <!-- 로그인 모달 -->
+		      <div v-if="loginModal" class="custom-modal-wrapper">
+		      	<div class="custom-modal">
+		         <div class="custom-modal-body" style="width: 300px;">
+		            <div class="text-center mb-3">
+		               <i class="ti ti-alert-triangle"></i>
+		            </div>
+		            <div class="text-center">로그인이 필요한 기능입니다</div>
+		            <div class="d-flex justify-content-center mt-4">
+		               <button class="custom-btn btn-round btn-purple1-secondary me-2 w-100" @click="linkToLogin">로그인</button>
+		               <button class="custom-btn btn-round btn-purple1 w-100" @click="loginModal = false">취소</button>
+		            </div>
+		         </div>
+		      	</div>
+		     </div>
                
             </div>   
                  
@@ -182,8 +270,20 @@
                 	searchQuery: "",
                 	searchQueryTemp: "",
                 	
-                	// 시간순 정렬
-                	dateSort: true,
+                	// 정렬
+                	orderList: ["post_time desc"],
+                	
+                	// 시간순 정렬 버튼
+                	dateSort: false,
+                	
+                	// 로그인 모달
+    			   	loginModal: false,
+    			   	
+    			   	// 세션 memberId
+    			   	memberId: memberId,
+    			   	
+    			 	// 좋아요 게시글 인덱스 배열
+                	postLikeIndexList: [], 
                 	 
                   };
                   },
@@ -194,39 +294,106 @@
                   
                },
                methods: {
-                    // FundPostImageDto 불러오기
-                    async loadFundPostImageList(){
-                       if(this.loading == true) return; // 로딩중이면
-                        if(this.finish == true) return; // 다 불러왔으면
-                        if(this.searchQuery != "") return;
-                          
-                          this.loading = true;
-                          
-	                  const resp = await axios.get("http://localhost:8080/rest/fund/page/"+this.page);     
-	                  console.log(resp.data);
-	                  resp.data.fundPostImageDtos == null ? this.fundings.push(...resp.data.fundListWithTagDtos) : this.fundings.push(...resp.data.fundPostImageDtos);
-	                  this.page ++;
-	                  
-	                  this.loading = false;
-	                  
-	                  // 데이터가 12개 미만이면 더 읽을게 없다
-	                       if(resp.data.length < 12){ 
-	                           this.finish = true;
-	                       }
-	                  
-	                    },
+            	   
+            	   // # 펀딩 리스트 불러오기
+                   async fetchFundingList() {
+                 	  
+		                  // funding 리스트 초기화
+// 		                  if(!this.initFundings || this.searchQueryTemp != this.searchQuery) {
+// 		                     this.fundings = [];
+// 		                     this.initFundings = true; 
+// 		                     this.finish = false; // 검색어가 다르면 초기화
+// 		                  }
+	                      // 다 불러왔으면
+// 	                      if(this.finish == true) return; 
+		                  
+		                  // 다른 검색어로 검색했을때
+// 		                  if(this.searchQueryTemp != this.searchQuery) {
+// 		                     this.searchPage = 1;
+// 		                  }
+		                  
+		                  // searchQueryTemp에 이전 검색어 저장
+// 		                  this.searchQueryTemp = this.searchQuery;
+		                       
+                  const resp = await axios.get("http://localhost:8080/rest/fund/page/"+this.searchPage,
+                        {
+                	  params: {
+                		  	// 검색어
+                        	searchKeyword : this.searchQuery,
+                        	// 정렬 조건
+                        	orderList : this.orderList
+                        },
+                        paramsSerializer: params => {
+                    		return new URLSearchParams(params).toString();
+                    	}
+                        });     
+               	  this.fundings.push(...resp.data);
+               	  
+               	  this.getLikePostIndex(this.fundings);
+                  console.log(resp.data);
+                  this.searchPage++;
+                  
+                  // 데이터가 12개 미만이면 더 읽을게 없다
+                       if(resp.data.length < 12){
+                           this.finish = true;
+                          }
+                   },
+                   
+                   async fetchOrderedFundingList(){
+                	   	  this.searchPage=1;
+                	   	  
+		                  const resp = await axios.get("http://localhost:8080/rest/fund/page/"+this.searchPage,
+		                        {
+		                	  params: {
+		                		  	// 검색어
+		                        	searchKeyword : this.searchQuery,
+		                        	// 정렬 조건
+		                        	orderList : this.orderList
+		                        },
+		                        paramsSerializer: params => {
+		                    		return new URLSearchParams(params).toString();
+		                    	}
+		                        });
+// 		                  console.log(resp.data);
+		                  this.fundings = [...resp.data];
+		                  this.searchPage++;
+		                  
+		                  // 데이터가 12개 미만이면 더 읽을게 없다
+		                       if(resp.data.length < 12){
+		                           this.finish = true;
+		                          }
+                   },
+                   
+                // postNo를 List로 송신하고 좋아요 되있는 index 번호를 수신
+                   getLikePostIndex(fundings){
+                   	postNoList = [];
+                   	fundings.forEach(function(funding){
+                   		postNoList.push(funding.postNo); 
+                   	})
+                   	
+               		axios.get('http://localhost:8080/rest/fund/like/index/'+postNoList)
+               			.then(response => {               			
+               			this.postLikeIndexList = response.data;  
+               			console.log("postLikeIndexList--------"+this.postLikeIndexList);
+               		})
+               		.catch(error => {
+               			console.error(error);
+               		})
+                   	              		
+                   },
                     
                     // 남은 시간 설정
                     getTimeDiff(funding) {
                           const startDate = new Date(funding.postStart);
                           const endDate = new Date(funding.postEnd);
+//                           console.log(startDate);
+//                           console.log(endDate);
                           const currentDate = new Date();
                           const fundState = funding.fundState;
-                          console.log(fundState);
                           const timeDiff = endDate.getTime() - startDate.getTime();
                           
                           // 마간기간이 남은 경우
-                          if(timeDiff > 0){
+                          if(timeDiff >= 0){
 	                          // 1일 이상인 경우
 	                          if (timeDiff >= 24 * 60 * 60 * 1000) {
 	                            return Math.ceil(timeDiff / (24 * 60 * 60 * 1000))+"일 남음";
@@ -241,18 +408,13 @@
                         	  return fundState;
                           }
                     },
-                    getProgress(funding) {
-                       
-                    },
                     
                     // 상세페이지로 이동
                     link(funding){
-                       console.log(funding.postNo)
-                       const url = "/fund/detail?postNo="+funding.postNo;
-                       window.location.href = url;
+                       window.location.href = "/fund/detail?postNo="+funding.postNo;;
                     },
                     getImageUrl(funding) {
-                     const imageUrl = "/rest/attachment/download/" + funding.attachmentNo;
+                       const imageUrl = "/rest/attachment/download/" + funding.attachmentNo;
                        return imageUrl;
                        },
                        
@@ -261,62 +423,113 @@
                         return value.toLocaleString();
                       },
                       
-                      // 펀딩 검색
-                      async searchFunding() {
-                         if(!this.searchQuery) return; // 빈 칸 입력시
-                         
-	                  // funding 리스트 초기화
-	                  if(!this.initFundings || this.searchQueryTemp != this.searchQuery) {
-	                     this.fundings = [];
-	                     this.initFundings = true; 
-	                     this.finish = false; // 검색어가 다르면 초기화
-	                  }
-	                       if(this.finish == true) return; // 다 불러왔으면
-	                  
-	                  // 다른 검색어로 검색했을때
-	                  if(this.searchQueryTemp != this.searchQuery) {
-	                     this.searchPage = 1;
-	                  }
-	                  // searchQueryTemp에 이전 검색어 저장
-	                   this.searchQueryTemp = this.searchQuery;
-	                       
-	                  const resp = await axios.get("http://localhost:8080/rest/fund/page/"
-	
-	                        +this.searchPage+"?searchKeyword="+this.searchQuery);     
-	                  console.log(resp.data);
-	                  // data가 FundListVO에 list 2개로 담겨옴
-	                  // fundPostImageDtos가 null이면 fundListWithTagDtos를 데이터에 넣고 vice versa
-	                  resp.data.fundPostImageDtos == null ? this.fundings.push(...resp.data.fundListWithTagDtos) : this.fundings.push(...resp.data.fundPostImageDtos);
-	                  this.searchPage ++;
-	                  
-	                  // 데이터가 12개 미만이면 더 읽을게 없다
-	                       if(resp.data.length < 12){
-	                           this.finish = true;
-	                          }
-                      },
                       // 펀딩 글쓰기로 이동
                       startFunding() {
+                    	  // if not logged in
+                    	  if(!this.checkLogin()) return;
                     	  window.location.href = "/fund/write";
                       },
                       
                       // 시간순 정렬
-//                       sortByDate() {
-//                    	  	const resp = await axios.get("http://localhost:8080/rest/fund/page/sort-by-date");
+                      sortByDate() {
+                    	  const descOrder = "post_time desc";
+                    	    const ascOrder = "post_time asc";
 
-//                    	    가져온 데이터로 fundings 배열 업데이트
-//                    	    this.fundings = resp.data.fundPostImageDtos || resp.data.fundListWithTagDtos;
-                   	    
-                   	    
-//                       }
+                    	    // 최신순
+                    	    if (this.dateSort) {
+                    	        this.dateSort = false;
+                    	        if (!this.orderList.includes(descOrder)) {
+                    	            this.orderList = [descOrder];
+//                     	            this.fetchFundingList();
+                    	        }
+                    	    }
+                    	    // 오래된순
+                    	    else {
+                    	        this.dateSort = true;
+                    	        if (!this.orderList.includes(ascOrder)) {
+                    	            this.orderList = [ascOrder];
+//                     	            this.fetchFundingList();
+                    	        }
+                    	    }
+//                     	    console.log(this.orderList);
+//                     	    console.log(this.fundings);
+                      },
+                      
+                   // 로그인 체크
+      				checkLogin() {
+                      	// 로그인이 안되어 있으면
+      					if(this.memberId == "") {
+      						this.loginModal = true;
+      						return false
+      					}
+                      	// 되어있으면
+      					else return true;
+      				},
+      				
+      				// 로그인 페이지로
+    				linkToLogin() {
+    					window.location.href="/member/login";
+    				},
+    				
+    				// 좋아요 체크 후 추가&삭제
+    				async checkLike(funding) {
+    					// 로그인이 안되어 있으면
+    					if(!this.checkLogin()) return;
+    					
+    					const postNo = funding.postNo;
+    					axios.get('http://localhost:8080/rest/post/like/'+postNo)
+                		.then(response => {
+                			console.log("checkLike = " +response.data);
+                			this.checkFundLike();
+                			
+                				
+                		})
+                		.catch(error => {
+                			console.error(error);
+                		})
+    					
+    				},
+    				// 좋아요 체크
+    				async checkFundLike() {
+    					const postNo = this.fundDetail.postNo;
+    					const resp = await axios.get("http://localhost:8080/rest/post/like/check/"+postNo);
+    					this.fundings.isLiked = resp.data;
+    				},
+    				// 아이디 접속해 있고, 좋아요 클릭시에 실행
+                 	checkLike(postNo,index){
+                    	axios.get('http://localhost:8080/rest/post/like/'+postNo)
+                    		.then(response => {
+                    			console.log(response.data);
+                    			// 응답이 좋아요면
+                    			if(response.data== 'Like'){
+                    				this.postLikeIndexList.push(index);                			
+                    			}
+                    			// 응답이 좋아요 취소면
+                    			else if(response.data=='disLike'){
+                    				this.postLikeIndexList.splice(this.postLikeIndexList.indexOf(index),1);
+                    			}
+                    			
+                    				
+                    		})
+                    		.catch(error => {
+                    			console.error(error);
+                    		})
+                    },
+    				
                  },
                  watch: {
                    // percent가 변하면 percent의 값을 읽어와서 80% 이상인지 판정
                    percent(){
                        if(this.percent >= 80) {
                            // console.log("데이터를 불러올 때가 된거 같아");
-                           this.loadFundPostImageList();
-                           this.searchFunding();
+//                            this.loadFundPostImageList();
+                           this.fetchFundingList();
                        }
+                   },
+                   // 정렬하면
+                   orderList() {
+//                 	   this.fetchFundingList();
+						this.fetchOrderedFundingList();
                    }
                },
                mounted() {
@@ -331,10 +544,10 @@
 
                        // data의 percent를 계산된 값으로 갱신
                        this.percent = Math.round(percent);
-                   },250));
+                   },100));
                },
                  created() {
-                    this.loadFundPostImageList();
+                    this.fetchFundingList();
                  }
            }).mount("#app");
 
