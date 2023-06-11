@@ -18,6 +18,7 @@
 			position: fixed;
 			bottom: 0;
 			left: 0;
+			background-color: #f5f5f5;
 		}
 		.loading {
 	    	position: fixed;
@@ -36,7 +37,7 @@
 	</style>
 </head>
 	
-<div class="loading-screen" style="background-color: #f5f5f5;">
+<div class="loading-screen">
 	<div>
         <img class="loading" src="${pageContext.request.contextPath}/static/image/loading.png" width="100px;">
     </div>
