@@ -224,8 +224,8 @@
     	<!----------------------------------------------- 헤더 시작 ----------------------------------------------->
         <header>
         	<div id="header-area" style="position: relative;">
-				<nav class="navbar navbar-light back-white px-4" style="box-shadow: 0px 3px 4px rgba(3, 21, 17, 0.1);">
-				  	<div class="container-fluid">
+				<nav class="navbar navbar-light back-white p-0" style="box-shadow: 0px 3px 4px rgba(3, 21, 17, 0.1);">
+				  	<div class="container-fluid px-4" style="padding-top: 0.5rem; padding-bottom: 0.5rem;">
 				  		<div class="col-3">
 					    	<a class="navbar-brand" href="/"><img src="/static/image/logo.png" style="width:130px;"></a>
 					    	<!-- <a href="dev/loading">(임시)로딩</a> -->
@@ -268,6 +268,7 @@
 				    	</div>
 				  	</div>
 				</nav>
+				
 				<!---------------------------------------- 채팅 메인 모달 ---------------------------------------->
 				<div class="customModal chatMainModal" v-if="chatMainModal == true">
 					<div class="customModalHeader d-flex align-items-center justify-content-between">
@@ -719,32 +720,9 @@
 	     			 	</div>                           					 	
 					</div>
 	           	</div>
+
 			</div>
         	<!----------------------------------------------- 헤더 끝 ----------------------------------------------->
-            <%-- 
-			<div class="row" style="position: fixed !important; top: 80px; z-index: 99999999999;">
-				<!-- (개발)로그인 버튼 -->
-				<div class="col-4">
-					<button><a href="/dev/login?memberId=testuser1">testuser1</a></button>
-					<button><a href="/dev/login?memberId=testuser2">testuser2</a></button>
-					<button><a href="/dev/login?memberId=testuser3">testuser3</a></button>
-					<button><a href="/dev/login?memberId=adminuser1">adminuser3</a></button>
-				</div>
-				<div class="offset-5 col-3">
-					<!--<c:if test="${memberId == null}">
-						<a href="${pageContext.request.contextPath}/member/login">로그인</a>
-						<a href="${pageContext.request.contextPath}/member/join">회원가입</a>
-					</c:if>
-					<c:if test="${memberId != null}">
-						<a href="${pageContext.request.contextPath}/member/logout">로그아웃</a>
-						<a href="${pageContext.request.contextPath}/member/mypage">마이페이지</a>
-					</c:if>-->
-					<c:if test="${memberLevel == '관리자'}">
-						<a href="${pageContext.request.contextPath}/admin/">관리자 페이지</a>
-					</c:if>
-				</div>
-            </div>
-			--%>
         </header>
           <!-- <hr> -->
 

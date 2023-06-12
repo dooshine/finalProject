@@ -32,8 +32,7 @@
         </footer>
     </main>
  
-	
-
+ 
 
 	<!-- 부트스트랩 js -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
@@ -109,7 +108,9 @@
 					
 					// 새 메세지 알림 여부
 					newChatNoti: false,
-					chatRoomNoList: []
+					chatRoomNoList: [],
+
+
 				};
 			},
 			methods: {
@@ -997,6 +998,7 @@
 					this.targetId = this.messageList[index].memberId;
 					window.location.href = `${pageContext.request.contextPath}/member/mypage/${targetId}`;
 				}*/
+
 				
 			},
 			computed: {
@@ -1019,6 +1021,8 @@
 				if(this.memberId != "" && memberId != ""){
 					this.connect();
 				}
+
+				
 			},
 			mounted() {
 				// 사용자가 이 탭을 보고있는지 확인
@@ -1134,15 +1138,11 @@
 							// 헤더버튼 요소 선택
 						function focusInputNoti() {
 							var notiMarkEle = $(".notiMark");
-							// notiMarkEle.css("background", "forestgreen");
 							notiMarkEle.hide();
-							// console.log("포커스");
 						}
 						function rollbackViewNoti() {
 							var notiMarkEle = $(".notiMark");
-							// notiMarkEle.css("background", "forestgreen");
 							notiMarkEle.show();
-							// console.log("블러");
 						}
 
 						function registerEvent() {
@@ -1174,16 +1174,9 @@
 			},
 		}).mount("#header-area");
 	</script>
-	<script>
-		// setTimeout(function(){
-		// 	$(function(){
-		// 	$(".loading-screen").remove();
-		// })
-		// }, 1000000);
-		$(function(){
-			$(".loading-screen").remove();
-		})
-	</script>
+
+ 
+    
 </body>
 
 </html>
