@@ -717,7 +717,7 @@
 		</div>
 	</div>
 
-	<!-- 게시물 수정 종료 모달 -->
+	<!-- 	 종료 모달 -->
 	<div class="modal" tabindex="-1" role="dialog" id="editEnd"
 		data-bs-backdrop="true">
 		<div class="modal-dialog" role="document">
@@ -854,7 +854,7 @@
 								<h5>사유 : </h5>
 							</div>
 							<div class="text-start col-7">
-								<h5 class="font-purple1" >{{reportReason}}</h5>
+								<h5 class="-purple1" >{{reportReason}}</h5>
 							</div>
 						</div>
 						<div class="text-center mb-2">
@@ -876,18 +876,27 @@
 	<div v-for="(post, index) in posts" :key="index">
 
 		<!-- 글 박스 루프 1개-->
-		<div class="mb-2 custom-container">
+		<div class="mb-2 custom-container" >
 			<!-- 프로필 사진과 아이디 -->
 			<div class="row mt-1">			
-				<div class="col-1 col-md-1 col-lg-1 d-flex align-items-center justify-content-center">
-					<!-- 프로필 사진이 있는 경우 -->
-					<img v-if="post.attachmentNo && post.attachmentNo != null" @click="toMemberPage(post.memberId)"
-						class="rounded-circle img-fluid" style="max-width: 100%; min-width: 100%; aspect-ratio: 1/1;"
-						:src="getAttachmentUrl(post.attachmentNo)">
-					
-					<!-- 프로필 사진이 없는 경우 -->
-					<img v-else class="img-fluid" style="max-width: 100%; min-width: 100%; aspect-ratio: 1/1;"
-						@click="toMemberPage(post.memberId)" src="static/image/profileDummy.png">
+				<div class="col-1 col-md-1 col-lg-1 ">
+					<div class="row d-flex align-items-center justify-content-center">
+						<div class="col-2"></div>
+						<div class="col-10">
+							<div class="row mt-2 text-center rounded-circle" style="aspect-ratio:1/1; overflow:hidden;object-fit:fill;">					
+								
+								<!-- 프로필 사진이 있는 경우 -->		
+								<img v-if="post.attachmentNo && post.attachmentNo != null" @click="toMemberPage(post.memberId)"
+									class="img-fluid p-0" style="max-width: 100%; min-width: 100%;"
+									:src="getAttachmentUrl(post.attachmentNo)">
+								
+								<!-- 프로필 사진이 없는 경우 -->
+								<img v-else class="img-fluid p-0" style="max-width: 100%; min-width: 100%;"
+									@click="toMemberPage(post.memberId)" src="static/image/profileDummy.png">
+							</div>
+						</div>
+<!-- 						<div class="col-1"></div> -->
+					</div>
 				</div>
 				<div class="col-5 col-md-5 col-lg-5 align-middle justify-content-center">
 
@@ -1215,16 +1224,17 @@
 											<div class="col-2">
 											</div>
 											<div class="col-9">
-												<div class="row mt-2 text-center rounded-circle " style="aspect-ratio:1/1; overflow:hidden;object-fit:fill;">
+												<div class="row mt-2 text-center rounded-circle" style="aspect-ratio:1/1; overflow:hidden;object-fit:fill;">
 												<!-- 프로필 사진이 있는 경우 -->
 												<img v-if="reply.attachmentNo && reply.attachmentNo != null"
-												class=" img-fluid p-0"
+												class=" img-fluid p-0" @click="toMemberPage(reply.replyId)"
 												style="width:100%;height:100%;"
 												:src="getAttachmentUrl(reply.attachmentNo)">
 											
 												<!-- 프로필 사진이 없는 경우 -->
-													<img v-else class="img-fluid p-0" style="width:100%;height:100%;"
-													src="static/image/profileDummy.png">
+												<img v-else class="img-fluid p-0" @click="toMemberPage(reply.replyId)"
+												style="width:100%;height:100%;"
+												src="static/image/profileDummy.png">
 												</div>
 											</div>
 											<div class="col-1">
@@ -1245,7 +1255,7 @@
 											class="row grey-f5f5f5 rounded-3 text-left"
 											:style="{ width: (reply.replyId.length * 15 + 30) + 'px' }">
 											<div class="row mt-2"></div>
-											<h6 class="mr-1 fw-bold">{{reply.memberNick}}</h6>
+											<h6 class="mr-1 fw-bold" @click="toMemberPage(reply.replyId)">{{reply.memberNick}}</h6>
 											<h6 class="mr-1 lh-lg">{{reply.replyContent}}</h6>
 											<div class="row mb-1"></div>
 										</div>
@@ -1255,7 +1265,7 @@
 											style="max-width: 100%"
 											:style="{width: (reply.replyContent.length * 15 +30) + 'px' }">
 											<div class="row mt-2"></div>
-											<h6 class="mr-1 fw-bold">{{reply.memberNick}}</h6>
+											<h6 class="mr-1 fw-bold" @click="toMemberPage(reply.replyId)">{{reply.memberNick}}</h6>
 											<h6 class="mr-1 lh-lg">{{reply.replyContent}}</h6>
 											<div class="row mb-1"></div>
 										</div>
@@ -1297,13 +1307,13 @@
 													<!-- 대댓글 프로필 사진이 있는 경우 -->
 													<div class="col-9">
 														<div class="row my-2 text-center rounded-circle m" style="aspect-ratio:1/1; overflow:hidden;object-fit:fill;">
-														<img v-if="rereply.attachmentNo && rereply.attachmentNo != null"
+														<img v-if="rereply.attachmentNo && rereply.attachmentNo != null" @click="toMemberPage(rereply.replyId)" 
 															class=" img-fluid p-0"
 															style="width:100%;height:100%;"
 															:src="getAttachmentUrl(rereply.attachmentNo)">
 														
 														<!-- 대댓글 프로필 사진이 없는 경우 -->
-														<img v-else class="img-fluid p-0" style="width:100%;height:100%;"														 
+														<img v-else class="img-fluid p-0" style="width:100%;height:100%;" @click="toMemberPage(rereply.replyId)"													 
 															src="static/image/profileDummy.png">
 														</div>
 													</div>
@@ -1321,7 +1331,7 @@
 													class="row grey-f5f5f5 rounded-3 text-left"
 													:style="{ width: (rereply.replyId.length * 15 +30) + 'px' }">
 													<div class="row mt-2"></div>
-													<h6 class="mr-1 fw-bold">{{rereply.memberNick}}</h6>
+													<h6 class="mr-1 fw-bold" @click="toMemberPage(rereply.replyId)">{{rereply.memberNick}}</h6>
 													<h6 class="mr-1 lh-lg">{{rereply.replyContent}}</h6>
 													<div class="row mb-1"></div>
 												</div>
@@ -1330,7 +1340,7 @@
 													style="max-width: 100%"
 													:style="{ width: (rereply.replyContent.length * 15 +30) + 'px' }">
 													<div class="row mt-2"></div>
-													<h6 class="mr-1 fw-bold">{{rereply.memberNick}}</h6>
+													<h6 class="mr-1 fw-bold" @click="toMemberPage(rereply.replyId)">{{rereply.memberNick}}</h6>
 													<h6 class="mr-1 lh-lg">{{rereply.replyContent}}</h6>
 													<div class="row mb-1"></div>
 												</div>
@@ -1434,11 +1444,11 @@
 												<div class="col-9">
 													<div class="row mt-2 text-center rounded-circle " style="aspect-ratio:1/1; overflow:hidden;object-fit:fill;">
 														<img v-if="reply.attachmentNo && reply.attachmentNo != null"
-															class=" img-fluid p-0" style="width:100%;height:100%;"
+															class=" img-fluid p-0" style="width:100%;height:100%;" @click="toMemberPage(reply.replyId)"
 															:src="getAttachmentUrl(reply.attachmentNo)">
 														
 														<!-- 프로필 사진이 없는 경우 -->
-														<img v-else class="img-fluid p-0" style="width:100%;height:100%;"
+														<img v-else class="img-fluid p-0" style="width:100%;height:100%;" @click="toMemberPage(reply.replyId)"
 														src="static/image/profileDummy.png">
 													</div>
 												</div>
@@ -1460,8 +1470,8 @@
 												class="row grey-f5f5f5 rounded-3 text-left"
 												:style="{ width: (reply.replyId.length * 15 + 30) + 'px' }">
 												<div class="row mt-2"></div>
-												<h6 class="mr-1 fw-bold">{{reply.memberNick}}</h6>
-												<h6 class="mr-1 lh-lg">{{reply.replyContent}}</h6>
+												<h6 class="mr-1 fw-bold" @click="toMemberPage(reply.replyId)">{{reply.memberNick}}</h6>
+												<h6 class="mr-1 lh-lg" >{{reply.replyContent}}</h6>
 												<div class="row mb-1"></div>
 											</div>
 
@@ -1470,7 +1480,7 @@
 												style="max-width: 100%"
 												:style="{width: (reply.replyContent.length * 15 +30) + 'px' }">
 												<div class="row mt-2"></div>
-												<h6 class="mr-1 fw-bold">{{reply.memberNick}}</h6>
+												<h6 class="mr-1 fw-bold" @click="toMemberPage(reply.replyId)">{{reply.memberNick}}</h6>
 												<h6 class="mr-1 lh-lg">{{reply.replyContent}}</h6>
 												<div class="row mb-1"></div>
 											</div>
@@ -1514,11 +1524,11 @@
 														<div class="col-9">
 															<div class="row mt-2 text-center rounded-circle " style="aspect-ratio:1/1; overflow:hidden;object-fit:fill;">
 																	<img v-if="rereply.attachmentNo && rereply.attachmentNo != null"
-																		class="rounded-circle img-fluid"
+																		class="img-fluid p-0" @click="toMemberPage(rereply.replyId)"
 																		:src="getAttachmentUrl(rereply.attachmentNo)">
 																	
 																	<!-- 프로필 사진이 없는 경우 -->
-																	<img v-else class="img-fluid p-0" style="width:100%;height:100%;"
+																	<img v-else class="img-fluid p-0" style="width:100%;height:100%;" @click="toMemberPage(rereply.replyId)"
 																		src="static/image/profileDummy.png">
 															</div>
 														</div>
@@ -1535,8 +1545,8 @@
 														class="row grey-f5f5f5 rounded-3 text-left"
 														:style="{ width: (rereply.replyId.length * 15 +30) + 'px' }">
 														<div class="row mt-2"></div>
-														<h6 class="mr-1 fs-12px fw-bold">{{rereply.memberNick}}</h6>
-														<h6 class="mr-1 fs-11px lh-lg">{{rereply.replyContent}}</h6>
+														<h6 class="mr-1 fw-bold" @click="toMemberPage(rereply.replyId)">{{rereply.memberNick}}</h6>
+														<h6 class="mr-1 lh-lg">{{rereply.replyContent}}</h6>
 														<div class="row mb-1"></div>
 													</div>
 													<!-- 대댓글 내용이 아이디보다 길면 -->
@@ -1544,8 +1554,8 @@
 														style="max-width: 100%"
 														:style="{ width: (rereply.replyContent.length * 15 +30) + 'px' }">
 														<div class="row mt-2"></div>
-														<h6 class="mr-1 fs-12px fw-bold">{{rereply.memberNick}}</h6>
-														<h6 class="mr-1 fs-11px lh-lg">{{rereply.replyContent}}</h6>
+														<h6 class="mr-1 fw-bold" @click="toMemberPage(rereply.replyId)">{{rereply.memberNick}}</h6>
+														<h6 class="mr-1 lh-lg">{{rereply.replyContent}}</h6>
 														<div class="row mb-1"></div>
 													</div>
 
@@ -1746,6 +1756,7 @@
     		</div>
   		</div>
     </div>
+    <!-- 일정 등록 모달 -->
 </div>
 
 

@@ -463,18 +463,27 @@
 	<div v-for="(post, index) in posts" :key="index">
 
 		<!-- 글 박스 루프 1개-->
-		<div class="mb-2 custom-container">
+		<div class="mb-2 custom-container" >
 			<!-- 프로필 사진과 아이디 -->
 			<div class="row mt-1">			
-				<div class="col-1 col-md-1 col-lg-1 d-flex align-items-center justify-content-center">
-					<!-- 프로필 사진이 있는 경우 -->
-					<img v-if="post.attachmentNo && post.attachmentNo != null" @click="toMemberPage(post.memberId)"
-						class="rounded-circle img-fluid" style="max-width: 100%; min-width: 100%; aspect-ratio: 1/1;"
-						:src="getAttachmentUrl(post.attachmentNo)">
-					
-					<!-- 프로필 사진이 없는 경우 -->
-					<img v-else class="img-fluid" style="max-width: 100%; min-width: 100%; aspect-ratio: 1/1;"
-						@click="toMemberPage(post.memberId)" src="static/image/profileDummy.png">
+				<div class="col-1 col-md-1 col-lg-1 ">
+					<div class="row d-flex align-items-center justify-content-center">
+						<div class="col-2"></div>
+						<div class="col-10">
+							<div class="row mt-2 text-center rounded-circle" style="aspect-ratio:1/1; overflow:hidden;object-fit:fill;">					
+								
+								<!-- 프로필 사진이 있는 경우 -->		
+								<img v-if="post.attachmentNo && post.attachmentNo != null" @click="toMemberPage(post.memberId)"
+									class="img-fluid p-0" style="max-width: 100%; min-width: 100%;"
+									:src="getAttachmentUrl(post.attachmentNo)">
+								
+								<!-- 프로필 사진이 없는 경우 -->
+								<img v-else class="img-fluid p-0" style="max-width: 100%; min-width: 100%;"
+									@click="toMemberPage(post.memberId)" src="static/image/profileDummy.png">
+							</div>
+						</div>
+<!-- 						<div class="col-1"></div> -->
+					</div>
 				</div>
 				<div class="col-5 col-md-5 col-lg-5 align-middle justify-content-center">
 
@@ -802,16 +811,17 @@
 											<div class="col-2">
 											</div>
 											<div class="col-9">
-												<div class="row mt-2 text-center rounded-circle " style="aspect-ratio:1/1; overflow:hidden;object-fit:fill;">
+												<div class="row mt-2 text-center rounded-circle" style="aspect-ratio:1/1; overflow:hidden;object-fit:fill;">
 												<!-- 프로필 사진이 있는 경우 -->
 												<img v-if="reply.attachmentNo && reply.attachmentNo != null"
-												class=" img-fluid p-0"
+												class=" img-fluid p-0" @click="toMemberPage(reply.replyId)"
 												style="width:100%;height:100%;"
 												:src="getAttachmentUrl(reply.attachmentNo)">
 											
 												<!-- 프로필 사진이 없는 경우 -->
-													<img v-else class="img-fluid p-0" style="width:100%;height:100%;"
-													src="static/image/profileDummy.png">
+												<img v-else class="img-fluid p-0" @click="toMemberPage(reply.replyId)"
+												style="width:100%;height:100%;"
+												src="static/image/profileDummy.png">
 												</div>
 											</div>
 											<div class="col-1">
@@ -832,7 +842,7 @@
 											class="row grey-f5f5f5 rounded-3 text-left"
 											:style="{ width: (reply.replyId.length * 15 + 30) + 'px' }">
 											<div class="row mt-2"></div>
-											<h6 class="mr-1 fw-bold">{{reply.memberNick}}</h6>
+											<h6 class="mr-1 fw-bold" @click="toMemberPage(reply.replyId)">{{reply.memberNick}}</h6>
 											<h6 class="mr-1 lh-lg">{{reply.replyContent}}</h6>
 											<div class="row mb-1"></div>
 										</div>
@@ -842,7 +852,7 @@
 											style="max-width: 100%"
 											:style="{width: (reply.replyContent.length * 15 +30) + 'px' }">
 											<div class="row mt-2"></div>
-											<h6 class="mr-1 fw-bold">{{reply.memberNick}}</h6>
+											<h6 class="mr-1 fw-bold" @click="toMemberPage(reply.replyId)">{{reply.memberNick}}</h6>
 											<h6 class="mr-1 lh-lg">{{reply.replyContent}}</h6>
 											<div class="row mb-1"></div>
 										</div>
@@ -884,13 +894,13 @@
 													<!-- 대댓글 프로필 사진이 있는 경우 -->
 													<div class="col-9">
 														<div class="row my-2 text-center rounded-circle m" style="aspect-ratio:1/1; overflow:hidden;object-fit:fill;">
-														<img v-if="rereply.attachmentNo && rereply.attachmentNo != null"
+														<img v-if="rereply.attachmentNo && rereply.attachmentNo != null" @click="toMemberPage(rereply.replyId)" 
 															class=" img-fluid p-0"
 															style="width:100%;height:100%;"
 															:src="getAttachmentUrl(rereply.attachmentNo)">
 														
 														<!-- 대댓글 프로필 사진이 없는 경우 -->
-														<img v-else class="img-fluid p-0" style="width:100%;height:100%;"														 
+														<img v-else class="img-fluid p-0" style="width:100%;height:100%;" @click="toMemberPage(rereply.replyId)"													 
 															src="static/image/profileDummy.png">
 														</div>
 													</div>
@@ -908,7 +918,7 @@
 													class="row grey-f5f5f5 rounded-3 text-left"
 													:style="{ width: (rereply.replyId.length * 15 +30) + 'px' }">
 													<div class="row mt-2"></div>
-													<h6 class="mr-1 fw-bold">{{rereply.memberNick}}</h6>
+													<h6 class="mr-1 fw-bold" @click="toMemberPage(rereply.replyId)">{{rereply.memberNick}}</h6>
 													<h6 class="mr-1 lh-lg">{{rereply.replyContent}}</h6>
 													<div class="row mb-1"></div>
 												</div>
@@ -917,7 +927,7 @@
 													style="max-width: 100%"
 													:style="{ width: (rereply.replyContent.length * 15 +30) + 'px' }">
 													<div class="row mt-2"></div>
-													<h6 class="mr-1 fw-bold">{{rereply.memberNick}}</h6>
+													<h6 class="mr-1 fw-bold" @click="toMemberPage(rereply.replyId)">{{rereply.memberNick}}</h6>
 													<h6 class="mr-1 lh-lg">{{rereply.replyContent}}</h6>
 													<div class="row mb-1"></div>
 												</div>
@@ -1021,11 +1031,11 @@
 												<div class="col-9">
 													<div class="row mt-2 text-center rounded-circle " style="aspect-ratio:1/1; overflow:hidden;object-fit:fill;">
 														<img v-if="reply.attachmentNo && reply.attachmentNo != null"
-															class=" img-fluid p-0" style="width:100%;height:100%;"
+															class=" img-fluid p-0" style="width:100%;height:100%;" @click="toMemberPage(reply.replyId)"
 															:src="getAttachmentUrl(reply.attachmentNo)">
 														
 														<!-- 프로필 사진이 없는 경우 -->
-														<img v-else class="img-fluid p-0" style="width:100%;height:100%;"
+														<img v-else class="img-fluid p-0" style="width:100%;height:100%;" @click="toMemberPage(reply.replyId)"
 														src="static/image/profileDummy.png">
 													</div>
 												</div>
@@ -1047,8 +1057,8 @@
 												class="row grey-f5f5f5 rounded-3 text-left"
 												:style="{ width: (reply.replyId.length * 15 + 30) + 'px' }">
 												<div class="row mt-2"></div>
-												<h6 class="mr-1 fw-bold">{{reply.memberNick}}</h6>
-												<h6 class="mr-1 lh-lg">{{reply.replyContent}}</h6>
+												<h6 class="mr-1 fw-bold" @click="toMemberPage(reply.replyId)">{{reply.memberNick}}</h6>
+												<h6 class="mr-1 lh-lg" >{{reply.replyContent}}</h6>
 												<div class="row mb-1"></div>
 											</div>
 
@@ -1057,7 +1067,7 @@
 												style="max-width: 100%"
 												:style="{width: (reply.replyContent.length * 15 +30) + 'px' }">
 												<div class="row mt-2"></div>
-												<h6 class="mr-1 fw-bold">{{reply.memberNick}}</h6>
+												<h6 class="mr-1 fw-bold" @click="toMemberPage(reply.replyId)">{{reply.memberNick}}</h6>
 												<h6 class="mr-1 lh-lg">{{reply.replyContent}}</h6>
 												<div class="row mb-1"></div>
 											</div>
@@ -1101,11 +1111,11 @@
 														<div class="col-9">
 															<div class="row mt-2 text-center rounded-circle " style="aspect-ratio:1/1; overflow:hidden;object-fit:fill;">
 																	<img v-if="rereply.attachmentNo && rereply.attachmentNo != null"
-																		class="rounded-circle img-fluid"
+																		class="img-fluid p-0" @click="toMemberPage(rereply.replyId)"
 																		:src="getAttachmentUrl(rereply.attachmentNo)">
 																	
 																	<!-- 프로필 사진이 없는 경우 -->
-																	<img v-else class="img-fluid p-0" style="width:100%;height:100%;"
+																	<img v-else class="img-fluid p-0" style="width:100%;height:100%;" @click="toMemberPage(rereply.replyId)"
 																		src="static/image/profileDummy.png">
 															</div>
 														</div>
@@ -1122,8 +1132,8 @@
 														class="row grey-f5f5f5 rounded-3 text-left"
 														:style="{ width: (rereply.replyId.length * 15 +30) + 'px' }">
 														<div class="row mt-2"></div>
-														<h6 class="mr-1 fs-12px fw-bold">{{rereply.memberNick}}</h6>
-														<h6 class="mr-1 fs-11px lh-lg">{{rereply.replyContent}}</h6>
+														<h6 class="mr-1 fw-bold" @click="toMemberPage(rereply.replyId)">{{rereply.memberNick}}</h6>
+														<h6 class="mr-1 lh-lg">{{rereply.replyContent}}</h6>
 														<div class="row mb-1"></div>
 													</div>
 													<!-- 대댓글 내용이 아이디보다 길면 -->
@@ -1131,8 +1141,8 @@
 														style="max-width: 100%"
 														:style="{ width: (rereply.replyContent.length * 15 +30) + 'px' }">
 														<div class="row mt-2"></div>
-														<h6 class="mr-1 fs-12px fw-bold">{{rereply.memberNick}}</h6>
-														<h6 class="mr-1 fs-11px lh-lg">{{rereply.replyContent}}</h6>
+														<h6 class="mr-1 fw-bold" @click="toMemberPage(rereply.replyId)">{{rereply.memberNick}}</h6>
+														<h6 class="mr-1 lh-lg">{{rereply.replyContent}}</h6>
 														<div class="row mb-1"></div>
 													</div>
 
@@ -1287,6 +1297,57 @@
 
 	</div>
 	<!--------------- 게시물들 반복구간 ------------->
+	
+	
+	
+	
+	<!-- 일정 등록 모달 -->
+   	<div class="modal" tabindex="-1" role="dialog" id="addCalendarPostModal">
+    	<div class="modal-dialog" role="document">
+        	<div class="modal-content">
+            	<div class="modal-header">
+                	<h5 class="modal-title">일정 등록</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  	<div class="beforeLogin">
+                  		<h5 class="text-center mt-4">🙌</h5>
+                   		<h5 class="text-center mt-3 mb-4">로그인하고 중요한 일정을 등록해 보세요!</h5>
+						<button type="button" class="custom-btn btn-purple1 btn-round w-100 mb-4 calendar-login-btn">
+							로그인하러 가기
+						</button>
+					</div>
+		            <div class="afterLogin">
+						<div class="form-floating mb-3">
+							<input type="text" readonly class="form-control-plaintext" id="scheduleDatePost" placeholder="dd" :value="scheduleDate">
+							<label for="scheduleDatePost" class="startDatePost">날짜</label>
+						</div>
+		              	<div class="form-floating mb-3">
+							<input type="text" class="form-control" id="calendarTitlePost" placeholder="dd" @keyup.enter="moveFocusToMemo">
+							<label for="calendarTitlePost">일정 이름</label>
+							<div class="display-none invalidMessage">
+						    	1글자 이상, 30글자 이하로 입력할 수 있습니다.
+						    </div>
+						</div>
+		               	<div class="form-floating">
+							<textarea class="form-control" placeholder="Leave a comment here" id="calendarMemoPost" ref="memoTextArea" style="height: 100px; resize: none;"></textarea>
+							<label for="calendarMemoPost">메모</label>
+							<div class="display-none invalidMessage">
+						    	100글자 이하로 입력할 수 있습니다.
+						    </div>
+						</div>
+					</div>
+        		</div>
+		        <div class="modal-footer addCalendarModalFooter">
+			        <button type="button" class="custom-btn btn-purple1 addSchedule-btn" @click="addSchedule">
+			            등록
+		            </button>
+		        </div>
+    		</div>
+  		</div>
+    </div>
+    <!-- 일정 등록 모달 -->
+	
 	
 	
     <div v-if="posts.length === 0">
@@ -2138,6 +2199,61 @@
         // 풀네임 생성
         fullName(name, engName){
           return name + "(" + engName + ")";
+        },
+        
+        showAddScheduleModal(index) {
+        	console.log("index: " + index);
+        	console.log("start: " + this.posts[index].scheduleStart);
+        	console.log("end: " + this.posts[index].scheduleEnd);
+        	this.$nextTick(() => {
+        		this.startDate = this.posts[index].scheduleStart;
+        		this.endDate = this.posts[index].scheduleEnd;
+        		this.scheduleDate = moment(startDate).format('YYYY년 MM월 DD일') 
+        							+ " - " + 
+        							moment(endDate).add(1, 'days').format('YYYY년 MM월 DD일');
+        		$("#calendarTitlePost").focus();
+        	});
+        	$("#addCalendarPostModal").modal("show");
+        	this.hidePostModal();
+        },
+        
+        addSchedule() {
+       		if(memberId === "") return;
+       		const calendarTitlePost = $("#calendarTitlePost").val();
+       		const calendarMemoPost = $("#calendarMemoPost").val();
+       		const endDate = moment(this.endDate).add(1, 'days');
+       		if(calendarTitlePost) {
+       			const dto={
+       				"memberId": memberId,
+       				"calendarTitle": calendarTitlePost,
+       				"calendarStart": this.startDate,
+       				"calendarEnd": endDate,
+       				"calendarMemo": calendarMemoPost
+       			};
+       			console.log(this.startDate);
+       			console.log(this.endDate);
+       			axios({
+       				url: contextPath + "/calendar/add",
+       				method:"post",
+       				data:JSON.stringify(dto),
+       				headers: { 'Content-Type': 'application/json' }
+       			}).then(function(resp){
+       				$("#calendarTitlePost").val("");
+       				$("#calendarMemoPost").val("");
+       				loadMemberCalendar();
+       			});
+       		}
+       		// 일정 등록 모달 닫기
+       	    $("#addCalendarPostModal").modal("hide");
+       		
+        },
+        moveFocusToMemo() {
+        	document.getElementById("calendarMemoPost").focus();
+        },
+        // 해당 맴버가 쓴 글 페이지로 
+        toMemberPage(memberId){
+        	const url = 'http://localhost:8080/member/mypage2/'+memberId;
+        	window.location.href = url;
         },
 
       },
