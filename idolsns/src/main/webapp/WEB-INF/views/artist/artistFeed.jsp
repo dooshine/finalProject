@@ -609,7 +609,14 @@
 												@click="setUpdatePost(post)">게시물 글 내용 수정</h6>
 										</div>
 									</div>
-									<div class="row" v-if="post.scheduleStart !== null">
+									<div class="row" v-if="post.scheduleStart !== null && post.scheduleEnd !== null">
+										<div class="col-1"></div>
+										<div class="col-11 ms-2">
+											<div class="custom-hr my-2 me-4"></div>
+											<h6 @click="showAddScheduleModal(index)">일정 추가</h6>
+										</div>
+									</div>
+									<div class="row" v-if="post.togetherStart !== null && post.togetherEnd !== null">
 										<div class="col-1"></div>
 										<div class="col-11 ms-2">
 											<div class="custom-hr my-2 me-4"></div>
@@ -641,7 +648,14 @@
 											<h6>게시물 신고 하기</h6>
 										</div>
 									</div>
-									<div class="row" v-if="post.scheduleStart !== null">
+									<div class="row" v-if="post.scheduleStart !== null && post.scheduleEnd !== null">
+										<div class="col-1"></div>
+										<div class="col-11 ms-2">
+											<div class="custom-hr my-2 me-4"></div>
+											<h6 @click="showAddScheduleModal(index)">일정 추가</h6>
+										</div>
+									</div>
+									<div class="row" v-if="post.togetherStart !== null && post.togetherEnd !== null">
 										<div class="col-1"></div>
 										<div class="col-11 ms-2">
 											<div class="custom-hr my-2 me-4"></div>
@@ -1512,6 +1526,7 @@
              	// 세션 맴버 첨부파일 번호
              	sessionMemberAttachmentNo: null,
              	
+             	// 캘린더 관련
              	scheduleDate: "",
              	startDate: "",
              	endDate: "",
@@ -2225,17 +2240,31 @@
         	}
         },
         
+     // 캘린더 관련
         showAddScheduleModal(index) {
-        	console.log("index: " + index);
-        	console.log("start: " + this.posts[index].scheduleStart);
-        	console.log("end: " + this.posts[index].scheduleEnd);
+        	//console.log("index: " + index);
+        	//console.log("start: " + this.posts[index].scheduleStart);
+        	//console.log("end: " + this.posts[index].scheduleEnd);
         	this.$nextTick(() => {
-        		this.startDate = this.posts[index].scheduleStart;
-        		this.endDate = this.posts[index].scheduleEnd;
-        		this.scheduleDate = moment(startDate).format('YYYY년 MM월 DD일') 
-        							+ " - " + 
-        							moment(endDate).add(1, 'days').format('YYYY년 MM월 DD일');
-        		$("#calendarTitlePost").focus();
+        		if(this.posts[index].scheduleStart !== null && this.posts[index].scheduleEnd !== null) {
+        			this.startDate = this.posts[index].scheduleStart;
+            		this.endDate = this.posts[index].scheduleEnd;
+            		this.scheduleDate = moment(this.startDate).format('YYYY년 MM월 DD일') 
+            							+ " - " + 
+            							moment(this.endDate).format('YYYY년 MM월 DD일');
+            		$("#calendarTitlePost").focus();
+        		}
+        		else {
+        			this.startDate = this.posts[index].togetherStart;
+            		this.endDate = this.posts[index].togetherEnd;
+            		this.scheduleDate = moment(this.startDate).format('YYYY년 MM월 DD일') 
+            							+ " - " + 
+            							moment(this.endDate).format('YYYY년 MM월 DD일');
+            		$("#calendarTitlePost").focus();
+        		}
+        		/*console.log(this.startDate);
+        		console.log(this.endDate);
+        		console.log(this.scheduleDate);*/
         	});
         	$("#addCalendarPostModal").modal("show");
         	this.hidePostModal();
@@ -2254,8 +2283,8 @@
        				"calendarEnd": endDate,
        				"calendarMemo": calendarMemoPost
        			};
-       			console.log(this.startDate);
-       			console.log(this.endDate);
+       			//console.log(this.startDate);
+       			//console.log(this.endDate);
        			axios({
        				url: contextPath + "/calendar/add",
        				method:"post",
@@ -2279,8 +2308,6 @@
         	const url = 'http://localhost:8080/member/mypage2/'+memberId;
         	window.location.href = url;
         },
-
-
 
 		// ######################## 게시물(jjy) method(끝) ########################
       },
@@ -2315,7 +2342,7 @@
 
 	  created(){
     	  	
-	  }
+	  },
     }).mount('#artist-body')
 </script>
 

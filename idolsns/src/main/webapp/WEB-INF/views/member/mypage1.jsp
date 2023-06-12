@@ -712,7 +712,14 @@
 											@click="setUpdatePost(post)">게시물 글 내용 수정</h6>
 									</div>
 								</div>
-								<div class="row" v-if="post.scheduleStart !== null">
+								<div class="row" v-if="post.scheduleStart !== null && post.scheduleEnd !== null">
+									<div class="col-1"></div>
+									<div class="col-11 ms-2">
+										<div class="custom-hr my-2 me-4"></div>
+										<h6 @click="showAddScheduleModal(index)">일정 추가</h6>
+									</div>
+								</div>
+								<div class="row" v-if="post.togetherStart !== null && post.togetherEnd !== null">
 									<div class="col-1"></div>
 									<div class="col-11 ms-2">
 										<div class="custom-hr my-2 me-4"></div>
@@ -744,7 +751,14 @@
 										<h6>게시물 신고 하기</h6>
 									</div>
 								</div>
-								<div class="row" v-if="post.scheduleStart !== null">
+								<div class="row" v-if="post.scheduleStart !== null && post.scheduleEnd !== null">
+									<div class="col-1"></div>
+									<div class="col-11 ms-2">
+										<div class="custom-hr my-2 me-4"></div>
+										<h6 @click="showAddScheduleModal(index)">일정 추가</h6>
+									</div>
+								</div>
+								<div class="row" v-if="post.togetherStart !== null && post.togetherEnd !== null">
 									<div class="col-1"></div>
 									<div class="col-11 ms-2">
 										<div class="custom-hr my-2 me-4"></div>
@@ -1510,6 +1524,53 @@
     		</div>
   		</div>
     </div>
+    
+    <!-- 일정 등록 모달 -->
+   	<div class="modal" tabindex="-1" role="dialog" id="addCalendarPostModal">
+    	<div class="modal-dialog" role="document">
+        	<div class="modal-content">
+            	<div class="modal-header">
+                	<h5 class="modal-title">일정 등록</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  	<div class="beforeLogin">
+                  		<h5 class="text-center mt-4">🙌</h5>
+                   		<h5 class="text-center mt-3 mb-4">로그인하고 중요한 일정을 등록해 보세요!</h5>
+						<button type="button" class="custom-btn btn-purple1 btn-round w-100 mb-4 calendar-login-btn">
+							로그인하러 가기
+						</button>
+					</div>
+		            <div class="afterLogin">
+						<div class="form-floating mb-3">
+							<input type="text" readonly class="form-control-plaintext" id="scheduleDatePost" placeholder="dd" :value="scheduleDate">
+							<label for="scheduleDatePost" class="startDatePost">날짜</label>
+						</div>
+		              	<div class="form-floating mb-3">
+							<input type="text" class="form-control" id="calendarTitlePost" placeholder="dd" @keyup.enter="moveFocusToMemo">
+							<label for="calendarTitlePost">일정 이름</label>
+							<div class="display-none invalidMessage">
+						    	1글자 이상, 30글자 이하로 입력할 수 있습니다.
+						    </div>
+						</div>
+		               	<div class="form-floating">
+							<textarea class="form-control" placeholder="Leave a comment here" id="calendarMemoPost" ref="memoTextArea" style="height: 100px; resize: none;"></textarea>
+							<label for="calendarMemoPost">메모</label>
+							<div class="display-none invalidMessage">
+						    	100글자 이하로 입력할 수 있습니다.
+						    </div>
+						</div>
+					</div>
+        		</div>
+		        <div class="modal-footer addCalendarModalFooter">
+			        <button type="button" class="custom-btn btn-purple1 addSchedule-btn" @click="addSchedule">
+			            등록
+		            </button>
+		        </div>
+    		</div>
+  		</div>
+    </div>
+    
   <!-- 뷰 app 내부 -->
   </div>
 <!-- 전체 컨테이너 내부 -->
@@ -2594,16 +2655,29 @@
               	
             	// 캘린더 관련
             	showAddScheduleModal(index) {
-                	console.log("index: " + index);
-                	console.log("start: " + this.posts[index].scheduleStart);
-                	console.log("end: " + this.posts[index].scheduleEnd);
+                	//console.log("index: " + index);
+                	//console.log("start: " + this.posts[index].scheduleStart);
+                	//console.log("end: " + this.posts[index].scheduleEnd);
                 	this.$nextTick(() => {
-                		this.startDate = this.posts[index].scheduleStart;
-                		this.endDate = this.posts[index].scheduleEnd;
-                		this.scheduleDate = moment(startDate).format('YYYY년 MM월 DD일') 
-                							+ " - " + 
-                							moment(endDate).add(1, 'days').format('YYYY년 MM월 DD일');
-                		$("#calendarTitlePost").focus();
+                		if(this.posts[index].scheduleStart !== null && this.posts[index].scheduleEnd !== null) {
+                			this.startDate = this.posts[index].scheduleStart;
+                    		this.endDate = this.posts[index].scheduleEnd;
+                    		this.scheduleDate = moment(this.startDate).format('YYYY년 MM월 DD일') 
+                    							+ " - " + 
+                    							moment(this.endDate).format('YYYY년 MM월 DD일');
+                    		$("#calendarTitlePost").focus();
+                		}
+                		else {
+                			this.startDate = this.posts[index].togetherStart;
+                    		this.endDate = this.posts[index].togetherEnd;
+                    		this.scheduleDate = moment(this.startDate).format('YYYY년 MM월 DD일') 
+                    							+ " - " + 
+                    							moment(this.endDate).format('YYYY년 MM월 DD일');
+                    		$("#calendarTitlePost").focus();
+                		}
+                		/*console.log(this.startDate);
+                		console.log(this.endDate);
+                		console.log(this.scheduleDate);*/
                 	});
                 	$("#addCalendarPostModal").modal("show");
                 	this.hidePostModal();
@@ -2622,8 +2696,8 @@
                				"calendarEnd": endDate,
                				"calendarMemo": calendarMemoPost
                			};
-               			console.log(this.startDate);
-               			console.log(this.endDate);
+               			//console.log(this.startDate);
+               			//console.log(this.endDate);
                			axios({
                				url: contextPath + "/calendar/add",
                				method:"post",
@@ -2637,11 +2711,12 @@
                		}
                		// 일정 등록 모달 닫기
                	    $("#addCalendarPostModal").modal("hide");
+               		
                 },
                 moveFocusToMemo() {
                 	document.getElementById("calendarMemoPost").focus();
                 },
-             	// 해당 맴버가 쓴 글 페이지로 
+                // 해당 맴버가 쓴 글 페이지로 
                 toMemberPage(memberId){
                 	const url = 'http://localhost:8080/member/mypage2/'+memberId;
                 	window.location.href = url;
