@@ -56,26 +56,20 @@
         </thead>
         <tbody>
           <tr v-for="(memberSearch, i) in memberSearchList" :key="i">
-            <td class="cursor-pointer" @click="moveToMemberPage" :href="memberSearch.memberId">
+            <td class="cursor-pointer" @click="moveToMemberPage(memberSearch.memberId)">
               <div class="search-table-col">
                 <img :src="memberSearch.attachmentNo === 0 ? '/static/image/profileDummy.png' : '/download/?attachmentNo=' + memberSearch.attachmentNo" style="height: 50px; width: 50px;">
               </div>
             </td>
-            <td class="cursor-pointer" @click="moveToMemberPage" :href="memberSearch.memberId">
+            <td class="cursor-pointer" @click="moveToMemberPage(memberSearch.memberId)">
               <div class="search-table-col">
                 {{fullName(memberSearch.memberId, memberSearch.memberNick)}}
               </div>
             </td>
             <td>
               <div class="search-table-col">
-                <button class="custom-btn" :class="{'btn-purple1-secondary':!memberSearch.isFollowMember, 'btn-purple1': memberSearch.isFollowMember}"  v-text="memberSearch.isFollowMember?'팔로우취소':'팔로우하기'"></button>
-                <%-- <button class="custom-btn btn-purple1-secondary" :class="{'btn-primary':!memberSearch.isFollowMember, 'btn-secondary': memberSearch.isFollowMember}"  v-text="memberSearch.isFollowMember?'팔로우취소':'팔로우하기'" @click="followMember(memberSearch)">팔로우하기</button> --%>
+                <button class="custom-btn btn-sm" :class="{'btn-purple1-secondary':!memberSearch.isFollowMember, 'btn-purple1': memberSearch.isFollowMember}"  v-text="memberSearch.isFollowMember?'팔로우취소':'팔로우하기'" @click="followMember(memberSearch)"></button>
               </div>
-            </td>
-          </tr>
-          <tr v-if="memberSearchList.length === 0">
-            <td colspan="3">
-              <h3 class="m-3">검색 결과가 없습니다</h3>
             </td>
           </tr>
         </tbody>
@@ -103,7 +97,10 @@
 
           // 회원 검색목록
           memberSearchList: [],
-          memberPage: 1,
+          memberSearchObj: {
+            memberPage: 1,
+            memberId: null,
+          },
           search: true,
 
           followObj: {
@@ -157,7 +154,6 @@
 
             // artistEngNameLower
             // 2. toggle 팔로우 삭제, 팔로우 생성
-            console.log("이거 실행되니?")
             const isFollowingMember = memberSearch.isFollowMember;
             if(isFollowingMember){
                 if(!confirm(this.fullName(memberSearch.memberId, memberSearch.memberNick) + "님 팔로우를 취소하시겠습니까?")) return;
@@ -209,10 +205,9 @@
         },
 
         // 회원페이지로 이동
-        moveToMemberPage(){
-          window.location.href = contextPath + "/member/mypage2/" + event.currentTarget.getAttribute("href");
+        moveToMemberPage(targetId){
+          window.location.href = contextPath + "/member/mypage2/" + targetId;
         },
-
       },
       watch: {
   
