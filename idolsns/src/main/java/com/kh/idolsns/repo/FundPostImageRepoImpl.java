@@ -76,6 +76,8 @@ public class FundPostImageRepoImpl implements FundPostImageRepo{
 	    param.put("end", end);
 	    param.put("searchKeyword", vo.getSearchKeyword());
 	    param.put("orderList", vo.getOrderList());
+	    param.put("fundState", vo.getFundState());
+	    System.out.println("param = " + param); 
 		return sqlSession.selectList("fundpostinte.selectListWithTag", param);
 	}
 

@@ -79,14 +79,6 @@
             };
         },
         methods: {
-        	showExitCancleModal() {
-                if(this.exitCancleModal == null) return;
-                this.exitCancleModal.show();
-             },
-             hideExitCancleModal() {
-                if(this.exitCancleModal == null) return;
-                this.exitCancleModal.hide();
-             },
             goToJoinPage() {
                 location.href = '${pageContext.request.contextPath}/member/join';
             }

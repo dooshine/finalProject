@@ -78,10 +78,28 @@
 	 	) where rn between #{begin} and #{end}
 	 </sql>
 	 
+	 
+	 <!-- 
+		조건을 활용한 복합(올인원) 검색 구현
+		- 문자열 : 유사 검색을 기본 원칙으로 하되 등급은 일치하는 항목을 검색
+		- 숫자 : 유사 검색은 하지 않고 일치 검색 또는 구간 검색
+		- 날짜 : 지정한 당일 검색 혹은 구간 검색
+		
+		사용할 수 있는 태그
+		- <bind> : 구문 내에서 변수를 생성하는 역할
+		- <where> : 조건절을 자동생성하는 역할
+		- <if> : 구문 내에서 논리에 의한 조건부 구문을 작성하는 역할
+		- <choose> : 구문 내에서 여러 가지 중 한 가지를 선택하는 역할
+		- <foreach> : 제공되는 데이터 배열에 의해 반복 구문을 생성하는 역할
+	-->
+	
+	
 	 <!-- 태그&펀딩제목 검색해서 무한스크롤 페이징 목록 -->
 	<select id="selectListWithTag" resultType="FundListWithTagDto">
-		<bind name="orderListExist" value="orderList != null and orderList.size() >0"/>
+		<bind name="orderListExist" value="orderList != null and !orderList.equals('')"/>
 		<bind name="searchKeywordExist" value="searchKeyword != null and !searchKeyword.equals('')"/>
+		<bind name="fundStateOn" value='fundState.equals("2")'/> <!-- 진행중 -->
+		<bind name="fundStateOff" value='fundState.equals("1")'/> <!-- 종료 -->
 		
 		<include refid="topNheader"/>	 		
 			select * from fundlist_with_tag
@@ -94,14 +112,19 @@
 					instr(tag_names, #{searchKeyword}) > 0
 		  		</if>
 		  		
+		  		<!-- 펀딩상태 ( 종료, 진행중 ) -->
+		  		<if test="fundStateOff ">
+		  			and fund_state != '진행중'
+		  		</if>
+		  		<if test="fundStateOn">
+		  			and fund_state = '진행중'
+		  		</if>
+		  		
 		  	</where> 
 		  	
 		  	<!-- 정렬조건 유무 -->
 		  	<if test="orderListExist">
-		  		order by
-		  		<foreach collection="orderList" item="order" separator=",">
-		  			${order}
-		  		</foreach>
+		  		order by ${orderList}
 		  	</if>
 		  	
 		<include refid="topNfooter"/> 

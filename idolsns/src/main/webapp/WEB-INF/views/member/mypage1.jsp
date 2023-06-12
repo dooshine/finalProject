@@ -2,45 +2,6 @@
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>   
 <jsp:include page="/WEB-INF/views/template/header.jsp"></jsp:include> 
-
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>마이페이지</title>
-    <!-- 폰트어썸 cdn -->
-    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css">
-    <!-- jquery cdn -->
-    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-    <!-- 뷰 cdn -->
-    <script src="https://unpkg.com/vue@3.2.26"></script>
-    <!-- axios -->
-    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-    <!-- lodash -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.21/lodash.min.js"></script>
-    <!-- moment -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
-    <!-- 부트스트랩 css(공식) -->
-    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css">
-
-    <!-- custom 테스트 css -->
-    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/static/css/test.css">
-    <!-- tabler 아이콘 -->
-   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
-    <!-- toastify -->
-    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
-      <!-- swiper cdn -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css"/>
-	<script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
-	<!------- 카카오 지도 관련-------->
-	<!-- 카카오 api 키 등록 -->
-	<script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=047888df39ba653ff171c5d03dc23d6a&libraries=services"></script>
-	<!-- 맵 관련 css -->
-	<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/static/css/map.css">
-	<!------- 카카오 지도 관련-------->
    <style>
       .profile-image-wrapper {
           position: relative;
@@ -148,8 +109,6 @@
 	border-style: solid;
 }
    </style>
-</head>
-<body>
    
    <div class="container rounded p-3" style="background-color:white">
    	   <!-- 전체 컨테이너 내부-->
@@ -158,7 +117,6 @@
 	      <br><br>
 	      <div class="container">
 	      <!-- 컨테이너 내부 -->
-	      
 		         <div class="row" >
 		            <div class="col-4" >
 		                  <img :src="memberProfileImageObj !== ''  && memberProfileImageObj.attachmentNo !== undefined ? '/download/?attachmentNo='+memberProfileImageObj.attachmentNo :  ' /static/image/profileDummy.png' "
@@ -259,11 +217,20 @@
 		                  </div>
 		                  <div class="modal-body text-left">
 		                     <div v-for="(board,index) in FollowListProfile"  :key="index">
-		                     <img :src="getAttachmentUrl(board.attachmentNo)" class="profile-image" style="width:54px; height:54px;">
-		                     <a :href="'/member/mypage/' + board.followTargetPrimaryKey">
+		                     <div class="row align-items-center">
+		                     <div class="col-3">
+		                     <img :src="getAttachmentUrl(board.attachmentNo)" class="profile-image" style="width:54px; height:54px; margin-left:20px; margin-bottom:10px;">
+		                     </div>
+		                     <div class="col-3">
+		                     <a :href="'/member/mypage2/' + board.followTargetPrimaryKey"  style="color:black; font-size:20px; text-decoration:none;">
 							    <span>{{board.followTargetPrimaryKey}}</span>
 							</a>
-		                    <button @click="deleteFollow(board.followNo)">팔로잉</button>
+		                     </div>
+		                     <div class="col-3"></div>
+		                     <div class="col-3 ">
+		                    <button v-if="mypage" class="btn-round btn-purple1-secondary"  @click="deleteFollow(board.followNo, index)" style="margin-left:30px; padding: 10px 20px; font-size: 15px;">삭제</button>
+		                     </div>
+		                    </div>
 		                     </div>
 		                  </div>
 		               </div>
@@ -279,11 +246,20 @@
 		                  </div>
 		                  <div class="modal-body text-left">
 		                     <div v-for="(board,index) in FollowerListProfile"  :key="index">
-		                     <img :src="getAttachmentUrl(board.attachmentNo)" class="profile-image" style="width:54px; height:54px;">
-		                     <a :href="'/member/mypage/' + board.memberId">
-		                    <span> {{board.memberId}}</span>
-		                    </a>
-		                    <button @click="deleteFollow(board.followNo)">팔로잉</button>
+		                     <div class="row align-items-center">
+		                     <div class="col-3">
+		                     <img :src="getAttachmentUrl(board.attachmentNo)" class="profile-image" style="width:54px; height:54px; margin-left:20px; margin-bottom:10px;">
+		                     </div>
+		                     <div class="col-3">
+		                     <a :href="'/member/mypage2/' + board.memberId"  style="color:black; font-size:20px; text-decoration:none;">
+							    <span>{{board.memberId}}</span>
+							</a>
+		                     </div>
+		                     <div class="col-3"></div>
+		                     <div class="col-3 ">
+		                    <button v-if="mypage" class="btn-round btn-purple1-secondary" @click="deleteFollow(board.followNo)"  style="margin-left:30px; padding: 10px 20px; font-size: 15px;">삭제</button>
+		                     </div>
+		                    </div>
 		                     </div>
 		                  </div>
 		               </div>
@@ -298,11 +274,20 @@
 		                  </div>
 		                  <div class="modal-body text-left">
 		                     <div v-for="(board,index) in PageListProfile"  :key="index">
-		                    <img :src="getAttachmentUrl(board.attachmentNo)" class="profile-image" style="width:54px; height:54px;">
-		                    <a :href="'/artist/' + board.followTergetPrimarykey">
-		                    <span> {{board.followTargetPrimaryKey}}</span>
-		                    </a>
-		                    <button @click="deleteFollow(board.followNo)">팔로잉</button>
+		                     <div class="row align-items-center">
+		                     <div class="col-3">
+		                     <img :src="getAttachmentUrl(board.attachmentNo)" class="profile-image" style="width:54px; height:54px; margin-left:20px; margin-bottom:10px;">
+		                     </div>
+		                     <div class="col-3">
+		                    <a :href="'/artist/' + board.followTergetPrimarykey" style="color:black; font-size:20px; text-decoration:none;">
+		                    	<span> {{board.followTargetPrimaryKey}}</span>
+							</a>
+		                     </div>
+		                     <div class="col-3"></div>
+		                     <div class="col-3 ">
+		                    <button v-if="mypage" class="btn-round btn-purple1-secondary" @click="deleteFollow(board.followNo)"  style="margin-left:30px; padding: 10px 20px; font-size: 15px;">삭제</button>
+		                     </div>
+		                    </div>
 		                     </div>
 		                  </div>
 		               </div>
@@ -312,12 +297,12 @@
 	         <hr>
 	
     <div class="row">         
-         <div class="col-6 text-center">
-            <i class="fa-sharp fa-regular fa-heart font-purple1"></i>
-         </div>
          <div class="col-6 text-center" >
             <i class="fa-solid fa-list "  @click="toWritePage()"></i>
          </div>         
+         <div class="col-6 text-center">
+            <i class="fa-sharp fa-regular fa-heart font-purple1"></i>
+         </div>
     </div>
 	
     <!-- 게시글 지도 게시 모달창 (게시글에서 위치나 지도 마크 클릭 시 모달 띠우기)-->
@@ -631,7 +616,6 @@
 <!-- 	<button type="button" onclick="relayout();" class="btn btn-white btn-outline-dark rounded-pill col-12 " data-bs-target="#modalmap" data-bs-toggle="modal">지도 테스트 모달</button> -->
 	<!--------------- 게시물들 반복구간 ------------->
 	<div v-for="(post, index) in posts" :key="index">
-
 		<!-- 글 박스 루프 1개-->
 		<div class="mb-2 custom-container">
 			<!-- 프로필 사진과 아이디 -->
@@ -710,6 +694,13 @@
 											@click="setUpdatePost(post)">게시물 글 내용 수정</h6>
 									</div>
 								</div>
+								<div class="row" v-if="post.scheduleStart !== null">
+									<div class="col-1"></div>
+									<div class="col-11 ms-2">
+										<div class="custom-hr my-2 me-4"></div>
+										<h6 @click="showAddScheduleModal(index)">일정 추가</h6>
+									</div>
+								</div>
 
 
 
@@ -733,6 +724,13 @@
 									<div class="col-11 ms-2">
 										<div class="custom-hr my-2 me-4"></div>
 										<h6>게시물 신고 하기</h6>
+									</div>
+								</div>
+								<div class="row" v-if="post.scheduleStart !== null">
+									<div class="col-1"></div>
+									<div class="col-11 ms-2">
+										<div class="custom-hr my-2 me-4"></div>
+										<h6 @click="showAddScheduleModal(index)">일정 추가</h6>
 									</div>
 								</div>
 
@@ -1441,11 +1439,57 @@
 	         
      <!-- 컨테이너 내부 -->
    	 </div>
+   	 
+   	 <!-- 일정 등록 모달 -->
+   	<div class="modal" tabindex="-1" role="dialog" id="addCalendarPostModal">
+    	<div class="modal-dialog" role="document">
+        	<div class="modal-content">
+            	<div class="modal-header">
+                	<h5 class="modal-title">일정 등록</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  	<div class="beforeLogin">
+                  		<h5 class="text-center mt-4">🙌</h5>
+                   		<h5 class="text-center mt-3 mb-4">로그인하고 중요한 일정을 등록해 보세요!</h5>
+						<button type="button" class="custom-btn btn-purple1 btn-round w-100 mb-4 calendar-login-btn">
+							로그인하러 가기
+						</button>
+					</div>
+		            <div class="afterLogin">
+						<div class="form-floating mb-3">
+							<input type="text" readonly class="form-control-plaintext" id="scheduleDatePost" placeholder="dd" :value="scheduleDate">
+							<label for="scheduleDatePost" class="startDatePost">날짜</label>
+						</div>
+		              	<div class="form-floating mb-3">
+							<input type="text" class="form-control" id="calendarTitlePost" placeholder="dd" @keyup.enter="moveFocusToMemo">
+							<label for="calendarTitlePost">일정 이름</label>
+							<div class="display-none invalidMessage">
+						    	1글자 이상, 30글자 이하로 입력할 수 있습니다.
+						    </div>
+						</div>
+		               	<div class="form-floating">
+							<textarea class="form-control" placeholder="Leave a comment here" id="calendarMemoPost" ref="memoTextArea" style="height: 100px; resize: none;"></textarea>
+							<label for="calendarMemoPost">메모</label>
+							<div class="display-none invalidMessage">
+						    	100글자 이하로 입력할 수 있습니다.
+						    </div>
+						</div>
+					</div>
+        		</div>
+		        <div class="modal-footer addCalendarModalFooter">
+			        <button type="button" class="custom-btn btn-purple1 addSchedule-btn" @click="addSchedule">
+			            등록
+		            </button>
+		        </div>
+    		</div>
+  		</div>
+    </div>
   <!-- 뷰 app 내부 -->
   </div>
 <!-- 전체 컨테이너 내부 -->
 </div>   
-      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+	  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
       <script>
          Vue.createApp({
             data(){
@@ -1577,6 +1621,11 @@
 					followTargetPrimaryKey: "",
 				},
 				// ---------------주영 추가 구문 
+				
+				// 캘린더 관련
+				scheduleDate: "",
+            	startDate: "",
+            	endDate: "",
                };
             },      
             methods:{
@@ -1767,7 +1816,6 @@
                       // 대표페이지 프로필사진 설정
                       const resp = await axios.post(url, formData);
                       
-                      alert("대표페이지 프로필사진 설정완료!");
                   },
                   
                   //팔로우 리스트 멤버별 프로필 조회
@@ -1805,13 +1853,14 @@
 						},
                   
                   //프로필 리스트 팔로우 취소
-				async deleteFollow(followNo) {
+				async deleteFollow(followNo, index) {
 					const response = await axios.get("/member/deleteFollow",{
 						params : {followNo:followNo}
 					});
 					if (response.data.success) {
 					    // 삭제 성공 시, FollowListProfile에서 해당 항목을 제거합니다.
-					    this.FollowListProfile = this.FollowListProfile.filter(item => item.followNo !== followNo);
+// 					    this.FollowListProfile = this.FollowListProfile.filter(item => item.followNo !== followNo);
+					    this.FollowListProfile.splice(index, 1);
 					  }
 				},
 				
@@ -1918,24 +1967,27 @@
               		// 아예 페이지 새로 고침
               		if(this.page == 2 && this.firstMountFlag)
               		{
-              			location.reload();	
+//               			location.reload();	
               		}
                 	  
-                	  
-                      if(this.loading == true) return;//로딩중이면
-                      if(this.finish == true) return;//다 불러왔으면
-                      
+                	 console.log("하하")
+//                       if(this.loading == true) return;//로딩중이면
+//                       if(this.finish == true) return;//다 불러왔으면
+                     console.log("하하2")
                       this.loading = true;
                       // 1페이지 부터 현재 페이지 까지 전부 가져옴 
                       var likedPostData ={
                       		page: this.page,
-                      		likedMemberId: this.memberId
+                      		pageMemberId: this.pageMemberId
                       };
                                             
                      const resp = await axios.post("http://localhost:8080/rest/post/pageReload/memberLikePost",likedPostData);
   	                this.posts = resp.data;
+  	               	
+//   	                console.log("야아ㅣ야앙라ㅓ임")
+//   	                console.table(resp.data);
   	                this.getLikePostIndex(this.posts);
-	                this.getReplyAllList(this.posts);
+	                await this.getReplyAllList(this.posts);
   	                this.page++;
   	                
   	                this.loading=false;
@@ -1951,9 +2003,13 @@
                     if(this.finish == true) return;//다 불러왔으면
                     
                     this.loading = true;
+                    var likedPostData ={
+                      		page: this.page,
+                      		pageMemberId: this.pageMemberId
+                     };
                     
                     // 1페이지 부터 현재 페이지 까지 전부 가져옴 
-                    const resp = await axios.get("http://localhost:8080/rest/post/pageReload/"+this.page);
+                    const resp = await axios.get("http://localhost:8080/rest/post/pageReload/memberLikePost"+likedPostData);
 	                this.posts = resp.data;
 	                this.getLikePostIndex(this.posts);
 	                this.getReplyAllList(this.posts);
@@ -2231,10 +2287,12 @@
                 // postNo를 List로 송신하고 좋아요 되있는 index 번호를 수신
                 getLikePostIndex(posts){
                 	
-                	postNoList = [];
-                	posts.forEach(function(post){
-                		postNoList.push(post.postNo); 
-                	})
+                	var postNoList = [];
+					if(typeof posts === typeof []){
+                		posts.forEach(function(post){
+                			postNoList.push(post.postNo); 
+                		})
+					}
                 	
                		axios.get('http://localhost:8080/rest/post/like/index/'+postNoList)
                			.then(response => {               			
@@ -2256,15 +2314,11 @@
                 // 댓글 창 관련 클릭 함수 -------------------------------              
               	// 전송 버튼 클릭 시
                 async replySending(postNo,index){
-                	try{
+                	
                 		const replyDto = {postNo: postNo, replyContent:this.replyContent};
                     	const response = await axios.post('http://localhost:8080/rest/post/reply/',replyDto);
                     	this.fetchPosts();
-                    }
-                	catch (error){
-                		console.error(error);
-                	}
-                	
+                   		
                 	this.hideReplyInput(index)
                 },
                 // 댓글 쓰기 창 띄우기 (다른 창들은 모두 닫음, 대댓글창도 닫음) 
@@ -2320,13 +2374,10 @@
                 
                 // 댓글 삭제
                 async deleteReply(replyNo){
-                	try{
+                	
                 		await axios.delete('http://localhost:8080/rest/post/reply/delete/'+replyNo);
                 		this.fetchPosts();
-                	}
-                	catch (error){
-                		console.error(error);
-                	}
+                	
                 
                 },
                 // 대댓글 삭제
@@ -2467,16 +2518,21 @@
             		
             	},
             	setId(){ // 아이디 세팅
-            		const memberId = '${memberId}';
-                	if (memberId && memberId.trim() !== '') {
-                		    // memberId가 존재하고 빈 문자열이 아닌 경우
-                		    this.memberId = memberId;
-                	} else {
-                		    // memberId가 없거나 빈 문자열인 경우 기본 값 또는 예외 처리를 수행합니다.
-                		    this.memberId = null; // 기본 값으로 null을 할당하거나
-                		    // 예외 처리 로직을 추가합니다.
-                		    // 예: 오류 메시지 표시, 다른 로직 실행 등
-                	}            		
+            		// const memberId = '${memberId}';
+                	// if (memberId && memberId.trim() !== '') {
+                	// 	    // memberId가 존재하고 빈 문자열이 아닌 경우
+                	// 	    this.memberId = memberId;
+                	// } else {
+                	// 	    // memberId가 없거나 빈 문자열인 경우 기본 값 또는 예외 처리를 수행합니다.
+                	// 	    this.memberId = null; // 기본 값으로 null을 할당하거나
+                	// 	    // 예외 처리 로직을 추가합니다.
+                	// 	    // 예: 오류 메시지 표시, 다른 로직 실행 등
+                	// }
+					
+					
+					// 아이디 세팅
+					const userId = window.location.pathname.split('/').at(-1);
+					this.memberId = userId;
             	},
             	setPageMemberId(){
             		const pageMemberId  = '${pageMemberId}';
@@ -2535,7 +2591,55 @@
             		}
             	},
               	
-
+            	// 캘린더 관련
+            	showAddScheduleModal(index) {
+                	console.log("index: " + index);
+                	console.log("start: " + this.posts[index].scheduleStart);
+                	console.log("end: " + this.posts[index].scheduleEnd);
+                	this.$nextTick(() => {
+                		this.startDate = this.posts[index].scheduleStart;
+                		this.endDate = this.posts[index].scheduleEnd;
+                		this.scheduleDate = moment(startDate).format('YYYY년 MM월 DD일') 
+                							+ " - " + 
+                							moment(endDate).add(1, 'days').format('YYYY년 MM월 DD일');
+                		$("#calendarTitlePost").focus();
+                	});
+                	$("#addCalendarPostModal").modal("show");
+                	this.hidePostModal();
+                },
+                
+                addSchedule() {
+               		if(memberId === "") return;
+               		const calendarTitlePost = $("#calendarTitlePost").val();
+               		const calendarMemoPost = $("#calendarMemoPost").val();
+               		const endDate = moment(this.endDate).add(1, 'days');
+               		if(calendarTitlePost) {
+               			const dto={
+               				"memberId": memberId,
+               				"calendarTitle": calendarTitlePost,
+               				"calendarStart": this.startDate,
+               				"calendarEnd": endDate,
+               				"calendarMemo": calendarMemoPost
+               			};
+               			console.log(this.startDate);
+               			console.log(this.endDate);
+               			axios({
+               				url: contextPath + "/calendar/add",
+               				method:"post",
+               				data:JSON.stringify(dto),
+               				headers: { 'Content-Type': 'application/json' }
+               			}).then(function(resp){
+               				$("#calendarTitlePost").val("");
+               				$("#calendarMemoPost").val("");
+               				loadMemberCalendar();
+               			});
+               		}
+               		// 일정 등록 모달 닫기
+               	    $("#addCalendarPostModal").modal("hide");
+                },
+                moveFocusToMemo() {
+                	document.getElementById("calendarMemoPost").focus();
+                },
 
             },
             watch:{
@@ -2577,7 +2681,7 @@
             this.setPageMemberId();
             this.profileImage();
        		this.pageListProfile();
-       		this. mypageCheck();
+       		this.mypageCheck();
        		this.followCheck();
                
             // 게시글 불러오기
@@ -2589,7 +2693,7 @@
             },
             
             mounted() {
-               this.profile();
+            //    this.profile();
                this.followList();
                this.followListProfile();
            	   this.followerListProfile();
@@ -2622,11 +2726,11 @@
                     //data의 percent를 계산된 값으로 갱신
                     this.percent = Math.round(percent);
                 }, 250));
+
             },
          }).mount("#app");
          <!--algPggg-->
       </script>
       
-</body>    
 
 <jsp:include page="/WEB-INF/views/template/footer.jsp"></jsp:include> 

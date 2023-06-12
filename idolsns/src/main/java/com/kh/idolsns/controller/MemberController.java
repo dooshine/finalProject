@@ -16,6 +16,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -42,6 +43,7 @@ import com.kh.idolsns.repo.MemberRepo;
 import com.kh.idolsns.service.FollowService;
 import com.kh.idolsns.service.emailService;
 
+@CrossOrigin
 @Controller
 @RequestMapping("/member")
 public class MemberController {
@@ -137,12 +139,12 @@ public class MemberController {
 		session.setAttribute("memberId", findDto.getMemberId());
 		session.setAttribute("memberLevel", findDto.getMemberLevel());
 		
-		String memberId = findDto.getMemberId();
-		if(!(findDto.getMemberExitDate() == null)) {
-			memberRepo.cancleExit(memberId	);
-		    attr.addAttribute("mode", "cancle");
-		    return "redirect:login";
-		}
+			String memberId = findDto.getMemberId();
+			if(!(findDto.getMemberExitDate() == null)) {
+				memberRepo.cancleExit(memberId	);
+			    attr.addAttribute("mode", "cancle");
+			    return "redirect:login";
+			}
 		
 		return "redirect:/";
 	}
@@ -152,7 +154,7 @@ public class MemberController {
 	@ResponseBody
 	public String goToLoginPage(HttpSession session) {
 		String memberId = (String) session.getAttribute("memberId");
-		return memberId;
+		  return memberId != null ? memberId : "";
 	}
 	
 	//로그아웃
@@ -203,7 +205,7 @@ public class MemberController {
 	public String mypage(HttpSession session) {
 		String memberId = (String) session.getAttribute("memberId");
 		return memberId;
-	}
+	}	
 	
 	//마이페이지 - 아이디, 닉네임 조회
 	@GetMapping("/profile")

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ↑ XML 헤더(반드시 첫 번째 줄에 위치) -->
+
+<!-- dtd선언 -->
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- mapper -->
+<mapper namespace="report">
+    <!-- 신고 생성 -->
+    <insert id="insert">
+        insert into report (REPORT_NO, MEMBER_ID, REPORT_TARGET_TYPE, REPORT_TARGET_PRIMARY_KEY, REPORT_FOR, REPORT_TIME) 
+        values (report_seq.nextval, #{memberId}, #{reportTargetType}, #{reportTargetPrimaryKey}, #{reportFor}, sysdate)
+    </insert>
+    <!-- 신고 단일조회 -->
+    <select id="reportExist" resultType="reportDto">
+        select * from report 
+        where 
+            member_id = #{memberId} 
+            and 
+            report_target_type = #{reportTargetType}
+            and
+            report_target_primary_key = #{reportTargetPrimaryKey}
+    </select>
+    <!-- 신고 목록조회 -->
+    <select id="selectList" resultType="reportDto">
+        select * from report order by report_no desc
+    </select>
+
+    <!-- 신고 횟수 조회 (전체기간 - 전체 N회 이상 제재) -->
+    <select id="selectAllReportCnt" resultType="Integer">
+        select count(*) from report 
+        where 
+            REPORT_TARGET_TYPE = #{reportTargetType}
+            and
+            REPORT_TARGET_PRIMARY_KEY = #{reportTargetPrimaryKey}
+    </select>
+    <!-- 신고 횟수 조회 (일주일 - 일주일 내 N회 이상 제재) -->
+    <select id="selectTermReportCnt" resultType="Integer">
+        select count(*) from report 
+        where 
+            REPORT_TARGET_TYPE = #{reportTargetType}
+            and
+            REPORT_TARGET_PRIMARY_KEY = #{reportTargetPrimaryKey}
+            and
+            report_time BETWEEN SYSDATE - 7 AND SYSDATE
+    </select>
+    <!-- 신고 수정(신고사유 변경) -->
+    <update id="update">
+        update report set report_for = #{reportFor} 
+        where 
+            member_id = #{memberId} 
+            and 
+            report_target_type = #{reportTargetType}
+            and
+            report_target_primary_key = #{reportTargetPrimaryKey}
+    </update>
+    <!-- 신고 삭제(신고 취소) -->
+    <delete id="delete">
+        delete from report where report_no = #{reportNo}
+    </delete>
+</mapper>

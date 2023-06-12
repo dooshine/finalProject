@@ -7,10 +7,7 @@
             </div>
 
 	<style>
-		/*.calendar-area {
-			position: sticky;
-			position: -webkit-sticky;
-		}*/
+		
 	</style>
 	<!-- 일반페이지 일때 -->
 	<c:if test="${!admin && !notFound}">
@@ -35,11 +32,13 @@
         </footer>
     </main>
  
- 
+	
 
+	
 
 	<!-- 부트스트랩 js -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+
 
 
 <!-- 채팅방 -->
@@ -111,7 +110,9 @@
 					
 					// 새 메세지 알림 여부
 					newChatNoti: false,
-					chatRoomNoList: []
+					chatRoomNoList: [],
+
+
 				};
 			},
 			methods: {
@@ -987,7 +988,7 @@
 				  if (memberId === "") {
 				    window.location.href = `${pageContext.request.contextPath}/member/login`;
 				  } else {
-				    window.location.href = `${pageContext.request.contextPath}/member/mypage2/${memberId}`;
+					  window.location.href = "${pageContext.request.contextPath}/member/mypage2/" + response.data;
 				  }
 				},
 				// 이미지 메세지 모달로 크게 보기위한 url 셋팅
@@ -999,6 +1000,7 @@
 					this.targetId = this.messageList[index].memberId;
 					window.location.href = `${pageContext.request.contextPath}/member/mypage/${targetId}`;
 				}*/
+
 				
 			},
 			computed: {
@@ -1021,6 +1023,8 @@
 				if(this.memberId != "" && memberId != ""){
 					this.connect();
 				}
+
+				
 			},
 			mounted() {
 				// 사용자가 이 탭을 보고있는지 확인
@@ -1052,7 +1056,6 @@
 				};
 
 
-// 				console.log("######################## 마운티드 발생 ########################");
 				// ######################## 헤더 조정 ########################
 				var inputCompoEle = document.getElementById('navbarSupportedContent');
 				var inputEle = $(inputCompoEle).find("input[name=q]");
@@ -1137,15 +1140,11 @@
 							// 헤더버튼 요소 선택
 						function focusInputNoti() {
 							var notiMarkEle = $(".notiMark");
-							// notiMarkEle.css("background", "forestgreen");
 							notiMarkEle.hide();
-							// console.log("포커스");
 						}
 						function rollbackViewNoti() {
 							var notiMarkEle = $(".notiMark");
-							// notiMarkEle.css("background", "forestgreen");
 							notiMarkEle.show();
-							// console.log("블러");
 						}
 
 						function registerEvent() {
@@ -1177,8 +1176,58 @@
 			},
 		}).mount("#header-area");
 	</script>
+	<script>
+		$(function(){
+			$(".loading-screen").remove();
+		})
+	</script>
 
- 
-    
+		<!-- 로그인모달 -->
+		<div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+			<div class="modal-dialog modal-dialog-centered" >
+				<div class="modal-content custom-container" style="border: 1px solid white">
+					<div class="modal-header justify-content-center" style="padding-top: 0px">
+						<h1 class="modal-title fs-5 font-bold" id="loginModalLabel">스타링크 로그인</h1>
+					</div>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="position: absolute; right: 20px;"></button>
+				<div class="modal-body">
+					<div>
+						<form class="w-100" action="${pageContext.request.contextPath}/member/login" method="post" autocomplete="off">
+							
+							<div class="row mb-3 mt-4 mx-0">
+								<input class="custom-input-rounded-container width: 100%;" type="text" name="memberId" placeholder="아이디">
+								</div>
+								
+								<div class="row mx-0 mb-1">
+								<input class="custom-input-rounded-container" type="password" name="memberPw" placeholder="비밀번호">
+								</div>
+							
+							<h6 class="font-purple1 text-center" >${param.msg}</h6>
+							
+							
+							<div class="custom-hr"></div>
+				
+							<div class="row my-3 mx-0 ">
+								<button type="submit" class="custom-btn btn-round btn-purple1" >로그인</button>
+							</div>
+							
+						</form>
+							
+							
+							<div class="row mb-3  mx-0">
+								<button type="button" onclick="location.href='${pageContext.request.contextPath}/member/join'" class="custom-btn btn-round btn-purple1-secondary" >회원가입</button>
+							</div>
+							
+							<div class="text-center">
+							<a href="${pageContext.request.contextPath}/member/findId" style="text-decoration: none; color:gray;">아이디 /</a>
+							<a href="${pageContext.request.contextPath}/member/findPw" style="text-decoration: none; color:gray;">비밀번호 찾기</a>
+							</div>
+							
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 </body>
+
 </html>

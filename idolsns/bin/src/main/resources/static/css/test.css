@@ -1,4 +1,7 @@
 @charset "UTF-8";
+
+
+
 /*
     테스트 스타일
     - 원하는 태그에 test 를 추가하면 해당 영역 내부가 점선으로 표시
@@ -26,4 +29,9 @@
     border:1px dotted black !important;
 }
 
+ 	
+ 	
+ 	html {
+		 font-family: "Pretendard", sans-serif;
+		}
 

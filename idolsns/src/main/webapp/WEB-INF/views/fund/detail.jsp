@@ -54,7 +54,14 @@
       }
        .reply-form {
         margin-top: 20px;
-        background-color: #f9f9f9;
+        background-color: #f5f5f5;
+        padding: 20px;
+        border-radius: 5px;
+        position: relative;
+       }
+       .reply-form2 {
+       	 margin-top: 20px;
+        background-color: #f5f5f5;
         padding: 20px;
         border-radius: 5px;
         position: relative;
@@ -93,6 +100,8 @@
       textarea {
          resize: none;
          height: 100px;
+         border: none;
+         outline: none;
       }
       
       /* 로그인 모달 스타일*/
@@ -111,8 +120,9 @@
 	.fund-sponsor:hover {
 		cursor: pointer;
 	}
-	
-
+	.custom-hr {
+    border-color: blue; /* 원하는 색상으로 변경 */
+  	}
     </style>
     
    	<div id="app">
@@ -139,6 +149,8 @@
 					<span style="font-weight:bold">{{ (fundDetail.fundTotal / fundDetail.fundGoal * 100).toFixed(1) }}</span>%
 			
 					<label class="mt-3">남은 시간</label>
+<!-- 					<span v-if="getTimeDiff().includes('D')" class="fund_span">{{ getTimeDiff() }}</span> -->
+<!-- 					<span v-else class="fund_span">{{ getTimeDiff() }}</span>일 -->
 					<span class="fund_span">{{ getTimeDiff() }}</span>일
 					
 					<div @click="sponsorModal = true">
@@ -155,7 +167,7 @@
 			    </button> -->
 			    
 			 
-			<hr class="mt-3 mb-3" style="height: 0.3px">
+			<hr class="mt-3 mb-3" style="height: 0.3px;">
 				
 			
 			
@@ -183,8 +195,8 @@
 				<div class="mt-3 d-flex">
 					<div class="col-12">
 					    <button class="custom-btn btn-purple1-secondary col-3" style="vertical-align:middle; margin-right:0.5em;" @click="checkLike">
-					      	<i v-if="isLiked" class="fs-4 ti ti-heart-filled"></i> 
-					      	<i v-else class="fs-4 ti ti-heart"></i> 
+					      	<i v-if="isLiked" class="ti ti-heart-filled" ></i> 
+					      	<i v-else class="ti ti-heart"></i> 
 						      	<div class="like-count">
 						      		{{ likeCount }} 
 						    	</div>
@@ -210,33 +222,29 @@
 					
 	</div>
 		
-		
-		
-	
-           
-		<hr>
-	
-			
-			<!-- 태그 출력 -->
-			<div class="row mt-3">
-				<div class="col d-flex">
-					<div class="fixed-tag ms-1" v-for="(tag, i) in fundDetail.tagNames"
-								@click="tagLink(i)">
-					{{ tag }}
-					</div>
-				</div>
+	<!-- 태그 출력 -->
+	<div class="row mt-3">
+		<div class="col d-flex ms-4">
+			<div class="fixed-tag ms-1" v-for="(tag, i) in fundDetail.tagNames"
+						@click="tagLink(i)">
+			{{ tag }}
 			</div>
+		</div>
+	</div>
 		
 		
 	<!-- ------------------------ 댓글 ------------------------------- -->
-	  <hr>
-	  <div v-if="replies.length == 0">댓글이 없습니다.</div>
+	  <hr class="mt-4 mb-4">
+	  
+	  <div v-if="replies.length == 0">
+	  	<span class="ms-3">댓글이 없습니다.</span>
+	  </div>
 	  <!-- 댓글이 있으면 -->
 	  <div v-else>
 	      <div v-for="(reply, i) in replies" :key="reply.replyNo">
 	         
 	        <!-- 최상위 댓글이면 -->
-	        <div v-if="reply.replyNo == reply.replyGroupNo" class="row">
+	        <div v-if="reply.replyNo == reply.replyGroupNo" class="row mb-1">
 	        	<!-- 프로필 이미지 -->
           		<div class="col-1">
           			<img v-if="reply.attachmentNo && reply.attachmentNo !=null" class="img-fluid rounded-circle" :src="getAttachmentUrl(reply.attachmentNo)"> 
@@ -248,7 +256,7 @@
 	        		<div v-if="reply.replyId == fundDetail.memberId">
 	        			<div class="d-flex">
 						    <div>{{ reply.memberNick }}</div>
-	        				<div class="author-badge font-purple2">
+	        				<div class="author-badge font-purple2 ms-1">
 							    <div class="">작성자</div>
 						  	</div>
 	        			</div>
@@ -259,14 +267,21 @@
 	        		</div>
 	        		
 	        		<!-- 수정 폼 -->
-		        	<div v-if="updateReplyObj.index == i" class="ms-3">
-				    	<textarea @blur="setUpdateReplyObj($event, i)" class="row grey-f5f5f5 rounded-3 font-gray2 col-10" 
+		        	<div v-if="updateReplyObj.index == i" class="ms-3 grey-f5f5f5 rounded-4">
+				    	<textarea @blur="setUpdateReplyObj($event, i)" class="row grey-f5f5f5 rounded-3 font-gray2 col-10 p-3" 
 		       				placeholder="수정 내용">{{ reply.replyContent }}</textarea>
-					    <button class="btn-purple2" @click="saveUpdate(i)">수정</button>
-					    <button class="btn-purple2" @click="cancelUpdate()">취소</button>
+		       			<div class="d-flex">
+			        		<div class="col text-start ps-2">
+				       		 	<i class="ti ti-x fx-12px font-purple1" @click="cancelUpdate()"></i>
+			        		</div>
+			        		<div class="col text-end pe-2">
+					        	<i class="fs-5 font-purple1 ti ti-arrow-badge-right-filled" @click="saveUpdate(i)"></i>
+			        		</div>
+			        	</div>
 					</div>
+					
 					<!-- 댓글 내용 -->
-		        	<div v-else class="grey-f5f5f5 rounded-3 font-gray2 p-1 ps-3">
+		        	<div v-else class="col-12 grey-f5f5f5 rounded-4 font-gray2 p-1 ps-3 mt-1">
 		        		{{ reply.replyContent }}
 		        	</div>
         		</div>
@@ -300,10 +315,11 @@
 	        </div>
 	        
 	        <!-- 대댓글이면 -->
-	        <div v-else class="ms-4 row">
+	        <div v-else class="row ms-4">
 	        	<!-- 프로필 이미지 -->
           		<div class="col-1">
-       				<img class="img-fluid rounded-circle" src="/static/image/profileDummy.png">
+          			<img v-if="reply.attachmentNo && reply.attachmentNo !=null" class="img-fluid rounded-circle" :src="getAttachmentUrl(reply.attachmentNo)"> 
+       				<img v-else class="img-fluid rounded-circle" src="/static/image/profileDummy.png">
           		</div>
           		
           		<div class="col-10 align-items-center">
@@ -312,7 +328,7 @@
 	        		<div v-if="reply.replyId == fundDetail.memberId">
 	        			<div class="d-flex">
 						    <div>{{ reply.replyId }}</div>
-	        				<div class="author-badge font-purple2">
+	        				<div class="author-badge font-purple2 ms-1">
 							    <div class="">작성자</div>
 						  	</div>
 	        			</div>
@@ -323,16 +339,24 @@
 	        		</div>
 	        		
           			<!-- 수정 폼 -->
-		        	<div v-if="updateReplyObj.index == i">
-				    	<textarea @blur="setUpdateReplyObj($event, i)" class="row grey-f5f5f5 rounded-3 font-gray2 mx-0 ps-3 col-10" 
+		        	<div v-if="updateReplyObj.index == i" class="grey-f5f5f5 rounded-4">
+				    	<textarea @blur="setUpdateReplyObj($event, i)" class="row grey-f5f5f5 rounded-3 font-gray2 mx-0 p-3 col-12" 
 		       				placeholder="수정 내용">{{ reply.replyContent }}</textarea>
-					    <button class="btn-purple2" @click="saveUpdate(i)">저장</button>
-					    <button class="btn-purple2" @click="cancelUpdate()">취소</button>
+		       			<div class="d-flex">
+			        		<div class="col text-start ps-2">
+				       		 	<i class="ti ti-x fx-12px font-purple1" @click="cancelUpdate()"></i>
+			        		</div>
+			        		<div class="col text-end pe-2">
+					        	<i class="fs-5 font-purple1 ti ti-arrow-badge-right-filled" @click="saveUpdate(i)"></i>
+			        		</div>
+			        	</div>
 					</div>
 					<!-- 대댓글 내용 -->
-					<div v-else class="col-10 grey-f5f5f5 rounded-3 font-gray2 p-1 ps-3">
+					<div v-else class="col-12 grey-f5f5f5 rounded-4 font-gray2 p-1 ps-3 mt-1">
 							{{ reply.replyContent }}
 					</div>
+					
+					
           		</div>
           		
           		<div class="col-1">
@@ -343,16 +367,21 @@
 	        				@click="showModal(i)" style="position: relative;">
 	   					<div class="custom-modal" v-if="replies[i].modal" style="position: absolute; top: 0px; right: 0px; width:100px; ">
 					        <div class="custom-modal-header">
-					            <button type="button" @click="hideModal(i)" class="btn-close" style="position: absolute; top: 5px; right: 5px; height: 5px; width: 5px;"></button>
+					            <button type="button" @click="hideModal(i)" class="btn-close" 
+					            style="position: absolute; top: 5px; right: 5px; height: 5px; width: 5px;"></button>
 					        </div>
 					        <div @click="hideModal(i)" class="custom-modal-body p-0" style="font-size: 16px;">
 					        	<!-- 대댓글 버튼 -->
-					        	<div v-if="reply.replyNo == reply.replyGroupNo" class="p-2" style=" border-bottom: 0.3px solid #dee2e6;" @click="showRereplyForm(i)">댓글달기</div>
+					        	<div v-if="reply.replyNo == reply.replyGroupNo" class="p-2" style=" border-bottom: 0.3px solid #dee2e6;" 
+					        	@click="showRereplyForm(i)">댓글달기</div>
 					        	<!-- 대댓글 수정 버튼 -->
-					        	<div v-if="reply.replyId == replyObj.replyId" class="p-2" style=" border-bottom: 0.3px solid #dee2e6;" @click="showUpdateForm(i)">수정</div>
+					        	<div v-if="reply.replyId == replyObj.replyId" class="p-2" style=" border-bottom: 0.3px solid #dee2e6;" 
+					        	@click="showUpdateForm(i)">수정</div>
 					        	<!-- 대댓글 삭제 버튼 -->
-					        	<div v-if="reply.replyId == replyObj.replyId" class="p-2" style=" border-bottom: 0.3px solid #dee2e6;" @click="deleteReply(i)">삭제</div>
+					        	<div v-if="reply.replyId == replyObj.replyId" class="p-2" style=" border-bottom: 0.3px solid #dee2e6;" 
+					        	@click="deleteReply(i)">삭제</div>
 					        </div>
+					        
 				    	</div>
 	        		</i>
 	        		</div>
@@ -360,14 +389,27 @@
         		
 	        	
 	        </div>
+	        		<!-- 대댓글 폼 -->
+	        		<div class="row mb-2">
+	        			<div class="col-1"></div>
+	        			<div class="col-10">
+	        				<div v-if="reReplies[i] == true" class="pt-2 ps-2 pe-2 w-100 rounded-4 grey-f5f5f5">
+				        	<textarea @blur="setReReplyObj($event, i)" placeholder="댓글을 입력해주세요" 
+				        	class="w-100 rounded-4 grey-f5f5f5"></textarea>
+				        	<div class="d-flex">
+				        		<div class="col text-start">
+					       		 	<i class="ti ti-x fx-12px font-purple1" @click="reReplies[i] = false"></i>
+				        		</div>
+				        		<div class="col text-end">
+						        	<i class="fs-5 font-purple1 ti ti-arrow-badge-right-filled" @click="addReReply(i)"></i>
+				        		</div>
+				        	</div>
+				        </div>
+	        			</div>
+	        			<div class="col-1"></div>
+	        		</div>
+			        
 	        
-	        <!-- 대댓글 폼 -->
-	        <div v-if="reReplies[i] == true" class="ms-5">
-	        	<textarea @blur="setReReplyObj($event, i)" placeholder="댓글을 작성해주세요" 
-	        	class="row grey-f5f5f5 rounded-3 font-gray2 mx-0 ps-3"></textarea>
-	        	<button class="btn-purple2" @click="addReReply(i)">작성</button>
-	        	<button class="btn-purple2" @click="reReplies[i] = false">취소</button>
-	        </div>
 	        
 	      </div>
  	 </div>
@@ -375,29 +417,35 @@
  	 <hr>
  	 
  	 <!-- 로그인이 되어있으면 -->
-<!--  	<div v-if="memberId != '' "> -->
+ 	<div v-if="memberId != ''">
 	  	<!-- 새댓글 폼 -->
-		<form @submit.prevent="addReply" class="reply-form">
+		<form @submit.prevent="addReply" class="reply-form rounded-4">
 		    <div>
 		        <input type="hidden" v-model="replyObj.replyId" required>
 		        <input type="hidden" v-model="replyObj.postNo" required>
 		    </div>
 		    <div>
-		        <textarea type="text" v-model="replyObj.replyContent" placeholder="글을 작성해주세요" required></textarea>
+		        <textarea type="text" class="w-100 rounded-4 grey-f5f5f5" v-model="replyObj.replyContent" placeholder="글을 작성해주세요" required></textarea>
 		    </div>
 		    <div class="submit-icon">
 		    	<button type="submit">
-			        <i class="fa-sharp fa-solid fa-pen font-purple1"></i>
+			        <i class="fs-2 font-purple1 ti ti-arrow-badge-right-filled"></i>
 		    	</button>
 		    </div>
 		</form>
-<!--  	</div> -->
+ 	</div>
  	
  	<!-- 로그인이 안되어있으면 -->
 	<div v-else>
-		<div></div>
+		<div class="reply-form2">
+			<div class="text-center">로그인 후 이용해주세요.</div>
+			<div class="text-center m-1">
+				<button class="custom-btn btn-round btn-purple1 me-2 w-30" @click="linkToLogin">로그인</button>
+			</div>
+		</div>
 	</div>
 	
+	<!-- ------------------------------------------------------------모달창 시작-------------------------------------------------------------- -->
 	
 	 <!-- 로그인 모달창 -->
      <div v-if="loginModal" class="custom-modal-wrapper">
@@ -419,13 +467,13 @@
     <!-- 후원자 모달창 -->
     <div v-if="sponsorModal" class="custom-modal-wrapper">
 	   	<div class="custom-modal">
-	       <div class="custom-modal-body" >
+	       <div class="custom-modal-body" style="width: 400px;">
 	          <div class="text-center mb-2" style="font-size: 30px;">후원자 랭킹</div>
-	          	<div v-if="fundVO.length == 0" class="row">
+	          	<div v-if="fundVO.length == 0" class="row text-center">
 	          		<span>아직 후원자가 없어요ㅠㅠ</span>
 	          	</div>
 	          	<div v-else v-for="(fund, index) in fundVO">
-		          	<div class="row">
+		          	<div class="row w-100">
 		          		<div class="col-2">
 							{{ fund.rank }}위        			
 		          		</div>
@@ -445,6 +493,22 @@
 	          </div>
 	       </div>
     	</div>
+    </div>
+    <!-- 후원자 모달창 끝! -->
+    
+    <!-- 후원자 모달창 -->
+     <div v-if="fundCheckModal" class="custom-modal-wrapper">
+     	<div class="custom-modal">
+        <div class="custom-modal-body" style="width: 300px;">
+           <div class="text-center mb-3">
+              <i class="ti ti-alert-triangle"></i>
+           </div>
+           <div class="text-center">이미 종료된 펀딩입니다.</div>
+           <div class="d-flex justify-content-center mt-4">
+              <button class="custom-btn btn-round btn-purple1 w-100" @click="fundCheckModal = false">취소</button>
+           </div>
+        </div>
+     	</div>
     </div>
     <!-- 후원자 모달창 끝! -->
      
@@ -518,6 +582,9 @@
 			   	// 후원자 모달
 			   	sponsorModal: false,
 			   	
+			   	// 후원 확인
+			   	fundCheckModal: false,
+			   	
 			   	// 세션 memberId
 			   	memberId: memberId,
 			   	
@@ -565,6 +632,11 @@
 		      	order() {
         		  // 로그인이 안되어 있으면
 				  if(!this.checkLogin()) return;
+        		  // 후원이 종료됐으면
+        		  if(this.fundDetail.fundState != "진행중"){
+        			  this.fundCheckModal = true;
+        			  return;
+        		  }
         			
 		      	  const postNo = this.fundDetail.postNo; // Vue 데이터의 postNo 값을 사용
 		      	  window.location.href = "http://localhost:8080/fund/order?postNo=" + postNo;
@@ -653,8 +725,8 @@
 				showRereplyForm(i) {
 					// 로그인이 안되어 있으면
 					if(!this.checkLogin()) return;
-					
 					this.reReplies[i] = true
+					console.log("i = "+ reReplies[i]);
 					this.cancelUpdate();
 				},
 				// 수정 폼 보여주기 & 대댓글 폼 숨기기
@@ -724,7 +796,13 @@
                       const currentDate = new Date();
                       const fundState = this.fundDetail.fundState;
                       const timeDiff = endDate.getTime() - currentDate.getTime();
+                      const timeDiff2 = startDate.getTime() - currentDate.getTime();
                       
+                   // 시작날짜가 오늘보다 뒤인경우
+                      if(timeDiff2 >= 0) {
+                    	  const diffInDays = Math.ceil(timeDiff2 / (24 * 60 * 60 * 1000));
+                    	    return "D-" + diffInDays.toString();
+                      }
                       // 마간기간이 남은 경우
                       if(timeDiff >= 0){
                           // 1일 이상인 경우

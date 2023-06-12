@@ -326,7 +326,7 @@ public class PostRestController {
     public List<PostShowVO> likedPostListReload(@RequestBody Map<String,Object> likedPostData)
     {	
     	Integer page = (Integer) likedPostData.get("page"); 
-    	String likedMemberId = (String) likedPostData.get("likedMemberId");
+    	String likedMemberId = (String) likedPostData.get("pageMemberId");
     	List<PostShowVO> posts = postShowService.likedPostShowByPagingReload(page, likedMemberId);
     	return posts; 
     }
@@ -335,7 +335,7 @@ public class PostRestController {
     @PostMapping("/pageReload/memberWritePost")
     public List<PostShowVO> writePostListReload(@RequestBody Map<String,Object> writePostData){
     	Integer page = (Integer) writePostData.get("page"); 
-    	String writeMemberId = (String) writePostData.get("writeMemberId");
+    	String writeMemberId = (String) writePostData.get("pageMemberId");
     	List<PostShowVO> posts = postShowService.writedPostShowByPagingReload(page, writeMemberId);
     	return posts;
     }

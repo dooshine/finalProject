@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ↑ XML 헤더(반드시 첫 번째 줄에 위치) -->
+
+<!-- dtd선언 -->
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- mapper -->
+<mapper namespace="sanction">
+
+    <!-- 제재 생성 -->
+    <insert id="insert">
+        insert into sanction (SANCTION_NO, SANCTION_TARGET_TYPE, SANCTION_TARGET_PRIMARY_KEY, SANCTION_FOR, SANCTION_TERM, SANCTION_START, SANCTION_END) values (sanction_seq.nextval, #{sanctionTargetType}, #{sanctionTargetPrimaryKey}, #{sanctionFor}, #{sanctionTerm}, sysdate, sysdate + #{sanctionTerm})
+    </insert>
+
+    <!-- 제재 조회 -->
+	<select id="selectListComplex" resultType="SanctionDto">
+        select * from sanction order by sanction_no desc
+    </select>
+    <!-- 제재 수정 -->
+    <!-- 제재 삭제 -->
+    <delete id="delete">
+        delete from sanction where sanction_no = #{sanctionNo}
+    </delete>
+</mapper>

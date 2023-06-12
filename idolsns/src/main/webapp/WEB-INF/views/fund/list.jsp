@@ -207,29 +207,36 @@
 						
 				
 			
-					<div class="d-flex justify-content-between mt-4 px-2">
+					<div class="d-flex mt-4 px-2">
 					
-			             	<!-- 검색창 -->
-		               	<div class="search-box w-35 ms-auto me-4">
-		                    <input class="search-input" type="text" v-model="searchQuery" placeholder="검색창" 
-		                    @keyup.enter="fetchOrderedFundingList">
-	                	</div>
-	             
-			                
-			                	<!-- 정렬(성현)
-							<button v-if="dateSort" class="btn-purple1 ms-1" @click="sortByDate">최신순</button>
-							<button v-else class="btn-purple1 ms-1" @click="sortByDate">오래된순</button>
+			     		<!-- 검색 조건 -->           
+						<div class="me-2">
 							
-							-->
-						<div class="w-10">
-							<select class="form-select" v-model="selectedValue" @change="updateOrderList">
+							<select class="form-select" v-model="selectedValue1" @change="updateOrderList1">
 							  	<option value="post_time desc" selected>최신순</option>
 							  	<option	value="post_time asc">오래된순</option>
 							  	<option value="total_price desc">후원금액↑</option>
 							  	<option value="total_price asc">후원금액↓</option>
 <!-- 							  	<option value="">좋아요순</option> -->
 							</select>
+							
 						</div>
+						<div>
+							<select class="form-select" v-model="selectedValue2" @change="updateOrderList2">
+							  	<option value="" selected>진행상태</option>
+							  	<option value="">전체</option>
+							  	<option value="1">펀딩완료</option>
+							  	<option value="2">펀딩진행중</option>
+<!-- 							  	<option value="">좋아요순</option> -->
+							</select>
+						</div>
+						
+			             	<!-- 검색창 -->
+		               	<div class="search-box w-35 me-2 justify-content-end">
+		                    <input class="search-input" type="text" v-model="searchQuery" placeholder="검색창" 
+		                    @keyup.enter="fetchOrderedFundingList" @input="finish=false">
+	                	</div>
+	             
 					
 					
 				
@@ -318,10 +325,12 @@
                 	searchQueryTemp: "",
                 	
                 	// 정렬
-                	orderList: "post_time desc",
+                	selectedValue1: "post_time desc",
+                	selectedValue2: "",
                 	
-                	// select 태그
-                	selectedValue: "",
+                	orderList: "post_time desc",
+                	fundState: "",
+                	
                 	
                 	// 시간순 정렬 버튼
                 	dateSort: false,
@@ -347,6 +356,7 @@
             	   
            	   	// # 펀딩 리스트 불러오기
                   async fetchFundingList() {
+           	   		if(this.finish) return;
            	   		
                   const resp = await axios.get("http://localhost:8080/rest/fund/page/"+this.searchPage,
                         {
@@ -354,7 +364,9 @@
                 		  	// 검색어
                         	searchKeyword : this.searchQuery,
                         	// 정렬 조건
-                        	orderList : this.orderList
+                        	orderList : this.orderList,
+                        	// 펀딩상태
+                        	fundState: this.fundState
                         },
                         paramsSerializer: params => {
                     		return new URLSearchParams(params).toString();
@@ -373,6 +385,7 @@
                    },
                    
                    async fetchOrderedFundingList(){
+                	   	if(this.finish) return;
                 	   	  this.searchPage=1;
                 	   	  
 		                  const resp = await axios.get("http://localhost:8080/rest/fund/page/"+this.searchPage,
@@ -381,7 +394,9 @@
 		                		  	// 검색어
 		                        	searchKeyword : this.searchQuery,
 		                        	// 정렬 조건
-		                        	orderList : this.orderList
+		                        	orderList : this.orderList,
+		                        	// 펀딩상태
+		                        	fundState: this.fundState
 		                        },
 		                        paramsSerializer: params => {
 		                    		return new URLSearchParams(params).toString();
@@ -395,6 +410,14 @@
 		                       if(resp.data.length < 12){
 		                           this.finish = true;
 		                          }
+                   },
+                   
+                // 정렬 리스트 설정
+                   updateOrderList1() {
+                   	this.orderList = this.selectedValue1;
+                   },
+                   updateOrderList2() {
+                   	this.fundState = this.selectedValue2;
                    },
                    
                 // postNo를 List로 송신하고 좋아요 되있는 index 번호를 수신
@@ -427,7 +450,9 @@
                           const timeDiff2 = startDate.getTime() - currentDate.getTime();
                           
                           // 시작날짜가 오늘보다 뒤인경우
-                          if(timeDiff2 >= 0) return "D-"+Math.ceil(timeDiff / (24 * 60 * 60 * 1000));
+                          if(timeDiff2 >= 0) {
+                        	  return "D-"+Math.ceil(timeDiff2 / (24 * 60 * 60 * 1000));
+                          }
                           // 마간기간이 남은 경우
                           if(timeDiff >= 0){
 	                          // 1일 이상인 경우
@@ -464,31 +489,6 @@
                     	  // if not logged in
                     	  if(!this.checkLogin()) return;
                     	  window.location.href = "/fund/write";
-                      },
-                      
-                      // 시간순 정렬
-                      sortByDate() {
-                    	  const descOrder = "post_time desc";
-                    	    const ascOrder = "post_time asc";
-
-                    	    // 최신순
-                    	    if (this.dateSort) {
-                    	        this.dateSort = false;
-                    	        if (!this.orderList.includes(descOrder)) {
-                    	            this.orderList = [descOrder];
-//                     	            this.fetchFundingList();
-                    	        }
-                    	    }
-                    	    // 오래된순
-                    	    else {
-                    	        this.dateSort = true;
-                    	        if (!this.orderList.includes(ascOrder)) {
-                    	            this.orderList = [ascOrder];
-//                     	            this.fetchFundingList();
-                    	        }
-                    	    }
-//                     	    console.log(this.orderList);
-//                     	    console.log(this.fundings);
                       },
                       
                    // 로그인 체크
@@ -553,9 +553,6 @@
                     			console.error(error);
                     		})
                     },
-                    updateOrderList() {
-                    	this.orderList = this.selectedValue;
-                    },
     				
                  },
                  watch: {
@@ -570,8 +567,13 @@
                    // 정렬하면
                    orderList() {
 //                 	   this.fetchFundingList();
+						this.finish = false;
 						this.fetchOrderedFundingList();
-                   }
+                   },
+                   fundState() {
+                	   	this.finish = false;
+						this.fetchOrderedFundingList();
+                   },
                },
                mounted() {
                   window.addEventListener("scroll", _.throttle(()=>{

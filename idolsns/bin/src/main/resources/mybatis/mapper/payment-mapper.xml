@@ -23,6 +23,7 @@
 	<select id="selectAll" resultType="PaymentDto">
 		select * from payment order by payment_no desc
 	</select>
+	
 	<select id="selectByMember" resultType="PaymentDto">
 		select * from payment 
 		where member_id = #{memberId}
@@ -33,11 +34,21 @@
 		select * from payment where payment_no = #{paymentNo}
 	</select>
 	
+	
+	<select id="find2" resultType="PaymentDto">
+		select * from payment where payment_tid = #{paymentTid}
+	</select>
+	
 	<update id="cancelRemain">
 		update payment
 		set payment_remain = 0
 		where payment_no = #{paymentNo}
 	</update>
+	
+	
+	
+	
+	
 	
 </mapper>
 

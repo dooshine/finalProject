@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="calendar">
+	
+	<!-- 번호 뽑기 -->
+	<select id="sequence" resultType="int">
+		select calendar_seq.nextval from dual
+	</select>
+
+	<!-- 일정 등록 -->
+    <insert id="insert">
+    	insert into calendar(
+    		calendar_no, member_id, calendar_title, 
+    		calendar_start, calendar_end, calendar_memo
+    	)
+    	values(
+    		#{calendarNo}, #{memberId}, #{calendarTitle},
+    		#{calendarStart}, #{calendarEnd}, #{calendarMemo}
+    	)
+    </insert>
+    
+    <!-- 로그인한 회원 일정 전체 조회 -->
+    <select id="selectList" resultType="CalendarDto">
+    	select * from calendar where member_id = #{memberId}
+    </select>
+    
+    <!-- 일정 상세 조회 -->
+    <select id="selectOne" resultType="CalendarDto">
+    	select * from calendar where calendar_no = #{calendarNo}
+    </select>
+    
+    <!-- 일정 삭제 -->
+    <delete id="delete">
+    	delete calendar where calendar_no = #{calendarNo}
+    </delete>
+    
+    <!-- 날짜만 수정 -->
+    <update id="updateDate">
+    	update calendar 
+    	set calendar_start = #{calendarStart}, calendar_end = #{calendarEnd} 
+    	where calendar_no = #{calendarNo}
+    </update>
+    
+    <!-- 내용만 수정 -->
+    <update id="updateContent">
+    	update calendar 
+    	set calendar_title = #{calendarTitle}, calendar_memo = #{calendarMemo} 
+    	where calendar_no = #{calendarNo}
+    </update>
+
+</mapper>
