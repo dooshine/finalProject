@@ -8,7 +8,7 @@
         background: #f2f2f2;
     }
     .total-cnt {
-        color: forestgreen;
+        color: #6a53fb;
     }
     .cursor-pointer:hover {
     cursor: pointer;
@@ -48,13 +48,17 @@
         background-color: white;
         border: none; /* 테두리 제거 */
     }
+    
+    td {
+    	vertical-align:middle;
+    }
 </style>
-<br>
-<div class="container custom-container" id="app">
+
+<div class="custom-container" id="app" style="padding: 24px;">
     <!-- # 회원조회 타이틀 -->
     <div class="row mt-3">
         <div class="col">
-            <h1 class="font-purple1">회원 목록</h1>
+            <h1>회원 목록</h1>
         </div>
         <div class="custom-hr"></div>
     </div>
@@ -167,7 +171,7 @@
             <!-- 검색버튼 -->
             <div class="row mt-3 text-end">
                 <div class="col">
-                    <button class="btn-round btn-purple1" type="button" @click="loadMemberList">검색하기</button>
+                    <button class="custom-btn btn-round btn-purple1" type="button" @click="loadMemberList">검색하기</button>
                 </div>
             </div>
         </div>
@@ -182,17 +186,17 @@
         <div class="col-4">
             전체 <b class="total-cnt">{{memberList.length}}</b>건
         </div>
-        <div class="offset-7 col-1 mb-1">
-            <button class="btn btn-danger" 	@click="changeMember"><i class="fa-solid fa-xmark"></i>삭제</button>
+        <div class="col-8 mb-1 d-flex justify-content-end">
+            <button class="custom-btn btn-purple1" @click="changeMember"><i class="fa-solid fa-xmark me-2"></i>삭제</button>
         </div>
     </div>
     <div class="row">
         <div class="col p-0">
             <table class="table">
                 <thead>
-                    <tr class="back-gray">
+                    <tr class="back-gray" style="text-align: center;">
+                        <th scope="col"><input type="checkbox"  @change="checkAllMember($event)"></th>
                         <th scope="col">번호</th>
-                        <th scope="col">전체<br><input type="checkbox"  @change="checkAllMember($event)"></th>
                         <th scope="col">회원프로필</th>
                         <th scope="col">회원아이디(닉네임)/회원이메일</th>
                         <th scope="col">팔로우/팔로워</th>
@@ -208,22 +212,22 @@
                         </td>
                     </tr>
                     <tr v-for="(member, i) in memberList.slice(pageObj.begin - 1, pageObj.end)" :key="i">
-                        <td>{{pageObj.begin + i}}</td>
-                        <td><input type="checkbox" @change="checkMember($event, member.memberId)" :checked="selectedMemberObj[member.memberId]"></td>
-                        <td><img :src="member.profileSrc" style="height: 50px; width: 50px;"></td>
+                        <td style="text-align: center;"><input type="checkbox" @change="checkMember($event, member.memberId)" :checked="selectedMemberObj[member.memberId]"></td>
+                        <td style="text-align: center;">{{pageObj.begin + i}}</td>
+                        <td style="text-align: center;"><img :src="member.profileSrc" style="height: 50px; width: 50px;"></td>
                         <td>
                             {{fullName(member.memberId, member.memberNick)}}<br>
                             {{member.memberEmail}}
                         </td>
-                        <td>{{member.memberFollowCnt}}/{{member.memberFollowerCnt}}</td>
-                        <td>{{member.memberPoint}}</td>
+                        <td style="text-align: right;">{{member.memberFollowCnt}}/{{member.memberFollowerCnt}}</td>
+                        <td style="text-align: right;">{{member.memberPoint}}</td>
                         <td>
                             {{member.memberJoin}}<br>
                             {{member.memberLogin === null ? "미접속": member.memberLogin }}
                         </td>
-                        <td>
-                            <button class="btn-round btn-purple1-secondary" @click="followMember(member.memberId)" style="margin-right:10px">수정하기</button>
-                            <button class="btn-round btn-purple2" @click="followMember(member.memberId)">제재
+                        <td style="text-align: center;">
+                            <button class="custom-btn btn-round btn-purple1-secondary" @click="followMember(member.memberId)" style="margin-right:10px">수정</button>
+                            <button class="custom-btn btn-round btn-purple2" @click="followMember(member.memberId)">제재</button>
                         </td>
                     </tr>
                 </tbody>

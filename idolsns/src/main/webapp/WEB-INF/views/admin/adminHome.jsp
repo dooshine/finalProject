@@ -3,8 +3,8 @@
 
 <jsp:include page="/WEB-INF/views/template/header.jsp"></jsp:include>
 
-<div class="container custom-container">
-    <div class="col">
+<div class="custom-container" style="padding: 24px;">
+    <div>
         <h1 class="font-bold">관리자 홈</h1>
     </div>
 </div>
