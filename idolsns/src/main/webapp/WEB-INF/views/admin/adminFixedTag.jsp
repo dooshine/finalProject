@@ -4,7 +4,7 @@
 <jsp:include page="/WEB-INF/views/template/header.jsp"></jsp:include>
 
 <!-- 제어영역 설정 -->
-<div class="container custom-container" id="app">
+<div class="custom-container" style="padding: 24px;" id="app">
     <!-- # 고정태그 -->
     <!-- 고정태그 생성 -->
     <div class="row mt-3">
@@ -14,48 +14,24 @@
     </div>
     <div class="row mt-3">
         <div class="col">
-            <input type="text" v-model="newFixedTagName">
-            <button class="btn btn-primary" @click="createFixedTag(newFixedTagName)">고정태그 생성</button>
+        	<div class="d-flex">
+	            <div class="custom-input-container me-2" style="width: 40%;">
+	                <input class="custom-input w-60" type="text" v-model="newFixedTagName" >
+	            </div>
+	            <button class="custom-btn btn-rounded btn-purple1" @click="createFixedTag(newFixedTagName)">고정태그 생성</button>
+	        </div>
         </div>
     </div>
 
 
     <!-- ########################### 글쓰기 추가 ######################## -->
     <!-- 고정태그 입력 시 목록 불러오기 -->
-    <div class="row mt-3">
-        <div class="col">
-            <h1>글쓰기 시 고정태그 목록 조회</h1>
-        </div>
-    </div>
-    <div class="row mt-3">
-        <div class="col">
-            <input type="text" @input="findFixedTagName = $event.target.value" v-model="findFixedTagName">
-        </div>
-    </div>
-    <div class="row">
-        <div v-for="(findFixedTag, i) in findFixedTagList" :key="i">
-            <button class="btn btn-secondary" @click="addNewFixedTag(findFixedTag)">{{ findFixedTag }}</button>
-        </div>
-    </div>
-    <div class="row mt-3">
-        <div class="col">
-            <button class="btn btn-primary" v-for="(newFixedTag, i) in newFixedTagList">{{ newFixedTag }}</button>
-        </div>
-    </div>
     <!-- ########################### 글쓰기 추가 ######################## -->
-
-
-    <!-- 고정태그 목록 -->
-    <div class="row mt-3">
-        <div class="col">
-            <h1>고정태그 목록</h1>
-        </div>
-    </div>
     
     <!-- 태그삭제 버튼 -->
     <div class="row text-end mt-5">
         <div class="col">
-            <button @click="deleteFixedTagByNo"><i class="fa-solid fa-xmark"></i>삭제</button>
+            <button class="custom-btn btn-purple1" @click="deleteFixedTagByNo"><i class="fa-solid fa-xmark me-2"></i>삭제</button>
         </div>
     </div>
     <div class="row">
