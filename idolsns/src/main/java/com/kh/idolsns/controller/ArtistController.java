@@ -25,6 +25,6 @@ public class ArtistController {
             throw new NoHandlerFoundException(null, null, null);
         }
         model.addAttribute("artistEngNameLower", artistEngNameLower);
-        return "/artist/artistHomeTemp";
+        return "/artist/artistHome";
     }
 }
