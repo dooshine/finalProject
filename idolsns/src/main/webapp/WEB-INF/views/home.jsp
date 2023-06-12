@@ -2405,7 +2405,7 @@
                 		this.endDate = this.posts[index].scheduleEnd;
                 		this.scheduleDate = moment(startDate).format('YYYY년 MM월 DD일') 
                 							+ " - " + 
-                							moment(endDate).format('YYYY년 MM월 DD일');
+                							moment(endDate).add(1, 'days').format('YYYY년 MM월 DD일');
                 		$("#calendarTitlePost").focus();
                 	});
                 	$("#addCalendarPostModal").modal("show");
