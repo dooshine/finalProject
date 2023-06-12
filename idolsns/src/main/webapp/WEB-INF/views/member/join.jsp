@@ -85,38 +85,38 @@
 			<div v-show="page==2">
                     <h2 class="font-purple1">회원정보입력</h2>
             <div class="custom-hr"></div>
-            <div class="row mb-3 mx-2">
-                    <input type="text" v-model="memberId" class="custom-input-rounded-container width: 100%;" 
+            <div class="custom-input-rounded-container mb-3 mx-2">
+                    <input type="text" v-model="memberId" class="custom-input width: 100%;" 
                     	:class="{ 'is-valid': memberIdValid && !idDuplicated && !idDuplicated2, 'is-invalid': memberId !== '' && (!memberIdValid || idDuplicated || idDuplicated2)}" placeholder="아이디" 
                     	@blur="idDuplicatedCheck(memberId) &&  idDuplicatedCheck2(memberId)" name="memberId" id="memberId">
                     <div class="valid-feedback">{{memberIdMessage}}</div>
   					<div class="invalid-feedback">{{memberIdMessage}}</div>
             </div>
 
-            <div class="row mb-3 mx-2">
-                    <input type="password" v-model="memberPw" class="custom-input-rounded-container width: 100%;" 
+            <div class="custom-input-rounded-container mb-3 mx-2">
+                    <input type="password" v-model="memberPw" class="custom-input width: 100%;" 
                     	:class="{'is-valid' : memberPwValid, 'is-invalid' : memberPw !== '' && !memberPwValid}" placeholder="비밀번호" name="memberPw">
                     <div class="valid-feedback">{{memberPwMessage}}</div>
                     <div class="invalid-feedback">{{memberPwMessage}}</div>
             </div>
 
-            <div class="row mb-3 mx-2">
-                    <input type="password" v-model="memberPwRe" class="custom-input-rounded-container width: 100%;" 
+            <div class="custom-input-rounded-container mb-3 mx-2">
+                    <input type="password" v-model="memberPwRe" class="custom-input width: 100%;" 
                     	:class="{'is-valid':memberPwReValid, 'is-invalid':memberPwRe !== '' && (!memberPwReValid || memberPw.length==0)}" placeholder="비밀번호 확인" name="memberPwRe">
                     <div class="valid-feedback">{{memberPwReMessage}}</div>
                     <div class="invalid-feedback">{{memberPwReMessage}}</div>
             </div>
 
-            <div class="row mb-3 mx-2">
-                    <input type="text" v-model="memberNick" class="custom-input-rounded-container width: 100%;" placeholder="닉네임" 
+            <div class="custom-input-rounded-container mb-3 mx-2">
+                    <input type="text" v-model="memberNick" class="custom-input width: 100%;" placeholder="닉네임" 
                     	:class="{'is-valid':memberNickValid && !nickDuplicated, 'is-invalid':memberNick !== '' && (!memberNickValid || nickDuplicated)}" 
                     	@blur="nickDuplicatedCheck(memberNick)" name="memberNick">
                     <div class="valid-feedback">{{memberNickMessage}}</div>
                     <div class="invalid-feedback">{{memberNickMessage}}</div>
             </div>
 
-            <div class="row mb-3 mx-2">
-                    <input type="email" v-model="memberEmail" class="custom-input-rounded-container width: 100%;" placeholder="이메일" 
+            <div class="custom-input-rounded-container mb-3 mx-2">
+                    <input type="email" v-model="memberEmail" class="custom-input width: 100%;" placeholder="이메일" 
                     	:class="{'is-valid':memberEmailValid && !emailDuplicated, 'is-invalid':memberEmail !== '' && (!memberEmailValid || emailDuplicated)}" 
                     	@blur="emailDuplicatedCheck(memberEmail)" name="memberEmail">
                     <div class="valid-feedback">{{memberEmailMessage}}</div>
@@ -138,13 +138,13 @@
             		<h2 class="font-purple1">본인 인증</h2>
             		<h4 class="font-gray2">입력하신 이메일주소로 본인인증을 완료해주세요.</h4>
             	<div class="custom-hr"></div>
-            	<div class="row mb-3 mx-1 ">
+            	<div class="custom-input-rounded-container mb-3 mx-1 ">
 				    <input type="text" v-model="memberEmail" readonly class="custom-input-rounded-container" style="width: 73%; margin-left: 8px;" disabled >
 				    <button type="button" class="custom-btn btn-round btn-purple1-secondary"  @click="sendEmail(memberEmail)" style="width: 23%; margin-left: 6px;" >전송</button>
 				</div>
 
-            	<div class="row mb-3 mx-2">
-            		<input type="text" v-model.number="code" placeholder="인증번호입력" @blur="isKeyValid" class="custom-input-rounded-container width: 100%;" >
+            	<div class="custom-input-rounded-container mb-3 mx-2">
+            		<input type="text" v-model.number="code" placeholder="인증번호입력" @blur="isKeyValid" class="custom-input width: 100%;" >
             	</div>
             	
             	<BR>

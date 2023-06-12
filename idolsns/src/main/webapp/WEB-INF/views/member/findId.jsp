@@ -16,8 +16,8 @@
 			</div>
 			<div class="custom-hr"></div>
 			<br>
-			<div class="row mb-3 mx-3">
-					<input type="email" class="custom-input-rounded-container" placeholder="이메일" v-model="memberEmail"  name="memberEmail"
+			<div class="custom-input-rounded-container mb-3 mx-3">
+					<input type="email" class="custom-input" placeholder="이메일" v-model="memberEmail"  name="memberEmail"
 					   :class="{'is-invalid':!emailDuplicated && memberEmail !== ''}" 
 					  @keyup="emailDuplicatedCheck(memberEmail)">
 					<div class="invalid-feedback">{{memberEmailMessage}}</div>
