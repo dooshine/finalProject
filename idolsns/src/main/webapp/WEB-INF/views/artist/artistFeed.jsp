@@ -188,13 +188,13 @@
 		<%-- ######################## 대표페이지 헤더 ######################## --%>
 		<div class="w-100" id="artist-header">
 			<div class="d-flex justify-content-center">
-				<a class="font-bold px-4 artist-header-tab" :href="makeHref('feed')">
+				<a class="font-bold px-4 artist-header-tab artist-header-tab-active" :href="makeHref('feed')">
 					게시물
 				</a>
 				<a class="font-bold px-4 artist-header-tab" :href="makeHref('map')">
 					지도
 				</a>
-				<a class="font-bold px-4 artist-header-tab artist-header-tab-active" :href="makeHref('fund')">
+				<a class="font-bold px-4 artist-header-tab" :href="makeHref('fund')">
 					후원
                 </a>
 			</div>
