@@ -7,13 +7,13 @@ import com.kh.idolsns.dto.PostImageDto;
 
 public interface FundPostRepo {
 	
-	void insert(FundPostDto dto);
-	List<FundPostDto> selectList();
-	FundPostDto selectOne(Long postNo);
-	boolean update(FundPostDto dto);
-	void connect(PostImageDto postImageDto);
-	boolean sponsorCount(FundPostDto fundPostDto);
-	void updateFundState();
+	public void insert(FundPostDto dto);
+	public List<FundPostDto> selectList();
+	public FundPostDto selectOne(Long postNo);
+	public boolean update(FundPostDto dto);
+	public void connect(PostImageDto postImageDto);
+	public boolean sponsorCount(FundPostDto fundPostDto);
+	public void updateFundState();
 
-	FundPostDto find(Long postNo);
+	public FundPostDto find(Long postNo);
 }
