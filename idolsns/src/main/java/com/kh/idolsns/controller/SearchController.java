@@ -13,7 +13,7 @@ public class SearchController {
     @GetMapping("/post")
     public String searchPost(@RequestParam String q, Model model){
         model.addAttribute("query", q);
-        return "search/searchPost";
+        return "search/searchPost1"; // 이거 내가 searchPost1로 jsp파일 바꿨어 윤기형 6.12 jjy 
     }
     
     // 6.11 새로 생성한 검색
