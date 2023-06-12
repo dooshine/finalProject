@@ -1295,7 +1295,7 @@
 										</div>
 
 										<!-- 댓글 내용이 아이디보다 길면 -->
-										<div v-else class="row grey-f5f5f5 rounded-3 text-left"
+										<div v-else-if="reply.replyContent && reply.replyId && reply.replyContent.length > reply.replyId.length" class="row grey-f5f5f5 rounded-3 text-left"
 											style="max-width: 100%"
 											:style="{width: (reply.replyContent.length * 15 +30) + 'px' }">
 											<div class="row mt-2"></div>
@@ -1361,7 +1361,7 @@
 													<div class="row mb-1"></div>
 												</div>
 												<!-- 대댓글 내용이 아이디보다 길면 -->
-												<div v-else class="row grey-f5f5f5 rounded-3 text-left"
+												<div v-else-if="rereply.replyContent && rereply.replyId && rereply.replyContent.length > rereply.replyId.length" class="row grey-f5f5f5 rounded-3 text-left"
 													style="max-width: 100%"
 													:style="{ width: (rereply.replyContent.length * 15 +30) + 'px' }">
 													<div class="row mt-2"></div>
@@ -1484,7 +1484,7 @@
 											</div>
 
 											<!-- 댓글 내용이 아이디보다 길면 -->
-											<div v-else class="row grey-f5f5f5 rounded-3 text-left"
+											<div v-else-if="reply.replyContent && reply.replyId && reply.replyContent.length > reply.replyId.length" class="row grey-f5f5f5 rounded-3 text-left"
 												style="max-width: 100%"
 												:style="{width: (reply.replyContent.length * 15 +30) + 'px' }">
 												<div class="row mt-2"></div>
@@ -1552,7 +1552,7 @@
 														<div class="row mb-1"></div>
 													</div>
 													<!-- 대댓글 내용이 아이디보다 길면 -->
-													<div v-else class="row grey-f5f5f5 rounded-3 text-left"
+													<div v-else-if="rereply.replyContent && rereply.replyId && rereply.replyContent.length > rereply.replyId.length" class="row grey-f5f5f5 rounded-3 text-left"
 														style="max-width: 100%"
 														:style="{ width: (rereply.replyContent.length * 15 +30) + 'px' }">
 														<div class="row mt-2"></div>

@@ -736,7 +736,7 @@
 			<!-- 고정 태그와 글 타입들 -->
 			<div class="row mb-3 ">
 				<div
-					class="col-1 col-md-1 col-lg-1 d-flex align-items-center justify-content-center">
+					class="col-1 col-md-1 col-lg-1 d-flex align-items-center justify-content-center">			
 				</div>
 				<div
 					class="col-10 col-md-10 col-lg-10 d-flex align-items-center justify-content-start">
@@ -1453,7 +1453,7 @@
                   FollowMemberList:[],
                   FollowerMemberList:[],
                   FollowPageList:[],
-                  page : 1,
+                  
                   file : null,
                   attachment: "",
                   previewURLList:[], 
@@ -1907,7 +1907,7 @@
               		// 아예 페이지 새로 고침
               		if(this.page == 2 && this.firstMountFlag)
               		{
-              			location.reload();	
+//               			location.reload();	
               		}
                 	  
                 	  
@@ -1918,7 +1918,7 @@
                       // 1페이지 부터 현재 페이지 까지 전부 가져옴 
 	                  var writePostData ={
 	                    		page: this.page,
-	                    		writeMemberId: this.memberId
+	                    		pageMemberId: this.pageMemberId
 	                   };
                                             
 	                  const resp = await axios.post("http://localhost:8080/rest/post/pageReload/memberWritePost",writePostData);
@@ -1940,9 +1940,15 @@
                     if(this.finish == true) return;//다 불러왔으면
                     
                     this.loading = true;
+                	 // 1페이지 부터 현재 페이지 까지 전부 가져옴 
+	                  var writePostData ={
+	                    		page: this.page,
+	                    		pageMemberId: this.pageMemberId
+	                   };
+                    
                     
                     // 1페이지 부터 현재 페이지 까지 전부 가져옴 
-                    const resp = await axios.get("http://localhost:8080/rest/post/pageReload/"+this.page);
+                    const resp = await axios.get("http://localhost:8080/rest/post/pageReload/memberWritePost"+writePostData);
 	                this.posts = resp.data;
 	                this.getLikePostIndex(this.posts);
 	                this.getReplyAllList(this.posts);
@@ -2440,10 +2446,11 @@
                 		    this.memberId = null; // 기본 값으로 null을 할당하거나
                 		    // 예외 처리 로직을 추가합니다.
                 		    // 예: 오류 메시지 표시, 다른 로직 실행 등
-                	}            		
+                	}
             	},
             	setPageMemberId(){
             		const pageMemberId  = '${pageMemberId}';
+            		console.log("테스트 멤버아이디"+pageMemberId);
             		if (pageMemberId&& pageMemberId !== null){
             			this.pageMemberId = pageMemberId;
             		}
@@ -2541,7 +2548,7 @@
             this.setPageMemberId();
             this.profileImage();
        		this.pageListProfile();
-       		this. mypageCheck();
+       		this.mypageCheck();
        		this.followCheck();
                
             // 게시글 불러오기

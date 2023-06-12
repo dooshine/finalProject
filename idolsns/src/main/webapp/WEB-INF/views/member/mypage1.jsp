@@ -619,7 +619,6 @@
 <!-- 	<button type="button" onclick="relayout();" class="btn btn-white btn-outline-dark rounded-pill col-12 " data-bs-target="#modalmap" data-bs-toggle="modal">지도 테스트 모달</button> -->
 	<!--------------- 게시물들 반복구간 ------------->
 	<div v-for="(post, index) in posts" :key="index">
-
 		<!-- 글 박스 루프 1개-->
 		<div class="mb-2 custom-container">
 			<!-- 프로필 사진과 아이디 -->
@@ -1906,24 +1905,27 @@
               		// 아예 페이지 새로 고침
               		if(this.page == 2 && this.firstMountFlag)
               		{
-              			location.reload();	
+//               			location.reload();	
               		}
                 	  
-                	  
-                      if(this.loading == true) return;//로딩중이면
-                      if(this.finish == true) return;//다 불러왔으면
-                      
+                	 console.log("하하")
+//                       if(this.loading == true) return;//로딩중이면
+//                       if(this.finish == true) return;//다 불러왔으면
+                     console.log("하하2")
                       this.loading = true;
                       // 1페이지 부터 현재 페이지 까지 전부 가져옴 
                       var likedPostData ={
                       		page: this.page,
-                      		likedMemberId: this.memberId
+                      		pageMemberId: this.pageMemberId
                       };
                                             
                      const resp = await axios.post("http://localhost:8080/rest/post/pageReload/memberLikePost",likedPostData);
   	                this.posts = resp.data;
+  	               	
+//   	                console.log("야아ㅣ야앙라ㅓ임")
+//   	                console.table(resp.data);
   	                this.getLikePostIndex(this.posts);
-	                this.getReplyAllList(this.posts);
+	                await this.getReplyAllList(this.posts);
   	                this.page++;
   	                
   	                this.loading=false;
@@ -1939,9 +1941,13 @@
                     if(this.finish == true) return;//다 불러왔으면
                     
                     this.loading = true;
+                    var likedPostData ={
+                      		page: this.page,
+                      		pageMemberId: this.pageMemberId
+                     };
                     
                     // 1페이지 부터 현재 페이지 까지 전부 가져옴 
-                    const resp = await axios.get("http://localhost:8080/rest/post/pageReload/"+this.page);
+                    const resp = await axios.get("http://localhost:8080/rest/post/pageReload/memberLikePost"+likedPostData);
 	                this.posts = resp.data;
 	                this.getLikePostIndex(this.posts);
 	                this.getReplyAllList(this.posts);
@@ -2244,15 +2250,11 @@
                 // 댓글 창 관련 클릭 함수 -------------------------------              
               	// 전송 버튼 클릭 시
                 async replySending(postNo,index){
-                	try{
+                	
                 		const replyDto = {postNo: postNo, replyContent:this.replyContent};
                     	const response = await axios.post('http://localhost:8080/rest/post/reply/',replyDto);
                     	this.fetchPosts();
-                    }
-                	catch (error){
-                		console.error(error);
-                	}
-                	
+                   		
                 	this.hideReplyInput(index)
                 },
                 // 댓글 쓰기 창 띄우기 (다른 창들은 모두 닫음, 대댓글창도 닫음) 
@@ -2308,13 +2310,10 @@
                 
                 // 댓글 삭제
                 async deleteReply(replyNo){
-                	try{
+                	
                 		await axios.delete('http://localhost:8080/rest/post/reply/delete/'+replyNo);
                 		this.fetchPosts();
-                	}
-                	catch (error){
-                		console.error(error);
-                	}
+                	
                 
                 },
                 // 대댓글 삭제
@@ -2565,7 +2564,7 @@
             this.setPageMemberId();
             this.profileImage();
        		this.pageListProfile();
-       		this. mypageCheck();
+       		this.mypageCheck();
        		this.followCheck();
                
             // 게시글 불러오기
