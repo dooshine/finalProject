@@ -1669,7 +1669,7 @@
             const url = "http://localhost:8080/rest/post/pageReload/fixedTagPost";
             var fixedTagPostData = {
             		page: this.page,
-            		fixedTagName: '아이브'
+            		fixedTagName: artistName
             }
             
             console.log(fixedTagPostData);
