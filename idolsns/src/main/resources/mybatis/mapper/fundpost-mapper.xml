@@ -61,6 +61,11 @@
       select * from fund_post where post_no = #{postNo}
    </select>
    
+   <!-- 글 작성시 중복제목 검사 -->
+   <select id="duplicateCheck" resultType="Integer" parameterType="String">
+   		select count(*) from fund_post where fund_title=#{fundTitle} 
+   </select>
+   
 	
 	
 </mapper>

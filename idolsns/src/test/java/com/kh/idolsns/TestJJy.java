@@ -27,9 +27,8 @@ public class TestJJy {
 	public void test() {
 		
 		int page = 1; 
-		String memberId = "testuser3";
-		
-		List<PostShowVO> list =  postShowService.writedPostShowByPagingReload(page, memberId);
+				
+		List<PostShowVO> list =  postShowService.fixedTagPostShowByPagingReload(page, "아이브");
 	
 		for(PostShowVO vo : list) {
 			System.out.println(vo);
