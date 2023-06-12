@@ -122,7 +122,45 @@
 	<%-- ######################## 펀딩 ######################## --%>
 	<div class="custom-container mt-3">
 
-		<h1>여기에 작성해주면되</h1>
+		<!-- 펀딩 리스트 -->
+                 <div class="funding-list justify-content-center mt-4">
+                 
+                   <div class="funding-item" v-for="(funding, index) in fundings" :key="index"
+                                              @click="link(funding)" >
+                     <div class="image-container">
+                     	<img :src="getImageUrl(funding)" alt="Funding Image" style="height:200px;">
+                     </div>
+                     
+                     <!-- 좋아요 -->
+                     <span class="heart-icon" v-if="postLikeIndexList.includes(index)">
+					      <i class="fs-4 ti ti-heart-filled" @click="checkLike(funding.postNo, index); $event.stopPropagation()"></i> 
+                     </span>
+                     <span class="heart-icon" v-else>
+					      <i class="fs-4 ti ti-heart" @click="checkLike(funding.postNo, index); $event.stopPropagation()"></i> 
+                     </span>
+                     <!-- 좋아요 끝! -->
+					    
+                     
+                     <h3 class="title">{{ funding.fundTitle }}</h3>
+                     <p class="description">{{ funding.fundShortTitle }}</p>
+                     <div class="progress-bar">
+                       	<div class="progress" :style="{ width: (funding.totalPrice / funding.fundGoal * 100).toFixed(1) + '%' }"></div>
+                     </div>
+                     <div class="info">
+	                       <div>
+		                     <span style="font-weight:bold">
+		                     {{ (funding.totalPrice / funding.fundGoal * 100).toFixed(1) }}
+		                     </span>%
+	                         <span class="fund_span">{{ formatCurrency(funding.totalPrice) }}</span>원
+	                       </div>
+	                       <div>
+	                         <span class="value">{{ getTimeDiff(funding) }}</span>
+	                       </div>
+                     </div>
+                   </div>
+                   
+                 </div>
+                 <!-- 펀딩 리스트 끝! -->
 
 	</div>
 	<%-- ######################## 펀딩 끝 ######################## --%>
@@ -148,7 +186,8 @@
 
 
 			// ######################## 후원 (lsh) ########################
-
+			fundings: [],
+			searchPage: 1,
 
 
 
@@ -282,7 +321,34 @@
 
 
 		// ######################## 후원(lsh) method ########################
-
+		
+        async fetchOrderedFundingList(){
+    	   	if(this.finish) return;
+    	   	  this.searchPage=1;
+    	   	  
+              const resp = await axios.get("http://localhost:8080/rest/fund/page/"+this.searchPage,
+                    {
+            	  params: {
+            		  	// 검색어
+                    	searchKeyword : this.searchQuery,
+                    	// 정렬 조건
+                    	orderList : this.orderList,
+                    	// 펀딩상태
+                    	fundState: this.fundState
+                    },
+                    paramsSerializer: params => {
+                		return new URLSearchParams(params).toString();
+                	}
+                    });
+//               console.log(resp.data);
+              this.fundings = [...resp.data];
+              this.searchPage++;
+              
+              // 데이터가 12개 미만이면 더 읽을게 없다
+                   if(resp.data.length < 12){
+                       this.finish = true;
+                      }
+       },
 
 
 
@@ -290,9 +356,10 @@
       },
       async mounted(){
 		// 1. 아티스트 정보 로드
-        this.loadArtist();
+        await this.loadArtist();
         // 2. 로그인 한 사람 팔로우 정보 로드
         this.loadMemberFollowInfo();
+        console.table(this.artistObj);
       },
 
 	  created(){
