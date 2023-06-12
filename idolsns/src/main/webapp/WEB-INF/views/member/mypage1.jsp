@@ -178,14 +178,23 @@
 		                     <i class="fa-solid fa-xmark" style="color: #bcc0c8;" data-bs-dismiss="modal" aria-label="Close"></i>
 		                  </div>
 		                  <div class="modal-body ">
-		                  	<div class="row">
-			                     <i class="fa-solid fa-lock" @click="goToPassword()">비밀번호 변경</i>
+		                  	<div class="row" style="display: flex;
+   justify-content: center;
+   align-items: center;
+   margin-bottom: 10px;">
+			                     <i class="fa-solid fa-lock fa-2x" @click="goToPassword()"><span style="font-size:30px; ">비밀번호 변경</span></i>
 		                  	</div>
-		                  	<div class="row">
-			                     <i class="fa-solid fa-pen-to-square" @click="goToLogout()">로그아웃</i>
+		                  	<div class="row" style="display: flex;
+   justify-content: center;
+   align-items: center;
+   margin-bottom: 10px;">
+			                     <i class="fa-solid fa-pen-to-square fa-2x" @click="goToLogout()"><span style="font-size:30px;">로그아웃</span></i>
 		                  	</div>
-		                  	<div class="row">
-			                     <i class="fa-sharp fa-solid fa-circle-minus " @click="goToExit()">회원탈퇴</i>
+		                  	<div class="row" style="display: flex;
+   justify-content: center;
+   align-items: center;
+   margin-bottom: 10px;">
+			                     <i class="fa-sharp fa-solid fa-circle-minus fa-2x" @click="goToExit()"><span style="font-size:30px;">회원탈퇴</span></i>
 		                  	</div>
 		                  </div>
 		               </div>
@@ -236,7 +245,7 @@
 		                     </div>
 		                     <div class="col-3"></div>
 		                     <div class="col-3 ">
-		                    <button v-if="mypage" class="btn-round btn-purple1-secondary"  @click="deleteFollow(board.followNo, index)" style="margin-left:30px; padding: 10px 20px; font-size: 15px;">삭제</button>
+		                    <button v-if="mypage" class="btn-round btn-purple1-secondary"  @click="deleteFollow(board.followNo, index)" style="padding: 10px 20px; font-size: 15px;">삭제</button>
 		                     </div>
 		                    </div>
 		                     </div>
@@ -265,7 +274,7 @@
 		                     </div>
 		                     <div class="col-3"></div>
 		                     <div class="col-3 ">
-		                    <button v-if="mypage" class="btn-round btn-purple1-secondary" @click="deleteFollow(board.followNo)"  style="margin-left:30px; padding: 10px 20px; font-size: 15px;">삭제</button>
+		                    <button v-if="mypage" class="btn-round btn-purple1-secondary" @click="deleteFollow(board.followNo)"  style=" padding: 10px 20px; font-size: 15px;">삭제</button>
 		                     </div>
 		                    </div>
 		                     </div>
@@ -293,7 +302,7 @@
 		                     </div>
 		                     <div class="col-3"></div>
 		                     <div class="col-3 ">
-		                    <button v-if="mypage" class="btn-round btn-purple1-secondary" @click="deleteFollow(board.followNo)"  style="margin-left:30px; padding: 10px 20px; font-size: 15px;">삭제</button>
+		                    <button v-if="mypage" class="btn-round btn-purple1-secondary" @click="deleteFollow(board.followNo)"  style=" padding: 10px 20px; font-size: 15px;">삭제</button>
 		                     </div>
 		                    </div>
 		                     </div>
