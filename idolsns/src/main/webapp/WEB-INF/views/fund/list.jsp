@@ -207,40 +207,34 @@
 						
 				
 			
-					<div class="d-flex mt-4 px-2">
-					
-			     		<!-- 검색 조건 -->           
-						<div class="me-2">
-							
-							<select class="form-select" v-model="selectedValue1" @change="updateOrderList1">
-							  	<option value="post_time desc" selected>최신순</option>
-							  	<option	value="post_time asc">오래된순</option>
-							  	<option value="total_price desc">후원금액↑</option>
-							  	<option value="total_price asc">후원금액↓</option>
-<!-- 							  	<option value="">좋아요순</option> -->
-							</select>
-							
-						</div>
-						<div>
-							<select class="form-select" v-model="selectedValue2" @change="updateOrderList2">
-							  	<option value="" selected>진행상태</option>
-							  	<option value="">전체</option>
-							  	<option value="1">펀딩완료</option>
-							  	<option value="2">펀딩진행중</option>
-<!-- 							  	<option value="">좋아요순</option> -->
-							</select>
-						</div>
-						
-			             	<!-- 검색창 -->
-		               	<div class="search-box w-35 me-2 justify-content-end">
-		                    <input class="search-input" type="text" v-model="searchQuery" placeholder="검색" 
-		                    @keyup.enter="fetchOrderedFundingList" @input="finish=false">
-	                	</div>
-	             
-					
-					
-				
+			<div class="d-flex mt-4 px-2 justify-content-between">
+				<div class="d-flex align-items-center">
+		    		<!-- 검색 조건1 -->           
+					<div class="me-2">
+						<select class="form-select" v-model="selectedValue1" @change="updateOrderList1">
+						  	<option value="post_time desc" selected>최신순</option>
+						  	<option	value="post_time asc">오래된순</option>
+						  	<option value="total_price desc">후원금액↑</option>
+						  	<option value="total_price asc">후원금액↓</option>
+						</select>
+					</div>
+					<!-- 검색 조건2 -->
+					<div>
+						<select class="form-select" v-model="selectedValue2" @change="updateOrderList2">
+						  	<option value="" selected>진행상태</option>
+						  	<option value="">전체</option>
+						  	<option value="1">펀딩완료</option>
+						  	<option value="2">펀딩진행중</option>
+						</select>
+					</div>
 				</div>
+	            <!-- 검색창 -->
+             	<div class="search-box me-2 ">
+                  <input class="search-input" type="text" v-model="searchQuery" placeholder="검색" 
+                  @keyup.enter="fetchOrderedFundingList" @input="finish=false">
+             	</div>
+		          
+			</div>
 	             	
                	
                	<!-- 펀딩 리스트 -->
@@ -313,11 +307,9 @@
                   return{
                   // 목록을 위한 데이터
                     percent: 0,
-                    page: 1,
                     searchPage: 1,
                     finish: false,
                  	fundings: [],
-                	initFundings: false,
                  // 무한스크롤 안전장치
                 	loading: false,
                  // 검색 키워드
