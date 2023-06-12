@@ -149,8 +149,11 @@
 					<span style="font-weight:bold">{{ (fundDetail.fundTotal / fundDetail.fundGoal * 100).toFixed(1) }}</span>%
 			
 					<label class="mt-3">남은 시간</label>
-					<span v-if="getTimeDiff().includes('D')" class="fund_span">{{ getTimeDiff() }}</span>
-					<span v-else class="fund_span">{{ getTimeDiff() }}</span>일
+					<span v-if="getTimeDiff().includes('펀')" class="fund_span">{{ getTimeDiff() }}</span>
+					<span v-else-if="getTimeDiff().includes('-')" class="fund_span">{{ getTimeDiff() }}</span>
+					<span v-else>
+						<span class="fund_span">{{ getTimeDiff() }}</span>일
+					</span>
 <!-- 					<span class="fund_span">{{ getTimeDiff() }}</span>일 -->
 					
 					<div @click="sponsorModal = true">
@@ -247,7 +250,8 @@
 	        <div v-if="reply.replyNo == reply.replyGroupNo" class="row mb-1">
 	        	<!-- 프로필 이미지 -->
           		<div class="col-1">
-          			<img v-if="reply.attachmentNo && reply.attachmentNo !=null" class="img-fluid rounded-circle" :src="getAttachmentUrl(reply.attachmentNo)"> 
+          			<img v-if="reply.attachmentNo && reply.attachmentNo !=null" class="img-fluid rounded-circle" 
+          			:src="getAttachmentUrl(reply.attachmentNo)" @click="linkToMypage(reply.replyId)"> 
        				<img v-else class="img-fluid rounded-circle" src="/static/image/profileDummy.png">
           		</div>
           		
@@ -318,7 +322,8 @@
 	        <div v-else class="row ms-4">
 	        	<!-- 프로필 이미지 -->
           		<div class="col-1">
-          			<img v-if="reply.attachmentNo && reply.attachmentNo !=null" class="img-fluid rounded-circle" :src="getAttachmentUrl(reply.attachmentNo)"> 
+          			<img v-if="reply.attachmentNo && reply.attachmentNo !=null" class="img-fluid rounded-circle" 
+          			:src="getAttachmentUrl(reply.attachmentNo)" @click="linkToMypage(reply.replyId)"> 
        				<img v-else class="img-fluid rounded-circle" src="/static/image/profileDummy.png">
           		</div>
           		
@@ -860,7 +865,12 @@
 				// 로그인 페이지로
 				linkToLogin() {
 					window.location.href="/member/login";
-				}
+				},
+				
+				// 프사 클릭시 마이페이지로
+				linkToMypage(id) {
+					window.location.href="/member/mypage2/"+id;
+				},
 		    },
 		    created() {
 		    	  this.setPostNo();
