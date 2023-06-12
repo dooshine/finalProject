@@ -667,7 +667,7 @@
 						<div class="text-center ">
 							<button
 								class="custom-btn btn-round btn-purple1 btn-sm col-3 mx-3"
-								data-bs-dismiss="modal" @click="fetchNew()">확인</button>
+								data-bs-dismiss="modal">확인</button>
 						</div>
 					</div>
 				</div>
@@ -832,7 +832,7 @@
 		</div>
 	</div>
 	
-	<!-- 유저 신고 확인 목달  -->
+	<!-- 유저 신고 종료 모달  -->
 	<div class="modal" tabindex="-1" role="dialog" id="reportEnd"
 		data-bs-backdrop="static">
 		<div class="modal-dialog" role="document">
@@ -886,7 +886,7 @@
 						:src="getAttachmentUrl(post.attachmentNo)">
 					
 					<!-- 프로필 사진이 없는 경우 -->
-					<img v-else class="rounded-circle img-fluid" style="max-width: 100%; min-width: 100%; aspect-ratio: 1/1;"
+					<img v-else class="img-fluid" style="max-width: 100%; min-width: 100%; aspect-ratio: 1/1;"
 						@click="toMemberPage(post.memberId)" src="static/image/profileDummy.png">
 				</div>
 				<div class="col-5 col-md-5 col-lg-5 align-middle justify-content-center">
@@ -1223,9 +1223,8 @@
 												:src="getAttachmentUrl(reply.attachmentNo)">
 											
 												<!-- 프로필 사진이 없는 경우 -->
-												<img v-else class="rounded-circle img-fluid"
-												 
-												src="static/image/profileDummy.png">
+													<img v-else class="img-fluid p-0" style="width:100%;height:100%;"
+													src="static/image/profileDummy.png">
 												</div>
 											</div>
 											<div class="col-1">
@@ -1304,7 +1303,7 @@
 															:src="getAttachmentUrl(rereply.attachmentNo)">
 														
 														<!-- 대댓글 프로필 사진이 없는 경우 -->
-														<img v-else class="rounded-circle img-fluid"															 
+														<img v-else class="img-fluid p-0" style="width:100%;height:100%;"														 
 															src="static/image/profileDummy.png">
 														</div>
 													</div>
@@ -1377,7 +1376,7 @@
 																:src="getAttachmentUrl(sessionMemberAttachmentNo)">
 															
 															<!-- 프로필 사진이 없는 경우 -->
-															<img v-else class="rounded-circle img-fluid"																
+															<img v-else class="img-fluid p-0" style="width:100%;height:100%;"																
 															src="static/image/profileDummy.png">
 													</div>
 												</div>
@@ -1439,7 +1438,7 @@
 															:src="getAttachmentUrl(reply.attachmentNo)">
 														
 														<!-- 프로필 사진이 없는 경우 -->
-														<img v-else class="rounded-circle img-fluid"
+														<img v-else class="img-fluid p-0" style="width:100%;height:100%;"
 														src="static/image/profileDummy.png">
 													</div>
 												</div>
@@ -1518,9 +1517,8 @@
 																		class="rounded-circle img-fluid"
 																		:src="getAttachmentUrl(rereply.attachmentNo)">
 																	
-																	<!-- 대댓글 프로필 사진이 없는 경우 -->
-																	<img v-else class="rounded-circle img-fluid"
-																		style="max-width: 100%; min-width: 100%; aspect-ratio: 1/1;"
+																	<!-- 프로필 사진이 없는 경우 -->
+																	<img v-else class="img-fluid p-0" style="width:100%;height:100%;"
 																		src="static/image/profileDummy.png">
 															</div>
 														</div>
@@ -1591,7 +1589,7 @@
 															:src="getAttachmentUrl(sessionMemberAttachmentNo)">
 														
 															<!-- 프로필 사진이 없는 경우 -->
-															<img v-else class="rounded-circle img-fluid"															
+															<img v-else class="img-fluid p-0" style="width:100%;height:100%;"
 															src="static/image/profileDummy.png">
 														</div>
 													<div class="col-1"></div>
@@ -1649,7 +1647,7 @@
 											:src="getAttachmentUrl(sessionMemberAttachmentNo)">
 									
 										<!-- 프로필 사진이 없는 경우 -->
-										<img v-else class="rounded-circle img-fluid "											
+										<img v-else class="img-fluid p-0"											
 											src="static/image/profileDummy.png">
 									</div>
 <!-- 								<div class="col-1"></div> -->
@@ -1848,14 +1846,8 @@
             },
             methods:{
             	// 무한 페이징 게시글 불러오기 1페이지당 10개씩 매 페이지 별로 불러옴,
-            	async fetchPosts(){
+            	async fetchPosts(){           		
             		
-            		// 페이지가 1페이지고(10개의 게시물만 보이고), 최초 mounted가 실행된 이후에 새로 호출 되었을 경우,
-            		// 아예 페이지 새로 고침
-            		if(this.page == 2 && this.firstMountFlag)
-            		{
-            			location.reload();	
-            		}
             		
                     if(this.loading == true) return;//로딩중이면
                     if(this.finish == true) return;//다 불러왔으면
