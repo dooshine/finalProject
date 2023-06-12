@@ -55,6 +55,177 @@
 	cursor: pointer;
   	color: #404040
   }
+  
+  
+	/*####################   펀딩 스타일	####################*/
+	.funding-list {
+            display:flex;
+            flex-wrap: wrap;
+   
+        }
+        
+    
+        
+        .funding-list > .funding-item {
+            width : 32%;
+            transition: width 0.1s ease-out;
+        }
+      
+        /*조건부 스타일 - 태블릿*/
+        @media screen and (max-width:1200px) {
+    
+	        .col-6 {
+	          width: 100%;
+	        }
+            .funding-list > .funding-item  {
+            width : 49%;
+           	}
+           
+         	#calendar {
+		  		display: none;
+		  	}
+			.col-3.calendar-area {
+				width: 0%;
+			}
+			.col-6.article {
+				width: 85%;
+			}
+			.col-3.left-aside {
+				width: 15%;
+			}
+			#aside-bar {
+				width: 15%;
+			}
+
+			.nav .aside-name-tag {
+				/* font-size: 0px; */
+				display: none;
+		  	}
+			.nav img {
+				margin-left: 0px !important;
+			}
+			.nav a {
+				text-align: center;
+			}   
+       }
+
+        /*조건부 스타일 - 모바일*/
+        @media screen and (max-width:800px) {
+       
+            .funding-list > .funding-item  {
+            width : 100%;
+        }
+        
+    }
+    
+    
+   
+         .funding-list {
+           display: flex;
+           flex-wrap: wrap;
+           gap: 10px;
+         }
+         
+         .funding-item {
+         
+           box-sizing: border-box;
+           padding: 10px;
+           border: 1px solid #ccc;
+           border-radius: 5px;
+           overflow: hidden;
+           /* 하트 고정 */
+           position: relative;
+         }
+         
+         .heart-icon {
+         	position: absolute;
+         	top: 175px; 
+         	right: 20px;
+         	transform: scale(1.1); /* 하트 크기 조정 */
+         	color: #6A53FB;
+         }
+         
+         
+         /*펀딩 이미지 컨테이너*/
+         
+         	.image-container {
+		/* 	  width: 300px; */
+			  height: 200px; 
+			  overflow: hidden;
+			}
+
+			.image-container img {
+			  width: 100%;
+			  height: 100%;
+			  object-fit: cover;
+			  transition: transform 0.3s;
+			  border-radius: 5px;
+			}
+
+			.funding-item:hover .image-container img {
+			  transform: scale(1.05);
+			}
+			         
+     
+         
+         .funding-item .title {
+            margin: 10px 0;
+            font-size: 1.2em;
+            font-weight: bold;
+            }
+         
+         .funding-item .description {
+            margin: 10px 0;
+            font-size: 0.9em;
+            color: #666;
+            }
+         
+         .progress-bar {
+            height: 10px;
+            background-color: #eee;
+            border-radius: 5px;
+            overflow: hidden;
+            margin: 10px 0;
+            }
+         
+         .progress {
+            height: 100%;
+            background-color: #6A53FB;
+            }
+         
+         .info {
+            display: flex;
+            justify-content: space-between;
+            }
+         
+         .info .col {
+            text-align: center;
+            color: #888;
+            }
+         
+         .info .col .value {
+            font-size: 1.2em;
+            font-weight: bold;
+            }
+            
+         .info .col .label {
+            font-size: 0.9em;
+            }
+            
+         /* 로그인 모달 스타일*/
+	      .custom-modal-wrapper {
+		   position: fixed;
+		   top: 0;
+		   left: 0;
+		   width: 100%;
+		   height: 100%;
+		   display: flex;
+		   align-items: center;
+		   justify-content: center;
+		   z-index: 9999;
+		}
+		/*####################   펀딩 스타일 끝!	####################*/
+  
 </style>
 
 <!-- 제어영역 설정 -->
@@ -132,12 +303,12 @@
                      </div>
                      
                      <!-- 좋아요 -->
-                     <span class="heart-icon" v-if="postLikeIndexList.includes(index)">
-					      <i class="fs-4 ti ti-heart-filled" @click="checkLike(funding.postNo, index); $event.stopPropagation()"></i> 
-                     </span>
-                     <span class="heart-icon" v-else>
-					      <i class="fs-4 ti ti-heart" @click="checkLike(funding.postNo, index); $event.stopPropagation()"></i> 
-                     </span>
+<!--                      <span class="heart-icon" v-if="postLikeIndexList.includes(index)"> -->
+<!-- 					      <i class="fs-4 ti ti-heart-filled" @click="checkLike(funding.postNo, index); $event.stopPropagation()"></i>  -->
+<!--                      </span> -->
+<!--                      <span class="heart-icon" v-else> -->
+<!-- 					      <i class="fs-4 ti ti-heart" @click="checkLike(funding.postNo, index); $event.stopPropagation()"></i>  -->
+<!--                      </span> -->
                      <!-- 좋아요 끝! -->
 					    
                      
@@ -188,6 +359,7 @@
 			// ######################## 후원 (lsh) ########################
 			fundings: [],
 			searchPage: 1,
+			postLikeIndexList: [],
 
 
 
@@ -314,7 +486,7 @@
             const pathName = window.location.pathname;
 			const pathArr = pathName.split('/').slice();
 			return pathArr.slice(0, pathArr.length-1).join('/') + '/' + target;
-        }
+        },
 		// ######################## 대표페이지 method 끝 ########################
 
 
@@ -322,6 +494,7 @@
 
 		// ######################## 후원(lsh) method ########################
 		
+		// 펀딩리스트 불러오기
         async fetchOrderedFundingList(){
     	   	if(this.finish) return;
     	   	  this.searchPage=1;
@@ -330,17 +503,17 @@
                     {
             	  params: {
             		  	// 검색어
-                    	searchKeyword : this.searchQuery,
+                    	searchKeyword : this.artistObj.artistName,
                     	// 정렬 조건
-                    	orderList : this.orderList,
+                    	orderList : "",
                     	// 펀딩상태
-                    	fundState: this.fundState
+                    	fundState: ""
                     },
                     paramsSerializer: params => {
                 		return new URLSearchParams(params).toString();
                 	}
                     });
-//               console.log(resp.data);
+              console.log(resp.data);
               this.fundings = [...resp.data];
               this.searchPage++;
               
@@ -349,6 +522,83 @@
                        this.finish = true;
                       }
        },
+       
+	       // 이미지 주소 설정
+	       getImageUrl(funding) {
+	           const imageUrl = "/rest/attachment/download/" + funding.attachmentNo;
+	           return imageUrl;
+           },
+           
+        	// 상세페이지로 이동
+           link(funding){
+              window.location.href = "/fund/detail?postNo="+funding.postNo;;
+           },
+           
+        	// 3자리 마다 ,
+           formatCurrency(value) {
+              return value.toLocaleString();
+            },
+        	 // 좋아요 체크
+			async checkFundLike() {
+				const postNo = this.fundDetail.postNo;
+				const resp = await axios.get("http://localhost:8080/rest/post/like/check/"+postNo);
+				this.fundings.isLiked = resp.data;
+			},
+			
+			// 아이디 접속해 있고, 좋아요 클릭시에 실행
+         	checkLike(postNo,index){
+				// if not logged in
+				if(!this.checkLogin()) return;
+            	axios.get('http://localhost:8080/rest/post/like/'+postNo)
+            		.then(response => {
+            			console.log(response.data);
+            			// 응답이 좋아요면
+            			if(response.data== 'Like'){
+            				this.postLikeIndexList.push(index);                			
+            			}
+            			// 응답이 좋아요 취소면
+            			else if(response.data=='disLike'){
+            				this.postLikeIndexList.splice(this.postLikeIndexList.indexOf(index),1);
+            			}
+            			
+            				
+            		})
+            		.catch(error => {
+            			console.error(error);
+            		})
+            },
+            
+         // 남은 시간 설정
+            getTimeDiff(funding) {
+                  const startDate = new Date(funding.postStart);
+                  const endDate = new Date(funding.postEnd);
+//                   console.log(startDate);
+//                   console.log(endDate);
+                  const currentDate = new Date();
+                  const fundState = funding.fundState;
+                  const timeDiff = endDate.getTime() - currentDate.getTime();
+                  const timeDiff2 = startDate.getTime() - currentDate.getTime();
+                  
+                  // 시작날짜가 오늘보다 뒤인경우
+                  if(timeDiff2 >= 0) {
+                	  return "D-"+Math.ceil(timeDiff2 / (24 * 60 * 60 * 1000));
+                  }
+                  // 마간기간이 남은 경우
+                  if(timeDiff >= 0){
+                      // 1일 이상인 경우
+                      if (timeDiff >= 24 * 60 * 60 * 1000) {
+                        return Math.ceil(timeDiff / (24 * 60 * 60 * 1000))+"일 남음";
+                      } 
+                      // 당일인 경우
+                      else {
+                          return "오늘 마감";
+                      }
+                  }
+                  // 이미 마감된 경우
+                  else {
+                	  return fundState;
+                  }
+            },
 
 
 
@@ -359,7 +609,8 @@
         await this.loadArtist();
         // 2. 로그인 한 사람 팔로우 정보 로드
         this.loadMemberFollowInfo();
-        console.table(this.artistObj);
+        console.log(this.artistObj.artistName);
+        this.fetchOrderedFundingList();
       },
 
 	  created(){

@@ -179,14 +179,23 @@
 		                     <i class="fa-solid fa-xmark" style="color: #bcc0c8;" data-bs-dismiss="modal" aria-label="Close"></i>
 		                  </div>
 		                  <div class="modal-body ">
-		                  	<div class="row">
-			                     <i class="fa-solid fa-lock" @click="goToPassword()">비밀번호 변경</i>
+		                  	<div class="row" style="display: flex;
+   justify-content: center;
+   align-items: center;
+   margin-bottom: 10px;">
+			                     <i class="fa-solid fa-lock fa-2x" @click="goToPassword()"><span style="font-size:30px; ">비밀번호 변경</span></i>
 		                  	</div>
-		                  	<div class="row">
-			                     <i class="fa-solid fa-pen-to-square" @click="goToLogout()">로그아웃</i>
+		                  	<div class="row" style="display: flex;
+   justify-content: center;
+   align-items: center;
+   margin-bottom: 10px;">
+			                     <i class="fa-solid fa-pen-to-square fa-2x" @click="goToLogout()"><span style="font-size:30px;">로그아웃</span></i>
 		                  	</div>
-		                  	<div class="row">
-			                     <i class="fa-sharp fa-solid fa-circle-minus " @click="goToExit()">회원탈퇴</i>
+		                  	<div class="row" style="display: flex;
+   justify-content: center;
+   align-items: center;
+   margin-bottom: 10px;">
+			                     <i class="fa-sharp fa-solid fa-circle-minus fa-2x" @click="goToExit()"><span style="font-size:30px;">회원탈퇴</span></i>
 		                  	</div>
 		                  </div>
 		               </div>
@@ -237,7 +246,7 @@
 		                     </div>
 		                     <div class="col-3"></div>
 		                     <div class="col-3 ">
-		                    <button v-if="mypage" class="btn-round btn-purple1-secondary" @click="deleteFollow(board.followNo)"  style="margin-left:30px; padding: 10px 20px; font-size: 15px;">삭제</button>
+		                    <button v-if="mypage" class="btn-round btn-purple1-secondary" @click="deleteFollow(board.followNo)"  style=" padding: 10px 20px; font-size: 15px;">삭제</button>
 		                     </div>
 		                    </div>
 		                     </div>
@@ -266,7 +275,7 @@
 		                     </div>
 		                     <div class="col-3"></div>
 		                     <div class="col-3 ">
-		                    <button v-if="mypage" class="btn-round btn-purple1-secondary" @click="deleteFollow(board.followNo)"  style="margin-left:30px; padding: 10px 20px; font-size: 15px;">삭제</button>
+		                    <button v-if="mypage" class="btn-round btn-purple1-secondary" @click="deleteFollow(board.followNo)"  style=" padding: 10px 20px; font-size: 15px;">삭제</button>
 		                     </div>
 		                    </div>
 		                     </div>
@@ -294,7 +303,7 @@
 		                     </div>
 		                     <div class="col-3"></div>
 		                     <div class="col-3 ">
-		                    <button v-if="mypage" class="btn-round btn-purple1-secondary" @click="deleteFollow(board.followNo)"  style="margin-left:30px; padding: 10px 20px; font-size: 15px;">삭제</button>
+		                    <button v-if="mypage" class="btn-round btn-purple1-secondary" @click="deleteFollow(board.followNo)"  style="padding: 10px 20px; font-size: 15px;">삭제</button>
 		                     </div>
 		                    </div>
 		                     </div>
@@ -713,7 +722,14 @@
 											@click="setUpdatePost(post)">게시물 글 내용 수정</h6>
 									</div>
 								</div>
-								<div class="row" v-if="post.scheduleStart !== null">
+								<div class="row" v-if="post.scheduleStart !== null && post.scheduleEnd !== null">
+									<div class="col-1"></div>
+									<div class="col-11 ms-2">
+										<div class="custom-hr my-2 me-4"></div>
+										<h6 @click="showAddScheduleModal(index)">일정 추가</h6>
+									</div>
+								</div>
+								<div class="row" v-if="post.togetherStart !== null && post.togetherEnd !== null">
 									<div class="col-1"></div>
 									<div class="col-11 ms-2">
 										<div class="custom-hr my-2 me-4"></div>
@@ -745,7 +761,14 @@
 										<h6>게시물 신고 하기</h6>
 									</div>
 								</div>
-								<div class="row" v-if="post.scheduleStart !== null">
+								<div class="row" v-if="post.scheduleStart !== null && post.scheduleEnd !== null">
+									<div class="col-1"></div>
+									<div class="col-11 ms-2">
+										<div class="custom-hr my-2 me-4"></div>
+										<h6 @click="showAddScheduleModal(index)">일정 추가</h6>
+									</div>
+								</div>
+								<div class="row" v-if="post.togetherStart !== null && post.togetherEnd !== null">
 									<div class="col-1"></div>
 									<div class="col-11 ms-2">
 										<div class="custom-hr my-2 me-4"></div>
@@ -1466,7 +1489,7 @@
      <!-- 컨테이너 내부 -->
    	 </div>
    	 
-   	 <!-- 일정 등록 모달 -->
+<!-- 일정 등록 모달 -->
    	<div class="modal" tabindex="-1" role="dialog" id="addCalendarPostModal">
     	<div class="modal-dialog" role="document">
         	<div class="modal-content">
@@ -2608,16 +2631,29 @@
               	
 				// 캘린더 관련
             	showAddScheduleModal(index) {
-                	console.log("index: " + index);
-                	console.log("start: " + this.posts[index].scheduleStart);
-                	console.log("end: " + this.posts[index].scheduleEnd);
+                	//console.log("index: " + index);
+                	//console.log("start: " + this.posts[index].scheduleStart);
+                	//console.log("end: " + this.posts[index].scheduleEnd);
                 	this.$nextTick(() => {
-                		this.startDate = this.posts[index].scheduleStart;
-                		this.endDate = this.posts[index].scheduleEnd;
-                		this.scheduleDate = moment(startDate).format('YYYY년 MM월 DD일') 
-                							+ " - " + 
-                							moment(endDate).add(1, 'days').format('YYYY년 MM월 DD일');
-                		$("#calendarTitlePost").focus();
+                		if(this.posts[index].scheduleStart !== null && this.posts[index].scheduleEnd !== null) {
+                			this.startDate = this.posts[index].scheduleStart;
+                    		this.endDate = this.posts[index].scheduleEnd;
+                    		this.scheduleDate = moment(this.startDate).format('YYYY년 MM월 DD일') 
+                    							+ " - " + 
+                    							moment(this.endDate).format('YYYY년 MM월 DD일');
+                    		$("#calendarTitlePost").focus();
+                		}
+                		else {
+                			this.startDate = this.posts[index].togetherStart;
+                    		this.endDate = this.posts[index].togetherEnd;
+                    		this.scheduleDate = moment(this.startDate).format('YYYY년 MM월 DD일') 
+                    							+ " - " + 
+                    							moment(this.endDate).format('YYYY년 MM월 DD일');
+                    		$("#calendarTitlePost").focus();
+                		}
+                		/*console.log(this.startDate);
+                		console.log(this.endDate);
+                		console.log(this.scheduleDate);*/
                 	});
                 	$("#addCalendarPostModal").modal("show");
                 	this.hidePostModal();
@@ -2636,8 +2672,8 @@
                				"calendarEnd": endDate,
                				"calendarMemo": calendarMemoPost
                			};
-               			console.log(this.startDate);
-               			console.log(this.endDate);
+               			//console.log(this.startDate);
+               			//console.log(this.endDate);
                			axios({
                				url: contextPath + "/calendar/add",
                				method:"post",
@@ -2651,6 +2687,7 @@
                		}
                		// 일정 등록 모달 닫기
                	    $("#addCalendarPostModal").modal("hide");
+               		
                 },
                 moveFocusToMemo() {
                 	document.getElementById("calendarMemoPost").focus();
