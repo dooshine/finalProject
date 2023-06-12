@@ -7,5 +7,6 @@ public interface ChatRoomService {
 	int createChatRoom(ChatMessageReceiveVO vo);
 	void leaveChatRoom(ChatRoomProcessVO vo);
 	void inviteMember(ChatRoomProcessVO vo);
+	void reinviteMember(ChatRoomProcessVO vo);
 	
 }

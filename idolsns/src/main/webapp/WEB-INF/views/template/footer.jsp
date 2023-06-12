@@ -162,6 +162,10 @@
 						this.messageList.splice(0);
 						this.loadMessage(); return;
 					}
+					if(parsedData.chatMessageType == 5 && parsedData.chatRoomType == 'P') {
+						this.messageList.splice(0);
+						this.loadMessage(); return;
+					}
 					// 이름 변경인 경우 방 정보 reload
 					if(parsedData.type == 8) {
 						this.roomInfo.chatRoomNo = "";
@@ -189,7 +193,7 @@
 						parsedData.chatMessageType === 5 || parsedData.chatMessageType === 6) {						
 						this.scrollBottom();
 					}
-					if(parsedData.chatMessageType === 5) {
+					if(parsedData.chatMessageType === 5 || parsedData.chatMessageType === 13) {
 						this.chatMemberList.splice(0);
 						this.loadChatMember();
 					}
@@ -538,9 +542,12 @@
 				findMemberById(index) {
 					//console.log("실행");
 					const memberId = this.messageList[index].memberId;
-					const member = this.chatMemberList.find(function(member) {
-						return member.memberId === memberId;
-					})
+					if (this.chatMemberList.some(member => member.memberId === memberId)) {
+						member = this.chatMemberList.find(member => member.memberId === memberId);
+					}
+					else {
+					    member = this.followProfileList.find(member => member.memberId === memberId);
+					}
 					//console.log("member: " + member.memberId);
 					if(member) {						
 						return {
@@ -575,17 +582,22 @@
 				},
 				findMemberByIdInRoom() {
 					let findId = "";
-					console.log("findMemberByIdInRoom memberId: " + findId);
-					console.log("this.roomInfo.chatRoomName1: " + this.roomInfo.chatRoomName1);
+					let member = "";
+					//console.log("this.roomInfo.chatRoomName1: " + this.roomInfo.chatRoomName1);
 					if(this.roomInfo.chatRoomName1 != this.memberId) {
 						findId = this.roomInfo.chatRoomName1;
 					}
 					else if(this.roomInfo.chatRoomName2 != this.memberId) {
 						findId = this.roomInfo.chatRoomName2;
 					}
-					const member = this.chatMemberList.find(function(member) {
-						return member.memberId === findId;
-					})
+					if (this.chatMemberList.some(member => member.memberId === memberId)) {
+						member = this.chatMemberList.find(member => member.memberId === findId);
+					}
+					else {
+					    member = this.followProfileList.find(member => member.memberId === findId);
+					}
+					
+					console.log("findId: " + findId);
 					if(member) {						
 						return {
 							memberNick: member.memberNick,
@@ -673,11 +685,35 @@
 					}
 				},
 				// 메세지 보내기(실시간 알림 전송 포함)
-				sendMessage() {
+				async sendMessage() {
 					if(this.textCount < 1) return;
 					if(this.textCount > 300) return;
 					this.firstMsg();
 					const text = this.text.trim();
+					// 상대방이 나간 갠톡인 경우
+					//console.log("chatRoomType: " + this.roomInfo.chatRoomType);
+					//console.log("memberList: " + this.chatMemberList.length);
+					if(this.roomInfo.chatRoomType === 'P' && this.chatMemberList.length === 1) {
+						let targetId = "";
+						//console.log("memberId: " + this.memberId);
+						//console.log("chatRoomName1: " + this.roomInfo.chatRoomName1);
+						if(this.roomInfo.chatRoomName1 !== this.memberId) {
+							targetId = this.roomInfo.chatRoomName1;
+						}
+						else {
+							targetId = this.roomInfo.chatRoomName2;
+						}
+						console.log("targetId: " + targetId);
+						const url = "${pageContext.request.contextPath}/chat/chatRoom/reinvite";
+						const data2 = {
+							chatRoomNo: this.chatRoomNo,
+							memberId: this.memberId,
+							targetId: targetId
+						};
+						const resp = await axios.post(url, data2);
+						this.chatMemberList.splice(0);
+						this.loadChatMember();
+					}
 					const data = {
 						type: 1,
 						chatRoomNo: this.chatRoomNo,
@@ -704,17 +740,33 @@
 						};
 						reader.readAsDataURL(file);
 					})
-					/*let isValid;
-					reader.onload = function(e) {
-						let fileSize = e.target.result.length;
-						isValid = fileSize <= 20961034;
-						
-					}*/
 					if(!isValid) {
 						this.fileSizeAlert = true;
 						return;
 					}
-					console.log("전송")
+					//console.log("전송")
+					// 갠톡방에서 상대방 나가있을 경우 다시 초대
+					if(this.roomInfo.chatRoomType === 'P' && this.chatMemberList.length === 1) {
+						let targetId = "";
+						//console.log("memberId: " + this.memberId);
+						//console.log("chatRoomName1: " + this.roomInfo.chatRoomName1);
+						if(this.roomInfo.chatRoomName1 !== this.memberId) {
+							targetId = this.roomInfo.chatRoomName1;
+						}
+						else {
+							targetId = this.roomInfo.chatRoomName2;
+						}
+						console.log("targetId: " + targetId);
+						const url = "${pageContext.request.contextPath}/chat/chatRoom/reinvite";
+						const data2 = {
+							chatRoomNo: this.chatRoomNo,
+							memberId: this.memberId,
+							targetId: targetId
+						};
+						const resp = await axios.post(url, data2);
+						this.chatMemberList.splice(0);
+						this.loadChatMember();
+					}
 					const formData = new FormData();
 					formData.append("attach", file);
 					const url = "${pageContext.request.contextPath}/rest/attachment/upload";
@@ -813,16 +865,27 @@
 					if(this.memberId === "") return;
 					const memberId = this.memberId;
 					const chatRoomNo = this.chatRoomNo;
+					const chatRoomType = this.roomInfo.chatRoomType;
 					const member = this.chatMemberList.find(function(member) {
 						return member.memberId === memberId;
 					})
-					const data1 = {
-						type: 5,
-						memberId: memberId,
-						chatRoomNo: chatRoomNo,
-						chatMessageContent: member.memberNick + " 님이 위즈를 떠났습니다."
-					};
-					this.socket.send(JSON.stringify(data1));
+					if(this.roomInfo.chatRoomType != 'P') {
+						const data1 = {
+							type: 5,
+							memberId: memberId,
+							chatRoomNo: chatRoomNo,
+							chatMessageContent: member.memberNick + " 님이 위즈를 떠났습니다."
+						};
+						this.socket.send(JSON.stringify(data1));
+					}
+					else {
+						const data1 = {
+							type: 13,
+							memberId: memberId,
+							chatRoomNo: chatRoomNo,
+						};
+						this.socket.send(JSON.stringify(data1));
+					}
 					const data2 = {
 							memberId: memberId,
 							chatRoomNo: chatRoomNo
@@ -924,7 +987,7 @@
 				  if (memberId === "") {
 				    window.location.href = `${pageContext.request.contextPath}/member/login`;
 				  } else {
-				    window.location.href = `${pageContext.request.contextPath}/member/mypage2/${memberId}`;
+					  window.location.href = "${pageContext.request.contextPath}/member/mypage2/" + response.data;
 				  }
 				},
 				// 이미지 메세지 모달로 크게 보기위한 url 셋팅

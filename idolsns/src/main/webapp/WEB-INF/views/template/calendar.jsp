@@ -1,13 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 
-    	<!-- 캘린더 css -->
-    	<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/static/css/calendar.css" />
-    	<!-- fullcalendar cdn -->
-		<script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js'></script>
-		<!-- 캘린더 스크립트 -->
-		<script src= "${pageContext.request.contextPath}/static/js/calendar.js"></script>
-     
      	<!-- 일정 등록 모달 -->
      	<div class="modal" tabindex="-1" role="dialog" id="addCalendarModal">
             <div class="modal-dialog" role="document">

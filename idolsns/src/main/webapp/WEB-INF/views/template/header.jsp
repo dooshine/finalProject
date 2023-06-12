@@ -57,6 +57,13 @@
 	
 	<!-- 채팅 css -->
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/static/css/chat.css" />
+    
+    <!-- fullcalendar cdn -->
+	<script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js'></script>
+    <!-- 캘린더 스크립트 -->
+	<script src= "${pageContext.request.contextPath}/static/js/calendar.js"></script>
+	<!-- 캘린더 css -->
+    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/static/css/calendar.css" />
 
 
     <script>
@@ -190,6 +197,7 @@
 				  	<div class="container-fluid">
 				  		<div class="col-3">
 					    	<a class="navbar-brand" href="/"><img src="/static/image/logo.png" style="width:130px;"></a>
+					    	<!-- <a href="dev/loading">(임시)로딩</a> -->
 					    </div>
 				    	<div class="col-6 d-flex px-3" id="navbarSupportedContent">
 				      		<form action="/search/post" class="d-flex w-100" method="get">
@@ -623,7 +631,7 @@
 				            		<!-- d-none -->
 				            		<input class="form-control picInput d-none" type="file" accept=".png, .jpg, .gif" @change="sendPic" />
 				            	</label>
-				            	<button type="button" @click="sendMessage" :disabled="text.length < 1 || text.length > 300" 
+				            	<button type="button" @click="sendMessage" :disabled="textCount < 1 || textCount > 300" 
 				            				class="hide-style fakeBtn d-flex align-items-center justify-content-center">
 				            		<i class="ti ti-send" style="margin-right: 2px; margin-top: 1px;"></i>
 				            	</button>

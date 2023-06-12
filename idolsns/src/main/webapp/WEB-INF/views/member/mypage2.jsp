@@ -1,46 +1,8 @@
-000<%@ page language="java" contentType="text/html; charset=UTF-8"
+<%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>   
 <jsp:include page="/WEB-INF/views/template/header.jsp"></jsp:include> 
 
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>마이페이지</title>
-    <!-- 폰트어썸 cdn -->
-    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css">
-    <!-- jquery cdn -->
-    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-    <!-- 뷰 cdn -->
-    <script src="https://unpkg.com/vue@3.2.26"></script>
-    <!-- axios -->
-    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-    <!-- lodash -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.21/lodash.min.js"></script>
-    <!-- moment -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
-    <!-- 부트스트랩 css(공식) -->
-    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css">
-
-    <!-- custom 테스트 css -->
-    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/static/css/test.css">
-    <!-- tabler 아이콘 -->
-   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
-    <!-- toastify -->
-    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
-      <!-- swiper cdn -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css"/>
-	<script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
-	<!------- 카카오 지도 관련-------->
-	<!-- 카카오 api 키 등록 -->
-	<script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=047888df39ba653ff171c5d03dc23d6a&libraries=services"></script>
-	<!-- 맵 관련 css -->
-	<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/static/css/map.css">
-	<!------- 카카오 지도 관련-------->
    <style>
       .profile-image-wrapper {
           position: relative;
@@ -148,8 +110,6 @@
 	border-style: solid;
 }
    </style>
-</head>
-<body>
    
    <div class="container rounded p-3" style="background-color:white">
    	   <!-- 전체 컨테이너 내부-->
@@ -259,11 +219,20 @@
 		                  </div>
 		                  <div class="modal-body text-left">
 		                     <div v-for="(board,index) in FollowListProfile"  :key="index">
-		                     <img :src="getAttachmentUrl(board.attachmentNo)" class="profile-image" style="width:54px; height:54px;">
-		                     <a :href="'/member/mypage/' + board.followTargetPrimaryKey">
+		                     <div class="row align-items-center">
+		                     <div class="col-3">
+		                     <img :src="getAttachmentUrl(board.attachmentNo)" class="profile-image" style="width:54px; height:54px; margin-left:20px; margin-bottom:10px;">
+		                     </div>
+		                     <div class="col-3">
+		                     <a :href="'/member/mypage2/' + board.followTargetPrimaryKey"  style="color:black; font-size:20px; text-decoration:none;">
 							    <span>{{board.followTargetPrimaryKey}}</span>
 							</a>
-		                    <button @click="deleteFollow(board.followNo)">팔로잉</button>
+		                     </div>
+		                     <div class="col-3"></div>
+		                     <div class="col-3 ">
+		                    <button v-if="mypage" class="btn-round btn-purple1-secondary" @click="deleteFollow(board.followNo)"  style="margin-left:30px; padding: 10px 20px; font-size: 15px;">삭제</button>
+		                     </div>
+		                    </div>
 		                     </div>
 		                  </div>
 		               </div>
@@ -279,11 +248,20 @@
 		                  </div>
 		                  <div class="modal-body text-left">
 		                     <div v-for="(board,index) in FollowerListProfile"  :key="index">
-		                     <img :src="getAttachmentUrl(board.attachmentNo)" class="profile-image" style="width:54px; height:54px;">
-		                     <a :href="'/member/mypage/' + board.memberId">
-		                    <span> {{board.memberId}}</span>
-		                    </a>
-		                    <button @click="deleteFollow(board.followNo)">팔로잉</button>
+		                     <div class="row align-items-center">
+		                     <div class="col-3">
+		                     <img :src="getAttachmentUrl(board.attachmentNo)" class="profile-image" style="width:54px; height:54px; margin-left:20px; margin-bottom:10px;">
+		                     </div>
+		                     <div class="col-3">
+		                     <a :href="'/member/mypage2/' + board.memberId"  style="color:black; font-size:20px; text-decoration:none;">
+							    <span>{{board.memberId}}</span>
+							</a>
+		                     </div>
+		                     <div class="col-3"></div>
+		                     <div class="col-3 ">
+		                    <button v-if="mypage" class="btn-round btn-purple1-secondary" @click="deleteFollow(board.followNo)"  style="margin-left:30px; padding: 10px 20px; font-size: 15px;">삭제</button>
+		                     </div>
+		                    </div>
 		                     </div>
 		                  </div>
 		               </div>
@@ -298,11 +276,20 @@
 		                  </div>
 		                  <div class="modal-body text-left">
 		                     <div v-for="(board,index) in PageListProfile"  :key="index">
-		                    <img :src="getAttachmentUrl(board.attachmentNo)" class="profile-image" style="width:54px; height:54px;">
-		                    <a :href="'/artist/' + board.followTergetPrimarykey">
-		                    <span> {{board.followTargetPrimaryKey}}</span>
-		                    </a>
-		                    <button @click="deleteFollow(board.followNo)">팔로잉</button>
+		                     <div class="row align-items-center">
+		                     <div class="col-3">
+		                     <img :src="getAttachmentUrl(board.attachmentNo)" class="profile-image" style="width:54px; height:54px; margin-left:20px; margin-bottom:10px;">
+		                     </div>
+		                     <div class="col-3">
+		                    <a :href="'/artist/' + board.followTergetPrimarykey" style="color:black; font-size:20px; text-decoration:none;">
+		                    	<span> {{board.followTargetPrimaryKey}}</span>
+							</a>
+		                     </div>
+		                     <div class="col-3"></div>
+		                     <div class="col-3 ">
+		                    <button v-if="mypage" class="btn-round btn-purple1-secondary" @click="deleteFollow(board.followNo)"  style="margin-left:30px; padding: 10px 20px; font-size: 15px;">삭제</button>
+		                     </div>
+		                    </div>
 		                     </div>
 		                  </div>
 		               </div>
@@ -1770,7 +1757,6 @@
                       // 대표페이지 프로필사진 설정
                       const resp = await axios.post(url, formData);
                       
-                      alert("대표페이지 프로필사진 설정완료!");
                   },
                   
                   //팔로우 리스트 멤버별 프로필 조회
@@ -2605,6 +2591,5 @@
          <!--algPggg-->
       </script>
       
-</body>    
 
 <jsp:include page="/WEB-INF/views/template/footer.jsp"></jsp:include> 
