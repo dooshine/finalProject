@@ -109,8 +109,6 @@
 	border-style: solid;
 }
    </style>
-</head>
-<body>
    
    <div class="container rounded p-3" style="background-color:white">
    	   <!-- 전체 컨테이너 내부-->
@@ -119,7 +117,6 @@
 	      <br><br>
 	      <div class="container">
 	      <!-- 컨테이너 내부 -->
-	      
 		         <div class="row" >
 		            <div class="col-4" >
 		                  <img :src="memberProfileImageObj !== ''  && memberProfileImageObj.attachmentNo !== undefined ? '/download/?attachmentNo='+memberProfileImageObj.attachmentNo :  ' /static/image/profileDummy.png' "
@@ -697,6 +694,13 @@
 											@click="setUpdatePost(post)">게시물 글 내용 수정</h6>
 									</div>
 								</div>
+								<div class="row" v-if="post.scheduleStart !== null">
+									<div class="col-1"></div>
+									<div class="col-11 ms-2">
+										<div class="custom-hr my-2 me-4"></div>
+										<h6 @click="showAddScheduleModal(index)">일정 추가</h6>
+									</div>
+								</div>
 
 
 
@@ -720,6 +724,13 @@
 									<div class="col-11 ms-2">
 										<div class="custom-hr my-2 me-4"></div>
 										<h6>게시물 신고 하기</h6>
+									</div>
+								</div>
+								<div class="row" v-if="post.scheduleStart !== null">
+									<div class="col-1"></div>
+									<div class="col-11 ms-2">
+										<div class="custom-hr my-2 me-4"></div>
+										<h6 @click="showAddScheduleModal(index)">일정 추가</h6>
 									</div>
 								</div>
 
@@ -1428,11 +1439,57 @@
 	         
      <!-- 컨테이너 내부 -->
    	 </div>
+   	 
+   	 <!-- 일정 등록 모달 -->
+   	<div class="modal" tabindex="-1" role="dialog" id="addCalendarPostModal">
+    	<div class="modal-dialog" role="document">
+        	<div class="modal-content">
+            	<div class="modal-header">
+                	<h5 class="modal-title">일정 등록</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  	<div class="beforeLogin">
+                  		<h5 class="text-center mt-4">🙌</h5>
+                   		<h5 class="text-center mt-3 mb-4">로그인하고 중요한 일정을 등록해 보세요!</h5>
+						<button type="button" class="custom-btn btn-purple1 btn-round w-100 mb-4 calendar-login-btn">
+							로그인하러 가기
+						</button>
+					</div>
+		            <div class="afterLogin">
+						<div class="form-floating mb-3">
+							<input type="text" readonly class="form-control-plaintext" id="scheduleDatePost" placeholder="dd" :value="scheduleDate">
+							<label for="scheduleDatePost" class="startDatePost">날짜</label>
+						</div>
+		              	<div class="form-floating mb-3">
+							<input type="text" class="form-control" id="calendarTitlePost" placeholder="dd" @keyup.enter="moveFocusToMemo">
+							<label for="calendarTitlePost">일정 이름</label>
+							<div class="display-none invalidMessage">
+						    	1글자 이상, 30글자 이하로 입력할 수 있습니다.
+						    </div>
+						</div>
+		               	<div class="form-floating">
+							<textarea class="form-control" placeholder="Leave a comment here" id="calendarMemoPost" ref="memoTextArea" style="height: 100px; resize: none;"></textarea>
+							<label for="calendarMemoPost">메모</label>
+							<div class="display-none invalidMessage">
+						    	100글자 이하로 입력할 수 있습니다.
+						    </div>
+						</div>
+					</div>
+        		</div>
+		        <div class="modal-footer addCalendarModalFooter">
+			        <button type="button" class="custom-btn btn-purple1 addSchedule-btn" @click="addSchedule">
+			            등록
+		            </button>
+		        </div>
+    		</div>
+  		</div>
+    </div>
   <!-- 뷰 app 내부 -->
   </div>
 <!-- 전체 컨테이너 내부 -->
 </div>   
-      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+	  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
       <script>
          Vue.createApp({
             data(){
@@ -1564,6 +1621,11 @@
 					followTargetPrimaryKey: "",
 				},
 				// ---------------주영 추가 구문 
+				
+				// 캘린더 관련
+				scheduleDate: "",
+            	startDate: "",
+            	endDate: "",
                };
             },      
             methods:{
@@ -2225,10 +2287,12 @@
                 // postNo를 List로 송신하고 좋아요 되있는 index 번호를 수신
                 getLikePostIndex(posts){
                 	
-                	postNoList = [];
-                	posts.forEach(function(post){
-                		postNoList.push(post.postNo); 
-                	})
+                	var postNoList = [];
+					if(typeof posts === typeof []){
+                		posts.forEach(function(post){
+                			postNoList.push(post.postNo); 
+                		})
+					}
                 	
                		axios.get('http://localhost:8080/rest/post/like/index/'+postNoList)
                			.then(response => {               			
@@ -2454,16 +2518,21 @@
             		
             	},
             	setId(){ // 아이디 세팅
-            		const memberId = '${memberId}';
-                	if (memberId && memberId.trim() !== '') {
-                		    // memberId가 존재하고 빈 문자열이 아닌 경우
-                		    this.memberId = memberId;
-                	} else {
-                		    // memberId가 없거나 빈 문자열인 경우 기본 값 또는 예외 처리를 수행합니다.
-                		    this.memberId = null; // 기본 값으로 null을 할당하거나
-                		    // 예외 처리 로직을 추가합니다.
-                		    // 예: 오류 메시지 표시, 다른 로직 실행 등
-                	}            		
+            		// const memberId = '${memberId}';
+                	// if (memberId && memberId.trim() !== '') {
+                	// 	    // memberId가 존재하고 빈 문자열이 아닌 경우
+                	// 	    this.memberId = memberId;
+                	// } else {
+                	// 	    // memberId가 없거나 빈 문자열인 경우 기본 값 또는 예외 처리를 수행합니다.
+                	// 	    this.memberId = null; // 기본 값으로 null을 할당하거나
+                	// 	    // 예외 처리 로직을 추가합니다.
+                	// 	    // 예: 오류 메시지 표시, 다른 로직 실행 등
+                	// }
+					
+					
+					// 아이디 세팅
+					const userId = window.location.pathname.split('/').at(-1);
+					this.memberId = userId;
             	},
             	setPageMemberId(){
             		const pageMemberId  = '${pageMemberId}';
@@ -2522,7 +2591,55 @@
             		}
             	},
               	
-
+            	// 캘린더 관련
+            	showAddScheduleModal(index) {
+                	console.log("index: " + index);
+                	console.log("start: " + this.posts[index].scheduleStart);
+                	console.log("end: " + this.posts[index].scheduleEnd);
+                	this.$nextTick(() => {
+                		this.startDate = this.posts[index].scheduleStart;
+                		this.endDate = this.posts[index].scheduleEnd;
+                		this.scheduleDate = moment(startDate).format('YYYY년 MM월 DD일') 
+                							+ " - " + 
+                							moment(endDate).add(1, 'days').format('YYYY년 MM월 DD일');
+                		$("#calendarTitlePost").focus();
+                	});
+                	$("#addCalendarPostModal").modal("show");
+                	this.hidePostModal();
+                },
+                
+                addSchedule() {
+               		if(memberId === "") return;
+               		const calendarTitlePost = $("#calendarTitlePost").val();
+               		const calendarMemoPost = $("#calendarMemoPost").val();
+               		const endDate = moment(this.endDate).add(1, 'days');
+               		if(calendarTitlePost) {
+               			const dto={
+               				"memberId": memberId,
+               				"calendarTitle": calendarTitlePost,
+               				"calendarStart": this.startDate,
+               				"calendarEnd": endDate,
+               				"calendarMemo": calendarMemoPost
+               			};
+               			console.log(this.startDate);
+               			console.log(this.endDate);
+               			axios({
+               				url: contextPath + "/calendar/add",
+               				method:"post",
+               				data:JSON.stringify(dto),
+               				headers: { 'Content-Type': 'application/json' }
+               			}).then(function(resp){
+               				$("#calendarTitlePost").val("");
+               				$("#calendarMemoPost").val("");
+               				loadMemberCalendar();
+               			});
+               		}
+               		// 일정 등록 모달 닫기
+               	    $("#addCalendarPostModal").modal("hide");
+                },
+                moveFocusToMemo() {
+                	document.getElementById("calendarMemoPost").focus();
+                },
 
             },
             watch:{
@@ -2576,7 +2693,7 @@
             },
             
             mounted() {
-               this.profile();
+            //    this.profile();
                this.followList();
                this.followListProfile();
            	   this.followerListProfile();
@@ -2609,6 +2726,7 @@
                     //data의 percent를 계산된 값으로 갱신
                     this.percent = Math.round(percent);
                 }, 250));
+
             },
          }).mount("#app");
          <!--algPggg-->

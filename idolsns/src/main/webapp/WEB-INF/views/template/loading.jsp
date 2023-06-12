@@ -40,7 +40,7 @@
 	
 <div class="loading-screen">
 	<div>
-        <img class="loading" src="${pageContext.request.contextPath}/static/image/loading.png" width="100px;">
+        <img class="loading" src="${pageContext.request.contextPath}/static/image/loading.png"  width="100px;">
     </div>
     <div class="loading-footer">STARLINK © 2023</div>
 </div>
