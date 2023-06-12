@@ -72,7 +72,7 @@
 			<i class="fa-solid fa-piggy-bank" :class="{selected: asideTab === '펀딩'}"><span class="ps-2 aside-name-tag"> 펀딩</span></i></a>
         <a href="${pageContext.request.contextPath}/point/charge">
         	<i class="fa-solid fa-wallet" :class="{selected: asideTab === '포인트'}"><span class="ps-2 aside-name-tag"> 충전</span></i></a>
-		<c:if test="${'관리자'.equals(sessionScope.memberLevel)}">
+		<c:if test="${sessionScope.memberLevel != null && sessionScope.memberLevel.equals('관리자')}">
 			<a href="${pageContext.request.contextPath}/admin/">
 				<i class="fa-solid fa-hammer" :class="{selected: asideTab === '관리자페이지'}"><span class="ps-2 aside-name-tag"> 관리자페이지</span></i></a>
 		</c:if>
