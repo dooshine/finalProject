@@ -4,7 +4,7 @@
 <jsp:include page="/WEB-INF/views/template/header.jsp"></jsp:include>
 
 <!-- 제어영역 설정 -->
-<div class="container custom-container" id="app">
+<div class="custom-container" style="padding: 24px;" id="app">
     
     <!-- # 제재조회 타이틀 -->
     <div class="row">
@@ -13,16 +13,10 @@
         </div>
     </div>
 
-    <!-- # 제재 목록-->
-    <div class="row">
-        <div class="col">
-            <h3>태그</h3>
-        </div>
-    </div>
     <!-- 태그삭제 버튼 -->
     <div class="row text-end">
         <div class="col">
-            <button @click="deleteSanction"><i class="fa-solid fa-xmark"></i>삭제</button>
+            <button class="custom-btn btn-purple1" @click="deleteSanction"><i class="fa-solid fa-xmark me-2"></i>삭제</button>
         </div>
     </div>
     <div class="row">
