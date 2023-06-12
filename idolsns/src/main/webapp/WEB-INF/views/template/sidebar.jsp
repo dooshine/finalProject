@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <style>
 	.nav a {
@@ -32,11 +33,13 @@
 	}
 	@media screen and (max-width:992px) {
 		  	.nav .aside-name-tag {
-				/* font-size: 0px; */
 				display: none;
 		  	}
 			.nav img {
 				margin-left: 0px !important;
+			}
+			.nav a {
+				justify-content: center;
 			}
 			#aside-footer {
 				display: none;
@@ -69,6 +72,10 @@
 			<i class="fa-solid fa-piggy-bank" :class="{selected: asideTab === '펀딩'}"><span class="ps-2 aside-name-tag"> 펀딩</span></i></a>
         <a href="${pageContext.request.contextPath}/point/charge">
         	<i class="fa-solid fa-wallet" :class="{selected: asideTab === '포인트'}"><span class="ps-2 aside-name-tag"> 충전</span></i></a>
+		<c:if test="${sessionScope.memberLevel != null && sessionScope.memberLevel.equals('관리자')}">
+			<a href="${pageContext.request.contextPath}/admin/">
+				<i class="fa-solid fa-hammer" :class="{selected: asideTab === '관리자페이지'}"><span class="ps-2 aside-name-tag"> 관리자페이지</span></i></a>
+		</c:if>
   	</div>
 	<!-- 어사이드 푸터 -->
 	<div id="aside-footer" class="mt-auto ps-4 pb-4">
@@ -132,6 +139,8 @@
 			const fundRegex = /^(\/fund\/).*$/;
 			const homeRegex = /^\/$/;
 			const artistRegex = /^(\/artist\/).*$/;
+			const adminRegex = /^(\/admin\/).*$/;
+
 
 			// 경로에 따른 asideTab 지정
 			if(pointRegex.test(pathName)){
@@ -146,6 +155,8 @@
 				if(memberId !== '') {
 					this.toggleFollowPageList = true;
 				}
+			} else if(adminRegex.test(pathName)){
+				this.asideTab = "관리자페이지";
 			}
 		},
 

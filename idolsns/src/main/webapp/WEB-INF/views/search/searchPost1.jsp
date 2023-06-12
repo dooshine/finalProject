@@ -49,6 +49,92 @@
     border: none;
     box-shadow: none;
   } */
+  
+  .grey {
+	color: grey;
+}
+
+.grey-e0e0e0 {
+	background-color: #E0E0E0;
+}
+
+.grey-f5f5f5 {
+	background-color: #f5f5f5;
+}
+
+.fs-7 {
+	font-size: 10px;
+}
+
+.fs-18px {
+	font-size: 18px;
+}
+
+.fs-17px {
+	font-size: 17px;
+}
+
+.fs-16px {
+	font-size: 16px;
+}
+
+.fs-15px {
+	font-size: 15px;
+} 
+
+.fs-14px {
+	font-size: 14px;
+}
+
+.fs-13px {
+	font-size: 13px;
+}
+
+.fs-12px {
+	font-size: 12px;
+}
+
+.fs-11px {
+	font-size: 11px;
+}
+
+.fs-10px {
+	font-size: 10px;
+}
+.fs-9px {
+	font-size: 9px;
+}
+.fs-8px {
+	font-size: 8px;
+}
+.fs-7px {
+	font-size: 7px;
+}
+.fs-6px {
+	font-size: 6px;
+}
+.h-20 {
+	height: 20px;
+}
+
+.reply-text {
+	font-size: 14px;
+}
+
+.post-modal {
+	z-index: 9999;
+	position: absolute;
+}
+
+.post-modal-content {
+	box-shadow: 0px 3px 4px rgba(3, 21, 17, 0.1);
+	background-color: white;
+	padding: 24px;
+	border-radius: 0.5rem;
+	border-width: 1px;
+	/* 		  border-color: black; /* 테두리 색상 지정 */
+	border-style: solid;
+}
 </style>
 
 <!-- 컨테이너 -->
@@ -361,7 +447,7 @@
 							</div>
 						</div>
 						<div class="text-center mb-2">
-							<button class="mx-2 custom-btn btn-round btn-purple1" data-bs-dismiss="modal" @click="fetchPosts()" >네</button>							
+							<button class="mx-2 custom-btn btn-round btn-purple1" data-bs-dismiss="modal" @click="fetchNew()" >네</button>							
 						</div>
 					</div>
 				</div>
@@ -373,29 +459,39 @@
 		</div>
 	</div>
 	<!-- v-for구간 -->
+	<!--------------- 게시물들 반복구간 ------------->
 	<div v-for="(post, index) in posts" :key="index">
 
 		<!-- 글 박스 루프 1개-->
-		<div class="mb-2 custom-container">
+		<div class="mb-2 custom-container" >
 			<!-- 프로필 사진과 아이디 -->
 			<div class="row mt-1">			
-				<div class="col-1 col-md-1 col-lg-1 d-flex align-items-center justify-content-center">
-					<!-- 프로필 사진이 있는 경우 -->
-					<img v-if="post.attachmentNo && post.attachmentNo != null"
-						class="rounded-circle img-fluid" style="max-width: 100%; aspect-ratio: 1/1;"
-						:src="getAttachmentUrl(post.attachmentNo)">
-					
-					<!-- 프로필 사진이 없는 경우 -->
-					<img v-else class="rounded-circle img-fluid" style="max-width: 100%; aspect-ratio: 1/1;"
-						src="static/image/profileDummy.png">
+				<div class="col-1 col-md-1 col-lg-1 ">
+					<div class="row d-flex align-items-center justify-content-center">
+						<div class="col-2"></div>
+						<div class="col-10">
+							<div class="row mt-2 text-center rounded-circle" style="aspect-ratio:1/1; overflow:hidden;object-fit:fill;">					
+								
+								<!-- 프로필 사진이 있는 경우 -->		
+								<img v-if="post.attachmentNo && post.attachmentNo != null" @click="toMemberPage(post.memberId)"
+									class="img-fluid p-0" style="max-width: 100%; min-width: 100%;"
+									:src="getAttachmentUrl(post.attachmentNo)">
+								
+								<!-- 프로필 사진이 없는 경우 -->
+								<img v-else class="img-fluid p-0" style="max-width: 100%; min-width: 100%;"
+									@click="toMemberPage(post.memberId)" src="static/image/profileDummy.png">
+							</div>
+						</div>
+<!-- 						<div class="col-1"></div> -->
+					</div>
 				</div>
 				<div class="col-5 col-md-5 col-lg-5 align-middle justify-content-center">
 
 					<div class="row">
-						<h4>{{ post.memberNick}}</h4>
+						<h4 @click="toMemberPage(post.memberId)">{{ post.memberNick}}</h4>
 					</div>
 					<div class="row">
-						<p class="text-secondary">@{{post.memberId}}
+						<p class="text-secondary" @click="toMemberPage(post.memberId)">@{{post.memberId}}
 							{{getTimeDifference(post.postTime) }}</p>
 
 					</div>
@@ -428,7 +524,7 @@
 					class="col-1 col-md-1 col-lg-1 d-flex align-items-start justify-content-end">
 					<i class="fs-3 text-secondary ti ti-dots-vertical"
 						@click="setPostModalIndex(index)" data-toggle="dropdown"></i>
-					<!-- 			               <i class="ti ti-x" @click="deletePost(post.postNo)"></i> -->
+					
 					<div v-if="index === getPostModalIndex()" class="post-modal">
 						<div class="mt-3 mr-4"></div>
 						<div class="post-modal-content">
@@ -451,6 +547,13 @@
 										<div class="custom-hr my-2 me-4"></div>
 										<h6 data-bs-target="#updatePost" data-bs-toggle="modal"
 											@click="setUpdatePost(post)">게시물 글 내용 수정</h6>
+									</div>
+								</div>
+								<div class="row" v-if="post.scheduleStart !== null">
+									<div class="col-1"></div>
+									<div class="col-11 ms-2">
+										<div class="custom-hr my-2 me-4"></div>
+										<h6 @click="showAddScheduleModal(index)">일정 추가</h6>
 									</div>
 								</div>
 
@@ -476,6 +579,13 @@
 									<div class="col-11 ms-2">
 										<div class="custom-hr my-2 me-4"></div>
 										<h6>게시물 신고 하기</h6>
+									</div>
+								</div>
+								<div class="row" v-if="post.scheduleStart !== null">
+									<div class="col-1"></div>
+									<div class="col-11 ms-2">
+										<div class="custom-hr my-2 me-4"></div>
+										<h6 @click="showAddScheduleModal(index)">일정 추가</h6>
 									</div>
 								</div>
 
@@ -532,7 +642,34 @@
 				</div>
 			</div>
 			<!-- 지도 맵이 있는 경우에만 지도 정보 표기 -->
-
+			
+			
+			<!-- 행사일정이나, 같이가요인 경우에만 정보 표기  -->			
+			<!-- 행사일정  -->
+			<div class="row my-2"
+				v-if="post.scheduleStart && post.scheduleStart !== '' && post.scheduleStart !== null && post.scheduleStart !== undefined">
+				<div class="col-1 col-md-1 col-lg-1 d-flex align-items-center justify-content-center">
+				</div>
+				<div class="col-10 col-md-10 col-lg-10 d-flex align-items-center justify-content-start fs-6 text-secondary ">
+					<i class="ti ti-calendar-event"></i>&nbsp;{{post.scheduleStart}} ~ {{post.scheduleEnd}}
+				</div>
+				<div
+					class="col-1 col-md-1 col-lg-1 d-flex align-items-center justify-content-center">
+				</div>
+			</div>			
+			<!-- 같이가요 -->
+			<div class="row my-2"
+				v-if="post.togetherStart && post.togetherStart !== '' && post.togetherStart !== null && post.togetherStart !== undefined">
+				<div class="col-1 col-md-1 col-lg-1 d-flex align-items-center justify-content-center">
+				</div>
+				<div class="col-10 col-md-10 col-lg-10 d-flex align-items-center justify-content-start fs-6 text-secondary ">
+					<i class="ti ti-calendar-event"></i>&nbsp;{{post.togetherStart}} ~ {{post.togetherEnd}}
+				</div>
+				<div
+					class="col-1 col-md-1 col-lg-1 d-flex align-items-center justify-content-center">
+				</div>
+			</div>
+			<!-- 행사일정이나, 같이가요인 경우에만 정보 표기  -->
 
 			<!-- 글 내용 -->
 			<div class="row my-2">
@@ -567,7 +704,7 @@
 									:key="attachmentIndex" class="col-6">
 									<img :src="getAttachmentUrl(attachmentNo)"
 										@click="setModalImageUrl(attachmentNo)" class="img-fluid"
-										style="max-width: 100%; aspect-ratio: 1/1;" alt="Attachment"
+										style="max-width: 100%; min-width: 100%; aspect-ratio: 1/1;" alt="Attachment"
 										data-bs-target="#image-modal" data-bs-toggle="modal">
 								</div>
 							</div>
@@ -579,24 +716,10 @@
 									:key="attachmentIndex" class="col-6">
 									<img :src="getAttachmentUrl(attachmentNo)"
 										@click="setModalImageUrl(attachmentNo)" class="img-fluid mb-3"
-										style="max-width: 100%; aspect-ratio: 1/1;" alt="Attachment"
+										style="max-width: 100%; min-width: 100%; aspect-ratio: 1/1;" alt="Attachment"
 										data-bs-target="#image-modal" data-bs-toggle="modal">
 								</div>
 							</div>
-
-							<!-- 두 개 이상의 이미지인 경우 (이미지 스와이핑 : 나중에하자 ㅅ....) -->
-							<!-- 					                <div v-else-if="post.attachmentList.length = -999" class="row text-center"> -->
-							<!-- 					                	<div v-for="(attachmentNo, attachmentIndex) in post.attachmentList" :key="attachmentIndex" class="col-6"> -->
-							<!-- 					                		첫 번째 이미지는 그냥 모달로 보여줌 -->
-							<!-- 					                		<div v-if="attachmentIndex === 0"> -->
-							<!-- 					                			<img :src="getAttachmentUrl(attachmentNo)" @click="setModalImageUrl(attachmentNo)" class="img-fluid" style="max-width:100%;aspect-ratio:1/1;" alt="Attachment" data-bs-target="#image-modal" data-bs-toggle="modal"> -->
-							<!-- 					                		</div> -->
-							<!-- 					                		이후의 이미지는 swiper를 사용하여 보여줌 -->
-							<!-- 					                		<div v-else-if="attachmentIndex == 1 "> -->
-							<!-- 					                			<img :src="getAttachmentUrl(attachmentNo)" @click="setModalImageUrlList(post.attachmentList)" class="img-fluid" style="max-width:100%;aspect-ratio:1/1;" alt="Attachment" data-bs-target="#imageList-modal" data-bs-toggle="modal"> -->
-							<!-- 					                		</div> -->
-							<!-- 					                	</div> -->
-							<!-- 					                </div> -->
 
 							<!-- 이미지 출력 모달창 -->
 							<div class="modal" tabindex="-1" role="dialog" id="image-modal"
@@ -607,78 +730,11 @@
 									</div>
 								</div>
 							</div>
-							<!-- 다중 이미지 스와이핑 모달창 나중에 보자...-->
-							<!-- 					                <div class="modal" tabindex="-1" role="dialog" id="imageList-modal" -->
-							<!--                            					 data-bs-backdrop="true"  test> -->
-							<!--                            					 <div class="modal-dialog modal-lg" role="image"> -->
-							<!--                            					 	<div class="modal-content"> -->
-							<!--                            					 		header -->
-							<!-- 										            <div class="modal-header"> -->
-							<!-- 										                <h5 class="modal-title"><i class="fa-solid fa-xmark fa-lg grey" data-bs-dismiss="modal"></i></h5> -->
-							<!-- 										            </div> -->
-
-							<!-- 										            body -->
-							<!--                            					 		<div class="modal-body"> -->
-							<!-- 	                           					 		Slider main container -->
-							<!-- 														<div class="swiper-container w-100"> -->
-							<!-- 														  Additional required wrapper -->
-							<!-- 														  <div class="swiper-wrapper"> -->
-							<!-- 														  	<div class="swiper-slide mx-5"> -->
-							<!-- 														  		<img class="img-fluid" style="width:200px;height:200px;" src="https://cdn.pixabay.com/photo/2023/05/21/06/05/water-jet-8007873_640.jpg"> -->
-							<!-- 														  	</div> -->
-							<!-- 														  	<div class="swiper-slide mx-5"> -->
-							<!-- 														  		<img class="img-fluid" style="width:200px;height:200px;" src="https://cdn.pixabay.com/photo/2023/05/21/06/05/water-jet-8007873_640.jpg"> -->
-							<!-- 														  	</div> -->
-							<!-- 														  	<div class="swiper-slide mx-5"> -->
-							<!-- 														  		<img class="img-fluid"  style="width:200px;height:200px;" src="https://cdn.pixabay.com/photo/2023/05/21/06/05/water-jet-8007873_640.jpg"> -->
-							<!-- 														  	</div> -->
-							<!-- 														  	<div v-for="(modalImageUrlitem, urlIdx) in modalImageUrlList" :key="urlIdx"> -->
-							<!-- 														  		Slides -->
-							<!-- 														  		<div  class="swiper-slide" style="width:80%;height:80%;"> -->
-							<!-- 														  			<img v-if="urlIdx>0" :src="getAttachmentUrl(modalImageUrlitem)" class="swiper-slide img-fluid"> -->
-							<!-- 														  		</div> -->
-							<!-- 														  	</div> -->
-							<!-- 														  </div>													   -->
-							<!-- 														  If we need pagination -->
-							<!-- 														  <div class="swiper-pagination"></div> -->
-
-
-
-							<!-- 													  If we need scrollbar -->
-							<!-- 													  <div class="swiper-scrollbar"></div> -->
-							<!-- 														</div> -->
-							<!-- 													</div> -->
-
-							<!-- 													footer -->
-							<!-- 										            <div class="modal-footer"> -->
-							<!-- 										            If we need navigation buttons -->
-							<!-- 														  <div class="swiper-button-prev"></div> -->
-							<!-- 														  <div class="swiper-button-next"></div> -->
-							<!-- 										            </div> -->
-							<!--                            					 	</div>					 	 -->
-							<!--                            					 </div> -->
-							<!--                            			</div> -->
-
-
-
+							
 							<div
 								v-for="(attachmentNo, attachmentIndex) in post.attachmentList"
 								:key="attachmentIndex">
 								<!-- 일단 이미지만 -->
-
-
-
-								<!-- 					                	이미지인 경우 -->
-								<!-- 					                	<div v-if="checkFileType(attachmentNo) === 'image' "> -->
-								<!-- 					                		<img :src="getAttachmentUrl(attachmentNo)" class="mx-1 px-1"style="max-width:100%;max-height:100%" alt="Attachment"> -->
-								<!-- 					                	</div> -->
-								<!-- 					                	<div v-else-if="checkFileType(attachmentNo) === 'video'"> -->
-								<!-- 					                		<video :src="getAttachmentUrl(attachmentNo)" class="mx-1 px-1" style="max-width:100%;max-height:100%"  controls> -->
-								<!-- 				                		 	</video> -->
-								<!-- 					                	</div> -->
-								<!-- 					                	<div v-else-if="checkFileType(attachmentNo) === 'unknown'"> -->
-								<!-- 					                		<h1>언노운</h1> -->
-								<!-- 					                	</div>					                     -->
 							</div>
 							<br>
 						</div>
@@ -751,16 +807,27 @@
 
 									<!-- 댓글 프로필 이미지 -->
 									<div class="col-1 ">
-										<div class="row mt-2 text-center">
-											<!-- 프로필 사진이 있는 경우 -->
-											<img v-if="reply.attachmentNo && reply.attachmentNo != null"
-												class="rounded-circle img-fluid aspect-ratio aspect-ratio-1/1" 
+										<div class="row">
+											<div class="col-2">
+											</div>
+											<div class="col-9">
+												<div class="row mt-2 text-center rounded-circle" style="aspect-ratio:1/1; overflow:hidden;object-fit:fill;">
+												<!-- 프로필 사진이 있는 경우 -->
+												<img v-if="reply.attachmentNo && reply.attachmentNo != null"
+												class=" img-fluid p-0" @click="toMemberPage(reply.replyId)"
+												style="width:100%;height:100%;"
 												:src="getAttachmentUrl(reply.attachmentNo)">
 											
-											<!-- 프로필 사진이 없는 경우 -->
-											<img v-else class="rounded-circle img-fluid aspect-ratio aspect-ratio-1/1" 
+												<!-- 프로필 사진이 없는 경우 -->
+												<img v-else class="img-fluid p-0" @click="toMemberPage(reply.replyId)"
+												style="width:100%;height:100%;"
 												src="static/image/profileDummy.png">
+												</div>
+											</div>
+											<div class="col-1">
+											</div>
 										</div>
+										
 									</div>
 
 									<!-- 댓글 상자 -->
@@ -770,37 +837,37 @@
 
 										<!-- 댓글 아이디가 내용보다 길면 -->
 										<div
-											v-if="reply.replyContent.length &lt; reply.replyId.length"
+											v-if="reply.replyContent && reply.replyId && reply.replyContent.length &lt; reply.replyId.length"
 											style="max-width: 100%"
 											class="row grey-f5f5f5 rounded-3 text-left"
-											:style="{ width: (reply.replyId.length * 12 + 30) + 'px' }">
+											:style="{ width: (reply.replyId.length * 15 + 30) + 'px' }">
 											<div class="row mt-2"></div>
-											<h6 class="mr-1 fw-bold">{{reply.memberNick}}</h6>
+											<h6 class="mr-1 fw-bold" @click="toMemberPage(reply.replyId)">{{reply.memberNick}}</h6>
 											<h6 class="mr-1 lh-lg">{{reply.replyContent}}</h6>
 											<div class="row mb-1"></div>
 										</div>
 
 										<!-- 댓글 내용이 아이디보다 길면 -->
-										<div v-else class="row grey-f5f5f5 rounded-3 text-left"
+										<div v-else-if="reply.replyContent && reply.replyId && reply.replyContent.length > reply.replyId.length" class="row grey-f5f5f5 rounded-3 text-left"
 											style="max-width: 100%"
-											:style="{width: (reply.replyContent.length * 11 +30) + 'px' }">
+											:style="{width: (reply.replyContent.length * 15 +30) + 'px' }">
 											<div class="row mt-2"></div>
-											<h6 class="mr-1 fw-bold">{{reply.memberNick}}</h6>
+											<h6 class="mr-1 fw-bold" @click="toMemberPage(reply.replyId)">{{reply.memberNick}}</h6>
 											<h6 class="mr-1 lh-lg">{{reply.replyContent}}</h6>
 											<div class="row mb-1"></div>
 										</div>
 
 										<!-- 댓글창 아이콘 -->
-										<div class="row d-flex flex-nowrap text-start">
+										<div class="col d-flex flex-nowrap text-start">
 											<!-- 				                				<h6 class="col-1 text-start reply-text" style="white-space: nowrap;">좋아요 </h6> -->
-											<h6 class="col-1 mt-1 reply-text text-secondary"
+											<h6 class="mx-1 mt-1 reply-text text-secondary"
 												style="white-space: nowrap">{{getTimeDifference(reply.replyTime)}}</h6>
-											<h6 class="col-1 mt-1 reply-text text-secondary"
+											<h6 class="mx-1 mt-1 reply-text text-secondary"
 												@click="showRereplyInput(post.postNo,reply.replyNo),hideReplyInput()"
 												style="white-space: nowrap; cursor: pointer;">댓글 달기</h6>
 											<!-- 댓글 삭제  -->
 											<h6 v-if="reply.replyId === memberId"
-												class="col-l mt-1 ms-3 reply-text text-danger"
+												class="mt-1 ms-2 reply-text text-danger"
 												style="cursor: pointer;" @click="deleteReply(reply.replyNo)">댓글
 												삭제</h6>
 										</div>
@@ -821,15 +888,24 @@
 										<div class="row ">
 											<div class="col-1"></div>
 											<div class="col-1">
-												<div class="row my-2 text-center">
+												<div class="row">
+													<div class="col-2">
+													</div>
 													<!-- 대댓글 프로필 사진이 있는 경우 -->
-													<img v-if="rereply.attachmentNo && rereply.attachmentNo != null"
-														class="rounded-circle img-fluid aspect-ratio aspect-ratio-1/1"
-														:src="getAttachmentUrl(rereply.attachmentNo)">
-													
-													<!-- 대댓글 프로필 사진이 없는 경우 -->
-													<img v-else class="rounded-circle img-fluid aspect-ratio aspect-ratio-1/1" 
-														src="static/image/profileDummy.png">
+													<div class="col-9">
+														<div class="row my-2 text-center rounded-circle m" style="aspect-ratio:1/1; overflow:hidden;object-fit:fill;">
+														<img v-if="rereply.attachmentNo && rereply.attachmentNo != null" @click="toMemberPage(rereply.replyId)" 
+															class=" img-fluid p-0"
+															style="width:100%;height:100%;"
+															:src="getAttachmentUrl(rereply.attachmentNo)">
+														
+														<!-- 대댓글 프로필 사진이 없는 경우 -->
+														<img v-else class="img-fluid p-0" style="width:100%;height:100%;" @click="toMemberPage(rereply.replyId)"													 
+															src="static/image/profileDummy.png">
+														</div>
+													</div>
+													<div class="col-1">
+													</div>
 												</div>
 											</div>
 											<div class="col-10">
@@ -840,31 +916,32 @@
 													v-if="rereply.replyContent && rereply.replyId && rereply.replyContent.length &lt; rereply.replyId.length"
 													style="max-width: 100%"
 													class="row grey-f5f5f5 rounded-3 text-left"
-													:style="{ width: (rereply.replyId.length * 12 +30) + 'px' }">
+													:style="{ width: (rereply.replyId.length * 15 +30) + 'px' }">
 													<div class="row mt-2"></div>
-													<h6 class="mr-1 fw-bold">{{rereply.memberNick}}</h6>
+													<h6 class="mr-1 fw-bold" @click="toMemberPage(rereply.replyId)">{{rereply.memberNick}}</h6>
 													<h6 class="mr-1 lh-lg">{{rereply.replyContent}}</h6>
 													<div class="row mb-1"></div>
 												</div>
 												<!-- 대댓글 내용이 아이디보다 길면 -->
-												<div v-else class="row grey-f5f5f5 rounded-3 text-left"
+												<div v-else-if="rereply.replyContent && rereply.replyId && rereply.replyContent.length > rereply.replyId.length" class="row grey-f5f5f5 rounded-3 text-left"
 													style="max-width: 100%"
-													:style="{ width: (rereply.replyContent.length * 11 +30) + 'px' }">
+													:style="{ width: (rereply.replyContent.length * 15 +30) + 'px' }">
 													<div class="row mt-2"></div>
-													<h6 class="mr-1 fw-bold">{{rereply.memberNick}}</h6>
+													<h6 class="mr-1 fw-bold" @click="toMemberPage(rereply.replyId)">{{rereply.memberNick}}</h6>
 													<h6 class="mr-1 lh-lg">{{rereply.replyContent}}</h6>
 													<div class="row mb-1"></div>
 												</div>
 
 												<!-- 대댓글창 아이콘 -->
-												<div class="row d-flex flex-nowrap text-start">
-													<h6 class="col-1 mt-1 reply-text text-secondary">{{getTimeDifference(rereply.replyTime)}}</h6>
-													<h6 class="col-1 mt-1 reply-text text-secondary"
+												<div class="col d-flex flex-nowrap text-start">
+													<h6 class="mx-1  mt-1 reply-text text-secondary"
+														style="white-space: nowrap">{{getTimeDifference(rereply.replyTime)}}</h6>
+													<h6 class="mx-1  mt-1 reply-text text-secondary"
 														@click="showRereplyInput(post.postNo,reply.replyNo),hideReplyInput()"
 														style="white-space: nowrap; cursor: pointer;">댓글 달기</h6>
 													<!-- 대댓글 삭제  -->
 													<h6 v-if="rereply.replyId == memberId"
-														class="col-l mt-1 ms-3 reply-text text-danger"
+														class="mt-1 ms-2 reply-text text-danger"
 														style="cursor: pointer;"
 														@click="deleteRereply(rereply.replyNo)">댓글 삭제</h6>
 												</div>
@@ -884,14 +961,25 @@
 									<div class="row">
 										<div class="col-1"></div>
 										<div class="col-1">
-											<!-- 대댓글 작성 시, 프로필 사진이 있는 경우 -->  
-											<img v-if="sessionMemberAttachmentNo && sessionMemberAttachmentNo != null"
-												class="rounded-circle img-fluid aspect-ratio aspect-ratio-1/1"
-												:src="getAttachmentUrl(sessionMemberAttachmentNo)">
-											
-											<!-- 프로필 사진이 없는 경우 -->
-											<img v-else class="rounded-circle img-fluid aspect-ratio aspect-ratio-1/1"
-												src="static/image/profileDummy.png">
+											<div class="row">
+												<div class="col-2">
+												</div>
+												<div class="col-9">
+													<div class="row mt-2 text-center rounded-circle " style="aspect-ratio:1/1; overflow:hidden;object-fit:fill;">
+															<!-- 대댓글 작성 시, 프로필 사진이 있는 경우 -->  
+															<img v-if="sessionMemberAttachmentNo && sessionMemberAttachmentNo != null"
+																class=" img-fluid p-0"
+																style="width:100%;height:100%;"
+																:src="getAttachmentUrl(sessionMemberAttachmentNo)">
+															
+															<!-- 프로필 사진이 없는 경우 -->
+															<img v-else class="img-fluid p-0" style="width:100%;height:100%;"																
+															src="static/image/profileDummy.png">
+													</div>
+												</div>
+												<div class="col-1">
+												</div>
+											</div>
 										</div>
 										<div class="col-10 mt-1">
 
@@ -937,15 +1025,21 @@
 
 										<!-- 댓글 프로필 이미지 -->
 										<div class="col-1">
-											<div class="row mt-2 text-center">
+											<div class="row">
+												<div class="col-2"></div>
 												<!-- 프로필 사진이 있는 경우 -->
-												<img v-if="reply.attachmentNo && reply.attachmentNo != null"
-													class="rounded-circle img-fluid aspect-ratio aspect-ratio-1/1"
-													:src="getAttachmentUrl(reply.attachmentNo)">
-												
-												<!-- 프로필 사진이 없는 경우 -->
-												<img v-else class="rounded-circle img-fluid aspect-ratio aspect-ratio-1/1"
-													src="static/image/profileDummy.png">
+												<div class="col-9">
+													<div class="row mt-2 text-center rounded-circle " style="aspect-ratio:1/1; overflow:hidden;object-fit:fill;">
+														<img v-if="reply.attachmentNo && reply.attachmentNo != null"
+															class=" img-fluid p-0" style="width:100%;height:100%;" @click="toMemberPage(reply.replyId)"
+															:src="getAttachmentUrl(reply.attachmentNo)">
+														
+														<!-- 프로필 사진이 없는 경우 -->
+														<img v-else class="img-fluid p-0" style="width:100%;height:100%;" @click="toMemberPage(reply.replyId)"
+														src="static/image/profileDummy.png">
+													</div>
+												</div>
+												<div class="col-1"></div>
 											</div>
 											
 											
@@ -958,38 +1052,38 @@
 
 											<!-- 댓글 아이디가 내용보다 길면 -->
 											<div
-												v-if="reply.replyContent.length &lt; reply.replyId.length"
+												v-if="reply.replyContent && reply.replyId && reply.replyContent.length &lt; reply.replyId.length"
 												style="max-width: 100%"
 												class="row grey-f5f5f5 rounded-3 text-left"
-												:style="{ width: (reply.replyId.length * 12 + 30) + 'px' }">
+												:style="{ width: (reply.replyId.length * 15 + 30) + 'px' }">
 												<div class="row mt-2"></div>
-												<h6 class="mr-1 fw-bold">{{reply.memberNick}}</h6>
-												<h6 class="mr-1 lh-lg">{{reply.replyContent}}</h6>
+												<h6 class="mr-1 fw-bold" @click="toMemberPage(reply.replyId)">{{reply.memberNick}}</h6>
+												<h6 class="mr-1 lh-lg" >{{reply.replyContent}}</h6>
 												<div class="row mb-1"></div>
 											</div>
 
 											<!-- 댓글 내용이 아이디보다 길면 -->
-											<div v-else class="row grey-f5f5f5 rounded-3 text-left"
+											<div v-else-if="reply.replyContent && reply.replyId && reply.replyContent.length > reply.replyId.length" class="row grey-f5f5f5 rounded-3 text-left"
 												style="max-width: 100%"
-												:style="{width: (reply.replyContent.length * 11 +30) + 'px' }">
+												:style="{width: (reply.replyContent.length * 15 +30) + 'px' }">
 												<div class="row mt-2"></div>
-												<h6 class="mr-1 fw-bold">{{reply.memberNick}}</h6>
+												<h6 class="mr-1 fw-bold" @click="toMemberPage(reply.replyId)">{{reply.memberNick}}</h6>
 												<h6 class="mr-1 lh-lg">{{reply.replyContent}}</h6>
 												<div class="row mb-1"></div>
 											</div>
 
 											<!-- 댓글창 아이콘 -->
-											<div class="row d-flex flex-nowrap text-start">
+											<div class="col d-flex flex-nowrap text-start">
 												<!-- 				                				<h6 class="col-1 text-start reply-text" style="white-space: nowrap;">좋아요 </h6> -->
-												<h6 class="col-1 mt-1 reply-text text-secondary"
+												<h6 class="mx-1  mt-1 reply-text text-secondary"
 													style="white-space: nowrap">{{getTimeDifference(reply.replyTime)
 													}}</h6>
-												<h6 class="col-1 mt-1 reply-text text-secondary"
+												<h6 class="mx-1  mt-1 reply-text text-secondary"
 													@click="showRereplyInput(post.postNo,reply.replyNo),hideReplyInput()"
 													style="white-space: nowrap; cursor: pointer;">댓글 달기</h6>
 												<!-- 댓글 삭제  -->
 												<h6 v-if="reply.replyId === memberId"
-													class="col-l mt-1 ms-3 reply-text text-danger"
+													class="mt-1 ms-2 reply-text text-danger"
 													style="cursor: pointer;"
 													@click="deleteReply(reply.replyNo)">댓글 삭제</h6>
 											</div>
@@ -1011,15 +1105,21 @@
 											<div class="row ">
 												<div class="col-1"></div>
 												<div class="col-1">
-													<div class="row my-2 text-center">
+													<div class="row">
+														<div class="col-2"></div>
 														<!-- 대댓글 프로필 사진이 있는 경우 -->
-														<img v-if="rereply.attachmentNo && rereply.attachmentNo != null"
-															class="rounded-circle img-fluid aspect-ratio aspect-ratio-1/1"
-															:src="getAttachmentUrl(rereply.attachmentNo)">
-														
-														<!-- 대댓글 프로필 사진이 없는 경우 -->
-														<img v-else class="rounded-circle img-fluid aspect-ratio aspect-ratio-1/1"
-															src="static/image/profileDummy.png">
+														<div class="col-9">
+															<div class="row mt-2 text-center rounded-circle " style="aspect-ratio:1/1; overflow:hidden;object-fit:fill;">
+																	<img v-if="rereply.attachmentNo && rereply.attachmentNo != null"
+																		class="img-fluid p-0" @click="toMemberPage(rereply.replyId)"
+																		:src="getAttachmentUrl(rereply.attachmentNo)">
+																	
+																	<!-- 프로필 사진이 없는 경우 -->
+																	<img v-else class="img-fluid p-0" style="width:100%;height:100%;" @click="toMemberPage(rereply.replyId)"
+																		src="static/image/profileDummy.png">
+															</div>
+														</div>
+														<div class="col-1"></div>
 													</div>
 												</div>
 												<div class="col-10">
@@ -1027,38 +1127,38 @@
 													<div class="mx-2"></div>
 													<!-- 대댓글 아이디가 내용보다 길면 -->
 													<div
-														v-if="rereply.replyContent.length &lt; rereply.replyId.length"
+														v-if="rereply.replyContent && rereply.replyId && rereply.replyContent.length &lt; rereply.replyId.length"
 														style="max-width: 100%"
 														class="row grey-f5f5f5 rounded-3 text-left"
-														:style="{ width: (rereply.replyId.length * 12 +30) + 'px' }">
+														:style="{ width: (rereply.replyId.length * 15 +30) + 'px' }">
 														<div class="row mt-2"></div>
-														<h6 class="mr-1 fs-12px fw-bold">{{rereply.memberNick}}</h6>
-														<h6 class="mr-1 fs-11px lh-lg">{{rereply.replyContent}}</h6>
+														<h6 class="mr-1 fw-bold" @click="toMemberPage(rereply.replyId)">{{rereply.memberNick}}</h6>
+														<h6 class="mr-1 lh-lg">{{rereply.replyContent}}</h6>
 														<div class="row mb-1"></div>
 													</div>
 													<!-- 대댓글 내용이 아이디보다 길면 -->
-													<div v-else class="row grey-f5f5f5 rounded-3 text-left"
+													<div v-else-if="rereply.replyContent && rereply.replyId && rereply.replyContent.length > rereply.replyId.length" class="row grey-f5f5f5 rounded-3 text-left"
 														style="max-width: 100%"
-														:style="{ width: (rereply.replyContent.length * 11 +30) + 'px' }">
+														:style="{ width: (rereply.replyContent.length * 15 +30) + 'px' }">
 														<div class="row mt-2"></div>
-														<h6 class="mr-1 fs-12px fw-bold">{{rereply.memberNick}}</h6>
-														<h6 class="mr-1 fs-11px lh-lg">{{rereply.replyContent}}</h6>
+														<h6 class="mr-1 fw-bold" @click="toMemberPage(rereply.replyId)">{{rereply.memberNick}}</h6>
+														<h6 class="mr-1 lh-lg">{{rereply.replyContent}}</h6>
 														<div class="row mb-1"></div>
 													</div>
 
 													<!-- 대댓글창 아이콘 -->
-													<div class="row d-flex flex-nowrap text-start">
+													<div class="col d-flex flex-nowrap text-start">
 														<h6
-															class="col-1 mt-1 reply-text text-secondary"
+															class="mx-1  mt-1 reply-text text-secondary"
 															style="white-space: nowrap">{{getTimeDifference(rereply.replyTime)
 															}}</h6>
 														<h6
-															class="col-1 mt-1 reply-text text-secondary"
+															class="mx-1  mt-1 reply-text text-secondary"
 															@click="showRereplyInput(post.postNo,reply.replyNo),hideReplyInput()"
 															style="white-space: nowrap; cursor: pointer;">댓글 달기</h6>
 														<!-- 대댓글 삭제  -->
 														<h6 v-if="rereply.replyId == memberId"
-															class="col-l mt-1 ms-3 reply-text text-danger"
+															class=" mt-1 ms-2 reply-text text-danger"
 															style="cursor: pointer;"
 															@click="deleteRereply(rereply.replyNo)">댓글 삭제</h6>
 													</div>
@@ -1075,14 +1175,22 @@
 										<div class="row">
 											<div class="col-1"></div>
 											<div class="col-1">
-												<!-- 대댓글 작성 시, 프로필 사진이 있는 경우 -->  
-												<img v-if="sessionMemberAttachmentNo && sessionMemberAttachmentNo != null"
-													class="rounded-circle img-fluid aspect-ratio aspect-ratio-1/1"
-													:src="getAttachmentUrl(sessionMemberAttachmentNo)">
-												
-												<!-- 프로필 사진이 없는 경우 -->
-												<img v-else class="rounded-circle img-fluid aspect-ratio aspect-ratio-1/1"
-													src="static/image/profileDummy.png">
+												<div class="row">
+													<div class="col-2"></div>
+													<div class="col-9"></div>
+														<div class="row mt-2 text-center rounded-circle " style="aspect-ratio:1/1; overflow:hidden;object-fit:fill;">
+															<!-- 대댓글 작성 시, 프로필 사진이 있는 경우 -->  
+															<img v-if="sessionMemberAttachmentNo && sessionMemberAttachmentNo != null"
+															class="img-fluid p-0"
+															style="width:100%;height:100%;"
+															:src="getAttachmentUrl(sessionMemberAttachmentNo)">
+														
+															<!-- 프로필 사진이 없는 경우 -->
+															<img v-else class="img-fluid p-0" style="width:100%;height:100%;"
+															src="static/image/profileDummy.png">
+														</div>
+													<div class="col-1"></div>
+												</div>												
 											</div>
 											<div class="col-10 mt-1">
 
@@ -1122,18 +1230,28 @@
 					<!-- 댓글, 대댓글 보여주는 창 (댓글이 다섯 개 이하일때) -->
 
 					<!-- 댓글 작성창  -->
-					<div class="row" v-if="replyFlagList[index]">
+					<div class="row" v-if="replyFlagList[index]" >
+<!-- 						<div class="col-1"></div> -->
 						<div class="col-1">
-							<!-- 대댓글 작성 시, 프로필 사진이 있는 경우 -->  
-							<img v-if="sessionMemberAttachmentNo && sessionMemberAttachmentNo != null"
-								class="rounded-circle img-fluid aspect-ratio aspect-ratio-1/1"
-								:src="getAttachmentUrl(sessionMemberAttachmentNo)">
-							
-							<!-- 프로필 사진이 없는 경우 -->
-							<img v-else class="rounded-circle img-fluid aspect-ratio aspect-ratio-1/1"
-								src="static/image/profileDummy.png">
+							<div class="row">
+<!-- 								<div class="col-2"></div> -->
+								<div class="col-12">
+									<div class="row mt-2 text-center rounded-circle m" style="aspect-ratio:1/1; overflow:hidden;object-fit:fill;">
+										<!-- 대댓글 작성 시, 프로필 사진이 있는 경우 -->  
+										<img v-if="sessionMemberAttachmentNo && sessionMemberAttachmentNo != null"
+											class=" img-fluid p-0"
+											style="width:100%;height:100%;"
+											:src="getAttachmentUrl(sessionMemberAttachmentNo)">
+									
+										<!-- 프로필 사진이 없는 경우 -->
+										<img v-else class="img-fluid p-0"											
+											src="static/image/profileDummy.png">
+									</div>
+<!-- 								<div class="col-1"></div> -->
+								</div>
+							</div>
 						</div>
-						<div class="col-11 mt-1">
+						<div class="col-10 mt-1">
 							<div class="pt-2 ps-2 pe-2 w-100 rounded-4 grey-f5f5f5">
 
 								<div class="mt-1"></div>
@@ -1178,7 +1296,60 @@
 		<!-- 글 박스 루프 1개-->
 
 	</div>
-	<!-- v-for구간 -->
+	<!--------------- 게시물들 반복구간 ------------->
+	
+	
+	
+	
+	<!-- 일정 등록 모달 -->
+   	<div class="modal" tabindex="-1" role="dialog" id="addCalendarPostModal">
+    	<div class="modal-dialog" role="document">
+        	<div class="modal-content">
+            	<div class="modal-header">
+                	<h5 class="modal-title">일정 등록</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  	<div class="beforeLogin">
+                  		<h5 class="text-center mt-4">🙌</h5>
+                   		<h5 class="text-center mt-3 mb-4">로그인하고 중요한 일정을 등록해 보세요!</h5>
+						<button type="button" class="custom-btn btn-purple1 btn-round w-100 mb-4 calendar-login-btn">
+							로그인하러 가기
+						</button>
+					</div>
+		            <div class="afterLogin">
+						<div class="form-floating mb-3">
+							<input type="text" readonly class="form-control-plaintext" id="scheduleDatePost" placeholder="dd" :value="scheduleDate">
+							<label for="scheduleDatePost" class="startDatePost">날짜</label>
+						</div>
+		              	<div class="form-floating mb-3">
+							<input type="text" class="form-control" id="calendarTitlePost" placeholder="dd" @keyup.enter="moveFocusToMemo">
+							<label for="calendarTitlePost">일정 이름</label>
+							<div class="display-none invalidMessage">
+						    	1글자 이상, 30글자 이하로 입력할 수 있습니다.
+						    </div>
+						</div>
+		               	<div class="form-floating">
+							<textarea class="form-control" placeholder="Leave a comment here" id="calendarMemoPost" ref="memoTextArea" style="height: 100px; resize: none;"></textarea>
+							<label for="calendarMemoPost">메모</label>
+							<div class="display-none invalidMessage">
+						    	100글자 이하로 입력할 수 있습니다.
+						    </div>
+						</div>
+					</div>
+        		</div>
+		        <div class="modal-footer addCalendarModalFooter">
+			        <button type="button" class="custom-btn btn-purple1 addSchedule-btn" @click="addSchedule">
+			            등록
+		            </button>
+		        </div>
+    		</div>
+  		</div>
+    </div>
+    <!-- 일정 등록 모달 -->
+	
+	
+	
     <div v-if="posts.length === 0">
       <h3 class="pb-5 px-4">검색 결과가 없습니다</h3>
     </div>
@@ -1352,26 +1523,7 @@
 
 
     	
-    	// 무한 스크롤용 페치 
-    	async fetchScroll(){
-    		if(this.loading == true) return;//로딩중이면
-            if(this.finish == true) return;//다 불러왔으면
-            
-            this.loading = true;
-            
-            // 1페이지 부터 현재 페이지 까지 전부 가져옴 
-            const resp = await axios.get("http://localhost:8080/rest/post/pageReload/"+this.page);
-            this.posts = resp.data;
-            this.getLikePostIndex(this.posts);
-            this.getReplyAllList(this.posts);
-            this.postPage++;
-            
-            this.loading=false;
-            
-            if(resp.data.length < 10){
-            	this.finish = true;
-            }
-    	},
+    	
     	
     	// 게시글 작성 시 글타입을 표현하기 위한 함수
     	setPostType(type){
@@ -1384,7 +1536,7 @@
     		var postNo = this.deletePostNo;
         	try{
         		await axios.delete('http://localhost:8080/rest/post/'+postNo);
-        		this.fetchPosts();
+        		this.fetchNew();
         	}
         	catch (error){
         		console.error(error);
@@ -1411,7 +1563,7 @@
 	    	
 	    },
 	    confirmUpdate(){
-	    	this.fetchPosts();
+	    	this.fetchNew();
 	    },
 	    
 		 // 이미지, 비디오 관련 
@@ -1489,7 +1641,7 @@
 			// 로그인 팔로우 정보 로드
 			this.memberFollowObj = resp.data;
 			//console.log(this.memberFollowObj);
-			this.fetchPosts();
+			this.fetchNew();
 			
 		},
 		
@@ -1515,7 +1667,7 @@
            
 
             this.loadMemberFollowInfo();
-          	this.fetchPosts();
+          	this.fetchNew();
             
         },
         
@@ -1542,7 +1694,7 @@
             });
             
             this.loadMemberFollowInfo();
-          	this.fetchPosts();
+          	this.fetchNew();
         },
         // 팔로우 관련 비동기 처리-----------------------------------
         
@@ -1638,7 +1790,7 @@
         	try{
         		const replyDto = {postNo: postNo, replyContent:this.replyContent};
             	const response = await axios.post('http://localhost:8080/rest/post/reply/',replyDto);
-            	this.fetchPosts();
+            	this.fetchNew();
             }
         	catch (error){
         		console.error(error);
@@ -1673,7 +1825,7 @@
         	try{
         		const replyDto = {postNo: postNo, replyContent:this.rereplyContent, replyGroupNo: replyNo};
             	const response = await axios.post('http://localhost:8080/rest/post/rereply/',replyDto);
-            	this.fetchPosts();
+            	this.fetchNew();
             }
         	catch (error){
         		console.error(error);
@@ -1701,7 +1853,7 @@
         async deleteReply(replyNo){
         	try{
         		await axios.delete('http://localhost:8080/rest/post/reply/delete/'+replyNo);
-        		this.fetchPosts();
+        		this.fetchNew();
         	}
         	catch (error){
         		console.error(error);
@@ -1712,7 +1864,7 @@
         async deleteRereply(replyNo){
         	try{
         		await axios.delete('http://localhost:8080/rest/post/reply/reDelete/'+replyNo);
-        		this.fetchPosts();
+        		this.fetchNew();
         	}
         	catch(error){
         		console.error(error);
@@ -2005,6 +2157,50 @@
           }
           this.firstMountFlag = true;
         },
+        
+        async fetchNew(){
+            // q
+            const params = new URLSearchParams(window.location.search);
+            const q = params.get("q");
+
+            // url
+            const url = "http://localhost:8080/rest/post/pageReload/fixedTagPost";
+           
+            // 조회
+            const resp = await axios.post(url, { page: this.postPage, fixedTagName: q } );
+
+            this.posts = resp.data;
+            this.getLikePostIndex(this.posts);
+            this.getReplyAllList(this.posts);
+        },
+	     // 무한 스크롤용 페치 
+	    async fetchScroll(){
+    		if(this.loading == true) return;//로딩중이면
+            if(this.finish == true) return;//다 불러왔으면
+            
+         	// q
+            const params = new URLSearchParams(window.location.search);
+            const q = params.get("q");
+            
+            this.loading = true;
+            
+            const url = "http://localhost:8080/rest/post/pageReload/fixedTagPost";
+            
+     	    // 조회
+            const resp = await axios.post(url, { page: this.postPage, fixedTagName: q } );
+
+            this.postPage++;
+            this.posts = resp.data;
+            this.getLikePostIndex(this.posts);
+            this.getReplyAllList(this.posts);
+            this.loading=false;
+            if(resp.data.length < 10){
+            	this.finish = true;
+            }
+            this.firstMountFlag = true;
+	    },  
+          
+          
         getAttachmentUrl(attachmentNo) {		
           return "http://localhost:8080/rest/attachment/download/"+attachmentNo;
         },
@@ -2012,6 +2208,61 @@
         // 풀네임 생성
         fullName(name, engName){
           return name + "(" + engName + ")";
+        },
+        
+        showAddScheduleModal(index) {
+        	console.log("index: " + index);
+        	console.log("start: " + this.posts[index].scheduleStart);
+        	console.log("end: " + this.posts[index].scheduleEnd);
+        	this.$nextTick(() => {
+        		this.startDate = this.posts[index].scheduleStart;
+        		this.endDate = this.posts[index].scheduleEnd;
+        		this.scheduleDate = moment(startDate).format('YYYY년 MM월 DD일') 
+        							+ " - " + 
+        							moment(endDate).add(1, 'days').format('YYYY년 MM월 DD일');
+        		$("#calendarTitlePost").focus();
+        	});
+        	$("#addCalendarPostModal").modal("show");
+        	this.hidePostModal();
+        },
+        
+        addSchedule() {
+       		if(memberId === "") return;
+       		const calendarTitlePost = $("#calendarTitlePost").val();
+       		const calendarMemoPost = $("#calendarMemoPost").val();
+       		const endDate = moment(this.endDate).add(1, 'days');
+       		if(calendarTitlePost) {
+       			const dto={
+       				"memberId": memberId,
+       				"calendarTitle": calendarTitlePost,
+       				"calendarStart": this.startDate,
+       				"calendarEnd": endDate,
+       				"calendarMemo": calendarMemoPost
+       			};
+       			console.log(this.startDate);
+       			console.log(this.endDate);
+       			axios({
+       				url: contextPath + "/calendar/add",
+       				method:"post",
+       				data:JSON.stringify(dto),
+       				headers: { 'Content-Type': 'application/json' }
+       			}).then(function(resp){
+       				$("#calendarTitlePost").val("");
+       				$("#calendarMemoPost").val("");
+       				loadMemberCalendar();
+       			});
+       		}
+       		// 일정 등록 모달 닫기
+       	    $("#addCalendarPostModal").modal("hide");
+       		
+        },
+        moveFocusToMemo() {
+        	document.getElementById("calendarMemoPost").focus();
+        },
+        // 해당 맴버가 쓴 글 페이지로 
+        toMemberPage(memberId){
+        	const url = 'http://localhost:8080/member/mypage2/'+memberId;
+        	window.location.href = url;
         },
 
       },

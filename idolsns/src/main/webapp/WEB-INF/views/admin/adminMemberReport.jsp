@@ -12,7 +12,7 @@
     }
 </style>
 
-<div class="container" id="app">
+<div class="custom-container" style="padding: 24px;" id="app">
     <!-- # 회원조회 타이틀 -->
     <div class="row mt-3">
         <div class="col">
@@ -133,7 +133,7 @@
             <!-- 검색버튼 -->
             <div class="row mt-3 text-end">
                 <div class="col">
-                    <button class="btn btn-success" type="button" @click="searchMember">검색하기</button>
+                    <button class="btn-round btn-purple1" type="button" @click="searchMember">검색하기</button>
                 </div>
             </div>
         </div>
@@ -148,7 +148,7 @@
             <button @click="checkPageObj">확인</button>
         </div>
         <div class="offset-7 col-1">
-            <button @click="changeMember"><i class="fa-solid fa-xmark"></i>삭제</button>
+            <button class="custom-btn btn-purple1" @click="changeMember"><i class="fa-solid fa-xmark"></i>삭제</button>
         </div>
     </div>
     <div class="row">

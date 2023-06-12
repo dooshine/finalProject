@@ -30,8 +30,8 @@
   
 <!-- aside -->
 <c:if test="${admin}">
-	<aside class ="col-12 py-4" id="aside-bar">
-		<div class= "nav flex-column">
+	<aside id="aside-bar">
+		<div class= "nav flex-column ps-3">
 			<a href="${pageContext.request.contextPath}/admin/">
 				<i class="fa-solid fa-house" :class="{selected: asideTab === '관리자홈'}">
 					<span class="ps-2"> 관리자 홈</span>

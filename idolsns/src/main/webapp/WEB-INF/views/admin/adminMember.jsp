@@ -8,7 +8,7 @@
         background: #f2f2f2;
     }
     .total-cnt {
-        color: forestgreen;
+        color: #6a53fb;
     }
     .cursor-pointer:hover {
     cursor: pointer;
@@ -24,14 +24,43 @@
         -webkit-appearance: none;
         appearance: none;
     }
+        /* 페이지네이션 스타일 */
+    .pagination .page-link {
+        color: gray;
+        background-color: none;
+        border: none; /* 테두리 제거 */
+    }
+
+    .pagination .page-link:hover {
+        color: #ffffff;
+        background-color: #a294f9;
+        border: none; /* 테두리 제거 */
+    }
+
+    .pagination .page-item.disabled .page-link {
+        color: #6c757d;
+        background-color: #f8f9fa;
+        border: none; /* 테두리 제거 */
+    }
+
+    .pagination .page-item.active .page-link {
+        color: #a294f9;
+        background-color: white;
+        border: none; /* 테두리 제거 */
+    }
+    
+    td {
+    	vertical-align:middle;
+    }
 </style>
 
-<div class="container custom-container" id="app">
+<div class="custom-container" id="app" style="padding: 24px;">
     <!-- # 회원조회 타이틀 -->
     <div class="row mt-3">
         <div class="col">
             <h1>회원 목록</h1>
         </div>
+        <div class="custom-hr"></div>
     </div>
 
     <!-- ######################## 회원리스트 검색도구 시작 ########################-->
@@ -41,19 +70,19 @@
                 <div class="col">
                     <label>
                         회원아이디
-                        <input class="ms-3" type="text" v-model="memberSearchVO.memberId">
+                        <input class="custom-input-container" type="text" v-model="memberSearchVO.memberId" style="height:20px;">
                     </label>
                 </div>
                 <div class="col">
                     <label>
                         회원닉네임
-                        <input class="ms-3" type="text" v-model="memberSearchVO.memberNick">
+                        <input class="custom-input-container" type="text" v-model="memberSearchVO.memberNick" style="height:20px;">
                     </label>
                 </div>
                 <div class="col">
                     <label>
                         회원이메일
-                        <input class="ms-3" type="text" v-model="memberSearchVO.memberEmail">
+                        <input class="custom-input-container" type="text" v-model="memberSearchVO.memberEmail" style="height:20px;">
                     </label>
                 </div>
             </div>
@@ -61,18 +90,19 @@
                 <div class="col">
                     <label>
                         최소포인트
-                        <input class="ms-3" type="text" v-model="memberSearchVO.minPoint">
+                        <input class="custom-input-container" type="text" v-model="memberSearchVO.minPoint" style="height:20px;">
                     </label>
                 </div>
                 <div class="col">
                     <label>
                         최대포인트
-                        <input class="ms-3" type="text" v-model="memberSearchVO.maxPoint">
+                        <input class="custom-input-container" type="text" v-model="memberSearchVO.maxPoint" style="height:20px;">
                     </label>
                 </div>
                 <div class="col">
                     동의여부
-                    <label class="ms-3">
+                    <br>
+                    <label >
                         <input type="checkbox" v-model="agree">
                         동의
                     </label>
@@ -86,26 +116,27 @@
                 <div class="col">
                     <label>
                         가입일자(이후)
-                        <input class="ms-3" type="date" v-model="memberSearchVO.beginJoinDate">
+                        <input class="custom-input-container" type="date" v-model="memberSearchVO.beginJoinDate" style="height:20px;">
                     </label>
                 </div>
                 <div class="col">
                     <label>
                         가입일자(이전)
-                        <input class="ms-3" type="date" v-model="memberSearchVO.endJoinDate">
+                        <input class="custom-input-container" type="date" v-model="memberSearchVO.endJoinDate" style="height:20px;">
                     </label>
                 </div>
                 <div class="col">
                     <label>
                         최초로그인일자
-                        <input class="ms-3" type="date" v-model="memberSearchVO.searchLoginDays">
+                        <input class="custom-input-container" type="date" v-model="memberSearchVO.searchLoginDays" style="height:20px;">
                     </label>
                 </div>
             </div>
             <div class="row mt-3">
                 <div class="col-4">
                     회원레벨
-                    <label class="ms-3">
+                    <br>
+                    <label >
                         <input type="checkbox" v-model="user">
                         일반회원
                     </label>
@@ -140,7 +171,7 @@
             <!-- 검색버튼 -->
             <div class="row mt-3 text-end">
                 <div class="col">
-                    <button class="btn btn-success" type="button" @click="loadMemberList">검색하기</button>
+                    <button class="custom-btn btn-round btn-purple1" type="button" @click="loadMemberList">검색하기</button>
                 </div>
             </div>
         </div>
@@ -155,17 +186,17 @@
         <div class="col-4">
             전체 <b class="total-cnt">{{memberList.length}}</b>건
         </div>
-        <div class="offset-7 col-1">
-            <button @click="changeMember"><i class="fa-solid fa-xmark"></i>삭제</button>
+        <div class="col-8 mb-1 d-flex justify-content-end">
+            <button class="custom-btn btn-purple1" @click="changeMember"><i class="fa-solid fa-xmark me-2"></i>삭제</button>
         </div>
     </div>
     <div class="row">
         <div class="col p-0">
             <table class="table">
                 <thead>
-                    <tr class="back-gray">
+                    <tr class="back-gray" style="text-align: center;">
+                        <th scope="col"><input type="checkbox"  @change="checkAllMember($event)"></th>
                         <th scope="col">번호</th>
-                        <th scope="col">전체<br><input type="checkbox"  @change="checkAllMember($event)"></th>
                         <th scope="col">회원프로필</th>
                         <th scope="col">회원아이디(닉네임)/회원이메일</th>
                         <th scope="col">팔로우/팔로워</th>
@@ -181,22 +212,22 @@
                         </td>
                     </tr>
                     <tr v-for="(member, i) in memberList.slice(pageObj.begin - 1, pageObj.end)" :key="i">
-                        <td>{{pageObj.begin + i}}</td>
-                        <td><input type="checkbox" @change="checkMember($event, member.memberId)" :checked="selectedMemberObj[member.memberId]"></td>
-                        <td><img :src="member.profileSrc" style="height: 50px; width: 50px;"></td>
+                        <td style="text-align: center;"><input type="checkbox" @change="checkMember($event, member.memberId)" :checked="selectedMemberObj[member.memberId]"></td>
+                        <td style="text-align: center;">{{pageObj.begin + i}}</td>
+                        <td style="text-align: center;"><img :src="member.profileSrc" style="height: 50px; width: 50px;"></td>
                         <td>
                             {{fullName(member.memberId, member.memberNick)}}<br>
                             {{member.memberEmail}}
                         </td>
-                        <td>{{member.memberFollowCnt}}/{{member.memberFollowerCnt}}</td>
-                        <td>{{member.memberPoint}}</td>
+                        <td style="text-align: right;">{{member.memberFollowCnt}}/{{member.memberFollowerCnt}}</td>
+                        <td style="text-align: right;">{{member.memberPoint}}</td>
                         <td>
                             {{member.memberJoin}}<br>
                             {{member.memberLogin === null ? "미접속": member.memberLogin }}
                         </td>
-                        <td>
-                            <button class="btn btn-primary" @click="followMember(member.memberId)">수정하기</button>
-                            <button class="btn btn-danger" @click="followMember(member.memberId)">제재
+                        <td style="text-align: center;">
+                            <button class="custom-btn btn-round btn-purple1-secondary" @click="followMember(member.memberId)" style="margin-right:10px">수정</button>
+                            <button class="custom-btn btn-round btn-purple2" @click="followMember(member.memberId)">제재</button>
                         </td>
                     </tr>
                 </tbody>
@@ -207,30 +238,44 @@
 
 
 
-
-    <!-- ######################## 회원리스트 페이지네이션 시작 ########################-->
-    <div class="row my-5">
-        <div class="col text-center">
-            <nav aria-label="...">
-                <ul class="pagination justify-content-center">
-                  <!-- 첫 페이지로 이동 -->
-                  <li class="page-item" :class="{disabled: pageObj.isFirst}"><span class="page-link cursor-pointer" @click="showFirstPage">&laquo;</span></li>
-                  <!-- 이전 블럭으로 이동 -->
-                  <li class="page-item" :class="{disabled: !pageObj.hasPrev}"><span class="page-link cursor-pointer" @click="showPrevBlock">&lt;</span></li>
-                  <!-- 페이지번호 이동 -->
-                  <li class="page-item" :class="{active: pageObj.startBlock + i - 1 === pageObj.page}" :aria-current="{page: pageObj.startBlock + i - 1 === pageObj.page}" v-for="i in pageObj.finishBlock-pageObj.startBlock+1" :key="i">
-                    <span href="#" class="page-link" :class="{'cursor-pointer': pageObj.startBlock + i - 1 !== pageObj.page}" @click="showTargetPage(pageObj.startBlock + i - 1)">{{pageObj.startBlock + i - 1}}</span>
-                  </li>
-                  <!-- 다음 블럭으로 이동 -->
-                  <li class="page-item disabled"><span class="page-link cursor-pointer" @click="showNextBlock">&gt;</span></li>
-                  <!-- <li class="page-item" :class="{disabled: !pageObj.hasNext}"><span class="page-link cursor-pointer" @click="showNextBlock">&gt;</span></li> -->
-                  <!-- 마지막 페이지로 이동 -->
-                  <li class="page-item" :class="{disabled: pageObj.isLast}"><span class="page-link cursor-pointer" @click="showLastPage">&raquo;</span></li>
-                </ul>
-            </nav>
-        </div>
+<!-- ######################## 회원리스트 페이지네이션 시작 ########################-->
+   <div class="row my-5">
+    <div class="col text-center">
+        <nav aria-label="...">
+            <ul class="pagination justify-content-center">
+                <!-- 첫 페이지로 이동 -->
+                <li class="page-item" :class="{disabled: pageObj.isFirst}">
+                    <span class="page-link cursor-pointer" @click="showFirstPage">&laquo;</span>
+                </li>
+                <!-- 이전 블럭으로 이동 -->
+                <li class="page-item" :class="{disabled: !pageObj.hasPrev}">
+                    <span class="page-link cursor-pointer" @click="showPrevBlock">&lt;</span>
+                </li>
+                <!-- 페이지번호 이동 -->
+                <li class="page-item"
+                    :class="{active: pageObj.startBlock + i - 1 === pageObj.page}"
+                    :aria-current="{page: pageObj.startBlock + i - 1 === pageObj.page}"
+                    v-for="i in pageObj.finishBlock-pageObj.startBlock+1" :key="i">
+                    <span href="#" class="page-link"
+                        :class="{'cursor-pointer': pageObj.startBlock + i - 1 !== pageObj.page}"
+                        @click="showTargetPage(pageObj.startBlock + i - 1)">
+                        {{pageObj.startBlock + i - 1}}
+                    </span>
+                </li>
+                <!-- 다음 블럭으로 이동 -->
+                <li class="page-item" :class="{disabled: !pageObj.hasNext}">
+				    <span class="page-link cursor-pointer" @click="showNextBlock">&gt;</span>
+				</li>
+                <!-- 마지막 페이지로 이동 -->
+                <li class="page-item" :class="{disabled: pageObj.isLast}">
+                    <span class="page-link cursor-pointer" @click="showLastPage">&raquo;</span>
+                </li>
+            </ul>
+        </nav>
     </div>
-    <!-- ######################## 회원리스트 페이지네이션 끝 ########################-->
+</div>
+<!-- ######################## 회원리스트 페이지네이션 끝 ########################-->
+
 
 </div>
 

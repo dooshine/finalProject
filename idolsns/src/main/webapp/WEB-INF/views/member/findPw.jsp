@@ -3,26 +3,33 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>   
 <jsp:include page="/WEB-INF/views/template/header_member.jsp"></jsp:include> 
 	<br><br>
-	<div class="container" id = app>
-	<div class="col-6 custom-container" style="background-color:white; margin-left: 300px;">
+	<div class="d-flex" id ="app">
+	<div class="custom-container justify-content-center" style="background-color:white; margin: 0 auto; width:700px">
 	<div class="row-page">
 	
 		<div v-show="page==1"  class="row justify-content-center" style="text-align:center;">
-				<div class="row justify-content-center mb-1">
-					<img src="/static/image/logo.png" style="width:200px;">
+				<div class="row mb-1">
+					<h2 class="font-purple1 text-start">비밀번호 찾기</h2>
 				</div>
 				<div class="row ">
-					<h3 class="font-gray2" style="text-align:center;">비밀번호를 찾고자하는 아이디를 입력해주세요.</h3>
+					<h3 class="font-gray2 text-start" >비밀번호를 찾고자하는 아이디를 입력해주세요.</h3>
 				</div>
-				<div class="custom-hr"></div>
-				<br>
-				<div class="row mb-3 ">
-						<input type="text" class="custom-input-rounded-container" placeholder="아이디" v-model="memberId"  name="memberName" @keyup="idDuplicatedCheck(memberId)">
+				<div class="custom-hr mb-3"></div>
+				
+				<div class="row">
+				<div class="custom-input-rounded-container mb-3">
+						<input type="text" class="custom-input" placeholder="아이디" v-model="memberId"  name="memberName" @keyup="idDuplicatedCheck(memberId)">
+				</div>
+				</div>
+				
+				<div class="row">
 						<h6 class="font-purple1 text-center" >{{message}}</h6>
 				</div>
+				
 				<div class="row">
 						<button type="button"  class="custom-btn btn-round btn-purple1"  :disabled="!idCheck" @click="pagePlus()">다음 단계</button>					
 				</div>
+				
 				<div class="row">
 					<a href="${pageContext.request.contextPath}/member/findId" style="text-decoration: none; color:gray;">아이디 찾기</a>			
 				</div>
@@ -30,15 +37,17 @@
 		
 		<div v-show="page==2"  class="row justify-content-center" style="text-align:center;">
 				<div class="row justify-content-center mb-1">
-					<img src="/static/image/logo.png" style="width:200px;">
+					<h2 class="font-purple1 text-start">비밀번호 찾기</h2>
 				</div>
 				<div class="row">
-					<h3 class="font-gray2" style="text-align:center;">회원가입 시 사용했던 이메일을 입력하세요.</h3>
+					<h3 class="font-gray2 text-start" style="text-align:center;">회원가입 시 사용했던 이메일을 입력하세요.</h3>
 				</div>
 				<div class="custom-hr"></div>
 				<br>
-				<div class="row mb-3">
-					<input type="email" class="custom-input-rounded-container" placeholder="이메일" v-model="memberEmail" name="memberEmail" @keyup="emailExist(memberId)">
+				<div class="row">
+				<div class="custom-input-rounded-container mb-3">
+					<input type="email" class="custom-input" placeholder="이메일" v-model="memberEmail" name="memberEmail" @keyup="emailExist(memberId)">
+				</div>
 				</div>
 				<div class="row mb-3">
 					<button type="button" class="custom-btn btn-round btn-purple1"  :disabled="!emailCheck" @click="goToLogin(), sendEmailPassword(memberEmail)">임시 비밀번호 발급</button>

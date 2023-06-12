@@ -4,7 +4,7 @@
 <jsp:include page="/WEB-INF/views/template/header.jsp"></jsp:include>
 
 <!-- 제어영역 설정 -->
-<div class="container custom-container" id="app">
+<div class="custom-container" style="padding: 24px;" id="app">
     <!-- # 아티스트 -->
     <!-- 아티스트 생성 -->
     <div class="row mt-3">
@@ -31,7 +31,7 @@
             </div>
             <div class="row">
                 <div class="offset-10 col-2">
-                    <button class="btn btn-primary ms-auto" @click="createArtist">아티스트 생성</button>
+                    <button class="custom-btn btn-purple1 ms-auto" @click="createArtist">아티스트 생성</button>
                 </div>
             </div>
             <div class="row">
@@ -122,7 +122,7 @@
     <!-- 태그삭제 버튼 -->
     <div class="row text-end mt-5">
         <div class="col">
-            <button @click="deleteArtistByNo"><i class="fa-solid fa-xmark"></i>삭제</button>
+            <button class="custom-btn btn-purple1" @click="deleteArtistByNo"><i class="fa-solid fa-xmark me-2"></i>삭제</button>
         </div>
     </div>
     <div class="row">
@@ -130,10 +130,10 @@
             <table class="table">
                 <thead>
                     <tr>
-                        <th scope="col">번호</th>
-                        <th scope="col">
-                            <input type="checkbox" @change="checkAllArtist($event)"> 전체
+                    	<th scope="col">
+                            <input type="checkbox" @change="checkAllArtist($event)">
                         </th>
+                        <th scope="col">번호</th>
                         <th scope="col">첨부사진</th>
                         <th scope="col">아티스트 이름</th>
                         <th scope="col">팔로워 수</th>
@@ -142,10 +142,10 @@
                 </thead>
                 <tbody>
                     <tr v-for="(artistView, i) in artistViewList" :key="i">
-                        <td scope="col">{{artistView.artistNo}}</td>
-                        <td>
+                    	<td>
                             <input type="checkbox" @change="checkArtist($event, artistView.artistNo)" :checked="selectedArtistObj[artistView.artistNo]">
                         </td>
+                        <td scope="col">{{artistView.artistNo}}</td>
                         <td>
                             <img :src="previewURLList[i]===null ? artistView.profileSrc : previewURLList[i]" style="height: 50px; width: 50px;">
                             <!-- <img v-if="previewURLList[i]!==null" :src="previewURLList[i]" style="height: 50px; width: 50px;"> -->
@@ -154,7 +154,7 @@
                         <td>{{artistView.followCnt ?? 0}}</td>
                         <td>
                             <input type="file" @change="handleFileUpload(i)">
-                            <button class="btn btn-primary" @click="setArtistProfile(i)">프로필사진 수정</button>
+                            <button class="custom-btn btn-purple1" @click="setArtistProfile(i)">프로필사진 수정</button>
                         </td>
                     </tr>
                 </tbody>

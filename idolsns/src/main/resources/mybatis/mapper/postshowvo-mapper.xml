@@ -115,10 +115,10 @@
          FROM (
                 SELECT p.*
                 FROM post p
-                full outer JOIN tag t ON p.post_no = t.post_no
+                right JOIN tag t ON p.post_no = t.post_no
                 WHERE t.tag_name = #{tagName} AND p.post_type != '펀딩' AND t.tag_type='고정'
          ) testuserP
-        full outer join schedule_post sp on testuserP.post_no = sp.post_no
+        left outer join schedule_post sp on testuserP.post_no = sp.post_no
         Left outer join together_post tp on testuserP.post_no = tp.post_no
         Left outer join map m on testuserP.post_no = m.post_no
         Left OUTER JOIN member mb ON testuserP.member_id = mb.member_id

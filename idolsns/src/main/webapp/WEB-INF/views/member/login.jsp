@@ -17,12 +17,12 @@
     <div class="col-4 custom-container" style="background-color:white; float:right; margin-right: 100px;">
         <form class="w-100" action="login" method="post" autocomplete="off">
 
-            <div class="row mb-3 mt-4 mx-0">
-                <input class="custom-input-rounded-container width: 100%;" type="text" name="memberId" placeholder="아이디">
+            <div class="custom-input-rounded-container mb-3 mt-4 mx-0">
+                <input class="custom-input width: 100%;" type="text" name="memberId" placeholder="아이디">
             </div>
 
-            <div class="row mx-0 mb-1">
-                <input class="custom-input-rounded-container" type="password" name="memberPw" placeholder="비밀번호">
+            <div class="custom-input-rounded-container mx-0 mb-1">
+                <input class="custom-input " type="password" name="memberPw" placeholder="비밀번호">
             </div>
 
             <h6 class="font-purple1 text-center">${param.msg}</h6>

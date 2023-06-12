@@ -45,7 +45,7 @@
 	<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/static/css/reset.css">
 
     <!-- custom 테스트 css -->
-    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/static/css/test.css">
+    <%-- <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/static/css/test.css"> --%>
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/static/css/component.css">
     <!-- doo-css -->
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/static/css/doo.css" />
@@ -749,7 +749,7 @@
 					</c:when>
 					<%-- 관리자페이지페이지 본문 --%>
 					<c:otherwise>
-						<div class="col-9 article container-fluid py-4">
+						<div class="col-9 article container-fluid mb-4 px-4" style="padding:0px; margin-top: 90px;">
 					</c:otherwise>
 				</c:choose>
                 

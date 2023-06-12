@@ -4,7 +4,7 @@
 <jsp:include page="/WEB-INF/views/template/header.jsp"></jsp:include>
 
 <!-- 제어영역 설정 -->
-<div class="container custom-container" id="app">
+<div class="custom-container" style="padding: 24px;" id="app">
     <!-- # 고정태그 -->
     <!-- 고정태그 등록 -->
     <div class="row mt-3">
@@ -40,7 +40,7 @@
             </div>
             <div class="row mt-3">
                 <div class="offset-11 col-1">
-                    <button class="btn btn-primary" @click="loadTagCntList">검색</button>
+                    <button class="custom-btn btn-round btn-purple1" @click="loadTagCntList">검색</button>
                 </div>
             </div>
         </div>
@@ -50,7 +50,7 @@
         <div class="col">
             <!-- <button @click="updateTagFree"><i class="fa-solid fa-pen-to-square"></i>자유 태그로</button> -->
             <!-- <button @click="updateTagFix"><i class="fa-solid fa-pen-to-square"></i>고정 태그로</button> -->
-            <button @click="deleteTagByName"><i class="fa-solid fa-xmark"></i>삭제</button>
+            <button class="custom-btn btn-purple1" @click="deleteTagByName"><i class="fa-solid fa-xmark me-2"></i>삭제</button>
         </div>
     </div>
     <div class="row">
