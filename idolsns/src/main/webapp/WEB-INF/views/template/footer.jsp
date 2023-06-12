@@ -10,7 +10,7 @@
 		
 	</style>
 	<!-- 일반페이지 일때 -->
-	<c:if test="${!admin && !notFound}">
+	<c:if test="${!admin}">
 		<div class="col-3 py-4 calendar-area px-0">
 			<!-- 캘린더 영역 -->
 		 	<jsp:include page="/WEB-INF/views/template/calendar.jsp"></jsp:include>

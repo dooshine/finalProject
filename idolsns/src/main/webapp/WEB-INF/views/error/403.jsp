@@ -5,6 +5,7 @@
   
     <div>
 		<img src="${pageContext.request.contextPath}/static/image/404.png">
+		<!-- <img src="${pageContext.request.contextPath}/static/image/403.png"> -->
 	</div>
 
 <jsp:include page="/WEB-INF/views/template/footer.jsp"></jsp:include>
