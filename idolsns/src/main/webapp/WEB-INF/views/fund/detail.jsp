@@ -149,9 +149,12 @@
 					<span style="font-weight:bold">{{ (fundDetail.fundTotal / fundDetail.fundGoal * 100).toFixed(1) }}</span>%
 			
 					<label class="mt-3">남은 시간</label>
-<!-- 					<span v-if="getTimeDiff().includes('D')" class="fund_span">{{ getTimeDiff() }}</span> -->
-<!-- 					<span v-else class="fund_span">{{ getTimeDiff() }}</span>일 -->
-					<span class="fund_span">{{ getTimeDiff() }}</span>일
+					<span v-if="getTimeDiff().includes('펀')" class="fund_span">{{ getTimeDiff() }}</span>
+					<span v-else-if="getTimeDiff().includes('-')" class="fund_span">{{ getTimeDiff() }}</span>
+					<span v-else>
+						<span class="fund_span">{{ getTimeDiff() }}</span>일
+					</span>
+<!-- 					<span class="fund_span">{{ getTimeDiff() }}</span>일 -->
 					
 					<div @click="sponsorModal = true">
 						<label class="mt-3">후원자</label>
@@ -247,7 +250,8 @@
 	        <div v-if="reply.replyNo == reply.replyGroupNo" class="row mb-1">
 	        	<!-- 프로필 이미지 -->
           		<div class="col-1">
-          			<img v-if="reply.attachmentNo && reply.attachmentNo !=null" class="img-fluid rounded-circle" :src="getAttachmentUrl(reply.attachmentNo)"> 
+          			<img v-if="reply.attachmentNo && reply.attachmentNo !=null" class="img-fluid rounded-circle" 
+          			:src="getAttachmentUrl(reply.attachmentNo)" @click="linkToMypage(reply.replyId)"> 
        				<img v-else class="img-fluid rounded-circle" src="/static/image/profileDummy.png">
           		</div>
           		
@@ -318,7 +322,8 @@
 	        <div v-else class="row ms-4">
 	        	<!-- 프로필 이미지 -->
           		<div class="col-1">
-          			<img v-if="reply.attachmentNo && reply.attachmentNo !=null" class="img-fluid rounded-circle" :src="getAttachmentUrl(reply.attachmentNo)"> 
+          			<img v-if="reply.attachmentNo && reply.attachmentNo !=null" class="img-fluid rounded-circle" 
+          			:src="getAttachmentUrl(reply.attachmentNo)" @click="linkToMypage(reply.replyId)"> 
        				<img v-else class="img-fluid rounded-circle" src="/static/image/profileDummy.png">
           		</div>
           		
@@ -327,7 +332,7 @@
           			<!-- 작성자면 작성자 표시 -->
 	        		<div v-if="reply.replyId == fundDetail.memberId">
 	        			<div class="d-flex">
-						    <div>{{ reply.replyId }}</div>
+						    <div>{{ reply.memberNick }}</div>
 	        				<div class="author-badge font-purple2 ms-1">
 							    <div class="">작성자</div>
 						  	</div>
@@ -335,7 +340,7 @@
 	        		</div>
 	        		<!-- 작성자가 아니면 -->
 	        		<div v-else>
-	        			{{ reply.replyId }}
+	        			{{ reply.memberNick }}
 	        		</div>
 	        		
           			<!-- 수정 폼 -->
@@ -390,10 +395,15 @@
 	        	
 	        </div>
 	        		<!-- 대댓글 폼 -->
-	        		<div class="row mb-2">
-	        			<div class="col-1"></div>
+	        		<div class="row mb-2" v-if="reReplies[i] == true">
+	        			<!-- 프로필 이미지 -->
+		          		<div class="col-1">
+		          			<img v-if="reply.attachmentNo && reply.attachmentNo !=null" class="img-fluid rounded-circle" 
+		          			:src="getAttachmentUrl(sessionMemberAttachmentNo)"> 
+		       				<img v-else class="img-fluid rounded-circle" src="/static/image/profileDummy.png">
+		          		</div>
 	        			<div class="col-10">
-	        				<div v-if="reReplies[i] == true" class="pt-2 ps-2 pe-2 w-100 rounded-4 grey-f5f5f5">
+	        				<div  class="pt-2 ps-2 pe-2 w-100 rounded-4 grey-f5f5f5">
 				        	<textarea @blur="setReReplyObj($event, i)" placeholder="댓글을 입력해주세요" 
 				        	class="w-100 rounded-4 grey-f5f5f5"></textarea>
 				        	<div class="d-flex">
@@ -855,7 +865,12 @@
 				// 로그인 페이지로
 				linkToLogin() {
 					window.location.href="/member/login";
-				}
+				},
+				
+				// 프사 클릭시 마이페이지로
+				linkToMypage(id) {
+					window.location.href="/member/mypage2/"+id;
+				},
 		    },
 		    created() {
 		    	  this.setPostNo();

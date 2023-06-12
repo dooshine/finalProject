@@ -48,8 +48,8 @@
 			    <div class="custom-hr"></div>
 			    <br>
 			    <!-- 비밀번호 입력 -->
-			    <div class="row mx-5 mb-1 justify-content-center">
-			        <input type="password" v-model="password" class="custom-input-rounded-container" name="memberPw" 
+			    <div class="custom-input-rounded-container mx-5 mb-1 justify-content-center">
+			        <input type="password" v-model="password" class="custom-input" name="memberPw" 
 			        placeholder="비밀번호" style="width:500px;" @keyup="exitPw();">
 			    </div>
 			    <div v-if="password !== '' && !pwCheck" class="row">

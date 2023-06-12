@@ -10,19 +10,19 @@
 				<h1 class="font-purple1">비밀번호 변경</h1>
 			</div>
 			<div class="custom-hr"></div>
-			<div class="row">
-				<input class="custom-input-rounded-container width: 100%;"  type="password"  v-model="currentPw" name="currentPw" placeholder="현재 비밀번호"
+			<div class="custom-input-rounded-container">
+				<input class="custom-input width: 100%;"  type="password"  v-model="currentPw" name="currentPw" placeholder="현재 비밀번호"
 				:class="{'is-invalid':currentPw !== '' && !pwCheck}" @blur="passwordCheck()">
 				<div class="invalid-feedback">{{currentPwMessage}}</div>
 			</div>
 			<br>
-			<div class="row mb-1">
-				<input class="custom-input-rounded-container width: 100%;"  type="password"  v-model="memberNewPw" name="changePw" placeholder="새로운 비밀번호"
+			<div class="custom-input-rounded-container mb-1">
+				<input class="custom-input width: 100%;"  type="password"  v-model="memberNewPw" name="changePw" placeholder="새로운 비밀번호"
 				:class="{'is-invalid':memberNewPw !== '' && !memberNewPwValid}">
 				<div class="invalid-feedback">{{memberNewPwMessage}}</div>
 			</div>
-			<div class="row mb-3">
-				<input class="custom-input-rounded-container width: 100%;"  type="password" v-model="memberNewPwRe" name="changePwRe" placeholder="새로운 비밀번호 확인"
+			<div class="custom-input-rounded-container mb-3">
+				<input class="custom-input width: 100%;"  type="password" v-model="memberNewPwRe" name="changePwRe" placeholder="새로운 비밀번호 확인"
 				:class="{'is-invalid' :memberNewPw !== '' && !memberNewPwReValid}">
 				<div class="invalid-feedback">{{memberNewPwReMessage}}</div>
 			</div>
