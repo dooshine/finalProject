@@ -58,14 +58,8 @@ public class FundRestController {
 	@GetMapping("/page/{page}")
 	public List<FundListWithTagDto> paging(@PathVariable int page,
 			@ModelAttribute FundSearchVO vo
-//			@RequestParam String searchKeyword,
-//			@RequestParam String orderList,
-//			@RequestParam String fundState 
 			) {
 		System.out.println("----------------------vo----------------------"+vo);
-//		System.out.println("searchKeyword = " + searchKeyword);
-//		System.out.println("orderList = " + orderList);
-//		System.out.println("fundState = " + fundState);
 		
 		List<FundListWithTagDto> list = fundPostImageRepo.selectListWithTag(page, vo);
 		
