@@ -68,8 +68,8 @@
             </td>
             <td>
               <div class="search-table-col">
-                <button class="btn rounded-pill" :class="{'btn-primary':!memberSearch.isFollowMember, 'btn-secondary': memberSearch.isFollowMember}"  v-text="memberSearch.isFollowMember?'팔로우취소':'팔로우하기'"></button>
-                <%-- <button class="btn rounded-pill" :class="{'btn-primary':!memberSearch.isFollowMember, 'btn-secondary': memberSearch.isFollowMember}"  v-text="memberSearch.isFollowMember?'팔로우취소':'팔로우하기'" @click="followMember(memberSearch)">팔로우하기</button> --%>
+                <button class="custom-btn" :class="{'btn-purple1-secondary':!memberSearch.isFollowMember, 'btn-purple1': memberSearch.isFollowMember}"  v-text="memberSearch.isFollowMember?'팔로우취소':'팔로우하기'"></button>
+                <%-- <button class="custom-btn btn-purple1-secondary" :class="{'btn-primary':!memberSearch.isFollowMember, 'btn-secondary': memberSearch.isFollowMember}"  v-text="memberSearch.isFollowMember?'팔로우취소':'팔로우하기'" @click="followMember(memberSearch)">팔로우하기</button> --%>
               </div>
             </td>
           </tr>
