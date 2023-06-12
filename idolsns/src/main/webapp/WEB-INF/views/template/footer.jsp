@@ -7,10 +7,7 @@
             </div>
 
 	<style>
-		/*.calendar-area {
-			position: sticky;
-			position: -webkit-sticky;
-		}*/
+		
 	</style>
 	<!-- 일반페이지 일때 -->
 	<c:if test="${!admin && !notFound}">
@@ -35,11 +32,13 @@
         </footer>
     </main>
  
- 
+	
 
+	
 
 	<!-- 부트스트랩 js -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+
 
 
 <!-- 채팅방 -->
@@ -111,7 +110,9 @@
 					
 					// 새 메세지 알림 여부
 					newChatNoti: false,
-					chatRoomNoList: []
+					chatRoomNoList: [],
+
+
 				};
 			},
 			methods: {
@@ -162,6 +163,10 @@
 						this.messageList.splice(0);
 						this.loadMessage(); return;
 					}
+					if(parsedData.chatMessageType == 5 && parsedData.chatRoomType == 'P') {
+						this.messageList.splice(0);
+						this.loadMessage(); return;
+					}
 					// 이름 변경인 경우 방 정보 reload
 					if(parsedData.type == 8) {
 						this.roomInfo.chatRoomNo = "";
@@ -189,7 +194,7 @@
 						parsedData.chatMessageType === 5 || parsedData.chatMessageType === 6) {						
 						this.scrollBottom();
 					}
-					if(parsedData.chatMessageType === 5) {
+					if(parsedData.chatMessageType === 5 || parsedData.chatMessageType === 13) {
 						this.chatMemberList.splice(0);
 						this.loadChatMember();
 					}
@@ -538,9 +543,12 @@
 				findMemberById(index) {
 					//console.log("실행");
 					const memberId = this.messageList[index].memberId;
-					const member = this.chatMemberList.find(function(member) {
-						return member.memberId === memberId;
-					})
+					if (this.chatMemberList.some(member => member.memberId === memberId)) {
+						member = this.chatMemberList.find(member => member.memberId === memberId);
+					}
+					else {
+					    member = this.followProfileList.find(member => member.memberId === memberId);
+					}
 					//console.log("member: " + member.memberId);
 					if(member) {						
 						return {
@@ -575,17 +583,22 @@
 				},
 				findMemberByIdInRoom() {
 					let findId = "";
-					console.log("findMemberByIdInRoom memberId: " + findId);
-					console.log("this.roomInfo.chatRoomName1: " + this.roomInfo.chatRoomName1);
+					let member = "";
+					//console.log("this.roomInfo.chatRoomName1: " + this.roomInfo.chatRoomName1);
 					if(this.roomInfo.chatRoomName1 != this.memberId) {
 						findId = this.roomInfo.chatRoomName1;
 					}
 					else if(this.roomInfo.chatRoomName2 != this.memberId) {
 						findId = this.roomInfo.chatRoomName2;
 					}
-					const member = this.chatMemberList.find(function(member) {
-						return member.memberId === findId;
-					})
+					if (this.chatMemberList.some(member => member.memberId === memberId)) {
+						member = this.chatMemberList.find(member => member.memberId === findId);
+					}
+					else {
+					    member = this.followProfileList.find(member => member.memberId === findId);
+					}
+					
+					console.log("findId: " + findId);
 					if(member) {						
 						return {
 							memberNick: member.memberNick,
@@ -673,11 +686,35 @@
 					}
 				},
 				// 메세지 보내기(실시간 알림 전송 포함)
-				sendMessage() {
+				async sendMessage() {
 					if(this.textCount < 1) return;
 					if(this.textCount > 300) return;
 					this.firstMsg();
 					const text = this.text.trim();
+					// 상대방이 나간 갠톡인 경우
+					//console.log("chatRoomType: " + this.roomInfo.chatRoomType);
+					//console.log("memberList: " + this.chatMemberList.length);
+					if(this.roomInfo.chatRoomType === 'P' && this.chatMemberList.length === 1) {
+						let targetId = "";
+						//console.log("memberId: " + this.memberId);
+						//console.log("chatRoomName1: " + this.roomInfo.chatRoomName1);
+						if(this.roomInfo.chatRoomName1 !== this.memberId) {
+							targetId = this.roomInfo.chatRoomName1;
+						}
+						else {
+							targetId = this.roomInfo.chatRoomName2;
+						}
+						console.log("targetId: " + targetId);
+						const url = "${pageContext.request.contextPath}/chat/chatRoom/reinvite";
+						const data2 = {
+							chatRoomNo: this.chatRoomNo,
+							memberId: this.memberId,
+							targetId: targetId
+						};
+						const resp = await axios.post(url, data2);
+						this.chatMemberList.splice(0);
+						this.loadChatMember();
+					}
 					const data = {
 						type: 1,
 						chatRoomNo: this.chatRoomNo,
@@ -704,17 +741,33 @@
 						};
 						reader.readAsDataURL(file);
 					})
-					/*let isValid;
-					reader.onload = function(e) {
-						let fileSize = e.target.result.length;
-						isValid = fileSize <= 20961034;
-						
-					}*/
 					if(!isValid) {
 						this.fileSizeAlert = true;
 						return;
 					}
-					console.log("전송")
+					//console.log("전송")
+					// 갠톡방에서 상대방 나가있을 경우 다시 초대
+					if(this.roomInfo.chatRoomType === 'P' && this.chatMemberList.length === 1) {
+						let targetId = "";
+						//console.log("memberId: " + this.memberId);
+						//console.log("chatRoomName1: " + this.roomInfo.chatRoomName1);
+						if(this.roomInfo.chatRoomName1 !== this.memberId) {
+							targetId = this.roomInfo.chatRoomName1;
+						}
+						else {
+							targetId = this.roomInfo.chatRoomName2;
+						}
+						console.log("targetId: " + targetId);
+						const url = "${pageContext.request.contextPath}/chat/chatRoom/reinvite";
+						const data2 = {
+							chatRoomNo: this.chatRoomNo,
+							memberId: this.memberId,
+							targetId: targetId
+						};
+						const resp = await axios.post(url, data2);
+						this.chatMemberList.splice(0);
+						this.loadChatMember();
+					}
 					const formData = new FormData();
 					formData.append("attach", file);
 					const url = "${pageContext.request.contextPath}/rest/attachment/upload";
@@ -813,16 +866,27 @@
 					if(this.memberId === "") return;
 					const memberId = this.memberId;
 					const chatRoomNo = this.chatRoomNo;
+					const chatRoomType = this.roomInfo.chatRoomType;
 					const member = this.chatMemberList.find(function(member) {
 						return member.memberId === memberId;
 					})
-					const data1 = {
-						type: 5,
-						memberId: memberId,
-						chatRoomNo: chatRoomNo,
-						chatMessageContent: member.memberNick + " 님이 위즈를 떠났습니다."
-					};
-					this.socket.send(JSON.stringify(data1));
+					if(this.roomInfo.chatRoomType != 'P') {
+						const data1 = {
+							type: 5,
+							memberId: memberId,
+							chatRoomNo: chatRoomNo,
+							chatMessageContent: member.memberNick + " 님이 위즈를 떠났습니다."
+						};
+						this.socket.send(JSON.stringify(data1));
+					}
+					else {
+						const data1 = {
+							type: 13,
+							memberId: memberId,
+							chatRoomNo: chatRoomNo,
+						};
+						this.socket.send(JSON.stringify(data1));
+					}
 					const data2 = {
 							memberId: memberId,
 							chatRoomNo: chatRoomNo
@@ -920,14 +984,12 @@
 				},
 				//유저버튼 - 로그인 or 마이페이지로 이동
 				async goToLoginPage() {
-					const response = await axios.get("/member/goToLoginPage");
-					console.log(response.data);
-					if(response.data == "") {
-						window.location.href = `${pageContext.request.contextPath}/member/login`;
-					}
-					else {
-						window.location.href = `${pageContext.request.contextPath}/member/mypage/${memberId}`;
-					}
+				  const response = await axios.get("/member/goToLoginPage");
+				  if (memberId === "") {
+				    window.location.href = `${pageContext.request.contextPath}/member/login`;
+				  } else {
+					  window.location.href = "${pageContext.request.contextPath}/member/mypage2/" + response.data;
+				  }
 				},
 				// 이미지 메세지 모달로 크게 보기위한 url 셋팅
 				setModalImgURL(index) {
@@ -938,6 +1000,7 @@
 					this.targetId = this.messageList[index].memberId;
 					window.location.href = `${pageContext.request.contextPath}/member/mypage/${targetId}`;
 				}*/
+
 				
 			},
 			computed: {
@@ -960,6 +1023,8 @@
 				if(this.memberId != "" && memberId != ""){
 					this.connect();
 				}
+
+				
 			},
 			mounted() {
 				// 사용자가 이 탭을 보고있는지 확인
@@ -991,7 +1056,6 @@
 				};
 
 
-// 				console.log("######################## 마운티드 발생 ########################");
 				// ######################## 헤더 조정 ########################
 				var inputCompoEle = document.getElementById('navbarSupportedContent');
 				var inputEle = $(inputCompoEle).find("input[name=q]");
@@ -1076,15 +1140,11 @@
 							// 헤더버튼 요소 선택
 						function focusInputNoti() {
 							var notiMarkEle = $(".notiMark");
-							// notiMarkEle.css("background", "forestgreen");
 							notiMarkEle.hide();
-							// console.log("포커스");
 						}
 						function rollbackViewNoti() {
 							var notiMarkEle = $(".notiMark");
-							// notiMarkEle.css("background", "forestgreen");
 							notiMarkEle.show();
-							// console.log("블러");
 						}
 
 						function registerEvent() {
@@ -1116,8 +1176,58 @@
 			},
 		}).mount("#header-area");
 	</script>
+	<script>
+		$(function(){
+			$(".loading-screen").remove();
+		})
+	</script>
 
- 
-    
+		<!-- 로그인모달 -->
+		<div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+			<div class="modal-dialog modal-dialog-centered" >
+				<div class="modal-content custom-container" style="border: 1px solid white">
+					<div class="modal-header justify-content-center" style="padding-top: 0px">
+						<h1 class="modal-title fs-5 font-bold" id="loginModalLabel">스타링크 로그인</h1>
+					</div>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="position: absolute; right: 20px;"></button>
+				<div class="modal-body">
+					<div>
+						<form class="w-100" action="${pageContext.request.contextPath}/member/login" method="post" autocomplete="off">
+							
+							<div class="row mb-3 mt-4 mx-0">
+								<input class="custom-input-rounded-container width: 100%;" type="text" name="memberId" placeholder="아이디">
+								</div>
+								
+								<div class="row mx-0 mb-1">
+								<input class="custom-input-rounded-container" type="password" name="memberPw" placeholder="비밀번호">
+								</div>
+							
+							<h6 class="font-purple1 text-center" >${param.msg}</h6>
+							
+							
+							<div class="custom-hr"></div>
+				
+							<div class="row my-3 mx-0 ">
+								<button type="submit" class="custom-btn btn-round btn-purple1" >로그인</button>
+							</div>
+							
+						</form>
+							
+							
+							<div class="row mb-3  mx-0">
+								<button type="button" onclick="location.href='${pageContext.request.contextPath}/member/join'" class="custom-btn btn-round btn-purple1-secondary" >회원가입</button>
+							</div>
+							
+							<div class="text-center">
+							<a href="${pageContext.request.contextPath}/member/findId" style="text-decoration: none; color:gray;">아이디 /</a>
+							<a href="${pageContext.request.contextPath}/member/findPw" style="text-decoration: none; color:gray;">비밀번호 찾기</a>
+							</div>
+							
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 </body>
+
 </html>

@@ -57,6 +57,13 @@
 	
 	<!-- 채팅 css -->
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/static/css/chat.css" />
+    
+    <!-- fullcalendar cdn -->
+	<script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js'></script>
+    <!-- 캘린더 스크립트 -->
+	<script src= "${pageContext.request.contextPath}/static/js/calendar.js"></script>
+	<!-- 캘린더 css -->
+    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/static/css/calendar.css" />
 
 
     <script>
@@ -175,21 +182,53 @@
 			color: white;
 			font-size: 18px;
 		}
+		.loading-screen {
+			height: 100vh;
+			width: 100vw;
+			position: fixed;
+			bottom: 0;
+			left: 0;
+			background-color: #f5f5f5;
+			z-index: 999999999999;
+		}
+		.loading {
+	    	position: fixed;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%);         
+	    }
+	    .loading-footer {
+	    	position: fixed;
+	      	bottom: 15px;
+	      	left: 50%;
+	      	transform: translate(-50%, 0%);
+	      	font-size: 0.8em;
+	      	color: #7f7f7f;
+	    }
     </style>
 </head>
 
 
 
 <body style="background-color: #f5f5f5;">
+	
     <main>
+		<!-- ######################## 로딩 이미지(뷰 스크립트 생성 후 제거) ######################## -->
+		<div class="loading-screen">
+			<div>
+				<img class="loading" src="${pageContext.request.contextPath}/static/image/loading.png"  width="100px;">
+			</div>
+			<div class="loading-footer">STARLINK © 2023</div>
+		</div>
+		<!-- ######################## 로딩 이미지(뷰 스크립트 생성 후 제거) 끝 ######################## -->
     	<!----------------------------------------------- 헤더 시작 ----------------------------------------------->
         <header>
-   
         	<div id="header-area" style="position: relative;">
-				<nav class="navbar navbar-light back-white px-4" style="box-shadow: 0px 3px 4px rgba(3, 21, 17, 0.1);">
-				  	<div class="container-fluid">
+				<nav class="navbar navbar-light back-white p-0" style="box-shadow: 0px 3px 4px rgba(3, 21, 17, 0.1);">
+				  	<div class="container-fluid px-4" style="padding-top: 0.5rem; padding-bottom: 0.5rem;">
 				  		<div class="col-3">
 					    	<a class="navbar-brand" href="/"><img src="/static/image/logo.png" style="width:130px;"></a>
+					    	<!-- <a href="dev/loading">(임시)로딩</a> -->
 					    </div>
 				    	<div class="col-6 d-flex px-3" id="navbarSupportedContent">
 				      		<form action="/search/post" class="d-flex w-100" method="get">
@@ -229,6 +268,7 @@
 				    	</div>
 				  	</div>
 				</nav>
+				
 				<!---------------------------------------- 채팅 메인 모달 ---------------------------------------->
 				<div class="customModal chatMainModal" v-if="chatMainModal == true">
 					<div class="customModalHeader d-flex align-items-center justify-content-between">
@@ -623,7 +663,7 @@
 				            		<!-- d-none -->
 				            		<input class="form-control picInput d-none" type="file" accept=".png, .jpg, .gif" @change="sendPic" />
 				            	</label>
-				            	<button type="button" @click="sendMessage" :disabled="text.length < 1 || text.length > 300" 
+				            	<button type="button" @click="sendMessage" :disabled="textCount < 1 || textCount > 300" 
 				            				class="hide-style fakeBtn d-flex align-items-center justify-content-center">
 				            		<i class="ti ti-send" style="margin-right: 2px; margin-top: 1px;"></i>
 				            	</button>
@@ -680,32 +720,9 @@
 	     			 	</div>                           					 	
 					</div>
 	           	</div>
+
 			</div>
         	<!----------------------------------------------- 헤더 끝 ----------------------------------------------->
-            <%-- 
-			<div class="row" style="position: fixed !important; top: 80px; z-index: 99999999999;">
-				<!-- (개발)로그인 버튼 -->
-				<div class="col-4">
-					<button><a href="/dev/login?memberId=testuser1">testuser1</a></button>
-					<button><a href="/dev/login?memberId=testuser2">testuser2</a></button>
-					<button><a href="/dev/login?memberId=testuser3">testuser3</a></button>
-					<button><a href="/dev/login?memberId=adminuser1">adminuser3</a></button>
-				</div>
-				<div class="offset-5 col-3">
-					<!--<c:if test="${memberId == null}">
-						<a href="${pageContext.request.contextPath}/member/login">로그인</a>
-						<a href="${pageContext.request.contextPath}/member/join">회원가입</a>
-					</c:if>
-					<c:if test="${memberId != null}">
-						<a href="${pageContext.request.contextPath}/member/logout">로그아웃</a>
-						<a href="${pageContext.request.contextPath}/member/mypage">마이페이지</a>
-					</c:if>-->
-					<c:if test="${memberLevel == '관리자'}">
-						<a href="${pageContext.request.contextPath}/admin/">관리자 페이지</a>
-					</c:if>
-				</div>
-            </div>
-			--%>
         </header>
           <!-- <hr> -->
 

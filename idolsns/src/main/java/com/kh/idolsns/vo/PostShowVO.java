@@ -4,9 +4,10 @@ import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.List;
 
-import com.kh.idolsns.dto.AttachmentDto;
-import com.kh.idolsns.dto.FollowDto;
-import com.kh.idolsns.dto.ReplyDto;
+import com.kh.idolsns.dto.PostDto;
+import com.kh.idolsns.dto.PostImageDto;
+import com.kh.idolsns.dto.PostShowDto;
+import com.kh.idolsns.dto.TagDto;
 
 import lombok.Data;
 
@@ -56,4 +57,13 @@ public class PostShowVO {
 	//-----------------------------------
 
 	
+	
+	
+	
+	//postShow
+	private PostShowDto postShowDto;
+	private List<PostImageDto> attachmentNos;
+	private List<PostDto> postDtos;
+	private List<TagDto> tagNames;
+
 }

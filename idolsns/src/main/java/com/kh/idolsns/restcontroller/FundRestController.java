@@ -4,6 +4,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,12 +19,13 @@ import com.kh.idolsns.dto.FundDto;
 import com.kh.idolsns.dto.FundListWithTagDto;
 import com.kh.idolsns.dto.FundPostImageDto;
 import com.kh.idolsns.dto.PostImageDto;
+import com.kh.idolsns.dto.PostLikeDto;
 import com.kh.idolsns.dto.TagDto;
 import com.kh.idolsns.repo.FundPostImageRepo;
 import com.kh.idolsns.repo.FundPostRepo;
 import com.kh.idolsns.repo.FundRepo;
+import com.kh.idolsns.repo.PostLikeRepo;
 import com.kh.idolsns.vo.FundDetailVO;
-import com.kh.idolsns.vo.FundListVO;
 import com.kh.idolsns.vo.FundSearchVO;
 import com.kh.idolsns.vo.FundVO;
 
@@ -39,6 +42,9 @@ public class FundRestController {
 	
 	@Autowired
 	private FundPostImageRepo fundPostImageRepo;
+	
+	@Autowired
+	private PostLikeRepo postLikeRepo;
 	
 	// 펀딩게시물 목록 조회
 	@GetMapping("/")
@@ -134,8 +140,42 @@ public class FundRestController {
 				templist.add(dto);
 			}
 		}
-		System.out.println(templist);
+	}
+
+	
+	// 펀딩 좋아요 수
+	@GetMapping("/likeCount/{postNo}")
+	public int count(@PathVariable Long postNo){
+		System.out.println("likecount--------"+fundRepo.likeCount(postNo));
+		return fundRepo.likeCount(postNo);
+	}
+	
+	// 펀딩 목록 좋아요 체크
+	@GetMapping("/like/index/{postNoList}")
+	public List<Integer> index(@PathVariable List<Long> postNoList,
+							HttpSession session){
+		List<Integer> response = new ArrayList<Integer>();
+		
+		PostLikeDto temp = new PostLikeDto();
+		String memberId = (String)session.getAttribute("memberId");		
+		temp.setMemberId(memberId); 
+		
+		if(memberId == "" || memberId == null) { // 세션 아이디 없을 때, 
+			return null; 
+		}
+		
+		
+		for(int i=0; i<postNoList.size();i++){
+			temp.setPostNo(postNoList.get(i));
+			// 좋아요 돼있으면
+			if(postLikeRepo.check(temp)){
+				response.add(i); // 반환할 좋아요 배열에 해당 인덱스 추가 
+			}		
+		}
+		
+		return response; 
 	}
 }
+
 	
 

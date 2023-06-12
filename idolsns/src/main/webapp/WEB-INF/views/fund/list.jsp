@@ -32,12 +32,39 @@
         /*조건부 스타일 - 태블릿*/
         @media screen and (max-width:1200px) {
     
-        .col-6 {
-          width: 100%;
-        }
+	        .col-6 {
+	          width: 100%;
+	        }
             .funding-list > .funding-item  {
             width : 49%;
-           }
+           	}
+           
+         	#calendar {
+		  		display: none;
+		  	}
+			.col-3.calendar-area {
+				width: 0%;
+			}
+			.col-6.article {
+				width: 85%;
+			}
+			.col-3.left-aside {
+				width: 15%;
+			}
+			#aside-bar {
+				width: 15%;
+			}
+
+			.nav .aside-name-tag {
+				/* font-size: 0px; */
+				display: none;
+		  	}
+			.nav img {
+				margin-left: 0px !important;
+			}
+			.nav a {
+				text-align: center;
+			}   
        }
 
         /*조건부 스타일 - 모바일*/
@@ -48,7 +75,9 @@
         }
         
     }
-               
+    
+    
+   
          .funding-list {
            display: flex;
            flex-wrap: wrap;
@@ -61,16 +90,41 @@
            padding: 10px;
            border: 1px solid #ccc;
            border-radius: 5px;
-           
-           
+           overflow: hidden;
+           /* 하트 고정 */
+           position: relative;
+         }
+         
+         .heart-icon {
+         	position: absolute;
+         	top: 175px; 
+         	right: 20px;
+         	transform: scale(1.1); /* 하트 크기 조정 */
+         	color: #6A53FB;
          }
          
          
-         .funding-item img {
-           width: 100%;
-           border-radius: 5px;
-           
-           }
+         /*펀딩 이미지 컨테이너*/
+         
+         	.image-container {
+		/* 	  width: 300px; */
+			  height: 200px; 
+			  overflow: hidden;
+			}
+
+			.image-container img {
+			  width: 100%;
+			  height: 100%;
+			  object-fit: cover;
+			  transition: transform 0.3s;
+			  border-radius: 5px;
+			}
+
+			.funding-item:hover .image-container img {
+			  transform: scale(1.05);
+			}
+			         
+     
          
          .funding-item .title {
             margin: 10px 0;
@@ -115,23 +169,42 @@
          .info .col .label {
             font-size: 0.9em;
             }
+            
+         /* 로그인 모달 스타일*/
+	      .custom-modal-wrapper {
+		   position: fixed;
+		   top: 0;
+		   left: 0;
+		   width: 100%;
+		   height: 100%;
+		   display: flex;
+		   align-items: center;
+		   justify-content: center;
+		   z-index: 9999;
+		}
+		
       </style>
       
         <div id="app">
-               <div class="custom-container">
+        	<div class="custom-container">
+		
 			
-				
-				
-					<div class="rounded bg-light p-3" style="width:100%; height:300px;">
+			
+		<div class="d-flex col rounded-4 bg-light p-3 mt-3 mb-3" style="width:100%; height:300px; float: none;
+			background-image: url('/static/image/fund_main.jpg'); background-size: cover; background-position: center;">
+			    <div class="mx-5" style="display: flex; flex-direction: column; justify-content: center; align-items: left; text-align: left;">
+			        <div class="font-bold" style="font-size:35px; color:white;">
+			            내 손으로 만드는 아이돌 이벤트!
+			        </div>
+			        <!-- 펀딩 글 작성 -->
+			        <div class="mt-3">
+			        <button class="custom-btn btn-round btn-purple1" style="font-size:20px;" @click="startFunding">
+			        	프로젝트 올리기
+			        </button>
+			        </div>
+		    </div>
+		</div>
 						
-						<div class="font-bold" style="font-size:30px;">아이돌의 펀딩을 받아봅시다
-						</div>
-						
-						<!-- 펀딩 글 작성 -->
-						<button class="custom-btn btn-round btn-purple1" @click="startFunding">프로젝트 올리기</button>
-					</div>
-				
-				
 				
 			
 					<div class="d-flex justify-content-between mt-4 px-2">
@@ -167,8 +240,21 @@
                  <div class="funding-list justify-content-center mt-4">
                  
                    <div class="funding-item" v-for="(funding, index) in fundings" :key="index"
-                                              v-on:click="link(funding)">
-                     <img :src="getImageUrl(funding)" alt="Funding Image" style="height:200px">
+                                              @click="link(funding)" >
+                     <div class="image-container">
+                     	<img :src="getImageUrl(funding)" alt="Funding Image" style="height:200px;">
+                     </div>
+                     
+                     <!-- 좋아요 -->
+                     <span class="heart-icon" v-if="postLikeIndexList.includes(index)">
+					      <i class="fs-4 ti ti-heart-filled" @click="checkLike(funding.postNo, index); $event.stopPropagation()"></i> 
+                     </span>
+                     <span class="heart-icon" v-else>
+					      <i class="fs-4 ti ti-heart" @click="checkLike(funding.postNo, index); $event.stopPropagation()"></i> 
+                     </span>
+                     <!-- 좋아요 끝! -->
+					    
+                     
                      <h3 class="title">{{ funding.fundTitle }}</h3>
                      <p class="description">{{ funding.fundShortTitle }}</p>
                      <div class="progress-bar">
@@ -188,7 +274,25 @@
                    </div>
                    
                  </div>
+                 <!-- 펀딩 리스트 끝! -->
+                 
                </div>
+               
+               <!-- 로그인 모달 -->
+		      <div v-if="loginModal" class="custom-modal-wrapper">
+		      	<div class="custom-modal">
+		         <div class="custom-modal-body" style="width: 300px;">
+		            <div class="text-center mb-3">
+		               <i class="ti ti-alert-triangle"></i>
+		            </div>
+		            <div class="text-center">로그인이 필요한 기능입니다</div>
+		            <div class="d-flex justify-content-center mt-4">
+		               <button class="custom-btn btn-round btn-purple1-secondary me-2 w-100" @click="linkToLogin">로그인</button>
+		               <button class="custom-btn btn-round btn-purple1 w-100" @click="loginModal = false">취소</button>
+		            </div>
+		         </div>
+		      	</div>
+		     </div>
                
             </div>   
                  
@@ -218,6 +322,15 @@
                 	
                 	// 시간순 정렬 버튼
                 	dateSort: false,
+                	
+                	// 로그인 모달
+    			   	loginModal: false,
+    			   	
+    			   	// 세션 memberId
+    			   	memberId: memberId,
+    			   	
+    			 	// 좋아요 게시글 인덱스 배열
+                	postLikeIndexList: [], 
                 	 
                   };
                   },
@@ -249,25 +362,28 @@
 		                  // searchQueryTemp에 이전 검색어 저장
 // 		                  this.searchQueryTemp = this.searchQuery;
 		                       
-		                  const resp = await axios.get("http://localhost:8080/rest/fund/page/"+this.searchPage,
-		                        {
-		                	  params: {
-		                		  	// 검색어
-		                        	searchKeyword : this.searchQuery,
-		                        	// 정렬 조건
-		                        	orderList : this.orderList
-		                        },
-		                        paramsSerializer: params => {
-		                    		return new URLSearchParams(params).toString();
-		                    	}
-		                        });     
-		                  this.fundings.push(...resp.data);
-		                  this.searchPage++;
-		                  
-		                  // 데이터가 12개 미만이면 더 읽을게 없다
-		                       if(resp.data.length < 12){
-		                           this.finish = true;
-		                          }
+                  const resp = await axios.get("http://localhost:8080/rest/fund/page/"+this.searchPage,
+                        {
+                	  params: {
+                		  	// 검색어
+                        	searchKeyword : this.searchQuery,
+                        	// 정렬 조건
+                        	orderList : this.orderList
+                        },
+                        paramsSerializer: params => {
+                    		return new URLSearchParams(params).toString();
+                    	}
+                        });     
+               	  this.fundings.push(...resp.data);
+               	  
+               	  this.getLikePostIndex(this.fundings);
+                  console.log(resp.data);
+                  this.searchPage++;
+                  
+                  // 데이터가 12개 미만이면 더 읽을게 없다
+                       if(resp.data.length < 12){
+                           this.finish = true;
+                          }
                    },
                    
                    async fetchOrderedFundingList(){
@@ -285,7 +401,7 @@
 		                    		return new URLSearchParams(params).toString();
 		                    	}
 		                        });
-// 		                  console.log(resp.data)
+// 		                  console.log(resp.data);
 		                  this.fundings = [...resp.data];
 		                  this.searchPage++;
 		                  
@@ -294,13 +410,31 @@
 		                           this.finish = true;
 		                          }
                    },
+                   
+                // postNo를 List로 송신하고 좋아요 되있는 index 번호를 수신
+                   getLikePostIndex(fundings){
+                   	postNoList = [];
+                   	fundings.forEach(function(funding){
+                   		postNoList.push(funding.postNo); 
+                   	})
+                   	
+               		axios.get('http://localhost:8080/rest/fund/like/index/'+postNoList)
+               			.then(response => {               			
+               			this.postLikeIndexList = response.data;  
+               			console.log("postLikeIndexList--------"+this.postLikeIndexList);
+               		})
+               		.catch(error => {
+               			console.error(error);
+               		})
+                   	              		
+                   },
                     
                     // 남은 시간 설정
                     getTimeDiff(funding) {
                           const startDate = new Date(funding.postStart);
                           const endDate = new Date(funding.postEnd);
-                          console.log(startDate);
-                          console.log(endDate);
+//                           console.log(startDate);
+//                           console.log(endDate);
                           const currentDate = new Date();
                           const fundState = funding.fundState;
                           const timeDiff = endDate.getTime() - startDate.getTime();
@@ -327,7 +461,7 @@
                        window.location.href = "/fund/detail?postNo="+funding.postNo;;
                     },
                     getImageUrl(funding) {
-                     const imageUrl = "/rest/attachment/download/" + funding.attachmentNo;
+                       const imageUrl = "/rest/attachment/download/" + funding.attachmentNo;
                        return imageUrl;
                        },
                        
@@ -338,6 +472,8 @@
                       
                       // 펀딩 글쓰기로 이동
                       startFunding() {
+                    	  // if not logged in
+                    	  if(!this.checkLogin()) return;
                     	  window.location.href = "/fund/write";
                       },
                       
@@ -362,9 +498,71 @@
 //                     	            this.fetchFundingList();
                     	        }
                     	    }
-                    	    console.log(this.orderList);
-                    	    console.log(this.fundings);
-                      }
+//                     	    console.log(this.orderList);
+//                     	    console.log(this.fundings);
+                      },
+                      
+                   // 로그인 체크
+      				checkLogin() {
+                      	// 로그인이 안되어 있으면
+      					if(this.memberId == "") {
+      						this.loginModal = true;
+      						return false
+      					}
+                      	// 되어있으면
+      					else return true;
+      				},
+      				
+      				// 로그인 페이지로
+    				linkToLogin() {
+    					window.location.href="/member/login";
+    				},
+    				
+    				// 좋아요 체크 후 추가&삭제
+    				async checkLike(funding) {
+    					// 로그인이 안되어 있으면
+    					if(!this.checkLogin()) return;
+    					
+    					const postNo = funding.postNo;
+    					axios.get('http://localhost:8080/rest/post/like/'+postNo)
+                		.then(response => {
+                			console.log("checkLike = " +response.data);
+                			this.checkFundLike();
+                			
+                				
+                		})
+                		.catch(error => {
+                			console.error(error);
+                		})
+    					
+    				},
+    				// 좋아요 체크
+    				async checkFundLike() {
+    					const postNo = this.fundDetail.postNo;
+    					const resp = await axios.get("http://localhost:8080/rest/post/like/check/"+postNo);
+    					this.fundings.isLiked = resp.data;
+    				},
+    				// 아이디 접속해 있고, 좋아요 클릭시에 실행
+                 	checkLike(postNo,index){
+                    	axios.get('http://localhost:8080/rest/post/like/'+postNo)
+                    		.then(response => {
+                    			console.log(response.data);
+                    			// 응답이 좋아요면
+                    			if(response.data== 'Like'){
+                    				this.postLikeIndexList.push(index);                			
+                    			}
+                    			// 응답이 좋아요 취소면
+                    			else if(response.data=='disLike'){
+                    				this.postLikeIndexList.splice(this.postLikeIndexList.indexOf(index),1);
+                    			}
+                    			
+                    				
+                    		})
+                    		.catch(error => {
+                    			console.error(error);
+                    		})
+                    },
+    				
                  },
                  watch: {
                    // percent가 변하면 percent의 값을 읽어와서 80% 이상인지 판정
@@ -396,7 +594,6 @@
                    },100));
                },
                  created() {
-//                     this.loadFundPostImageList();
                     this.fetchFundingList();
                  }
            }).mount("#app");

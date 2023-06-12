@@ -9,6 +9,7 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -18,6 +19,7 @@ import com.kh.idolsns.dto.MemberDto;
 import com.kh.idolsns.dto.TestDto;
 import com.kh.idolsns.repo.MemberRepo;
 
+@CrossOrigin
 @Controller
 @RequestMapping("/dev")
 public class DevController {
@@ -89,4 +91,11 @@ public class DevController {
             // return ResponseEntity.ok().body(TestDto.builder().no(1).name("김통깨").build());
         }
     }
+    
+ // [테스트] 로딩 페이지
+    @GetMapping("/loading")
+    public String loading() {
+    	return "template/loading";
+    }
+    
 }

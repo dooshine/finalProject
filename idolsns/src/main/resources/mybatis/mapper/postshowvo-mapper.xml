@@ -74,10 +74,10 @@
          FROM (
                 SELECT p.*
                 FROM post p
-                full outer JOIN post_like pl ON p.post_no = pl.post_no
-                WHERE pl.member_id = #{memberId} AND p.post_type != '펀딩'
+                right JOIN post_like pl ON p.member_id = pl.member_id and p.post_no = pl.post_no
+                WHERE p.member_id = #{memberId} AND p.post_type != '펀딩'
          ) testuserP
-        full outer join schedule_post sp on testuserP.post_no = sp.post_no
+        left outer join schedule_post sp on testuserP.post_no = sp.post_no
         Left outer join together_post tp on testuserP.post_no = tp.post_no
         Left outer join map m on testuserP.post_no = m.post_no
         Left OUTER JOIN member mb ON testuserP.member_id = mb.member_id
@@ -97,7 +97,7 @@
                 from post 
                 where member_id = #{memberId} AND post_type != '펀딩'
          ) testuserP
-        full outer join schedule_post sp on testuserP.post_no = sp.post_no
+        left outer join schedule_post sp on testuserP.post_no = sp.post_no
         Left outer join together_post tp on testuserP.post_no = tp.post_no
         Left outer join map m on testuserP.post_no = m.post_no
         Left OUTER JOIN member mb ON testuserP.member_id = mb.member_id

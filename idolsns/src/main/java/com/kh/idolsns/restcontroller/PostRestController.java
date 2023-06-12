@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kh.idolsns.dto.FreePostDto;
+import com.kh.idolsns.dto.FundDto;
 import com.kh.idolsns.dto.MapDto;
 import com.kh.idolsns.dto.PostDto;
 import com.kh.idolsns.dto.PostImageDto;
@@ -201,6 +202,20 @@ public class PostRestController {
     	
     }
     
+    
+    // 애연 추가 -- 성지순례
+    @GetMapping("/map/{postNo}")
+    public List<String> getMapList(@PathVariable Long postNo) {
+    	return mapRepo.selectAll(postNo);
+    	
+    }
+    
+    
+ 	
+    
+    
+    
+    
     // -------------------- 태그정보 등록 
 //    @PostMapping("/tag")
 //    public void taging(@RequestParam Long postNo, @RequestBody List<String> tagList) {
@@ -311,7 +326,7 @@ public class PostRestController {
     public List<PostShowVO> likedPostListReload(@RequestBody Map<String,Object> likedPostData)
     {	
     	Integer page = (Integer) likedPostData.get("page"); 
-    	String likedMemberId = (String) likedPostData.get("likedMemberId");
+    	String likedMemberId = (String) likedPostData.get("pageMemberId");
     	List<PostShowVO> posts = postShowService.likedPostShowByPagingReload(page, likedMemberId);
     	return posts; 
     }
@@ -320,7 +335,7 @@ public class PostRestController {
     @PostMapping("/pageReload/memberWritePost")
     public List<PostShowVO> writePostListReload(@RequestBody Map<String,Object> writePostData){
     	Integer page = (Integer) writePostData.get("page"); 
-    	String writeMemberId = (String) writePostData.get("writeMemberId");
+    	String writeMemberId = (String) writePostData.get("pageMemberId");
     	List<PostShowVO> posts = postShowService.writedPostShowByPagingReload(page, writeMemberId);
     	return posts;
     }

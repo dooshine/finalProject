@@ -382,7 +382,7 @@
 
         // postNo를 List로 송신하고 좋아요 되있는 index 번호를 수신
         getLikePostIndex(posts){
-          postNoList = [];
+          const postNoList = [];
           posts.forEach(function(post){
             postNoList.push(post.postNo); 
           })
@@ -608,6 +608,3 @@
 
 
 <jsp:include page="/WEB-INF/views/template/footer.jsp"></jsp:include>
-
-
-	

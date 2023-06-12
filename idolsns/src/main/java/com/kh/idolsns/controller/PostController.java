@@ -139,5 +139,9 @@ public class PostController {
     	return "/post/fixedTagPost";
     }
     								
-    							
+    @GetMapping("/linkPost/{postNo}")
+    public String linkPost(@PathVariable Long postNo)
+    {
+    	return "/post/linkPost";
+    }
 }

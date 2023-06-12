@@ -128,7 +128,7 @@
 
 
 <!-- 	<div class="container-fluid" id="app" test> -->
-<div class="container-fluid" id="app" >
+<div class="container-fluid" id="app">
 <!-- 	<button class="custom-btn btn-purple1-secondary" @click="changeCustom">커스텀모달</button> -->
 <!-- 	<div v-if="customOn" class="custom-modal" id="deleteAlertModal"> -->
 <!-- 		<div class="custom-modal-body"> -->
@@ -153,14 +153,13 @@
 			<div class="col-1 col-md-1 col-lg-1 d-flex align-items-center justify-content-center p-0">
 					<!-- 세션이 프로필 사진이 있는 경우 -->  
 					<img v-if="sessionMemberAttachmentNo && sessionMemberAttachmentNo != null"
-						class="rounded-circle img-fluid"
-						:src="getAttachmentUrl(sessionMemberAttachmentNo)" style="max-width: 100%; aspect-ratio: 1/1;">
+						class="rounded-circle img-fluid" style="max-width: 100%; min-width: 100%; aspect-ratio: 1/1;"
+						:src="getAttachmentUrl(sessionMemberAttachmentNo)">
 					
 					<!-- 세션이 프로필 사진이 없는 경우 -->
-					<img v-else class="rounded-circle img-fluid"
-						src="static/image/profileDummy.png" style="max-width: 100%; aspect-ratio: 1/1;">
+					<img v-else class="rounded-circle img-fluid" style="max-width: 100%; min-width: 100%; aspect-ratio: 1/1;"
+						src="static/image/profileDummy.png">
 			</div>
-			
 			<div
 				class="col-11 col-md-11 col-lg-11 d-flex align-items-center justify-content-center">
 				<button type="button"
@@ -879,15 +878,15 @@
 		<!-- 글 박스 루프 1개-->
 		<div class="mb-2 custom-container">
 			<!-- 프로필 사진과 아이디 -->
-			<div class="row mt-1">
+			<div class="row mt-1">			
 				<div class="col-1 col-md-1 col-lg-1 d-flex align-items-center justify-content-center">
 					<!-- 프로필 사진이 있는 경우 -->
 					<img v-if="post.attachmentNo && post.attachmentNo != null"
-						class="rounded-circle img-fluid"
+						class="rounded-circle img-fluid" style="max-width: 100%; aspect-ratio: 1/1;"
 						:src="getAttachmentUrl(post.attachmentNo)">
 					
 					<!-- 프로필 사진이 없는 경우 -->
-					<img v-else class="rounded-circle img-fluid"
+					<img v-else class="rounded-circle img-fluid" style="max-width: 100%; aspect-ratio: 1/1;"
 						src="static/image/profileDummy.png">
 				</div>
 				<div class="col-5 col-md-5 col-lg-5 align-middle justify-content-center">
@@ -954,6 +953,13 @@
 											@click="setUpdatePost(post)">게시물 글 내용 수정</h6>
 									</div>
 								</div>
+								<div class="row" v-if="post.scheduleStart !== null">
+									<div class="col-1"></div>
+									<div class="col-11 ms-2">
+										<div class="custom-hr my-2 me-4"></div>
+										<h6 @click="showAddScheduleModal(index)">일정 추가</h6>
+									</div>
+								</div>
 
 
 
@@ -977,6 +983,13 @@
 									<div class="col-11 ms-2">
 										<div class="custom-hr my-2 me-4"></div>
 										<h6>게시물 신고 하기</h6>
+									</div>
+								</div>
+								<div class="row" v-if="post.scheduleStart !== null">
+									<div class="col-1"></div>
+									<div class="col-11 ms-2">
+										<div class="custom-hr my-2 me-4"></div>
+										<h6 @click="showAddScheduleModal(index)">일정 추가</h6>
 									</div>
 								</div>
 
@@ -1242,7 +1255,7 @@
 
 
 					<!-- 댓글, 대댓글 보여주는 창-->
-					<div v-if="post.replyList.length >= 1">
+					<div v-if="post.replyList && post.replyList.length >= 1">
 
 						<!-- 댓글이 다섯개 이하인 경우 -->
 						<div v-if="5 >= post.replyList.length ">
@@ -1251,15 +1264,15 @@
 								<div class="row" v-if="reply.replyNo == reply.replyGroupNo">
 
 									<!-- 댓글 프로필 이미지 -->
-									<div class="col-1">
+									<div class="col-1 ">
 										<div class="row mt-2 text-center">
 											<!-- 프로필 사진이 있는 경우 -->
 											<img v-if="reply.attachmentNo && reply.attachmentNo != null"
-												class="rounded-circle img-fluid"
+												class="rounded-circle img-fluid aspect-ratio aspect-ratio-1/1" 
 												:src="getAttachmentUrl(reply.attachmentNo)">
 											
 											<!-- 프로필 사진이 없는 경우 -->
-											<img v-else class="rounded-circle img-fluid"
+											<img v-else class="rounded-circle img-fluid aspect-ratio aspect-ratio-1/1" 
 												src="static/image/profileDummy.png">
 										</div>
 									</div>
@@ -1271,10 +1284,10 @@
 
 										<!-- 댓글 아이디가 내용보다 길면 -->
 										<div
-											v-if="reply.replyContent.length &lt; reply.replyId.length"
+											v-if="reply.replyContent && reply.replyId && reply.replyContent.length &lt; reply.replyId.length"
 											style="max-width: 100%"
 											class="row grey-f5f5f5 rounded-3 text-left"
-											:style="{ width: (reply.replyId.length * 12 + 30) + 'px' }">
+											:style="{ width: (reply.replyId.length * 15 + 30) + 'px' }">
 											<div class="row mt-2"></div>
 											<h6 class="mr-1 fw-bold">{{reply.memberNick}}</h6>
 											<h6 class="mr-1 lh-lg">{{reply.replyContent}}</h6>
@@ -1282,9 +1295,9 @@
 										</div>
 
 										<!-- 댓글 내용이 아이디보다 길면 -->
-										<div v-else class="row grey-f5f5f5 rounded-3 text-left"
+										<div v-else-if="reply.replyContent && reply.replyId && reply.replyContent.length > reply.replyId.length" class="row grey-f5f5f5 rounded-3 text-left"
 											style="max-width: 100%"
-											:style="{width: (reply.replyContent.length * 11 +30) + 'px' }">
+											:style="{width: (reply.replyContent.length * 15 +30) + 'px' }">
 											<div class="row mt-2"></div>
 											<h6 class="mr-1 fw-bold">{{reply.memberNick}}</h6>
 											<h6 class="mr-1 lh-lg">{{reply.replyContent}}</h6>
@@ -1294,14 +1307,14 @@
 										<!-- 댓글창 아이콘 -->
 										<div class="row d-flex flex-nowrap text-start">
 											<!-- 				                				<h6 class="col-1 text-start reply-text" style="white-space: nowrap;">좋아요 </h6> -->
-											<h6 class="col-1 mt-1  reply-text text-secondary"
+											<h6 class="col-1 mt-1 reply-text text-secondary"
 												style="white-space: nowrap">{{getTimeDifference(reply.replyTime)}}</h6>
-											<h6 class="col-1 mt-1  reply-text text-secondary"
+											<h6 class="col-1 mt-1 reply-text text-secondary"
 												@click="showRereplyInput(post.postNo,reply.replyNo),hideReplyInput()"
 												style="white-space: nowrap; cursor: pointer;">댓글 달기</h6>
 											<!-- 댓글 삭제  -->
 											<h6 v-if="reply.replyId === memberId"
-												class="col-l mt-1 text-start reply-text text-danger"
+												class="col-l mt-1 ms-3 reply-text text-danger"
 												style="cursor: pointer;" @click="deleteReply(reply.replyNo)">댓글
 												삭제</h6>
 										</div>
@@ -1325,11 +1338,11 @@
 												<div class="row my-2 text-center">
 													<!-- 대댓글 프로필 사진이 있는 경우 -->
 													<img v-if="rereply.attachmentNo && rereply.attachmentNo != null"
-														class="rounded-circle img-fluid"
+														class="rounded-circle img-fluid aspect-ratio aspect-ratio-1/1"
 														:src="getAttachmentUrl(rereply.attachmentNo)">
 													
 													<!-- 대댓글 프로필 사진이 없는 경우 -->
-													<img v-else class="rounded-circle img-fluid"
+													<img v-else class="rounded-circle img-fluid aspect-ratio aspect-ratio-1/1" 
 														src="static/image/profileDummy.png">
 												</div>
 											</div>
@@ -1341,16 +1354,16 @@
 													v-if="rereply.replyContent && rereply.replyId && rereply.replyContent.length &lt; rereply.replyId.length"
 													style="max-width: 100%"
 													class="row grey-f5f5f5 rounded-3 text-left"
-													:style="{ width: (rereply.replyId.length * 12 +30) + 'px' }">
+													:style="{ width: (rereply.replyId.length * 15 +30) + 'px' }">
 													<div class="row mt-2"></div>
 													<h6 class="mr-1 fw-bold">{{rereply.memberNick}}</h6>
 													<h6 class="mr-1 lh-lg">{{rereply.replyContent}}</h6>
 													<div class="row mb-1"></div>
 												</div>
 												<!-- 대댓글 내용이 아이디보다 길면 -->
-												<div v-else class="row grey-f5f5f5 rounded-3 text-left"
+												<div v-else-if="rereply.replyContent && rereply.replyId && rereply.replyContent.length > rereply.replyId.length" class="row grey-f5f5f5 rounded-3 text-left"
 													style="max-width: 100%"
-													:style="{ width: (rereply.replyContent.length * 11 +30) + 'px' }">
+													:style="{ width: (rereply.replyContent.length * 15 +30) + 'px' }">
 													<div class="row mt-2"></div>
 													<h6 class="mr-1 fw-bold">{{rereply.memberNick}}</h6>
 													<h6 class="mr-1 lh-lg">{{rereply.replyContent}}</h6>
@@ -1358,14 +1371,15 @@
 												</div>
 
 												<!-- 대댓글창 아이콘 -->
-												<div class="row d-flex flex-nowrap">
-													<h6 class="col-1 mt-1 text-start reply-text text-secondary">{{getTimeDifference(rereply.replyTime)}}</h6>
-													<h6 class="col-1 mt-1 text-start reply-text text-secondary"
+												<div class="row d-flex flex-nowrap text-start">
+													<h6 class="col-1 mt-1 reply-text text-secondary"
+														style="white-space: nowrap">{{getTimeDifference(rereply.replyTime)}}</h6>
+													<h6 class="col-1 mt-1 reply-text text-secondary"
 														@click="showRereplyInput(post.postNo,reply.replyNo),hideReplyInput()"
 														style="white-space: nowrap; cursor: pointer;">댓글 달기</h6>
 													<!-- 대댓글 삭제  -->
 													<h6 v-if="rereply.replyId == memberId"
-														class="col-l mt-1 text-start reply-text text-danger"
+														class="col-l mt-1 ms-3 reply-text text-danger"
 														style="cursor: pointer;"
 														@click="deleteRereply(rereply.replyNo)">댓글 삭제</h6>
 												</div>
@@ -1387,11 +1401,11 @@
 										<div class="col-1">
 											<!-- 대댓글 작성 시, 프로필 사진이 있는 경우 -->  
 											<img v-if="sessionMemberAttachmentNo && sessionMemberAttachmentNo != null"
-												class="rounded-circle img-fluid"
+												class="rounded-circle img-fluid aspect-ratio aspect-ratio-1/1"
 												:src="getAttachmentUrl(sessionMemberAttachmentNo)">
 											
 											<!-- 프로필 사진이 없는 경우 -->
-											<img v-else class="rounded-circle img-fluid"
+											<img v-else class="rounded-circle img-fluid aspect-ratio aspect-ratio-1/1"
 												src="static/image/profileDummy.png">
 										</div>
 										<div class="col-10 mt-1">
@@ -1409,8 +1423,7 @@
 															@click="hideRereplyInput()"></i>
 													</div>
 													<div class="col text-end">
-														<i
-															class="fs-5 font-purple1 ti ti-arrow-badge-right-filled"
+														<i class="fs-5 font-purple1 ti ti-arrow-badge-right-filled"
 															@click="rereplySending(post.postNo,reply.replyNo,index)"></i>
 													</div>
 												</div>
@@ -1429,7 +1442,7 @@
 
 
 						<!-- 댓글이 다섯 개 초과인 경우 -->
-						<div v-else-if="post.replyList.length >5">
+						<div v-else-if="post.replyList && post.replyList.length >5">
 							<div v-for="(reply,replyIdx) in post.replyList" :key="replyIdx">
 								<!-- 댓글이 다섯 개 초과인 경우중, 댓글이 5개 이하 이거나 글 인덱스의 전체보기 버튼이 눌렸을 때, -->
 								<div v-if="4 >= replyIdx || replyAllList[index] ">
@@ -1442,11 +1455,11 @@
 											<div class="row mt-2 text-center">
 												<!-- 프로필 사진이 있는 경우 -->
 												<img v-if="reply.attachmentNo && reply.attachmentNo != null"
-													class="rounded-circle img-fluid"
+													class="rounded-circle img-fluid aspect-ratio aspect-ratio-1/1"
 													:src="getAttachmentUrl(reply.attachmentNo)">
 												
 												<!-- 프로필 사진이 없는 경우 -->
-												<img v-else class="rounded-circle img-fluid"
+												<img v-else class="rounded-circle img-fluid aspect-ratio aspect-ratio-1/1"
 													src="static/image/profileDummy.png">
 											</div>
 											
@@ -1460,10 +1473,10 @@
 
 											<!-- 댓글 아이디가 내용보다 길면 -->
 											<div
-												v-if="reply.replyContent.length &lt; reply.replyId.length"
+												v-if="reply.replyContent && reply.replyId && reply.replyContent.length &lt; reply.replyId.length"
 												style="max-width: 100%"
 												class="row grey-f5f5f5 rounded-3 text-left"
-												:style="{ width: (reply.replyId.length * 12 + 30) + 'px' }">
+												:style="{ width: (reply.replyId.length * 15 + 30) + 'px' }">
 												<div class="row mt-2"></div>
 												<h6 class="mr-1 fw-bold">{{reply.memberNick}}</h6>
 												<h6 class="mr-1 lh-lg">{{reply.replyContent}}</h6>
@@ -1471,9 +1484,9 @@
 											</div>
 
 											<!-- 댓글 내용이 아이디보다 길면 -->
-											<div v-else class="row grey-f5f5f5 rounded-3 text-left"
+											<div v-else-if="reply.replyContent && reply.replyId && reply.replyContent.length > reply.replyId.length" class="row grey-f5f5f5 rounded-3 text-left"
 												style="max-width: 100%"
-												:style="{width: (reply.replyContent.length * 11 +30) + 'px' }">
+												:style="{width: (reply.replyContent.length * 15 +30) + 'px' }">
 												<div class="row mt-2"></div>
 												<h6 class="mr-1 fw-bold">{{reply.memberNick}}</h6>
 												<h6 class="mr-1 lh-lg">{{reply.replyContent}}</h6>
@@ -1481,17 +1494,17 @@
 											</div>
 
 											<!-- 댓글창 아이콘 -->
-											<div class="row d-flex flex-nowrap">
+											<div class="row d-flex flex-nowrap text-start">
 												<!-- 				                				<h6 class="col-1 text-start reply-text" style="white-space: nowrap;">좋아요 </h6> -->
-												<h6 class="col-1 mt-1 text-start reply-text text-secondary"
+												<h6 class="col-1 mt-1 reply-text text-secondary"
 													style="white-space: nowrap">{{getTimeDifference(reply.replyTime)
 													}}</h6>
-												<h6 class="col-1 mt-1 text-start reply-text text-secondary"
+												<h6 class="col-1 mt-1 reply-text text-secondary"
 													@click="showRereplyInput(post.postNo,reply.replyNo),hideReplyInput()"
 													style="white-space: nowrap; cursor: pointer;">댓글 달기</h6>
 												<!-- 댓글 삭제  -->
 												<h6 v-if="reply.replyId === memberId"
-													class="col-l mt-1 text-start reply-text text-danger"
+													class="col-l mt-1 ms-3 reply-text text-danger"
 													style="cursor: pointer;"
 													@click="deleteReply(reply.replyNo)">댓글 삭제</h6>
 											</div>
@@ -1516,11 +1529,11 @@
 													<div class="row my-2 text-center">
 														<!-- 대댓글 프로필 사진이 있는 경우 -->
 														<img v-if="rereply.attachmentNo && rereply.attachmentNo != null"
-															class="rounded-circle img-fluid"
+															class="rounded-circle img-fluid aspect-ratio aspect-ratio-1/1"
 															:src="getAttachmentUrl(rereply.attachmentNo)">
 														
 														<!-- 대댓글 프로필 사진이 없는 경우 -->
-														<img v-else class="rounded-circle img-fluid"
+														<img v-else class="rounded-circle img-fluid aspect-ratio aspect-ratio-1/1"
 															src="static/image/profileDummy.png">
 													</div>
 												</div>
@@ -1529,19 +1542,19 @@
 													<div class="mx-2"></div>
 													<!-- 대댓글 아이디가 내용보다 길면 -->
 													<div
-														v-if="rereply.replyContent.length &lt; rereply.replyId.length"
+														v-if="rereply.replyContent && rereply.replyId && rereply.replyContent.length &lt; rereply.replyId.length"
 														style="max-width: 100%"
 														class="row grey-f5f5f5 rounded-3 text-left"
-														:style="{ width: (rereply.replyId.length * 12 +30) + 'px' }">
+														:style="{ width: (rereply.replyId.length * 15 +30) + 'px' }">
 														<div class="row mt-2"></div>
 														<h6 class="mr-1 fs-12px fw-bold">{{rereply.memberNick}}</h6>
 														<h6 class="mr-1 fs-11px lh-lg">{{rereply.replyContent}}</h6>
 														<div class="row mb-1"></div>
 													</div>
 													<!-- 대댓글 내용이 아이디보다 길면 -->
-													<div v-else class="row grey-f5f5f5 rounded-3 text-left"
+													<div v-else-if="rereply.replyContent && rereply.replyId && rereply.replyContent.length > rereply.replyId.length" class="row grey-f5f5f5 rounded-3 text-left"
 														style="max-width: 100%"
-														:style="{ width: (rereply.replyContent.length * 11 +30) + 'px' }">
+														:style="{ width: (rereply.replyContent.length * 15 +30) + 'px' }">
 														<div class="row mt-2"></div>
 														<h6 class="mr-1 fs-12px fw-bold">{{rereply.memberNick}}</h6>
 														<h6 class="mr-1 fs-11px lh-lg">{{rereply.replyContent}}</h6>
@@ -1549,18 +1562,18 @@
 													</div>
 
 													<!-- 대댓글창 아이콘 -->
-													<div class="row d-flex flex-nowrap">
+													<div class="row d-flex flex-nowrap text-start">
 														<h6
-															class="col-1 mt-1 text-start reply-text text-secondary"
+															class="col-1 mt-1 reply-text text-secondary"
 															style="white-space: nowrap">{{getTimeDifference(rereply.replyTime)
 															}}</h6>
 														<h6
-															class="col-1 mt-1 text-start reply-text text-secondary"
+															class="col-1 mt-1 reply-text text-secondary"
 															@click="showRereplyInput(post.postNo,reply.replyNo),hideReplyInput()"
 															style="white-space: nowrap; cursor: pointer;">댓글 달기</h6>
 														<!-- 대댓글 삭제  -->
 														<h6 v-if="rereply.replyId == memberId"
-															class="col-l mt-1 text-start reply-text text-danger"
+															class="col-l mt-1 ms-3 reply-text text-danger"
 															style="cursor: pointer;"
 															@click="deleteRereply(rereply.replyNo)">댓글 삭제</h6>
 													</div>
@@ -1579,11 +1592,11 @@
 											<div class="col-1">
 												<!-- 대댓글 작성 시, 프로필 사진이 있는 경우 -->  
 												<img v-if="sessionMemberAttachmentNo && sessionMemberAttachmentNo != null"
-													class="rounded-circle img-fluid"
+													class="rounded-circle img-fluid aspect-ratio aspect-ratio-1/1"
 													:src="getAttachmentUrl(sessionMemberAttachmentNo)">
 												
 												<!-- 프로필 사진이 없는 경우 -->
-												<img v-else class="rounded-circle img-fluid"
+												<img v-else class="rounded-circle img-fluid aspect-ratio aspect-ratio-1/1"
 													src="static/image/profileDummy.png">
 											</div>
 											<div class="col-10 mt-1">
@@ -1628,11 +1641,11 @@
 						<div class="col-1">
 							<!-- 대댓글 작성 시, 프로필 사진이 있는 경우 -->  
 							<img v-if="sessionMemberAttachmentNo && sessionMemberAttachmentNo != null"
-								class="rounded-circle img-fluid"
+								class="rounded-circle img-fluid aspect-ratio aspect-ratio-1/1"
 								:src="getAttachmentUrl(sessionMemberAttachmentNo)">
 							
 							<!-- 프로필 사진이 없는 경우 -->
-							<img v-else class="rounded-circle img-fluid"
+							<img v-else class="rounded-circle img-fluid aspect-ratio aspect-ratio-1/1"
 								src="static/image/profileDummy.png">
 						</div>
 						<div class="col-11 mt-1">
@@ -1658,7 +1671,7 @@
 						</div>
 					</div>
 					<!-- 댓글 더보기 버튼 -->
-					<div v-if="post.replyList.length >5">
+					<div v-if="post.replyList &&  post.replyList.length >5">
 						<h6 class="mt-2 fs-11px text-secondary"
 							v-if="!replyAllList[index]" @click="showReplyMoreThanFive(index)">댓글
 							더보기 ({{post.replyList.length -5}}개의 댓글)</h6>
@@ -1681,10 +1694,53 @@
 
 	</div>
 	<!--------------- 게시물들 반복구간 ------------->
+	
+	<!-- 일정 등록 모달 -->
+   	<div class="modal" tabindex="-1" role="dialog" id="addCalendarPostModal">
+    	<div class="modal-dialog" role="document">
+        	<div class="modal-content">
+            	<div class="modal-header">
+                	<h5 class="modal-title">일정 등록</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  	<div class="beforeLogin">
+                  		<h5 class="text-center mt-4">🙌</h5>
+                   		<h5 class="text-center mt-3 mb-4">로그인하고 중요한 일정을 등록해 보세요!</h5>
+						<button type="button" class="custom-btn btn-purple1 btn-round w-100 mb-4 calendar-login-btn">
+							로그인하러 가기
+						</button>
+					</div>
+		            <div class="afterLogin">
+						<div class="form-floating mb-3">
+							<input type="text" readonly class="form-control-plaintext" id="scheduleDatePost" placeholder="dd" :value="scheduleDate">
+							<label for="scheduleDatePost" class="startDatePost">날짜</label>
+						</div>
+		              	<div class="form-floating mb-3">
+							<input type="text" class="form-control" id="calendarTitlePost" placeholder="dd" @keyup.enter="moveFocusToMemo">
+							<label for="calendarTitlePost">일정 이름</label>
+							<div class="display-none invalidMessage">
+						    	1글자 이상, 30글자 이하로 입력할 수 있습니다.
+						    </div>
+						</div>
+		               	<div class="form-floating">
+							<textarea class="form-control" placeholder="Leave a comment here" id="calendarMemoPost" ref="memoTextArea" style="height: 100px; resize: none;"></textarea>
+							<label for="calendarMemoPost">메모</label>
+							<div class="display-none invalidMessage">
+						    	100글자 이하로 입력할 수 있습니다.
+						    </div>
+						</div>
+					</div>
+        		</div>
+		        <div class="modal-footer addCalendarModalFooter">
+			        <button type="button" class="custom-btn btn-purple1 addSchedule-btn" @click="addSchedule">
+			            등록
+		            </button>
+		        </div>
+    		</div>
+  		</div>
+    </div>
 </div>
-
-
-
 
 
 <!-- Vue.createApp구간 -->
@@ -1774,18 +1830,15 @@
                 	// 세션 맴버 첨부파일 번호
                 	sessionMemberAttachmentNo: null,
                 	
+                	scheduleDate: "",
+                	startDate: "",
+                	endDate: "",
                 };
             },
             computed:{
             
             },
             methods:{
-            	changeCustom()
-            	{
-            		this.customOn = !this.customOn;
-            	},
-            	
-            	
             	// 무한 페이징 게시글 불러오기 1페이지당 10개씩 매 페이지 별로 불러옴,
             	async fetchPosts(){
             		
@@ -2342,6 +2395,55 @@
                 		return this.sessionMemberAttachmentNo; 
                 	}
                 },
+                
+                showAddScheduleModal(index) {
+                	console.log("index: " + index);
+                	console.log("start: " + this.posts[index].scheduleStart);
+                	console.log("end: " + this.posts[index].scheduleEnd);
+                	this.$nextTick(() => {
+                		this.startDate = this.posts[index].scheduleStart;
+                		this.endDate = this.posts[index].scheduleEnd;
+                		this.scheduleDate = moment(startDate).format('YYYY년 MM월 DD일') 
+                							+ " - " + 
+                							moment(endDate).add(1, 'days').format('YYYY년 MM월 DD일');
+                		$("#calendarTitlePost").focus();
+                	});
+                	$("#addCalendarPostModal").modal("show");
+                	this.hidePostModal();
+                },
+                
+                addSchedule() {
+               		if(memberId === "") return;
+               		const calendarTitlePost = $("#calendarTitlePost").val();
+               		const calendarMemoPost = $("#calendarMemoPost").val();
+               		const endDate = moment(this.endDate).add(1, 'days');
+               		if(calendarTitlePost) {
+               			const dto={
+               				"memberId": memberId,
+               				"calendarTitle": calendarTitlePost,
+               				"calendarStart": this.startDate,
+               				"calendarEnd": endDate,
+               				"calendarMemo": calendarMemoPost
+               			};
+               			console.log(this.startDate);
+               			console.log(this.endDate);
+               			axios({
+               				url: contextPath + "/calendar/add",
+               				method:"post",
+               				data:JSON.stringify(dto),
+               				headers: { 'Content-Type': 'application/json' }
+               			}).then(function(resp){
+               				$("#calendarTitlePost").val("");
+               				$("#calendarMemoPost").val("");
+               				loadMemberCalendar();
+               			});
+               		}
+               		// 일정 등록 모달 닫기
+               	    $("#addCalendarPostModal").modal("hide");
+                },
+                moveFocusToMemo() {
+                	document.getElementById("calendarMemoPost").focus();
+                },
             },
             watch:{
             	percent(){
@@ -2377,10 +2479,14 @@
                      //data의 percent를 계산된 값으로 갱신
                      this.percent = Math.round(percent);
                  }, 250));
+                
+            	 /*$('#addCalendarPostModal').on('shown.bs.modal', () => {
+            		 $("#scheduleDatePost").val(this.posts)
+            	 });*/
             	
             },
             created(){
-            	// 게시글 불러오기            	
+            	// 게시글 불러오기            	likedPostData 
             	this.fetchPosts();
             	this.setId();
             	//created()에 추가
@@ -2394,11 +2500,11 @@
 
 
 <!-- 이미지 스와이핑 창 -->
-<script
-	src="${pageContext.request.contextPath}/static/js/swiping-image.js"></script>
+<script src="${pageContext.request.contextPath}/static/js/swiping-image.js"></script>
 <!-- 게시글 작성 ajax -->
 <script src="${pageContext.request.contextPath}/static/js/async-post.js"></script>
 <!-- 카카오 API구현 JS -->
 <script src="${pageContext.request.contextPath}/static/js/post-map.js"></script>
+
 
 <jsp:include page="/WEB-INF/views/template/footer.jsp"></jsp:include>

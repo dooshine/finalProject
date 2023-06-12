@@ -19,4 +19,6 @@ public class ChatRoomProcessVO {
 	private int chatRoomNo;
 	private int chatMessageType;
 	
+	private String targetId;
+	
 }

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -29,6 +30,7 @@ import com.kh.idolsns.vo.ChatRoomProcessVO;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
+@CrossOrigin
 @RestController
 @RequestMapping("/chat")
 public class ChatRestController {
@@ -85,6 +87,12 @@ public class ChatRestController {
 	@PostMapping("/chatRoom/invite")
 	public void inviteMember(@RequestBody ChatRoomProcessVO vo) {
 		chatRoomService.inviteMember(vo);
+	}
+	
+	// 상대방이 나간 1대1 채팅방에 메세지 보낼 때 상대방 재 초대
+	@PostMapping("/chatRoom/reinvite")
+	public void reinviteMember(@RequestBody ChatRoomProcessVO vo) {
+		chatRoomService.reinviteMember(vo);
 	}
 	
 	// 채팅방 참여자 목록 조회
