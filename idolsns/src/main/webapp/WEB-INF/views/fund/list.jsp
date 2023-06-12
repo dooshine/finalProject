@@ -222,12 +222,12 @@
 							
 							-->
 						<div class="w-10">
-							<select class="form-select">
-								<option disabled>정렬</option>
-							  	<option value="new">최신순</option>
-							  	<option	value="old">오래된순</option>
-							  	<option value="likes">좋아요순</option>
-							  	<option value="deadline">마감임박순</option>
+							<select class="form-select" v-model="selectedValue" @change="updateOrderList">
+							  	<option value="post_time desc" selected>최신순</option>
+							  	<option	value="post_time asc">오래된순</option>
+							  	<option value="total_price desc">후원금액↑</option>
+							  	<option value="total_price asc">후원금액↓</option>
+<!-- 							  	<option value="">좋아요순</option> -->
 							</select>
 						</div>
 					
@@ -318,7 +318,10 @@
                 	searchQueryTemp: "",
                 	
                 	// 정렬
-                	orderList: ["post_time desc"],
+                	orderList: "post_time desc",
+                	
+                	// select 태그
+                	selectedValue: "",
                 	
                 	// 시간순 정렬 버튼
                 	dateSort: false,
@@ -421,7 +424,10 @@
                           const currentDate = new Date();
                           const fundState = funding.fundState;
                           const timeDiff = endDate.getTime() - currentDate.getTime();
+                          const timeDiff2 = startDate.getTime() - currentDate.getTime();
                           
+                          // 시작날짜가 오늘보다 뒤인경우
+                          if(timeDiff2 >= 0) return "D-"+Math.ceil(timeDiff / (24 * 60 * 60 * 1000));
                           // 마간기간이 남은 경우
                           if(timeDiff >= 0){
 	                          // 1일 이상인 경우
@@ -546,6 +552,9 @@
                     		.catch(error => {
                     			console.error(error);
                     		})
+                    },
+                    updateOrderList() {
+                    	this.orderList = this.selectedValue;
                     },
     				
                  },
