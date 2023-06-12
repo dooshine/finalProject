@@ -14,6 +14,11 @@
     data() {
       return {
         text: "안녕하세요",
+
+        // 피드 로드
+        posts: [],
+        page: 1,
+        memberId: memberId,
       };
     },
     computed: {
@@ -36,13 +41,48 @@
                         window.location.href="http://naver.com";
                     }
                 });
-        }
+        },
+
+        async fetchPosts(){
+
+        // 페이지가 1페이지고(10개의 게시물만 보이고), 최초 mounted가 실행된 이후에 새로 호출 되었을 경우,
+        // 아예 페이지 새로 고침
+        // if(this.page == 2 && this.firstMountFlag)
+        // {
+        //   location.reload();	
+        // }
+          
+          
+        //     if(this.loading == true) return;//로딩중이면
+        //     if(this.finish == true) return;//다 불러왔으면
+            
+        //     this.loading = true;
+            // 1페이지 부터 현재 페이지 까지 전부 가져옴 
+            var likedPostData ={
+                page: this.page,
+                likedMemberId: this.memberId
+            };
+                                  
+          const resp = await axios.post("http://localhost:8080/rest/post/pageReload/memberLikePost",likedPostData);
+          this.posts = resp.data;
+          console.log(this.posts);
+          // this.getLikePostIndex(this.posts);
+          // this.getReplyAllList(this.posts);
+          // this.page++;
+          
+          // this.loading=false;
+          
+          // if(resp.data.length < 10){
+          //   this.finish = true;
+          // }
+          // this.firstMountFlag = true;
+        },
     },
     watch: {
 
     },
     created(){
-          
+      this.fetchPosts();
     },
   }).mount('#app')
 </script>
