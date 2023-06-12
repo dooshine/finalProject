@@ -7,10 +7,7 @@
             </div>
 
 	<style>
-		/*.calendar-area {
-			position: sticky;
-			position: -webkit-sticky;
-		}*/
+		
 	</style>
 	<!-- 일반페이지 일때 -->
 	<c:if test="${!admin && !notFound}">
@@ -35,11 +32,12 @@
         </footer>
     </main>
  
- 
+	
 
 
 	<!-- 부트스트랩 js -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+
 
 
 <!-- 채팅방 -->
@@ -1176,8 +1174,16 @@
 			},
 		}).mount("#header-area");
 	</script>
-
- 
-    
+	<script>
+		// setTimeout(function(){
+		// 	$(function(){
+		// 	$(".loading-screen").remove();
+		// })
+		// }, 1000000);
+		$(function(){
+			$(".loading-screen").remove();
+		})
+	</script>
 </body>
+
 </html>

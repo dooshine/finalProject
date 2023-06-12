@@ -117,7 +117,6 @@
 	      <br><br>
 	      <div class="container">
 	      <!-- 컨테이너 내부 -->
-	      
 		         <div class="row" >
 		            <div class="col-4" >
 		                  <img :src="memberProfileImageObj !== ''  && memberProfileImageObj.attachmentNo !== undefined ? '/download/?attachmentNo='+memberProfileImageObj.attachmentNo :  ' /static/image/profileDummy.png' "
@@ -1491,7 +1490,7 @@
   </div>
 <!-- 전체 컨테이너 내부 -->
 </div>   
-      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+	  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
       <script>
          Vue.createApp({
             data(){
@@ -2282,10 +2281,12 @@
                 // postNo를 List로 송신하고 좋아요 되있는 index 번호를 수신
                 getLikePostIndex(posts){
                 	
-                	postNoList = [];
-                	posts.forEach(function(post){
-                		postNoList.push(post.postNo); 
-                	})
+                	var postNoList = [];
+					if(typeof posts === typeof []){
+                		posts.forEach(function(post){
+                			postNoList.push(post.postNo); 
+                		})
+					}
                 	
                		axios.get('http://localhost:8080/rest/post/like/index/'+postNoList)
                			.then(response => {               			
@@ -2518,16 +2519,21 @@
             		
             	},
             	setId(){ // 아이디 세팅
-            		const memberId = '${memberId}';
-                	if (memberId && memberId.trim() !== '') {
-                		    // memberId가 존재하고 빈 문자열이 아닌 경우
-                		    this.memberId = memberId;
-                	} else {
-                		    // memberId가 없거나 빈 문자열인 경우 기본 값 또는 예외 처리를 수행합니다.
-                		    this.memberId = null; // 기본 값으로 null을 할당하거나
-                		    // 예외 처리 로직을 추가합니다.
-                		    // 예: 오류 메시지 표시, 다른 로직 실행 등
-                	}            		
+            		// const memberId = '${memberId}';
+                	// if (memberId && memberId.trim() !== '') {
+                	// 	    // memberId가 존재하고 빈 문자열이 아닌 경우
+                	// 	    this.memberId = memberId;
+                	// } else {
+                	// 	    // memberId가 없거나 빈 문자열인 경우 기본 값 또는 예외 처리를 수행합니다.
+                	// 	    this.memberId = null; // 기본 값으로 null을 할당하거나
+                	// 	    // 예외 처리 로직을 추가합니다.
+                	// 	    // 예: 오류 메시지 표시, 다른 로직 실행 등
+                	// }
+					
+					
+					// 아이디 세팅
+					const userId = window.location.pathname.split('/').at(-1);
+					this.memberId = userId;
             	},
             	setPageMemberId(){
             		const pageMemberId  = '${pageMemberId}';
@@ -2688,7 +2694,7 @@
             },
             
             mounted() {
-               this.profile();
+            //    this.profile();
                this.followList();
                this.followListProfile();
            	   this.followerListProfile();
@@ -2721,6 +2727,7 @@
                     //data의 percent를 계산된 값으로 갱신
                     this.percent = Math.round(percent);
                 }, 250));
+
             },
          }).mount("#app");
          <!--algPggg-->

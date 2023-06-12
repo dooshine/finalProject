@@ -182,16 +182,47 @@
 			color: white;
 			font-size: 18px;
 		}
+		.loading-screen {
+			height: 100vh;
+			width: 100vw;
+			position: fixed;
+			bottom: 0;
+			left: 0;
+			background-color: #f5f5f5;
+			z-index: 999999999999;
+		}
+		.loading {
+	    	position: fixed;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%);         
+	    }
+	    .loading-footer {
+	    	position: fixed;
+	      	bottom: 15px;
+	      	left: 50%;
+	      	transform: translate(-50%, 0%);
+	      	font-size: 0.8em;
+	      	color: #7f7f7f;
+	    }
     </style>
 </head>
 
 
 
 <body style="background-color: #f5f5f5;">
+	
     <main>
+		<!-- ######################## 로딩 이미지(뷰 스크립트 생성 후 제거) ######################## -->
+		<div class="loading-screen">
+			<div>
+				<img class="loading" src="${pageContext.request.contextPath}/static/image/loading.png"  width="100px;">
+			</div>
+			<div class="loading-footer">STARLINK © 2023</div>
+		</div>
+		<!-- ######################## 로딩 이미지(뷰 스크립트 생성 후 제거) 끝 ######################## -->
     	<!----------------------------------------------- 헤더 시작 ----------------------------------------------->
         <header>
-   
         	<div id="header-area" style="position: relative;">
 				<nav class="navbar navbar-light back-white px-4" style="box-shadow: 0px 3px 4px rgba(3, 21, 17, 0.1);">
 				  	<div class="container-fluid">
