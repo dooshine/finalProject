@@ -52,7 +52,7 @@
         <a href="#" @click="toggleMyArtist">
         	<i class="ti ti-star-filled" :class="{selected: asideTab === '대표페이지'}"><span class="ps-2 aside-name-tag"> 내 아이돌</span></i></a>
 		<div v-if="toggleFollowPageList">
-			<a class="d-flex" :href="'/artist/'+followPage.artistEngNameLower" v-for="(followPage, i) in memberFollowObj.followPageList" :key="i">
+			<a class="d-flex" :href="'/artist/'+ followPage.artistEngNameLower + '/feed'" v-for="(followPage, i) in memberFollowObj.followPageList" :key="i">
 				<img class="ms-3 rounded-circle" :src="followPage.profileSrc" style="height: 30px; width: 30px;">
 				<div class="ms-2 aside-name-tag" :class="{selected: isPage(followPage.artistEngNameLower) }">{{fullName(followPage.artistName, followPage.artistEngName)}}</div>
 			</a>

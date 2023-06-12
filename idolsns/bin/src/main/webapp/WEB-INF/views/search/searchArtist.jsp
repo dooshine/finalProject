@@ -241,7 +241,7 @@
 
 
         goArtistPage(artistSearch){
-          window.location.href="/artist/" + artistSearch.artistEngNameLower;
+          window.location.href="/artist/" + artistSearch.artistEngNameLower + "/feed";
         },
 
       },
