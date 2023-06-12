@@ -299,7 +299,7 @@
 		                  <div class="modal-body text-left">
 		                     <div v-for="(board,index) in PageListProfile"  :key="index">
 		                    <img :src="getAttachmentUrl(board.attachmentNo)" class="profile-image" style="width:54px; height:54px;">
-		                    <a :href="'/artist/' + board.followTergetPrimarykey">
+		                    <a :href="'/artist/' + board.followTergetPrimarykey + '/feed'">
 		                    <span> {{board.followTargetPrimaryKey}}</span>
 		                    </a>
 		                    <button @click="deleteFollow(board.followNo)">팔로잉</button>

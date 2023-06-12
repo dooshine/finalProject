@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.kh.idolsns.configuration.CustomFileuploadProperties;
@@ -216,8 +217,11 @@ public class FundController {
    
    // 펀딩게시물 상세조회
    @GetMapping("/detail")
-   public String detail(@RequestParam Long postNo, Model model) {
+   public String detail(@RequestParam Long postNo, Model model) throws NoHandlerFoundException {
       FundPostDto fundPostDto = fundPostRepo.selectOne(postNo);
+      if(fundPostDto == null){
+         throw new NoHandlerFoundException(null, null, null);
+      }
       List<PostImageDto> list = postImageRepo.selectList(postNo);
       FundMainImageDto fundMainImageDto = fundMainImageRepo.selectOne(postNo);
       

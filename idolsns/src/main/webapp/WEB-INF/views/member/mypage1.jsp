@@ -279,7 +279,7 @@
 		                     <img :src="getAttachmentUrl(board.attachmentNo)" class="profile-image" style="width:54px; height:54px; margin-left:20px; margin-bottom:10px;">
 		                     </div>
 		                     <div class="col-3">
-		                    <a :href="'/artist/' + board.followTergetPrimarykey" style="color:black; font-size:20px; text-decoration:none;">
+		                    <a :href="'/artist/' + board.followTergetPrimarykey + '/feed'" style="color:black; font-size:20px; text-decoration:none;">
 		                    	<span> {{board.followTargetPrimaryKey}}</span>
 							</a>
 		                     </div>
