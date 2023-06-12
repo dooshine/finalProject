@@ -882,11 +882,11 @@
 				<div class="col-1 col-md-1 col-lg-1 d-flex align-items-center justify-content-center">
 					<!-- 프로필 사진이 있는 경우 -->
 					<img v-if="post.attachmentNo && post.attachmentNo != null"
-						class="rounded-circle img-fluid" style="max-width: 100%; aspect-ratio: 1/1;"
+						class="rounded-circle img-fluid" style="max-width: 100%; min-width: 100%; aspect-ratio: 1/1;"
 						:src="getAttachmentUrl(post.attachmentNo)">
 					
 					<!-- 프로필 사진이 없는 경우 -->
-					<img v-else class="rounded-circle img-fluid" style="max-width: 100%; aspect-ratio: 1/1;"
+					<img v-else class="rounded-circle img-fluid" style="max-width: 100%; min-width: 100%; aspect-ratio: 1/1;"
 						src="static/image/profileDummy.png">
 				</div>
 				<div class="col-5 col-md-5 col-lg-5 align-middle justify-content-center">
@@ -1081,7 +1081,7 @@
 									:key="attachmentIndex" class="col-6">
 									<img :src="getAttachmentUrl(attachmentNo)"
 										@click="setModalImageUrl(attachmentNo)" class="img-fluid"
-										style="max-width: 100%; aspect-ratio: 1/1;" alt="Attachment"
+										style="max-width: 100%; min-width: 100%; aspect-ratio: 1/1;" alt="Attachment"
 										data-bs-target="#image-modal" data-bs-toggle="modal">
 								</div>
 							</div>
@@ -1093,24 +1093,10 @@
 									:key="attachmentIndex" class="col-6">
 									<img :src="getAttachmentUrl(attachmentNo)"
 										@click="setModalImageUrl(attachmentNo)" class="img-fluid mb-3"
-										style="max-width: 100%; aspect-ratio: 1/1;" alt="Attachment"
+										style="max-width: 100%; min-width: 100%; aspect-ratio: 1/1;" alt="Attachment"
 										data-bs-target="#image-modal" data-bs-toggle="modal">
 								</div>
 							</div>
-
-							<!-- 두 개 이상의 이미지인 경우 (이미지 스와이핑 : 나중에하자 ㅅ....) -->
-							<!-- 					                <div v-else-if="post.attachmentList.length = -999" class="row text-center"> -->
-							<!-- 					                	<div v-for="(attachmentNo, attachmentIndex) in post.attachmentList" :key="attachmentIndex" class="col-6"> -->
-							<!-- 					                		첫 번째 이미지는 그냥 모달로 보여줌 -->
-							<!-- 					                		<div v-if="attachmentIndex === 0"> -->
-							<!-- 					                			<img :src="getAttachmentUrl(attachmentNo)" @click="setModalImageUrl(attachmentNo)" class="img-fluid" style="max-width:100%;aspect-ratio:1/1;" alt="Attachment" data-bs-target="#image-modal" data-bs-toggle="modal"> -->
-							<!-- 					                		</div> -->
-							<!-- 					                		이후의 이미지는 swiper를 사용하여 보여줌 -->
-							<!-- 					                		<div v-else-if="attachmentIndex == 1 "> -->
-							<!-- 					                			<img :src="getAttachmentUrl(attachmentNo)" @click="setModalImageUrlList(post.attachmentList)" class="img-fluid" style="max-width:100%;aspect-ratio:1/1;" alt="Attachment" data-bs-target="#imageList-modal" data-bs-toggle="modal"> -->
-							<!-- 					                		</div> -->
-							<!-- 					                	</div> -->
-							<!-- 					                </div> -->
 
 							<!-- 이미지 출력 모달창 -->
 							<div class="modal" tabindex="-1" role="dialog" id="image-modal"
@@ -1121,78 +1107,11 @@
 									</div>
 								</div>
 							</div>
-							<!-- 다중 이미지 스와이핑 모달창 나중에 보자...-->
-							<!-- 					                <div class="modal" tabindex="-1" role="dialog" id="imageList-modal" -->
-							<!--                            					 data-bs-backdrop="true"  test> -->
-							<!--                            					 <div class="modal-dialog modal-lg" role="image"> -->
-							<!--                            					 	<div class="modal-content"> -->
-							<!--                            					 		header -->
-							<!-- 										            <div class="modal-header"> -->
-							<!-- 										                <h5 class="modal-title"><i class="fa-solid fa-xmark fa-lg grey" data-bs-dismiss="modal"></i></h5> -->
-							<!-- 										            </div> -->
-
-							<!-- 										            body -->
-							<!--                            					 		<div class="modal-body"> -->
-							<!-- 	                           					 		Slider main container -->
-							<!-- 														<div class="swiper-container w-100"> -->
-							<!-- 														  Additional required wrapper -->
-							<!-- 														  <div class="swiper-wrapper"> -->
-							<!-- 														  	<div class="swiper-slide mx-5"> -->
-							<!-- 														  		<img class="img-fluid" style="width:200px;height:200px;" src="https://cdn.pixabay.com/photo/2023/05/21/06/05/water-jet-8007873_640.jpg"> -->
-							<!-- 														  	</div> -->
-							<!-- 														  	<div class="swiper-slide mx-5"> -->
-							<!-- 														  		<img class="img-fluid" style="width:200px;height:200px;" src="https://cdn.pixabay.com/photo/2023/05/21/06/05/water-jet-8007873_640.jpg"> -->
-							<!-- 														  	</div> -->
-							<!-- 														  	<div class="swiper-slide mx-5"> -->
-							<!-- 														  		<img class="img-fluid"  style="width:200px;height:200px;" src="https://cdn.pixabay.com/photo/2023/05/21/06/05/water-jet-8007873_640.jpg"> -->
-							<!-- 														  	</div> -->
-							<!-- 														  	<div v-for="(modalImageUrlitem, urlIdx) in modalImageUrlList" :key="urlIdx"> -->
-							<!-- 														  		Slides -->
-							<!-- 														  		<div  class="swiper-slide" style="width:80%;height:80%;"> -->
-							<!-- 														  			<img v-if="urlIdx>0" :src="getAttachmentUrl(modalImageUrlitem)" class="swiper-slide img-fluid"> -->
-							<!-- 														  		</div> -->
-							<!-- 														  	</div> -->
-							<!-- 														  </div>													   -->
-							<!-- 														  If we need pagination -->
-							<!-- 														  <div class="swiper-pagination"></div> -->
-
-
-
-							<!-- 													  If we need scrollbar -->
-							<!-- 													  <div class="swiper-scrollbar"></div> -->
-							<!-- 														</div> -->
-							<!-- 													</div> -->
-
-							<!-- 													footer -->
-							<!-- 										            <div class="modal-footer"> -->
-							<!-- 										            If we need navigation buttons -->
-							<!-- 														  <div class="swiper-button-prev"></div> -->
-							<!-- 														  <div class="swiper-button-next"></div> -->
-							<!-- 										            </div> -->
-							<!--                            					 	</div>					 	 -->
-							<!--                            					 </div> -->
-							<!--                            			</div> -->
-
-
-
+							
 							<div
 								v-for="(attachmentNo, attachmentIndex) in post.attachmentList"
 								:key="attachmentIndex">
 								<!-- 일단 이미지만 -->
-
-
-
-								<!-- 					                	이미지인 경우 -->
-								<!-- 					                	<div v-if="checkFileType(attachmentNo) === 'image' "> -->
-								<!-- 					                		<img :src="getAttachmentUrl(attachmentNo)" class="mx-1 px-1"style="max-width:100%;max-height:100%" alt="Attachment"> -->
-								<!-- 					                	</div> -->
-								<!-- 					                	<div v-else-if="checkFileType(attachmentNo) === 'video'"> -->
-								<!-- 					                		<video :src="getAttachmentUrl(attachmentNo)" class="mx-1 px-1" style="max-width:100%;max-height:100%"  controls> -->
-								<!-- 				                		 	</video> -->
-								<!-- 					                	</div> -->
-								<!-- 					                	<div v-else-if="checkFileType(attachmentNo) === 'unknown'"> -->
-								<!-- 					                		<h1>언노운</h1> -->
-								<!-- 					                	</div>					                     -->
 							</div>
 							<br>
 						</div>
@@ -1265,16 +1184,27 @@
 
 									<!-- 댓글 프로필 이미지 -->
 									<div class="col-1 ">
-										<div class="row mt-2 text-center">
-											<!-- 프로필 사진이 있는 경우 -->
-											<img v-if="reply.attachmentNo && reply.attachmentNo != null"
-												class="rounded-circle img-fluid aspect-ratio aspect-ratio-1/1" 
+										<div class="row">
+											<div class="col-2">
+											</div>
+											<div class="col-9">
+												<div class="row mt-2 text-center rounded-circle " style="aspect-ratio:1/1; overflow:hidden;object-fit:fill;">
+												<!-- 프로필 사진이 있는 경우 -->
+												<img v-if="reply.attachmentNo && reply.attachmentNo != null"
+												class=" img-fluid p-0"
+												style="width:100%;height:100%;"
 												:src="getAttachmentUrl(reply.attachmentNo)">
 											
-											<!-- 프로필 사진이 없는 경우 -->
-											<img v-else class="rounded-circle img-fluid aspect-ratio aspect-ratio-1/1" 
+												<!-- 프로필 사진이 없는 경우 -->
+												<img v-else class="rounded-circle img-fluid"
+												 
 												src="static/image/profileDummy.png">
+												</div>
+											</div>
+											<div class="col-1">
+											</div>
 										</div>
+										
 									</div>
 
 									<!-- 댓글 상자 -->
@@ -1335,15 +1265,24 @@
 										<div class="row ">
 											<div class="col-1"></div>
 											<div class="col-1">
-												<div class="row my-2 text-center">
+												<div class="row">
+													<div class="col-2">
+													</div>
 													<!-- 대댓글 프로필 사진이 있는 경우 -->
-													<img v-if="rereply.attachmentNo && rereply.attachmentNo != null"
-														class="rounded-circle img-fluid aspect-ratio aspect-ratio-1/1"
-														:src="getAttachmentUrl(rereply.attachmentNo)">
-													
-													<!-- 대댓글 프로필 사진이 없는 경우 -->
-													<img v-else class="rounded-circle img-fluid aspect-ratio aspect-ratio-1/1" 
-														src="static/image/profileDummy.png">
+													<div class="col-9">
+														<div class="row my-2 text-center rounded-circle m" style="aspect-ratio:1/1; overflow:hidden;object-fit:fill;">
+														<img v-if="rereply.attachmentNo && rereply.attachmentNo != null"
+															class=" img-fluid p-0"
+															style="width:100%;height:100%;"
+															:src="getAttachmentUrl(rereply.attachmentNo)">
+														
+														<!-- 대댓글 프로필 사진이 없는 경우 -->
+														<img v-else class="rounded-circle img-fluid"															 
+															src="static/image/profileDummy.png">
+														</div>
+													</div>
+													<div class="col-1">
+													</div>
 												</div>
 											</div>
 											<div class="col-10">
@@ -1399,14 +1338,25 @@
 									<div class="row">
 										<div class="col-1"></div>
 										<div class="col-1">
-											<!-- 대댓글 작성 시, 프로필 사진이 있는 경우 -->  
-											<img v-if="sessionMemberAttachmentNo && sessionMemberAttachmentNo != null"
-												class="rounded-circle img-fluid aspect-ratio aspect-ratio-1/1"
-												:src="getAttachmentUrl(sessionMemberAttachmentNo)">
-											
-											<!-- 프로필 사진이 없는 경우 -->
-											<img v-else class="rounded-circle img-fluid aspect-ratio aspect-ratio-1/1"
-												src="static/image/profileDummy.png">
+											<div class="row">
+												<div class="col-2">
+												</div>
+												<div class="col-9">
+													<div class="row mt-2 text-center rounded-circle " style="aspect-ratio:1/1; overflow:hidden;object-fit:fill;">
+															<!-- 대댓글 작성 시, 프로필 사진이 있는 경우 -->  
+															<img v-if="sessionMemberAttachmentNo && sessionMemberAttachmentNo != null"
+																class=" img-fluid p-0"
+																style="width:100%;height:100%;"
+																:src="getAttachmentUrl(sessionMemberAttachmentNo)">
+															
+															<!-- 프로필 사진이 없는 경우 -->
+															<img v-else class="rounded-circle img-fluid"																
+															src="static/image/profileDummy.png">
+													</div>
+												</div>
+												<div class="col-1">
+												</div>
+											</div>
 										</div>
 										<div class="col-10 mt-1">
 
@@ -1452,15 +1402,21 @@
 
 										<!-- 댓글 프로필 이미지 -->
 										<div class="col-1">
-											<div class="row mt-2 text-center">
+											<div class="row">
+												<div class="col-2"></div>
 												<!-- 프로필 사진이 있는 경우 -->
-												<img v-if="reply.attachmentNo && reply.attachmentNo != null"
-													class="rounded-circle img-fluid aspect-ratio aspect-ratio-1/1"
-													:src="getAttachmentUrl(reply.attachmentNo)">
-												
-												<!-- 프로필 사진이 없는 경우 -->
-												<img v-else class="rounded-circle img-fluid aspect-ratio aspect-ratio-1/1"
-													src="static/image/profileDummy.png">
+												<div class="col-9">
+													<div class="row mt-2 text-center rounded-circle " style="aspect-ratio:1/1; overflow:hidden;object-fit:fill;">
+														<img v-if="reply.attachmentNo && reply.attachmentNo != null"
+															class=" img-fluid p-0" style="width:100%;height:100%;"
+															:src="getAttachmentUrl(reply.attachmentNo)">
+														
+														<!-- 프로필 사진이 없는 경우 -->
+														<img v-else class="rounded-circle img-fluid"
+														src="static/image/profileDummy.png">
+													</div>
+												</div>
+												<div class="col-1"></div>
 											</div>
 											
 											
@@ -1526,15 +1482,22 @@
 											<div class="row ">
 												<div class="col-1"></div>
 												<div class="col-1">
-													<div class="row my-2 text-center">
+													<div class="row">
+														<div class="col-2"></div>
 														<!-- 대댓글 프로필 사진이 있는 경우 -->
-														<img v-if="rereply.attachmentNo && rereply.attachmentNo != null"
-															class="rounded-circle img-fluid aspect-ratio aspect-ratio-1/1"
-															:src="getAttachmentUrl(rereply.attachmentNo)">
-														
-														<!-- 대댓글 프로필 사진이 없는 경우 -->
-														<img v-else class="rounded-circle img-fluid aspect-ratio aspect-ratio-1/1"
-															src="static/image/profileDummy.png">
+														<div class="col-9">
+															<div class="row mt-2 text-center rounded-circle " style="aspect-ratio:1/1; overflow:hidden;object-fit:fill;">
+																	<img v-if="rereply.attachmentNo && rereply.attachmentNo != null"
+																		class="rounded-circle img-fluid"
+																		:src="getAttachmentUrl(rereply.attachmentNo)">
+																	
+																	<!-- 대댓글 프로필 사진이 없는 경우 -->
+																	<img v-else class="rounded-circle img-fluid"
+																		style="max-width: 100%; min-width: 100%; aspect-ratio: 1/1;"
+																		src="static/image/profileDummy.png">
+															</div>
+														</div>
+														<div class="col-1"></div>
 													</div>
 												</div>
 												<div class="col-10">
@@ -1590,14 +1553,22 @@
 										<div class="row">
 											<div class="col-1"></div>
 											<div class="col-1">
-												<!-- 대댓글 작성 시, 프로필 사진이 있는 경우 -->  
-												<img v-if="sessionMemberAttachmentNo && sessionMemberAttachmentNo != null"
-													class="rounded-circle img-fluid aspect-ratio aspect-ratio-1/1"
-													:src="getAttachmentUrl(sessionMemberAttachmentNo)">
-												
-												<!-- 프로필 사진이 없는 경우 -->
-												<img v-else class="rounded-circle img-fluid aspect-ratio aspect-ratio-1/1"
-													src="static/image/profileDummy.png">
+												<div class="row">
+													<div class="col-2"></div>
+													<div class="col-9"></div>
+														<div class="row mt-2 text-center rounded-circle " style="aspect-ratio:1/1; overflow:hidden;object-fit:fill;">
+															<!-- 대댓글 작성 시, 프로필 사진이 있는 경우 -->  
+															<img v-if="sessionMemberAttachmentNo && sessionMemberAttachmentNo != null"
+															class="img-fluid p-0"
+															style="width:100%;height:100%;"
+															:src="getAttachmentUrl(sessionMemberAttachmentNo)">
+														
+															<!-- 프로필 사진이 없는 경우 -->
+															<img v-else class="rounded-circle img-fluid"															
+															src="static/image/profileDummy.png">
+														</div>
+													<div class="col-1"></div>
+												</div>												
 											</div>
 											<div class="col-10 mt-1">
 
@@ -1637,18 +1608,28 @@
 					<!-- 댓글, 대댓글 보여주는 창 (댓글이 다섯 개 이하일때) -->
 
 					<!-- 댓글 작성창  -->
-					<div class="row" v-if="replyFlagList[index]">
+					<div class="row" v-if="replyFlagList[index]" >
+<!-- 						<div class="col-1"></div> -->
 						<div class="col-1">
-							<!-- 대댓글 작성 시, 프로필 사진이 있는 경우 -->  
-							<img v-if="sessionMemberAttachmentNo && sessionMemberAttachmentNo != null"
-								class="rounded-circle img-fluid aspect-ratio aspect-ratio-1/1"
-								:src="getAttachmentUrl(sessionMemberAttachmentNo)">
-							
-							<!-- 프로필 사진이 없는 경우 -->
-							<img v-else class="rounded-circle img-fluid aspect-ratio aspect-ratio-1/1"
-								src="static/image/profileDummy.png">
+							<div class="row">
+<!-- 								<div class="col-2"></div> -->
+								<div class="col-12">
+									<div class="row mt-2 text-center rounded-circle m" style="aspect-ratio:1/1; overflow:hidden;object-fit:fill;">
+										<!-- 대댓글 작성 시, 프로필 사진이 있는 경우 -->  
+										<img v-if="sessionMemberAttachmentNo && sessionMemberAttachmentNo != null"
+											class=" img-fluid p-0"
+											style="width:100%;height:100%;"
+											:src="getAttachmentUrl(sessionMemberAttachmentNo)">
+									
+										<!-- 프로필 사진이 없는 경우 -->
+										<img v-else class="rounded-circle img-fluid "											
+											src="static/image/profileDummy.png">
+									</div>
+<!-- 								<div class="col-1"></div> -->
+								</div>
+							</div>
 						</div>
-						<div class="col-11 mt-1">
+						<div class="col-10 mt-1">
 							<div class="pt-2 ps-2 pe-2 w-100 rounded-4 grey-f5f5f5">
 
 								<div class="mt-1"></div>
