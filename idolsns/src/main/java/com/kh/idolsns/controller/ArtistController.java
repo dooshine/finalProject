@@ -17,14 +17,35 @@ public class ArtistController {
     @Autowired
     private ArtistRepo artistRepo;
 
-    @GetMapping("/{artistEngNameLower}")
-    public String home(@PathVariable String artistEngNameLower, Model model) throws NoHandlerFoundException{
+    @GetMapping("/{artistEngNameLower}/feed")
+    public String feed(@PathVariable String artistEngNameLower, Model model) throws NoHandlerFoundException{
+
+        System.out.println("artistEngNameLower: " + artistEngNameLower);
+        boolean isArtistExist = artistRepo.isArtistExistByArtistEngNameLower(artistEngNameLower);
+        if(!isArtistExist){
+            throw new NoHandlerFoundException(null, null, null);
+        }
+        model.addAttribute("artistEngNameLower", artistEngNameLower);
+        return "/artist/artistFeed";
+    }
+    @GetMapping("/{artistEngNameLower}/map")
+    public String map(@PathVariable String artistEngNameLower, Model model) throws NoHandlerFoundException{
 
         boolean isArtistExist = artistRepo.isArtistExistByArtistEngNameLower(artistEngNameLower);
         if(!isArtistExist){
             throw new NoHandlerFoundException(null, null, null);
         }
         model.addAttribute("artistEngNameLower", artistEngNameLower);
-        return "/artist/artistHome";
+        return "/artist/artistMap";
+    }
+    @GetMapping("/{artistEngNameLower}/fund")
+    public String fund(@PathVariable String artistEngNameLower, Model model) throws NoHandlerFoundException{
+
+        boolean isArtistExist = artistRepo.isArtistExistByArtistEngNameLower(artistEngNameLower);
+        if(!isArtistExist){
+            throw new NoHandlerFoundException(null, null, null);
+        }
+        model.addAttribute("artistEngNameLower", artistEngNameLower);
+        return "/artist/artistFund";
     }
 }
