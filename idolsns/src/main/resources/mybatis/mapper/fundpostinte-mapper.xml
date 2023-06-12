@@ -83,10 +83,9 @@
 		  		<if test="searchKeywordExist">
 		  			instr(fund_title, #{searchKeyword}) > 0
 						or
-					instr(tag_name, #{searchKeyword}) > 0
-						or
-					instr(member_id, #{searchKeyword}) > 0
+					instr(tag_names, #{searchKeyword}) > 0
 		  		</if>
+		  		
 		  	</where> 
 		  	
 		  	<!-- 정렬조건 유무 -->

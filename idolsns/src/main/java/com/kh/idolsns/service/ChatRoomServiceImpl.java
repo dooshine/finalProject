@@ -184,4 +184,21 @@ public class ChatRoomServiceImpl implements ChatRoomService {
 		}
 	}
 
+	// 상대방이 나간 1대1 채팅방에 메세지 보낼 때 상대방 재 초대
+	@Override
+	public void reinviteMember(ChatRoomProcessVO vo) {
+		int chatRoomNo = vo.getChatRoomNo();
+		String targetId = vo.getTargetId();
+		String memberId = vo.getMemberId();
+		ChatJoinDto joinDto = new ChatJoinDto();
+		joinDto.setChatRoomNo(chatRoomNo);
+		joinDto.setMemberId(targetId);
+		chatJoinRepo.joinChatRoom(joinDto);
+		ChatRoomPrivDto privDto = new ChatRoomPrivDto();
+		privDto.setChatRoomNo(chatRoomNo);
+		privDto.setChatRoomPrivI(targetId);
+		privDto.setChatRoomPrivU(memberId);
+		chatRoomPrivRepo.createRoom(privDto);
+	}
+
 }

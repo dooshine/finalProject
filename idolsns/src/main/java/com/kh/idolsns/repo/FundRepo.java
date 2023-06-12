@@ -18,6 +18,7 @@ public interface FundRepo {
    Integer selectTotal(Long postNo);
    FundDto find(Long fundNo);
    int count(Long postNo);
+   int likeCount(Long postNo);
    
 }
 
