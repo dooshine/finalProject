@@ -35,14 +35,17 @@
 				
 				
 				// 2-0. 고정 태그를 저장할 배열 선언 및 고정 태그 전역변수 fixedTag에 저정
-				let fixedTag = [];
+				let fixedTag = [];				
 				$(".fixed-tag-end").click(function(){
 					fixedTagInputs = $(".fixed-tag");
 					var temp = "";
 					fixedTagInputs.each(function(){
 						temp = $(this).text();
-						fixedTag.push(temp);
+						if(!fixedTag.includes(temp)){
+							fixedTag.push(temp);	
+						}						
 					})
+					
 				});
 
 				// 2. 태그를 저장할 배열 선언 및 태그 전역 변수 tag에 저장

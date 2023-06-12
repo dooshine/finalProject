@@ -479,7 +479,7 @@
 					<div class="col-6 col-md-6 col-lg-6 text-end fs-4">
 						<button type="button"
 							class="custom-btn btn-round btn-purple1 btn-sm write-finish mx-2"
-							data-bs-dismiss="modal">작성완료</button>
+							data-bs-dismiss="modal" @click="fetchNew()">작성완료</button>
 						<button type="button"
 							class="custom-btn btn-round btn-purple1 btn-sm"
 							data-bs-target="#modalmap" onclick="relayout();"
@@ -858,7 +858,7 @@
 							</div>
 						</div>
 						<div class="text-center mb-2">
-							<button class="mx-2 custom-btn btn-round btn-purple1" data-bs-dismiss="modal" @click="fetchPosts()" >네</button>							
+							<button class="mx-2 custom-btn btn-round btn-purple1" data-bs-dismiss="modal" @click="fetchNew()" >네</button>							
 						</div>
 					</div>
 				</div>
@@ -1305,16 +1305,16 @@
 										</div>
 
 										<!-- 댓글창 아이콘 -->
-										<div class="row d-flex flex-nowrap text-start">
+										<div class="col d-flex flex-nowrap text-start">
 											<!-- 				                				<h6 class="col-1 text-start reply-text" style="white-space: nowrap;">좋아요 </h6> -->
-											<h6 class="col-1 mt-1 reply-text text-secondary"
+											<h6 class="mx-1 mt-1 reply-text text-secondary"
 												style="white-space: nowrap">{{getTimeDifference(reply.replyTime)}}</h6>
-											<h6 class="col-1 mt-1 reply-text text-secondary"
+											<h6 class="mx-1 mt-1 reply-text text-secondary"
 												@click="showRereplyInput(post.postNo,reply.replyNo),hideReplyInput()"
 												style="white-space: nowrap; cursor: pointer;">댓글 달기</h6>
 											<!-- 댓글 삭제  -->
 											<h6 v-if="reply.replyId === memberId"
-												class="col-l mt-1 ms-3 reply-text text-danger"
+												class="mt-1 ms-2 reply-text text-danger"
 												style="cursor: pointer;" @click="deleteReply(reply.replyNo)">댓글
 												삭제</h6>
 										</div>
@@ -1371,15 +1371,15 @@
 												</div>
 
 												<!-- 대댓글창 아이콘 -->
-												<div class="row d-flex flex-nowrap text-start">
-													<h6 class="col-1 mt-1 reply-text text-secondary"
+												<div class="col d-flex flex-nowrap text-start">
+													<h6 class="mx-1  mt-1 reply-text text-secondary"
 														style="white-space: nowrap">{{getTimeDifference(rereply.replyTime)}}</h6>
-													<h6 class="col-1 mt-1 reply-text text-secondary"
+													<h6 class="mx-1  mt-1 reply-text text-secondary"
 														@click="showRereplyInput(post.postNo,reply.replyNo),hideReplyInput()"
 														style="white-space: nowrap; cursor: pointer;">댓글 달기</h6>
 													<!-- 대댓글 삭제  -->
 													<h6 v-if="rereply.replyId == memberId"
-														class="col-l mt-1 ms-3 reply-text text-danger"
+														class="mt-1 ms-2 reply-text text-danger"
 														style="cursor: pointer;"
 														@click="deleteRereply(rereply.replyNo)">댓글 삭제</h6>
 												</div>
@@ -1494,17 +1494,17 @@
 											</div>
 
 											<!-- 댓글창 아이콘 -->
-											<div class="row d-flex flex-nowrap text-start">
+											<div class="col d-flex flex-nowrap text-start">
 												<!-- 				                				<h6 class="col-1 text-start reply-text" style="white-space: nowrap;">좋아요 </h6> -->
-												<h6 class="col-1 mt-1 reply-text text-secondary"
+												<h6 class="mx-1  mt-1 reply-text text-secondary"
 													style="white-space: nowrap">{{getTimeDifference(reply.replyTime)
 													}}</h6>
-												<h6 class="col-1 mt-1 reply-text text-secondary"
+												<h6 class="mx-1  mt-1 reply-text text-secondary"
 													@click="showRereplyInput(post.postNo,reply.replyNo),hideReplyInput()"
 													style="white-space: nowrap; cursor: pointer;">댓글 달기</h6>
 												<!-- 댓글 삭제  -->
 												<h6 v-if="reply.replyId === memberId"
-													class="col-l mt-1 ms-3 reply-text text-danger"
+													class="mt-1 ms-2 reply-text text-danger"
 													style="cursor: pointer;"
 													@click="deleteReply(reply.replyNo)">댓글 삭제</h6>
 											</div>
@@ -1562,18 +1562,18 @@
 													</div>
 
 													<!-- 대댓글창 아이콘 -->
-													<div class="row d-flex flex-nowrap text-start">
+													<div class="col d-flex flex-nowrap text-start">
 														<h6
-															class="col-1 mt-1 reply-text text-secondary"
+															class="mx-1  mt-1 reply-text text-secondary"
 															style="white-space: nowrap">{{getTimeDifference(rereply.replyTime)
 															}}</h6>
 														<h6
-															class="col-1 mt-1 reply-text text-secondary"
+															class="mx-1  mt-1 reply-text text-secondary"
 															@click="showRereplyInput(post.postNo,reply.replyNo),hideReplyInput()"
 															style="white-space: nowrap; cursor: pointer;">댓글 달기</h6>
 														<!-- 대댓글 삭제  -->
 														<h6 v-if="rereply.replyId == memberId"
-															class="col-l mt-1 ms-3 reply-text text-danger"
+															class=" mt-1 ms-2 reply-text text-danger"
 															style="cursor: pointer;"
 															@click="deleteRereply(rereply.replyNo)">댓글 삭제</h6>
 													</div>
@@ -1869,6 +1869,14 @@
 	                this.firstMountFlag = true;
             	},
             	
+            	// 비동기 통신 후 최신화
+            	async fetchNew(){     
+                     const resp = await axios.get("http://localhost:8080/rest/post/pageReload/"+this.page);
+                     this.posts = resp.data;
+                     this.getLikePostIndex(this.posts);
+ 	                 this.getReplyAllList(this.posts);
+              	}, 
+            	
             	// 무한 스크롤용 페치 
             	async fetchScroll(){
             		if(this.loading == true) return;//로딩중이면
@@ -1901,7 +1909,7 @@
             		var postNo = this.deletePostNo;
                 	try{
                 		await axios.delete('http://localhost:8080/rest/post/'+postNo);
-                		this.fetchPosts();
+                		this.fetchNew();
                 	}
                 	catch (error){
                 		console.error(error);
@@ -1928,7 +1936,7 @@
 			    	
 			    },
 			    confirmUpdate(){
-			    	this.fetchPosts();
+			    	this.fetchNew();
 			    },
 			    
 				 // 이미지, 비디오 관련 
@@ -2006,7 +2014,7 @@
         			// 로그인 팔로우 정보 로드
         			this.memberFollowObj = resp.data;
         			//console.log(this.memberFollowObj);
-        			this.fetchPosts();
+        			this.fetchNew();
         			
         		},
         		
@@ -2032,7 +2040,7 @@
                    
 
                     this.loadMemberFollowInfo();
-                  	this.fetchPosts();
+                  	this.fetchNew();
                     
                 },
                 
@@ -2059,7 +2067,7 @@
                     });
                     
                     this.loadMemberFollowInfo();
-                  	this.fetchPosts();
+                  	this.fetchNew();
                 },
                 // 팔로우 관련 비동기 처리-----------------------------------
                 
@@ -2155,7 +2163,7 @@
                 	try{
                 		const replyDto = {postNo: postNo, replyContent:this.replyContent};
                     	const response = await axios.post('http://localhost:8080/rest/post/reply/',replyDto);
-                    	this.fetchPosts();
+                    	this.fetchNew();
                     }
                 	catch (error){
                 		console.error(error);
@@ -2190,7 +2198,7 @@
                 	try{
                 		const replyDto = {postNo: postNo, replyContent:this.rereplyContent, replyGroupNo: replyNo};
                     	const response = await axios.post('http://localhost:8080/rest/post/rereply/',replyDto);
-                    	this.fetchPosts();
+                    	this.fetchNew();
                     }
                 	catch (error){
                 		console.error(error);
@@ -2218,7 +2226,7 @@
                 async deleteReply(replyNo){
                 	try{
                 		await axios.delete('http://localhost:8080/rest/post/reply/delete/'+replyNo);
-                		this.fetchPosts();
+                		this.fetchNew();
                 	}
                 	catch (error){
                 		console.error(error);
@@ -2229,7 +2237,7 @@
                 async deleteRereply(replyNo){
                 	try{
                 		await axios.delete('http://localhost:8080/rest/post/reply/reDelete/'+replyNo);
-                		this.fetchPosts();
+                		this.fetchNew();
                 	}
                 	catch(error){
                 		console.error(error);

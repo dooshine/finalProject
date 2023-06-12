@@ -49,6 +49,92 @@
     border: none;
     box-shadow: none;
   } */
+  
+  .grey {
+	color: grey;
+}
+
+.grey-e0e0e0 {
+	background-color: #E0E0E0;
+}
+
+.grey-f5f5f5 {
+	background-color: #f5f5f5;
+}
+
+.fs-7 {
+	font-size: 10px;
+}
+
+.fs-18px {
+	font-size: 18px;
+}
+
+.fs-17px {
+	font-size: 17px;
+}
+
+.fs-16px {
+	font-size: 16px;
+}
+
+.fs-15px {
+	font-size: 15px;
+} 
+
+.fs-14px {
+	font-size: 14px;
+}
+
+.fs-13px {
+	font-size: 13px;
+}
+
+.fs-12px {
+	font-size: 12px;
+}
+
+.fs-11px {
+	font-size: 11px;
+}
+
+.fs-10px {
+	font-size: 10px;
+}
+.fs-9px {
+	font-size: 9px;
+}
+.fs-8px {
+	font-size: 8px;
+}
+.fs-7px {
+	font-size: 7px;
+}
+.fs-6px {
+	font-size: 6px;
+}
+.h-20 {
+	height: 20px;
+}
+
+.reply-text {
+	font-size: 14px;
+}
+
+.post-modal {
+	z-index: 9999;
+	position: absolute;
+}
+
+.post-modal-content {
+	box-shadow: 0px 3px 4px rgba(3, 21, 17, 0.1);
+	background-color: white;
+	padding: 24px;
+	border-radius: 0.5rem;
+	border-width: 1px;
+	/* 		  border-color: black; /* 테두리 색상 지정 */
+	border-style: solid;
+}
 </style>
 
 <!-- 컨테이너 -->
@@ -361,7 +447,7 @@
 							</div>
 						</div>
 						<div class="text-center mb-2">
-							<button class="mx-2 custom-btn btn-round btn-purple1" data-bs-dismiss="modal" @click="fetchPosts()" >네</button>							
+							<button class="mx-2 custom-btn btn-round btn-purple1" data-bs-dismiss="modal" @click="fetchNew()" >네</button>							
 						</div>
 					</div>
 				</div>
@@ -1384,7 +1470,7 @@
     		var postNo = this.deletePostNo;
         	try{
         		await axios.delete('http://localhost:8080/rest/post/'+postNo);
-        		this.fetchPosts();
+        		this.fetchNew();
         	}
         	catch (error){
         		console.error(error);
@@ -1411,7 +1497,7 @@
 	    	
 	    },
 	    confirmUpdate(){
-	    	this.fetchPosts();
+	    	this.fetchNew();
 	    },
 	    
 		 // 이미지, 비디오 관련 
@@ -1489,7 +1575,7 @@
 			// 로그인 팔로우 정보 로드
 			this.memberFollowObj = resp.data;
 			//console.log(this.memberFollowObj);
-			this.fetchPosts();
+			this.fetchNew();
 			
 		},
 		
@@ -1515,7 +1601,7 @@
            
 
             this.loadMemberFollowInfo();
-          	this.fetchPosts();
+          	this.fetchNew();
             
         },
         
@@ -1542,7 +1628,7 @@
             });
             
             this.loadMemberFollowInfo();
-          	this.fetchPosts();
+          	this.fetchNew();
         },
         // 팔로우 관련 비동기 처리-----------------------------------
         
@@ -1638,7 +1724,7 @@
         	try{
         		const replyDto = {postNo: postNo, replyContent:this.replyContent};
             	const response = await axios.post('http://localhost:8080/rest/post/reply/',replyDto);
-            	this.fetchPosts();
+            	this.fetchNew();
             }
         	catch (error){
         		console.error(error);
@@ -1673,7 +1759,7 @@
         	try{
         		const replyDto = {postNo: postNo, replyContent:this.rereplyContent, replyGroupNo: replyNo};
             	const response = await axios.post('http://localhost:8080/rest/post/rereply/',replyDto);
-            	this.fetchPosts();
+            	this.fetchNew();
             }
         	catch (error){
         		console.error(error);
@@ -1701,7 +1787,7 @@
         async deleteReply(replyNo){
         	try{
         		await axios.delete('http://localhost:8080/rest/post/reply/delete/'+replyNo);
-        		this.fetchPosts();
+        		this.fetchNew();
         	}
         	catch (error){
         		console.error(error);
@@ -1712,7 +1798,7 @@
         async deleteRereply(replyNo){
         	try{
         		await axios.delete('http://localhost:8080/rest/post/reply/reDelete/'+replyNo);
-        		this.fetchPosts();
+        		this.fetchNew();
         	}
         	catch(error){
         		console.error(error);
@@ -2005,6 +2091,22 @@
           }
           this.firstMountFlag = true;
         },
+        
+        async fetchNew(){
+            // q
+            const params = new URLSearchParams(window.location.search);
+            const q = params.get("q");
+
+            // url
+            const url = "http://localhost:8080/rest/post/pageReload/fixedTagPost";
+           
+            // 조회
+            const resp = await axios.post(url, { page: this.postPage, fixedTagName: q } );
+
+            this.posts = resp.data;
+            this.getLikePostIndex(this.posts);
+            this.getReplyAllList(this.posts);
+          },
         getAttachmentUrl(attachmentNo) {		
           return "http://localhost:8080/rest/attachment/download/"+attachmentNo;
         },

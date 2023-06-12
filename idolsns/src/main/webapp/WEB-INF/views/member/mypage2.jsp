@@ -2,7 +2,14 @@
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>   
 <jsp:include page="/WEB-INF/views/template/header.jsp"></jsp:include> 
-
+<!-- 카카오 api 키 등록 -->
+<script
+	src="//dapi.kakao.com/v2/maps/sdk.js?appkey=047888df39ba653ff171c5d03dc23d6a&libraries=services"></script>
+<!-- 카카오 API구현 JS -->
+<script src="${pageContext.request.contextPath}/static/js/post-map.js"></script>	
+<!-- 맵 관련 css -->
+<link rel="stylesheet" type="text/css"
+	href="${pageContext.request.contextPath}/static/css/map.css">
    <style>
       .profile-image-wrapper {
           position: relative;
@@ -602,7 +609,7 @@
 							</div>
 						</div>
 						<div class="text-center mb-2">
-							<button class="mx-2 custom-btn btn-round btn-purple1" data-bs-dismiss="modal" @click="fetchPosts()" >네</button>							
+							<button class="mx-2 custom-btn btn-round btn-purple1" data-bs-dismiss="modal" @click="fetchNew()()" >네</button>							
 						</div>
 					</div>
 				</div>
@@ -1999,6 +2006,18 @@
   	                 }
   	              	 this.firstMountFlag = true;
               	},
+              	// fetchNew()
+              	async fetchNew(){
+              		var likedPostData ={
+                      		page: this.page,
+                      		pageMemberId: this.pageMemberId
+                      };
+                                            
+                     const resp = await axios.post("http://localhost:8080/rest/post/pageReload/memberLikePost",likedPostData);
+                     this.posts = resp.data;
+                     this.getLikePostIndex(this.posts);
+ 	                 this.getReplyAllList(this.posts);
+              	}, 
             	// 무한 스크롤용 페치 
             	async fetchScroll(){
             		if(this.loading == true) return;//로딩중이면
@@ -2040,7 +2059,7 @@
             		var postNo = this.deletePostNo;
                 	try{
                 		await axios.delete('http://localhost:8080/rest/post/'+postNo);
-                		this.fetchPosts();
+                		this.fetchNew()();
                 	}
                 	catch (error){
                 		console.error(error);
@@ -2067,7 +2086,7 @@
 			    	
 			    },
 			    confirmUpdate(){
-			    	this.fetchPosts();
+			    	this.fetchNew()();
 			    },
 			    
 				 // 이미지, 비디오 관련 
@@ -2145,7 +2164,7 @@
         			// 로그인 팔로우 정보 로드
         			this.memberFollowObj = resp.data;
         			//console.log(this.memberFollowObj);
-        			this.fetchPosts();
+        			this.fetchNew()();
         			
         		},
         		
@@ -2171,7 +2190,7 @@
                    
 
                     this.loadMemberFollowInfo();
-                  	this.fetchPosts();
+                  	this.fetchNew()();
                     
                 },
                 
@@ -2198,7 +2217,7 @@
                     });
                     
                     this.loadMemberFollowInfo();
-                  	this.fetchPosts();
+                  	this.fetchNew()();
                 },
                 // 팔로우 관련 비동기 처리-----------------------------------
                 
@@ -2294,7 +2313,7 @@
                 	try{
                 		const replyDto = {postNo: postNo, replyContent:this.replyContent};
                     	const response = await axios.post('http://localhost:8080/rest/post/reply/',replyDto);
-                    	this.fetchPosts();
+                    	this.fetchNew()();
                     }
                 	catch (error){
                 		console.error(error);
@@ -2329,7 +2348,7 @@
                 	try{
                 		const replyDto = {postNo: postNo, replyContent:this.rereplyContent, replyGroupNo: replyNo};
                     	const response = await axios.post('http://localhost:8080/rest/post/rereply/',replyDto);
-                    	this.fetchPosts();
+                    	this.fetchNew()();
                     }
                 	catch (error){
                 		console.error(error);
@@ -2357,7 +2376,7 @@
                 async deleteReply(replyNo){
                 	try{
                 		await axios.delete('http://localhost:8080/rest/post/reply/delete/'+replyNo);
-                		this.fetchPosts();
+                		this.fetchNew()();
                 	}
                 	catch (error){
                 		console.error(error);
@@ -2368,7 +2387,7 @@
                 async deleteRereply(replyNo){
                 	try{
                 		await axios.delete('http://localhost:8080/rest/post/reply/reDelete/'+replyNo);
-                		this.fetchPosts();
+                		this.fetchNew()();
                 	}
                 	catch(error){
                 		console.error(error);
