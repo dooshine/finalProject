@@ -78,7 +78,7 @@
 			
 	  	<div style="font-size:20px;">
         	<p class="container rounded p-3 border">내 스타: 
-        	<span class="amount" style="color:#77E9CC; font-weight:bold;">{{ formattedAmount }}</span>스타</p>
+        	<span class="amount" style="color:#6A53FB; font-weight:bold;">{{ formattedAmount }}</span>스타</p>
         </div>	
 			
 			
