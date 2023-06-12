@@ -1150,6 +1150,7 @@
 								</div>
 							</div>
 
+
 							<!-- 이미지 출력 모달창 -->
 							<div class="modal" tabindex="-1" role="dialog" id="image-modal"
 								data-bs-backdrop="true">
