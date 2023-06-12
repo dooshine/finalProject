@@ -63,7 +63,7 @@
       </table>
      
       
-	<div class="d-flex justify-content-end">
+	<div class="d-flex justify-content-end mb-5">
 		<a :href="'history'">
 	      <button class="custom-btn-sm btn-purple1">
 			결제 내역
@@ -80,7 +80,7 @@
       </template>
       <!-- 7일 경과 후 충전 취소 안내 문구 -->
       <template v-if="isCancellationDisabled && paymentDto.paymentRemain > 0">
-        <p class="font-bold start" style="color: red; font-size: 15px">
+        <p class="font-bold start" style="color: red; font-size: 15px;">
           결제 7일 경과 후 충전 취소가 불가합니다.
         </p>
       </template>
