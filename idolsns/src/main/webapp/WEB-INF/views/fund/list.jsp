@@ -233,7 +233,7 @@
 						
 			             	<!-- 검색창 -->
 		               	<div class="search-box w-35 me-2 justify-content-end">
-		                    <input class="search-input" type="text" v-model="searchQuery" placeholder="검색창" 
+		                    <input class="search-input" type="text" v-model="searchQuery" placeholder="검색" 
 		                    @keyup.enter="fetchOrderedFundingList" @input="finish=false">
 	                	</div>
 	             
