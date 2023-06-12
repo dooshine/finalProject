@@ -2020,6 +2020,7 @@
                                             
 	                  const resp = await axios.post("http://localhost:8080/rest/post/pageReload/memberWritePost",writePostData);
   	                 this.posts = resp.data;
+  	                 console.log("게시물은 "+this.posts);
   	                 this.getLikePostIndex(this.posts);
 	                 this.getReplyAllList(this.posts);
   	                 this.page++;
@@ -2188,8 +2189,7 @@
 
         			// 로그인 팔로우 정보 로드
         			this.memberFollowObj = resp.data;
-        			//console.log(this.memberFollowObj);
-        			this.fetchNew()();
+        			//console.log(this.memberFollowObj);        			
         			
         		},
         		

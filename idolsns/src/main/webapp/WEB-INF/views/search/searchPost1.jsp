@@ -1523,26 +1523,7 @@
 
 
     	
-    	// 무한 스크롤용 페치 
-    	async fetchScroll(){
-    		if(this.loading == true) return;//로딩중이면
-            if(this.finish == true) return;//다 불러왔으면
-            
-            this.loading = true;
-            
-            // 1페이지 부터 현재 페이지 까지 전부 가져옴 
-            const resp = await axios.get("http://localhost:8080/rest/post/pageReload/"+this.page);
-            this.posts = resp.data;
-            this.getLikePostIndex(this.posts);
-            this.getReplyAllList(this.posts);
-            this.postPage++;
-            
-            this.loading=false;
-            
-            if(resp.data.length < 10){
-            	this.finish = true;
-            }
-    	},
+    	
     	
     	// 게시글 작성 시 글타입을 표현하기 위한 함수
     	setPostType(type){
@@ -2191,7 +2172,35 @@
             this.posts = resp.data;
             this.getLikePostIndex(this.posts);
             this.getReplyAllList(this.posts);
-          },
+        },
+	     // 무한 스크롤용 페치 
+	    async fetchScroll(){
+    		if(this.loading == true) return;//로딩중이면
+            if(this.finish == true) return;//다 불러왔으면
+            
+         	// q
+            const params = new URLSearchParams(window.location.search);
+            const q = params.get("q");
+            
+            this.loading = true;
+            
+            const url = "http://localhost:8080/rest/post/pageReload/fixedTagPost";
+            
+     	    // 조회
+            const resp = await axios.post(url, { page: this.postPage, fixedTagName: q } );
+
+            this.postPage++;
+            this.posts = resp.data;
+            this.getLikePostIndex(this.posts);
+            this.getReplyAllList(this.posts);
+            this.loading=false;
+            if(resp.data.length < 10){
+            	this.finish = true;
+            }
+            this.firstMountFlag = true;
+	    },  
+          
+          
         getAttachmentUrl(attachmentNo) {		
           return "http://localhost:8080/rest/attachment/download/"+attachmentNo;
         },

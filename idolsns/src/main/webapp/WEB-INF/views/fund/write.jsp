@@ -175,7 +175,7 @@ $(function(){
 	    <div class="input-group mb-3">
 		  <span class="input-group-text" id="inputGroup-sizing-default">태그</span>
 		  <input type="text" @input="findFixedTagName = $event.target.value" v-model="findFixedTagName"
-		  	name="fundGoal" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default">
+		  	class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default">
 		</div>
 		
 		
@@ -187,9 +187,9 @@ $(function(){
 	    </div>
 	    <div class="row">
 	        <div class="col">
-	            <div class="fixed-tag" v-for="(newFixedTag, i) in newFixedTagList"
+	            <span class="fixed-tag me-1" v-for="(newFixedTag, i) in newFixedTagList"
 	            				@click="deleteTag(i)">{{ newFixedTag }}</div>
-	        </div>
+	        </span>
 	    </div>
 
 

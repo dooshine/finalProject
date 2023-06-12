@@ -5,7 +5,7 @@
 <jsp:include page="/WEB-INF/views/template/header.jsp"></jsp:include>
 
 <!-- 제어영역 설정 -->
-<div class="" id="app">
+<div style="padding: 24px;" id="app">
     <!-- # 신고조회 타이틀 -->
     <nav aria-label="...">
         <ul class="pagination">
