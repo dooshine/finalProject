@@ -337,16 +337,26 @@ public class PostRestController {
     	Integer page = (Integer) writePostData.get("page"); 
     	String writeMemberId = (String) writePostData.get("pageMemberId");
     	List<PostShowVO> posts = postShowService.writedPostShowByPagingReload(page, writeMemberId);
+    	for(PostShowVO post : posts) {
+    		System.out.println(post);
+    	}
     	return posts;
+    	
     }
     
     // 특정 고정태그 게시물
     @PostMapping("/pageReload/fixedTagPost")
     public List<PostShowVO> fixedTagPostListReload(@RequestBody Map<String,Object> fixedTagPostData){
+    	
     	Integer page = (Integer) fixedTagPostData.get("page"); 
-    	String tagName = (String) fixedTagPostData.get("fixedTagName");
-    	List<PostShowVO> posts = postShowService.fixedTagPostShowByPagingReload(page, tagName);
-    	System.out.println(posts);
+    	String fixedTagName = (String) fixedTagPostData.get("fixedTagName");
+    	System.out.println("답을 알려줘 page는 "+page);
+    	System.out.println("키키키");
+    	System.out.println("답을 알려줘 fixedTagName는 "+fixedTagName);
+    	
+    	List<PostShowVO> posts = postShowService.fixedTagPostShowByPagingReload(page, fixedTagName);
+    	
+    	
     	return posts;
     }
     
