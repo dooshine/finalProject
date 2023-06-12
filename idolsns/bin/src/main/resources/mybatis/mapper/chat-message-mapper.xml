@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+<mapper namespace="chatMessage">
+
+	<!-- 메세지 번호 시퀀스 뽑기 -->
+	<select id="sequence" resultType="int">
+		select chat_message_seq.nextval from dual
+	</select>
+
+	<!-- 보낸 메세지 저장 -->
+	<insert id="sendMessage">
+		insert into chat_message(
+				chat_room_no, chat_message_no, member_id, 
+				chat_message_time, chat_message_content, 
+				attachment_no, chat_message_type
+			)
+		values(
+				#{chatRoomNo}, #{chatMessageNo}, #{memberId}, 
+				sysdate, #{chatMessageContent}, 
+				null, #{chatMessageType}
+			)
+	</insert>
+	
+	<!-- 보낸 이미지 저장 -->
+	<insert id="sendPic">
+		insert into chat_message(
+				chat_room_no, chat_message_no, member_id, 
+				chat_message_time, chat_message_content, 
+				attachment_no, chat_message_type
+			)
+		values(
+				#{chatRoomNo}, #{chatMessageNo}, #{memberId}, 
+				sysdate, #{chatMessageContent}, 
+				#{attachmentNo}, 4
+			)
+	</insert>
+	
+	<!-- 메세지 불러오기 -->
+	<select id="listMessage" resultType="ChatMessageDto">
+		select * from chat_message 
+		where chat_room_no = #{chatRoomNo} and chat_message_time >= #{chatMessageTime}
+		order by chat_message_no asc
+	</select>
+	
+	<!-- 보낸 메세지 삭제 -->
+	<delete id="deleteMessage">
+		delete chat_message where chat_message_no = #{chatMessageNo}
+	</delete>
+
+</mapper>
+    
