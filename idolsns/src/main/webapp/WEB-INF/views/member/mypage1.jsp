@@ -1636,6 +1636,7 @@
               	memberId:null,
               	// 어느 아이디 페이진지
               	pageMemberId:null,
+              	pageMemberNick:null,
               	// 모달 이미지 URL
               	modalImageUrl:null,
               	modalImageUrlList:[],
@@ -2573,6 +2574,15 @@
             			this.pageMemberId = null;
             		}
             	},
+            	setPageMemberNick(){
+            		const pageMemberNick = '${pageMemberNick}';
+            		if (pageMemberNick && pageMemberNick !== null){
+            			this.pageMemberNick = pageMemberNick;
+            		}
+            		else{
+            			this.pageMemberNick = null;
+            		}
+            	},
             	async loadFindFixedTagList(){
                     if(this.findFixedTagName.length == 0) return;
 
@@ -2726,8 +2736,10 @@
                       },
             },
             created(){
+            	
             this.setId();
             this.setPageMemberId();
+            this.setPageMemberNick();
             this.profileImage();
        		this.pageListProfile();
        		this.mypageCheck();
@@ -2742,7 +2754,7 @@
             },
             
             mounted() {
-            //    this.profile();
+               this.profile();
                this.followList();
                this.followListProfile();
            	   this.followerListProfile();
