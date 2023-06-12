@@ -441,9 +441,9 @@
 					<!--         -->
 					<div class="row">
 						<div class="col">
-							<button
-								class="custom-btn btn-purple1 btn-sm rounded-pill mx-2 my-2 fixed-tag">
-								{{postType}}</button>
+<!-- 							<button -->
+<!-- 								class="custom-btn btn-purple1 btn-sm rounded-pill mx-2 my-2 fixed-tag"> -->
+<!-- 								{{postType}}</button> -->
 							<button
 								class="custom-btn btn-purple1 btn-sm rounded-pill mx-2 my-2 fixed-tag"
 								v-for="(newFixedTag, i) in newFixedTagList">{{
@@ -667,7 +667,7 @@
 						<div class="text-center ">
 							<button
 								class="custom-btn btn-round btn-purple1 btn-sm col-3 mx-3"
-								data-bs-dismiss="modal">확인</button>
+								data-bs-dismiss="modal" @click="fetchNew()">확인</button>
 						</div>
 					</div>
 				</div>
@@ -881,21 +881,21 @@
 			<div class="row mt-1">			
 				<div class="col-1 col-md-1 col-lg-1 d-flex align-items-center justify-content-center">
 					<!-- 프로필 사진이 있는 경우 -->
-					<img v-if="post.attachmentNo && post.attachmentNo != null"
+					<img v-if="post.attachmentNo && post.attachmentNo != null" @click="toMemberPage(post.memberId)"
 						class="rounded-circle img-fluid" style="max-width: 100%; min-width: 100%; aspect-ratio: 1/1;"
 						:src="getAttachmentUrl(post.attachmentNo)">
 					
 					<!-- 프로필 사진이 없는 경우 -->
 					<img v-else class="rounded-circle img-fluid" style="max-width: 100%; min-width: 100%; aspect-ratio: 1/1;"
-						src="static/image/profileDummy.png">
+						@click="toMemberPage(post.memberId)" src="static/image/profileDummy.png">
 				</div>
 				<div class="col-5 col-md-5 col-lg-5 align-middle justify-content-center">
 
 					<div class="row">
-						<h4>{{ post.memberNick}}</h4>
+						<h4 @click="toMemberPage(post.memberId)">{{ post.memberNick}}</h4>
 					</div>
 					<div class="row">
-						<p class="text-secondary">@{{post.memberId}}
+						<p class="text-secondary" @click="toMemberPage(post.memberId)">@{{post.memberId}}
 							{{getTimeDifference(post.postTime) }}</p>
 
 					</div>
@@ -928,7 +928,7 @@
 					class="col-1 col-md-1 col-lg-1 d-flex align-items-start justify-content-end">
 					<i class="fs-3 text-secondary ti ti-dots-vertical"
 						@click="setPostModalIndex(index)" data-toggle="dropdown"></i>
-					<!-- 			               <i class="ti ti-x" @click="deletePost(post.postNo)"></i> -->
+					
 					<div v-if="index === getPostModalIndex()" class="post-modal">
 						<div class="mt-3 mr-4"></div>
 						<div class="post-modal-content">
@@ -1046,7 +1046,34 @@
 				</div>
 			</div>
 			<!-- 지도 맵이 있는 경우에만 지도 정보 표기 -->
-
+			
+			
+			<!-- 행사일정이나, 같이가요인 경우에만 정보 표기  -->			
+			<!-- 행사일정  -->
+			<div class="row my-2"
+				v-if="post.scheduleStart && post.scheduleStart !== '' && post.scheduleStart !== null && post.scheduleStart !== undefined">
+				<div class="col-1 col-md-1 col-lg-1 d-flex align-items-center justify-content-center">
+				</div>
+				<div class="col-10 col-md-10 col-lg-10 d-flex align-items-center justify-content-start fs-6 text-secondary ">
+					<i class="ti ti-calendar-event"></i>&nbsp;{{post.scheduleStart}} ~ {{post.scheduleEnd}}
+				</div>
+				<div
+					class="col-1 col-md-1 col-lg-1 d-flex align-items-center justify-content-center">
+				</div>
+			</div>			
+			<!-- 같이가요 -->
+			<div class="row my-2"
+				v-if="post.togetherStart && post.togetherStart !== '' && post.togetherStart !== null && post.togetherStart !== undefined">
+				<div class="col-1 col-md-1 col-lg-1 d-flex align-items-center justify-content-center">
+				</div>
+				<div class="col-10 col-md-10 col-lg-10 d-flex align-items-center justify-content-start fs-6 text-secondary ">
+					<i class="ti ti-calendar-event"></i>&nbsp;{{post.togetherStart}} ~ {{post.togetherEnd}}
+				</div>
+				<div
+					class="col-1 col-md-1 col-lg-1 d-flex align-items-center justify-content-center">
+				</div>
+			</div>
+			<!-- 행사일정이나, 같이가요인 경우에만 정보 표기  -->
 
 			<!-- 글 내용 -->
 			<div class="row my-2">
@@ -2261,6 +2288,7 @@
              	// 게시글 삭제 ----------------------------------
              	setDeletePostNo(postNo){
   					this.deletePostNo = postNo;
+  					console.log("삭제번호는"+postNo);
   					this.hidePostModal();
              	},
              	             	
@@ -2429,9 +2457,15 @@
                		}
                		// 일정 등록 모달 닫기
                	    $("#addCalendarPostModal").modal("hide");
+               		
                 },
                 moveFocusToMemo() {
                 	document.getElementById("calendarMemoPost").focus();
+                },
+                // 해당 맴버가 쓴 글 페이지로 
+                toMemberPage(memberId){
+                	const url = 'http://localhost:8080/member/mypage2/'+memberId;
+                	window.location.href = url;
                 },
             },
             watch:{
