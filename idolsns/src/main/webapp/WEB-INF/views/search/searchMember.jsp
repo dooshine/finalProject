@@ -56,19 +56,20 @@
         </thead>
         <tbody>
           <tr v-for="(memberSearch, i) in memberSearchList" :key="i">
-            <td class="cursor-pointer">
+            <td class="cursor-pointer" @click="moveToMemberPage" :href="memberSearch.memberId">
               <div class="search-table-col">
                 <img :src="memberSearch.attachmentNo === 0 ? '/static/image/profileDummy.png' : '/download/?attachmentNo=' + memberSearch.attachmentNo" style="height: 50px; width: 50px;">
               </div>
             </td>
-            <td class="cursor-pointer">
+            <td class="cursor-pointer" @click="moveToMemberPage" :href="memberSearch.memberId">
               <div class="search-table-col">
                 {{fullName(memberSearch.memberId, memberSearch.memberNick)}}
               </div>
             </td>
             <td>
               <div class="search-table-col">
-                <button class="btn rounded-pill" :class="{'btn-primary':!memberSearch.isFollowMember, 'btn-secondary': memberSearch.isFollowMember}"  v-text="memberSearch.isFollowMember?'팔로우취소':'팔로우하기'" @click="followMember(memberSearch)">팔로우하기</button>
+                <button class="btn rounded-pill" :class="{'btn-primary':!memberSearch.isFollowMember, 'btn-secondary': memberSearch.isFollowMember}"  v-text="memberSearch.isFollowMember?'팔로우취소':'팔로우하기'"></button>
+                <%-- <button class="btn rounded-pill" :class="{'btn-primary':!memberSearch.isFollowMember, 'btn-secondary': memberSearch.isFollowMember}"  v-text="memberSearch.isFollowMember?'팔로우취소':'팔로우하기'" @click="followMember(memberSearch)">팔로우하기</button> --%>
               </div>
             </td>
           </tr>
@@ -156,6 +157,7 @@
 
             // artistEngNameLower
             // 2. toggle 팔로우 삭제, 팔로우 생성
+            console.log("이거 실행되니?")
             const isFollowingMember = memberSearch.isFollowMember;
             if(isFollowingMember){
                 if(!confirm(this.fullName(memberSearch.memberId, memberSearch.memberNick) + "님 팔로우를 취소하시겠습니까?")) return;
@@ -204,6 +206,11 @@
         // 풀네임 생성
         fullName(name, engName){
           return name + "(" + engName + ")";
+        },
+
+        // 회원페이지로 이동
+        moveToMemberPage(){
+          window.location.href = contextPath + "/member/mypage2/" + event.currentTarget.getAttribute("href");
         },
 
       },
