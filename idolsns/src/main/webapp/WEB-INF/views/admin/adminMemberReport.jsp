@@ -133,7 +133,7 @@
             <!-- 검색버튼 -->
             <div class="row mt-3 text-end">
                 <div class="col">
-                    <button class="btn btn-success" type="button" @click="searchMember">검색하기</button>
+                    <button class="btn-round btn-purple1" type="button" @click="searchMember">검색하기</button>
                 </div>
             </div>
         </div>

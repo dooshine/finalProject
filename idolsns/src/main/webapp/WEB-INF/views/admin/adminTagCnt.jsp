@@ -40,7 +40,7 @@
             </div>
             <div class="row mt-3">
                 <div class="offset-11 col-1">
-                    <button class="btn btn-primary" @click="loadTagCntList">검색</button>
+                    <button class="btn-round btn-purple1" @click="loadTagCntList">검색</button>
                 </div>
             </div>
         </div>
