@@ -1,4 +1,4 @@
-000<%@ page language="java" contentType="text/html; charset=UTF-8"
+<%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>   
 <jsp:include page="/WEB-INF/views/template/header.jsp"></jsp:include> 
@@ -259,11 +259,20 @@
 		                  </div>
 		                  <div class="modal-body text-left">
 		                     <div v-for="(board,index) in FollowListProfile"  :key="index">
-		                     <img :src="getAttachmentUrl(board.attachmentNo)" class="profile-image" style="width:54px; height:54px;">
-		                     <a :href="'/member/mypage/' + board.followTargetPrimaryKey">
+		                     <div class="row align-items-center">
+		                     <div class="col-3">
+		                     <img :src="getAttachmentUrl(board.attachmentNo)" class="profile-image" style="width:54px; height:54px; margin-left:20px; margin-bottom:10px;">
+		                     </div>
+		                     <div class="col-3">
+		                     <a :href="'/member/mypage2/' + board.followTargetPrimaryKey"  style="color:black; font-size:20px; text-decoration:none;">
 							    <span>{{board.followTargetPrimaryKey}}</span>
 							</a>
-		                    <button @click="deleteFollow(board.followNo)">팔로잉</button>
+		                     </div>
+		                     <div class="col-3"></div>
+		                     <div class="col-3 ">
+		                    <button v-if="mypage" class="btn-round btn-purple1-secondary" @click="deleteFollow(board.followNo)"  style="margin-left:30px; padding: 10px 20px; font-size: 15px;">삭제</button>
+		                     </div>
+		                    </div>
 		                     </div>
 		                  </div>
 		               </div>
@@ -279,11 +288,20 @@
 		                  </div>
 		                  <div class="modal-body text-left">
 		                     <div v-for="(board,index) in FollowerListProfile"  :key="index">
-		                     <img :src="getAttachmentUrl(board.attachmentNo)" class="profile-image" style="width:54px; height:54px;">
-		                     <a :href="'/member/mypage/' + board.memberId">
-		                    <span> {{board.memberId}}</span>
-		                    </a>
-		                    <button @click="deleteFollow(board.followNo)">팔로잉</button>
+		                     <div class="row align-items-center">
+		                     <div class="col-3">
+		                     <img :src="getAttachmentUrl(board.attachmentNo)" class="profile-image" style="width:54px; height:54px; margin-left:20px; margin-bottom:10px;">
+		                     </div>
+		                     <div class="col-3">
+		                     <a :href="'/member/mypage2/' + board.memberId"  style="color:black; font-size:20px; text-decoration:none;">
+							    <span>{{board.memberId}}</span>
+							</a>
+		                     </div>
+		                     <div class="col-3"></div>
+		                     <div class="col-3 ">
+		                    <button v-if="mypage" class="btn-round btn-purple1-secondary" @click="deleteFollow(board.followNo)"  style="margin-left:30px; padding: 10px 20px; font-size: 15px;">삭제</button>
+		                     </div>
+		                    </div>
 		                     </div>
 		                  </div>
 		               </div>
@@ -298,11 +316,20 @@
 		                  </div>
 		                  <div class="modal-body text-left">
 		                     <div v-for="(board,index) in PageListProfile"  :key="index">
-		                    <img :src="getAttachmentUrl(board.attachmentNo)" class="profile-image" style="width:54px; height:54px;">
-		                    <a :href="'/artist/' + board.followTergetPrimarykey">
-		                    <span> {{board.followTargetPrimaryKey}}</span>
-		                    </a>
-		                    <button @click="deleteFollow(board.followNo)">팔로잉</button>
+		                     <div class="row align-items-center">
+		                     <div class="col-3">
+		                     <img :src="getAttachmentUrl(board.attachmentNo)" class="profile-image" style="width:54px; height:54px; margin-left:20px; margin-bottom:10px;">
+		                     </div>
+		                     <div class="col-3">
+		                    <a :href="'/artist/' + board.followTergetPrimarykey" style="color:black; font-size:20px; text-decoration:none;">
+		                    	<span> {{board.followTargetPrimaryKey}}</span>
+							</a>
+		                     </div>
+		                     <div class="col-3"></div>
+		                     <div class="col-3 ">
+		                    <button v-if="mypage" class="btn-round btn-purple1-secondary" @click="deleteFollow(board.followNo)"  style="margin-left:30px; padding: 10px 20px; font-size: 15px;">삭제</button>
+		                     </div>
+		                    </div>
 		                     </div>
 		                  </div>
 		               </div>
@@ -1770,7 +1797,6 @@
                       // 대표페이지 프로필사진 설정
                       const resp = await axios.post(url, formData);
                       
-                      alert("대표페이지 프로필사진 설정완료!");
                   },
                   
                   //팔로우 리스트 멤버별 프로필 조회
