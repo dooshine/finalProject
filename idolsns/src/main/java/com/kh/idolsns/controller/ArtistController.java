@@ -36,7 +36,7 @@ public class ArtistController {
             throw new NoHandlerFoundException(null, null, null);
         }
         model.addAttribute("artistEngNameLower", artistEngNameLower);
-        return "/artist/artistMap";
+        return "/artist/artistFeed";
     }
     @GetMapping("/{artistEngNameLower}/fund")
     public String fund(@PathVariable String artistEngNameLower, Model model) throws NoHandlerFoundException{
