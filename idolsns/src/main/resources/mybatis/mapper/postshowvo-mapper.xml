@@ -74,8 +74,8 @@
          FROM (
                 SELECT p.*
                 FROM post p
-                right JOIN post_like pl ON p.member_id = pl.member_id and p.post_no = pl.post_no
-                WHERE p.member_id = #{memberId} AND p.post_type != '펀딩'
+                right JOIN post_like pl ON p.post_no = pl.post_no
+                WHERE pl.member_id = #{memberId} AND p.post_type != '펀딩'
          ) testuserP
         left outer join schedule_post sp on testuserP.post_no = sp.post_no
         Left outer join together_post tp on testuserP.post_no = tp.post_no
