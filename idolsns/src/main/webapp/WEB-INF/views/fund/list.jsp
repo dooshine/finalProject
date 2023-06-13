@@ -465,10 +465,10 @@
                     
                     // 상세페이지로 이동
                     link(funding){
-                       window.location.href = "/fund/detail?postNo="+funding.postNo;;
+                       window.location.href = "${contextPath}/fund/detail?postNo="+funding.postNo;;
                     },
                     getImageUrl(funding) {
-                       const imageUrl = "/rest/attachment/download/" + funding.attachmentNo;
+                       const imageUrl = "${contextPath}/rest/attachment/download/" + funding.attachmentNo;
                        return imageUrl;
                        },
                        
@@ -481,7 +481,7 @@
                       startFunding() {
                     	  // if not logged in
                     	  if(!this.checkLogin()) return;
-                    	  window.location.href = "/fund/write";
+                    	  window.location.href = "${contextPath}/fund/write";
                       },
                       
                    // 로그인 체크
@@ -497,7 +497,7 @@
       				
       				// 로그인 페이지로
     				linkToLogin() {
-    					window.location.href="/member/login";
+    					window.location.href="${contextPath}/member/login";
     				},
     				
     				// 좋아요 체크 후 추가&삭제

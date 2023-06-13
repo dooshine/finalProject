@@ -37,7 +37,7 @@ $(function(){
 		         }
 				
 				$.ajax({
-					url:"/rest/attachment/upload",
+					url:"${contextPath}/rest/attachment/upload",
 					method:"post",
 					data:fd,
 					processData:false,

@@ -663,7 +663,7 @@
         		},
         		async loadTagNames() {
         			const postNo = this.fundDetail.postNo;
-        			const resp = await axios.get("/rest/fund/tag/"+postNo);
+        			const resp = await axios.get("${contextPath}/rest/fund/tag/"+postNo);
         			this.fundDetail.tagNames.push(...resp.data);
         		},
 		       // fundTotal & fundSponsorCount 불러오기
