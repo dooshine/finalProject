@@ -434,6 +434,7 @@
                     getTimeDiff(funding) {
                           const startDate = new Date(funding.postStart);
                           const endDate = new Date(funding.postEnd);
+                          endDate.setHours(23, 59, 0, 0); // endDate를 23:59:00.000으로 설정
 //                           console.log(startDate);
 //                           console.log(endDate);
                           const currentDate = new Date();

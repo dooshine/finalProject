@@ -149,12 +149,14 @@
 					<span style="font-weight:bold">{{ (fundDetail.fundTotal / fundDetail.fundGoal * 100).toFixed(1) }}</span>%
 			
 					<label class="mt-3">남은 시간</label>
-					<span v-if="getTimeDiff().includes('펀')" class="fund_span">{{ getTimeDiff() }}</span>
-					<span v-else-if="getTimeDiff().includes('-')" class="fund_span">{{ getTimeDiff() }}</span>
-					<span v-else>
-						<span class="fund_span">{{ getTimeDiff() }}</span>일
-					</span>
-<!-- 					<span class="fund_span">{{ getTimeDiff() }}</span>일 -->
+<!-- 					<span v-if="getTimeDiff().includes('펀')" class="fund_span">{{ getTimeDiff }}</span> -->
+<!-- 					<span v-else-if="getTimeDiff().includes('-')" class="fund_span">{{ getTimeDiff }}</span> -->
+<!-- 					<span v-else-if="getTimeDiff().includes('진')" class="fund_span">{{ getTimeDiff }}</span> -->
+<!-- 					<span v-else-if="getTimeDiff().includes('오')" class="fund_span">{{ getTimeDiff }}</span> -->
+<!-- 					<span v-else> -->
+						<span class="fund_span">{{ getTimeDiff }}</span>
+<!-- 					</span> -->
+<!-- 					<span class="fund_span">{{ getTimeDiff }}</span>일 -->
 					
 					<div @click="sponsorModal = true">
 						<label class="mt-3">후원자</label>
@@ -182,7 +184,7 @@
 				</tr>
 				
 				<tr>
-					<th>펀딩 기간</th> 
+					<th>펀딩 기간</th>
 					<td>{{ fundDetail.postStart }} ~ {{ fundDetail.postEnd }}</td>
 				</tr>
 				
@@ -603,6 +605,42 @@
 		      };
 		    },
 		    computed: {
+		    	// 남은 시간 설정
+                getTimeDiff() {
+                      const startDate = new Date(this.fundDetail.postStart);
+                      const endDate = new Date(this.fundDetail.postEnd);
+                      endDate.setHours(23, 59, 0, 0); // endDate를 23:59:00.000으로 설정
+//                       console.log(this.fundDetail);
+                      const currentDate = new Date();
+                      const fundState = this.fundDetail.fundState;
+                      const timeDiff = endDate.getTime() - currentDate.getTime();
+                      const timeDiff2 = startDate.getTime() - currentDate.getTime();
+                      
+                      console.log("endDate.getTime()= "+endDate.getTime());
+                      console.log("currentDate.getTime()= "+currentDate.getTime());
+                      console.log("timeDiff= "+timeDiff);
+                      
+                   // 시작날짜가 오늘보다 뒤인경우
+                      if(timeDiff2 >= 0) {
+                    	  const diffInDays = Math.ceil(timeDiff2 / (24 * 60 * 60 * 1000));
+                    	    return "D-" + diffInDays.toString();
+                      }
+                      // 마간기간이 남은 경우
+                      if(timeDiff >= 0){
+                          // 1일 이상인 경우
+                          if (timeDiff >= 24 * 60 * 60 * 1000) {
+                            return Math.ceil(timeDiff / (24 * 60 * 60 * 1000))+"일";
+                          } 
+                          // 당일인 경우
+                          else {
+                              return "오늘 마감";
+                          }
+                      }
+                      // 이미 마감된 경우
+                      else {
+                    	  return fundState;
+                      }
+                }
 		    },
 		    methods: {
 				// postNo 설정		    	
@@ -798,37 +836,7 @@
 					this.likeCount = resp.data;
 				},
 				
-				// 남은 시간 설정
-                getTimeDiff() {
-                      const startDate = new Date(this.fundDetail.postStart);
-                      const endDate = new Date(this.fundDetail.postEnd);
-//                       console.log(this.fundDetail);
-                      const currentDate = new Date();
-                      const fundState = this.fundDetail.fundState;
-                      const timeDiff = endDate.getTime() - currentDate.getTime();
-                      const timeDiff2 = startDate.getTime() - currentDate.getTime();
-                      
-                   // 시작날짜가 오늘보다 뒤인경우
-                      if(timeDiff2 >= 0) {
-                    	  const diffInDays = Math.ceil(timeDiff2 / (24 * 60 * 60 * 1000));
-                    	    return "D-" + diffInDays.toString();
-                      }
-                      // 마간기간이 남은 경우
-                      if(timeDiff >= 0){
-                          // 1일 이상인 경우
-                          if (timeDiff >= 24 * 60 * 60 * 1000) {
-                            return Math.ceil(timeDiff / (24 * 60 * 60 * 1000));
-                          } 
-                          // 당일인 경우
-                          else {
-                              return "오늘 마감";
-                          }
-                      }
-                      // 이미 마감된 경우
-                      else {
-                    	  return fundState;
-                      }
-                },
+				
                 
                 // 이미지 불러오기 
                 getAttachmentUrl(attachmentNo) {      
