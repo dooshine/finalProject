@@ -9,7 +9,7 @@
 <script type="text/javascript">
 $(function(){
     $('[name=postContent]').summernote({
-        placeholder: '내용을 입력해주세요 (20MB 이하의 이미지만 업로드할 수 있습니다)',
+        placeholder: '내용을 입력해주세요 (개당 20MB 이하의 이미지만 업로드할 수 있습니다)',
         tabsize: 4,
         height: 600,
         toolbar: [
