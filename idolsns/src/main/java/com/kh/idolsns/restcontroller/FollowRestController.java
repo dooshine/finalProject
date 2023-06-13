@@ -153,7 +153,6 @@ public class FollowRestController {
     @GetMapping("/memberFollowInfo")
     public MemberFollowInfoDto selectMemberFollowInfo(@RequestParam String memberId){
         MemberFollowInfoDto dto = sqlSession.selectOne("follow.selectMemberFollowInfo", memberId);
-        System.out.println(dto.toString());
         return dto;
     }
 
