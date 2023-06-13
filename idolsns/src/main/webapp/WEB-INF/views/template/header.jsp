@@ -505,7 +505,7 @@
 								<!-- 상대방이 보낸 메세지일 때 -->
 								<div v-if="message.memberId != memberId">
 									<!-- 프로필 영역 -->
-									<a class="d-flex align-items-center link-to-profile" :href="'${pageContext.request.contextPath}/member/mypage/' + findMemberById(index).memberId">
+									<a class="d-flex align-items-center link-to-profile" :href="'${pageContext.request.contextPath}/member/mypage2/' + findMemberById(index).memberId">
 										<img :src="findMemberById(index).profileSrc" v-if="!sameTime(index)" 
 											class="profileImg me-2" style="height: 30px; width: 30px;">
 										<span style="font-size: 0.8em;" v-if="!sameTime(index)" style="margin: 0;">
