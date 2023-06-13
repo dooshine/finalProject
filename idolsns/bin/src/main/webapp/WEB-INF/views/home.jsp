@@ -1784,7 +1784,7 @@
             		
             		// 페이지가 1페이지고(10개의 게시물만 보이고), 최초 mounted가 실행된 이후에 새로 호출 되었을 경우,
             		// 아예 페이지 새로 고침
-            		if(this.page == 2 && this.firstMountFlag)
+            		if(this.pmodalfixedage == 2 && this.firstMountFlag)
             		{
             			location.reload();	
             		}
