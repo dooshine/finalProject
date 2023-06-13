@@ -4,7 +4,7 @@
     
   
     <div>
-		<img src="${pageContext.request.contextPath}/static/image/404.png">
+		<img src="${pageContext.request.contextPath}/static/image/403.png">
 		<!-- <img src="${pageContext.request.contextPath}/static/image/403.png"> -->
 	</div>
 

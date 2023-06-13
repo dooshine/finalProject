@@ -4,7 +4,7 @@
     
     
     
-<div style="height:800px; background-image: url('${pageContext.request.contextPath}/static/image/404.png'); background-size: cover; background-position: center; 
+<div style="height:800px; background-image: url('${pageContext.request.contextPath}/static/image/sorry.png'); background-size: cover; background-position: center; 
 display: flex; flex-direction: column; justify-content: center; align-items: center;">
 	<div>
 		<a href="${pageContext.request.contextPath}/">
