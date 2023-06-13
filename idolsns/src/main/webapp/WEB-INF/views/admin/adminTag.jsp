@@ -215,7 +215,7 @@
         // Load 태그 리스트
         async loadTagList () {
             // 태그리스트 조회 URL
-            const url = "http://localhost:8080/rest/admin/tag";
+            const url = "${contextPath}/rest/admin/tag";
             // 비동기 태그리스트 조회 실행
             const resp = await axios.get(url);
             // vue.data.reportList에 resp.data 복사
@@ -243,7 +243,7 @@
             if(!confirm(selectedTagCnt + "개의 태그를 정말 삭제하시겠습니까?")) return;
 
             // 신고 api url
-            const url = "http://localhost:8080/rest/admin/tag"
+            const url = "${contextPath}/rest/admin/tag"
             
             // 신고 삭제 호출
             const resp = await axios.delete(url, { 

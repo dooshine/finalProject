@@ -228,7 +228,7 @@
 		        	        return value.toLocaleString();
 		        	      },
 		           	 async loadMemberPoint() {
-		                     const url = "http://localhost:8080/rest/member/"+memberId;
+		                     const url = "${contextPath}/rest/member/"+memberId;
 		                     const data = {
 		                         memberId: this.memberId // 로그인된 멤버 아이디 사용
 		                     };
@@ -241,7 +241,7 @@
 		        	},
 		        	 async loadOrdertHistory() {
 		                try {
-		                  const url = "http://localhost:8080/rest/point/order/" + memberId;
+		                  const url = "${contextPath}/rest/point/order/" + memberId;
 		                  const response = await axios.get(url);
 		                  this.items = response.data;
 		                } catch (error) {

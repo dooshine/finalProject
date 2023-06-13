@@ -139,7 +139,7 @@
 	      },
 	      async loadFundVO() {
 	    	  const postNo = this.fundDetail.postNo;
-	    	  const resp = await axios.get("http://localhost:8080/rest/fund/fundlist/"+postNo);
+	    	  const resp = await axios.get("${contextPath}/rest/fund/fundlist/"+postNo);
 	    	  this.fundDetail.fundSponsorCount = resp.data.fundSponsorCount;
 	      }
 	    },

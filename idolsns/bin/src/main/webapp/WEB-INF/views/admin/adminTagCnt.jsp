@@ -126,7 +126,7 @@
         // Load 태그사용량 목록
         async loadTagCntList () {
             // 신고리스트 조회 URL
-            const url = "http://localhost:8080/rest/admin/tagName";
+            const url = "${contextPath}/rest/admin/tagName";
             // 비동기 신고리스트 조회 실행
             const resp = await axios.get(url, { 
                 params: this.tagCntSearchObj, 
@@ -140,7 +140,7 @@
 
             for(let i = 0; i<this.tagCntList.length; i++){
                 const tagName = this.tagCntList[i].tagName;
-                const url = "http://localhost:8080/rest/fixedTag/check";
+                const url = "${contextPath}/rest/fixedTag/check";
 
                 const resp = await axios.get(url, {params: {fixedTagName: tagName}});
                 // this.isFixedTagList[i] = true;
@@ -214,7 +214,7 @@
             if(!this.preTagAccess("updateTagFree")) return;
 
             // 태그수정(자유) api url
-            const url = "http://localhost:8080/rest/admin/tagName"
+            const url = "${contextPath}/rest/admin/tagName"
             // 태그수정(자유) 호출
             const resp = await axios.put(url, {
                 tagType: "자유",
@@ -229,7 +229,7 @@
             if(!this.preTagAccess("updateTagFix")) return;
 
             // 태그수정(고정) api url
-            const url = "http://localhost:8080/rest/admin/tagName"
+            const url = "${contextPath}/rest/admin/tagName"
             // 태그수정(고정) 호출
             const resp = await axios.put(url, {
                 tagType: "고정",
@@ -244,7 +244,7 @@
             if(!this.preTagAccess("deleteTagByName")) return;
 
             // 태그삭제 api url
-            const url = "http://localhost:8080/rest/admin/tagName"
+            const url = "${contextPath}/rest/admin/tagName"
             // 태그삭제 호출
             const resp = await axios.delete(url, { 
                 data: this.selectedTagNameList,
