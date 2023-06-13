@@ -3,6 +3,57 @@
 
 <jsp:include page="/WEB-INF/views/template/header.jsp"></jsp:include>
 
+<style>
+    .back-gray {
+        background: #f2f2f2;
+    }
+    .total-cnt {
+        color: #6a53fb;
+    }
+    .cursor-pointer:hover {
+    cursor: pointer;
+    }
+
+    .pagination {
+        color: #6a53fb;
+    }
+    .pagination {
+        --bs-pagination-focus-box-shadow: 0px;
+    }
+    .form-check-input {
+        -webkit-appearance: none;
+        appearance: none;
+    }
+        /* 페이지네이션 스타일 */
+    .pagination .page-link {
+        color: gray;
+        background-color: none;
+        border: none; /* 테두리 제거 */
+    }
+
+    .pagination .page-link:hover {
+        color: #ffffff;
+        background-color: #a294f9;
+        border: none; /* 테두리 제거 */
+    }
+
+    .pagination .page-item.disabled .page-link {
+        color: #6c757d;
+        background-color: #f8f9fa;
+        border: none; /* 테두리 제거 */
+    }
+
+    .pagination .page-item.active .page-link {
+        color: #a294f9;
+        background-color: white;
+        border: none; /* 테두리 제거 */
+    }
+    
+    td {
+    	vertical-align:middle;
+    }
+</style>
+
 <!-- 제어영역 설정 -->
 <div class="custom-container" style="padding: 24px;" id="app">
     <!-- # 아티스트 -->
@@ -43,6 +94,7 @@
     </div>
 
     <!-- # 회원리스트 검색도구 -->
+    <%--
     <div class="row mt-3">
         <div class="col back-gray border border-secondary-subtle p-4">
             <!-- 검색타이틀 -->
@@ -57,30 +109,30 @@
                     <label>
                         아티스트번호
                         <input class="ms-3" type="text">
-                        <%-- <input class="ms-3" type="text" v-model="memberSearchVO.memberId"> --%>
+                        <input class="ms-3" type="text" v-model="memberSearchVO.memberId">
                     </label>
                 </div>
                 <div class="col">
                     <label>
                         아티스트이름
-                        <%-- <input class="ms-3" type="text" v-model="memberSearchVO.memberNick"> --%>
+                        <input class="ms-3" type="text" v-model="memberSearchVO.memberNick">
                     </label>
                 </div>
                 <div class="col">
                     프로필사진 설정 여부
                     <label class="ms-3">
-                        <%-- <input type="checkbox" v-model="profileExist"> --%>
+                        <input type="checkbox" v-model="profileExist">
                         설정
                     </label>
                     <label class="ms-3">
-                        <%-- <input type="checkbox" v-model="noProfile"> --%>
+                        <input type="checkbox" v-model="noProfile">
                         미설정
                     </label>
                 </div>
             </div>
             <div class="row mt-3">
                 <div class="col-8">
-                    <%-- <label>
+                    <label>
                         1차 정렬
                         <select v-model="memberSearchVO.orderList[0]">
                             <option value="">선택하세요</option>
@@ -99,18 +151,18 @@
                             <option value="memberLogin">최근로그인순</option>
                             <option value="memberPoint">포인트순</option>
                         </select>
-                    </label> --%>
+                    </label>
                 </div>
             </div>
             <!-- 검색버튼 -->
             <div class="row mt-3 text-end">
                 <div class="col">
-                    <%-- <button class="btn btn-success" type="button" @click="searchMember">검색하기</button> --%>
+                    <button class="btn btn-success" type="button" @click="searchMember">검색하기</button>
                 </div>
             </div>
         </div>
     </div>
-
+    --%>
 
     <!-- 아티스트 목록 -->
     <div class="row mt-5">
@@ -129,7 +181,7 @@
         <div class="col">
             <table class="table">
                 <thead>
-                    <tr>
+                    <tr class="back-gray">
                     	<th scope="col">
                             <input type="checkbox" @change="checkAllArtist($event)">
                         </th>
@@ -141,7 +193,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="(artistView, i) in artistViewList" :key="i">
+                    <tr v-for="(artistView, i) in artistViewList.slice(pageObj.begin - 1, pageObj.end)" :key="i">
                     	<td>
                             <input type="checkbox" @change="checkArtist($event, artistView.artistNo)" :checked="selectedArtistObj[artistView.artistNo]">
                         </td>
@@ -161,6 +213,44 @@
             </table>
         </div>
     </div>
+
+    <!-- ######################## 제재 페이지네이션 시작 ########################-->
+    <div class="row my-5">
+        <div class="col text-center">
+            <nav aria-label="...">
+                <ul class="pagination justify-content-center">
+                    <!-- 첫 페이지로 이동 -->
+                    <li class="page-item" :class="{disabled: pageObj.isFirst}">
+                        <span class="page-link cursor-pointer" @click="showFirstPage">&laquo;</span>
+                    </li>
+                    <!-- 이전 블럭으로 이동 -->
+                    <li class="page-item" :class="{disabled: !pageObj.hasPrev}">
+                        <span class="page-link cursor-pointer" @click="showPrevBlock">&lt;</span>
+                    </li>
+                    <!-- 페이지번호 이동 -->
+                    <li class="page-item"
+                        :class="{active: pageObj.startBlock + i - 1 === pageObj.page}"
+                        :aria-current="{page: pageObj.startBlock + i - 1 === pageObj.page}"
+                        v-for="i in pageObj.finishBlock-pageObj.startBlock+1" :key="i">
+                        <span href="#" class="page-link"
+                            :class="{'cursor-pointer': pageObj.startBlock + i - 1 !== pageObj.page}"
+                            @click="showTargetPage(pageObj.startBlock + i - 1)">
+                            {{pageObj.startBlock + i - 1}}
+                        </span>
+                    </li>
+                    <!-- 다음 블럭으로 이동 -->
+                    <li class="page-item" :class="{disabled: !pageObj.hasNext}">
+                        <span class="page-link cursor-pointer" @click="showNextBlock">&gt;</span>
+                    </li>
+                    <!-- 마지막 페이지로 이동 -->
+                    <li class="page-item" :class="{disabled: pageObj.isLast}">
+                        <span class="page-link cursor-pointer" @click="showLastPage">&raquo;</span>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+    <!-- ######################## 회원리스트 페이지네이션 끝 ########################-->
 </div>
 
 <!-- 뷰 스크립트 작성 -->
@@ -189,12 +279,75 @@
           // 아티스트 프로필사진 목록   
           attachmentList: [],
           previewURLList: [],
+
+          // 페이지네이션 Obj
+          pageObj: {
+            page: 1,
+            size: 15,
+            blocksize: 5,
+            total: 0, 
+
+            // 블럭에서 뜨는 첫번째 게시물
+            get begin(){
+                return (this.page - 1) * this.size + 1;
+            },
+            // 블럭에서 뜨는 마지막 게시물
+            get end(){
+                return Math.min(this.page * this.size, this.total);
+            },
+
+            // 페이지 총 수
+            get totalPage(){
+                return Math.floor((this.total + this.size - 1) / this.size);
+            },
+            // 시작 블럭
+            get startBlock(){
+                
+                return Math.floor((this.page - 1)/this.blocksize) * this.blocksize + 1
+            },
+            // 마지막 블럭
+            get finishBlock(){
+                return Math.min(this.startBlock + this.blocksize - 1, this.totalPage);
+            },
+
+
+            // 처음블럭 판별
+            get isFirst(){
+                return this.page === 1;
+            },
+            // 마지막블럭 판별
+            get isLast(){
+                return this.page >= this.totalPage;
+            },
+            // 이전블럭 존재판별
+            get hasPrev(){
+                return this.startBlock > 1;
+            },
+            // 다음블럭 존재판별
+            get hasNext(){
+                return this.finishBlock < this.totalPage;
+            },
+            // 이전블럭 페이지번호
+            get getPrevPage(){
+                return this.startBlock - 1 ;
+            },
+            // 다음블럭 페이지번호
+            get getNextPage(){
+                return this.finishBlock + 1 ;
+            },
+
+          },
         };
       },
       computed: {
       },
       watch: {
-
+        artistViewList: {
+          deep: true,
+          handler(newVal, oldVal) {
+            this.pageObj.total = this.artistViewList.length;
+          }
+        },
       },
       methods: {
         // 파일 업로드 시 프로필 사진 변경
@@ -399,6 +552,24 @@
         fullName(name, engName){
           return name + "(" + engName + ")";
         },
+
+        // ################################# 페이지네이션 method 시작 #################################
+        showFirstPage(){
+            this.pageObj.page = 1;
+        },
+        showPrevBlock(){
+            this.pageObj.page = this.pageObj.getPrevPage;
+        },
+        showNextBlock(){
+            this.pageObj.page = this.pageObj.getNextPage;
+        },
+        showLastPage(){
+            this.pageObj.page = this.pageObj.totalPage;
+        },
+        showTargetPage(page){
+            this.pageObj.page = page;
+        },
+        // ################################# 페이지네이션 method 끝 #################################
 
 
 

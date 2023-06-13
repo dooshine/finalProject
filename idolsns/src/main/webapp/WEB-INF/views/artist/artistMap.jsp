@@ -446,7 +446,6 @@
 			kakao.maps.load(() => {
 				this.loadArtist();
 				this.loadMemberFollowInfo();
-				
 			});
 		};
 
@@ -456,7 +455,6 @@
         // 2. 로그인 한 사람 팔로우 정보 로드
         this.loadMemberFollowInfo();
       },
-
 	  created(){
 		
 	  }

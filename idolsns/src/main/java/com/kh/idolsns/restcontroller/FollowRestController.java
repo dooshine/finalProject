@@ -66,7 +66,11 @@ public class FollowRestController {
 
     // 팔로우생성
     @PostMapping("/")
-    public void createFollow(@RequestBody FollowDto followDto){
+    public void createFollow(@RequestBody FollowDto followDto, HttpSession session){
+        String memberId = (String) session.getAttribute("memberId");
+        if(memberId == null){
+            return;
+        }
         followService.createFollow(followDto);
     }
     // 팔로우(회원) 생성

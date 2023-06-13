@@ -360,6 +360,12 @@ public class PostRestController {
     	return posts;
     }
     
+    @GetMapping("/onePost/{postNo}")
+    public PostShowVO showOnePost(@PathVariable Long postNo){    	
+    	PostShowVO postShowVO = postShowService.showOnePost(postNo);    	
+    	return postShowVO;
+    }
+    
     // 통합게시물 수정
     @PutMapping("/")
     public boolean update(@RequestBody PostDto postDto){

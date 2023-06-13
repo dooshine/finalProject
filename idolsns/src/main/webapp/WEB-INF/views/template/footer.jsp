@@ -2,8 +2,6 @@
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-<%-- <div style="position:fixed;top:150px;right:150px;z-index:9999999;">admin : ${requestScope.admin}</div> --%>
-
             </div>
 
 	<style>
@@ -1187,7 +1185,10 @@
 			<div class="modal-dialog modal-dialog-centered" >
 				<div class="modal-content custom-container" style="border: 1px solid white">
 					<div class="modal-header justify-content-center" style="padding-top: 0px">
-						<h1 class="modal-title fs-5 font-bold" id="loginModalLabel">스타링크 로그인</h1>
+						<h1 class="modal-title fs-5 font-bold" id="loginModalLabel">
+							<img class="me-2" src="${contextPath}/static/image/loading.png" style="width: 1.5em;">
+							스타링크 로그인
+						</h1>
 					</div>
 					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="position: absolute; right: 20px;"></button>
 				<div class="modal-body">
