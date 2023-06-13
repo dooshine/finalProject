@@ -490,17 +490,7 @@
 							{{ fund.rank }}위   			
 		          		</div>
 		          		<div class="col-5 px-0">
-			                <div v-if="fund.showDetails">
-			                  {{ fund.memberNick }} ({{ fund.memberId }})
-			                </div>
-			                <div v-else>
-			                  <div class="text-ellipsis" style="width: 100px; overflow: hidden; white-space: nowrap;">
-			                    {{ fund.memberNick }} ({{ fund.memberId }})
-			                  </div>
-			                  <button class="btn-show-more" @click="fund.showDetails = !fund.showDetails">
-			                    더보기
-			                  </button>
-			                </div>
+		                    {{ fund.memberNick }} 
 		                </div>
 		          		<div class="col-4 d-flex justify-content-end">
 							{{ formatCurrency(fund.fundTotal) }}원         			
