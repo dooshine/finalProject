@@ -176,23 +176,14 @@
 		                     <i class="fa-solid fa-xmark" style="color: #bcc0c8;" data-bs-dismiss="modal" aria-label="Close"></i>
 		                  </div>
 		                  <div class="modal-body ">
-		                  	<div class="row" style="display: flex;
-   justify-content: center;
-   align-items: center;
-   margin-bottom: 10px;">
-			                     <i class="fa-solid fa-lock fa-2x" @click="goToPassword()"><span style="font-size:30px; ">비밀번호 변경</span></i>
+		                  	<div class="d-flex align-items-center mb-3" @click="goToPassword()" style="cursor: pointer;">
+			                     <i class="fa-solid fa-lock me-2"></i><h5>비밀번호 변경</h5>
 		                  	</div>
-		                  	<div class="row" style="display: flex;
-   justify-content: center;
-   align-items: center;
-   margin-bottom: 10px;">
-			                     <i class="fa-solid fa-pen-to-square fa-2x" @click="goToLogout()"><span style="font-size:30px;">로그아웃</span></i>
+		                  	<div class="d-flex align-items-center mb-3" @click="goToLogout()" style="cursor: pointer;">
+			                     <i class="fa-solid fa-pen-to-square me-2"></i><h5>로그아웃</h5>
 		                  	</div>
-		                  	<div class="row" style="display: flex;
-   justify-content: center;
-   align-items: center;
-   margin-bottom: 10px;">
-			                     <i class="fa-sharp fa-solid fa-circle-minus fa-2x" @click="goToExit()"><span style="font-size:30px;">회원탈퇴</span></i>
+		                  	<div class="d-flex align-items-center mb-3" @click="goToExit()" style="cursor: pointer;">
+			                     <i class="fa-sharp fa-solid fa-circle-minus me-2"></i><h5>회원탈퇴</h5>
 		                  	</div>
 		                  </div>
 		               </div>
