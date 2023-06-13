@@ -1589,25 +1589,31 @@
             // 로그인 팔로우 정보 로드
             this.memberFollowObj = resp.data;
             // 팔로우 버튼 동기화
-            this.isFollowingArtist = this.checkFollow();
         },
 
         // 대표페이지 팔로우확인
-        checkFollow(){
+        async checkFollow(){
             // 로그인 안했으면 return false
             if(memberId === "") return false;
             
             // 팔로우 대표페이지 목록
-            const followPageList = this.memberFollowObj.followPageList;
+            // const followPageList = this.memberFollowObj.followPageList;
 
-            if(this.memberFollowObj.followPageList!==undefined){
-                if(followPageList===null) {
-                    return false;
-                } else {
-                    const isFollowing = followPageList.includes(this.artistObj.artistEngNameLower);
-                    return isFollowing;
-                }
-            }
+            // if(this.memberFollowObj.followPageList!==undefined){
+            //     if(followPageList===null) {
+            //         return false;
+            //     } else {
+            //         const isFollowing = followPageList.includes(this.artistObj.artistEngNameLower);
+            //         return isFollowing;
+            //     }
+            // }
+
+			const url = "${contextPath}/rest/follow/checkFollowPage";
+
+			const resp = await axios.get(url, {params: {memberId: memberId, followTargetType: '대표페이지', followTargetPrimaryKey: this.artistObj.artistEngNameLower}});
+
+			this.isFollowingArtist = resp.data;
+			console.log(this.isFollowingArtist);
         },
 
         // 페이지 팔로우 버튼
@@ -2289,8 +2295,6 @@
        				"calendarEnd": endDate,
        				"calendarMemo": calendarMemoPost
        			};
-       			//console.log(this.startDate);
-       			//console.log(this.endDate);
        			axios({
        				url: contextPath + "/calendar/add",
        				method:"post",
@@ -2322,6 +2326,8 @@
         await this.loadArtist();
         // 2. 로그인 한 사람 팔로우 정보 로드
         this.loadMemberFollowInfo();
+		this.checkFollow();
+		console.log(this.isFollowingArtist);
         window.addEventListener("scroll", _.throttle(()=>{
             //console.log("스크롤 이벤트");
             //console.log(this);
@@ -2347,7 +2353,6 @@
       },
 
 	  created(){
-    	  	
 	  },
     }).mount('#artist-body')
 </script>
