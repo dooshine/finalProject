@@ -351,7 +351,7 @@
 					<div class="row mt-3">
 						<div class="col">
 							<button
-								class="custom-btn btn-purple1 btn-sm rounded-pill mx-2 my-2 fixed-tag"
+								class="custom-btn btn-purple1 btn-sm rounded-pill mx-2 my-2 fixed-tag1"
 								v-for="(newFixedTag, i) in newFixedTagList">{{
 								newFixedTag }}</button>
 						</div>
@@ -442,11 +442,8 @@
 					<!--         -->
 					<div class="row">
 						<div class="col">
-<!-- 							<button -->
-<!-- 								class="custom-btn btn-purple1 btn-sm rounded-pill mx-2 my-2 fixed-tag"> -->
-<!-- 								{{postType}}</button> -->
 							<button
-								class="custom-btn btn-purple1 btn-sm rounded-pill mx-2 my-2 fixed-tag"
+								class="custom-btn btn-purple1 btn-sm rounded-pill mx-2 my-2 fixed-tag1"
 								v-for="(newFixedTag, i) in newFixedTagList">{{
 								newFixedTag }}</button>
 						</div>
