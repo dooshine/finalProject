@@ -62,7 +62,7 @@
             const data = {"postContent": $(".input-input").val()};
 
             $.ajax({
-                url: "http://localhost:8080/rest/post/",
+                url: "${contextPath}/rest/post/",
                 method: "post",
                 data: data,
                 success: function(){
@@ -78,7 +78,7 @@
         $(".list-btn").click(function(){
 
             $.ajax({
-                url: "http://localhost:8080/rest/post/",
+                url: "${contextPath}/rest/post/",
                 method: "get",
                 success: function(response){
                     console.log(response);
@@ -94,7 +94,7 @@
         $(".detail-btn").click(function(){
             const postNo = $(".detail-postNo").val();
             $.ajax({
-                url: "http://localhost:8080/rest/post/" + postNo,
+                url: "${contextPath}/rest/post/" + postNo,
                 method: "get",
                 success: function(response){
                     console.log(response);

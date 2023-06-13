@@ -55,26 +55,24 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(memberSearch, i) in memberSearchList" :key="i">
-            <td class="cursor-pointer">
+          <tr v-for="(memberSearch, i) in memberSearchList" :key="i" style="height: 300px;">
+            <td class="cursor-pointer" @click="moveToMemberPage(memberSearch.memberId)">
               <div class="search-table-col">
                 <img :src="memberSearch.attachmentNo === 0 ? '/static/image/profileDummy.png' : '/download/?attachmentNo=' + memberSearch.attachmentNo" style="height: 50px; width: 50px;">
               </div>
             </td>
-            <td class="cursor-pointer">
+            <td class="cursor-pointer" @click="moveToMemberPage(memberSearch.memberId)">
               <div class="search-table-col">
                 {{fullName(memberSearch.memberId, memberSearch.memberNick)}}
               </div>
             </td>
             <td>
               <div class="search-table-col">
-                <button class="btn rounded-pill" :class="{'btn-primary':!memberSearch.isFollowMember, 'btn-secondary': memberSearch.isFollowMember}"  v-text="memberSearch.isFollowMember?'팔로우취소':'팔로우하기'" @click="followMember(memberSearch)">팔로우하기</button>
+                <%-- 팔로우 버튼(비로그인-로그인모달 at footer) --%>
+                <button v-if="memberId===''" data-bs-toggle="modal" data-bs-target="#loginModal" class="custom-btn btn-sm" :class="{'btn-purple1-secondary':!memberSearch.isFollowMember, 'btn-purple1': memberSearch.isFollowMember}"   v-text="memberSearch.isFollowMember?'팔로우취소':'팔로우하기'"></button>
+                <%-- 팔로우 버튼(로그인) --%>
+                <button v-else class="custom-btn btn-sm" :class="{'btn-purple1-secondary':!memberSearch.isFollowMember, 'btn-purple1': memberSearch.isFollowMember}"  v-text="memberSearch.isFollowMember?'팔로우취소':'팔로우하기'" @click="followMember(i)"></button>
               </div>
-            </td>
-          </tr>
-          <tr v-if="memberSearchList.length === 0">
-            <td colspan="3">
-              <h3 class="m-3">검색 결과가 없습니다</h3>
             </td>
           </tr>
         </tbody>
@@ -92,6 +90,7 @@
     Vue.createApp({
       data() {
         return {
+          memberId: memberId,
 
           // 로그인 회원 팔로우 목록 조회
           memberFollowObj: {
@@ -102,7 +101,10 @@
 
           // 회원 검색목록
           memberSearchList: [],
-          memberPage: 1,
+          memberSearchObj: {
+            memberPage: 1,
+            memberId: null,
+          },
           search: true,
 
           followObj: {
@@ -110,6 +112,17 @@
             followTargetType: "",
             followTargetPrimaryKey: "",
           },
+
+          // 무한 스크롤
+          percent: 0,
+
+          // 목록을 위한 데이터
+          page: 1,
+          pocketmonList: [],
+          finish: false,
+
+          // 안전장치
+          loading: false,
         };
       },
       computed: {
@@ -122,7 +135,7 @@
           // 로그인X → 실행 X
           if(memberId==="") return;
           // url
-          const url = "http://localhost:8080/rest/follow/memberFollowInfo/"
+          const url = "${contextPath}/rest/follow/memberFollowInfo/"
           // 팔로우 목록 load
           const resp = await axios.get(url, {params:{memberId: memberId}});
           // 로그인 팔로우 정보 로드
@@ -132,28 +145,22 @@
         // 대표페이지 팔로우 생성
         async createFollow(){
             // 팔로우 생성 url
-            const url = "http://localhost:8080/rest/follow/";
+            const url = "${contextPath}/rest/follow/";
             await axios.post(url, this.followObj);
             // [develope] 
         },
         // 대표페이지 팔로우 취소
         async deleteFollow(){
             // 팔로우 생성 url
-            const url = "http://localhost:8080/rest/follow/";
+            const url = "${contextPath}/rest/follow/";
             await axios.delete(url, {
                 data: this.followObj,
             });
             // [develope]
         },
         // 회원 팔로우 버튼
-        async followMember(memberSearch){
-            // 1. 회원 로그인 확인
-            // if(memberId === ""){
-            //     if(confirm("로그인 한 회원만 사용할 수 있는 기능입니다. 로그인 하시겠습니까?")) {
-            //         window.location.href = contextPath + "/member/login";
-            //     }
-            // }
-
+        async followMember(index){
+            const memberSearch = this.memberSearchList[index];
             // artistEngNameLower
             // 2. toggle 팔로우 삭제, 팔로우 생성
             const isFollowingMember = memberSearch.isFollowMember;
@@ -167,7 +174,8 @@
             }
 
             await this.loadMemberFollowInfo();
-            this.loadMemberSearchList();
+            this.memberSearchList[index].isFollowMember = !this.memberSearchList[index].isFollowMember;
+            // this.loadMemberSearchList();
         },
 
         // 회원 팔로우 대상 설정
@@ -181,23 +189,41 @@
 
         // (search) 회원 검색목록 조회
         async loadMemberSearchList(){
+          if(this.loading == true) return; //로딩중이면
+          if(this.finish == true) return; // 다 불러왔으면
+          this.loading = true;
+
           // q
           const params = new URLSearchParams(window.location.search);
           const q = params.get("q")
 
           // url
-          const url = "http://localhost:8080/rest/search/member";
+          const url = "${contextPath}/rest/search/member";
           // 조회
-          const resp = await axios.get(url, { params: {memberId: q}});
-        
-          // 데이터 반영
-          this.memberSearchList = resp.data;
+          const resp = await axios.get(url, { params: {memberId: q, page: this.page}});
 
+          // 기존 회원 팔로우 수
+          const prevFollowCnt  = this.memberSearchList.length;
+          // 데이터 반영
+          this.memberSearchList.push(...resp.data);
+          this.page++;
+
+          this.loading = false;
+
+          if(resp.data.length < 5){
+              this.finish = true;
+          }
 
           // 회원팔로우 여부 저장
-          for(let i = 0; i<this.memberSearchList.length; i++){
-            const followMemberId = this.memberSearchList[i].memberId;
-            this.memberSearchList[i].isFollowMember = this.memberFollowObj.followMemberList.includes(followMemberId);
+          for(let i = 0; i<resp.data.length; i++){
+            const followMemberId = resp.data[i].memberId;
+            this.memberSearchList[prevFollowCnt + i].isFollowMember = this.memberFollowObj.followMemberList.includes(followMemberId);
+          }
+
+          // 스크롤이 생기지 않은경우 로드
+          if (!this.finish && !(document.body.scrollHeight > window.innerHeight)) {
+            // 본문에 스크롤이 필요하지 않은 경우
+            this.loadMemberSearchList()
           }
         },
 
@@ -206,9 +232,18 @@
           return name + "(" + engName + ")";
         },
 
+        // 회원페이지로 이동
+        moveToMemberPage(targetId){
+          window.location.href = contextPath + "/member/mypage2/" + targetId;
+        },
       },
       watch: {
-  
+        // percent가 변하면 percent의 값을 읽어와서 80% 이상인지 판정
+        percent(){
+          if(this.percent >= 80){
+            this.loadMemberSearchList();
+          }
+        }
       },
       async created(){
         // 1. 로그인 회원 팔로우 정보 로드
@@ -217,6 +252,16 @@
         this.loadMemberSearchList();
 
       },
+      mounted(){
+        window.addEventListener("scroll", _.throttle(()=>{
+          const height = document.body.clientHeight - window.innerHeight;
+          const current = window.scrollY;
+          const percent = (current / height) * 100;
+
+          // data의 percent를 계산된 값으로 갱신
+          this.percent = Math.round(percent);
+        }, 250));
+      }
     }).mount('#search-body')
 </script>
 

@@ -129,7 +129,7 @@
         // 고정태그 생성
         async createFixedTag(fixedTagName){
             // URL
-            const url = "http://localhost:8080/rest/fixedTag/";
+            const url = "${contextPath}/rest/fixedTag/";
             // 고정태그 생성
             await axios.post(url, {fixedTagName: fixedTagName});
 
@@ -139,7 +139,7 @@
         // 고정태그 목록 조회
         async loadFixedTagList () {
             // URL
-            const url = "http://localhost:8080/rest/fixedTag/";
+            const url = "${contextPath}/rest/fixedTag/";
             // 비동기 고정태그 목록 조회
             const resp = await axios.get(url);
             // 반영
@@ -199,7 +199,7 @@
             if(!this.preTagAccess()) return;
 
             // URL
-            const url = "http://localhost:8080/rest/fixedTag/"
+            const url = "${contextPath}/rest/fixedTag/"
             // 고정태그 삭제
             const resp = await axios.delete(url, { 
                 data: this.selectedFixedTagList,
@@ -218,7 +218,7 @@
         async loadFindFixedTagList(){
             if(this.findFixedTagName.length == 0) return;
 
-            const resp = await axios.get("http://localhost:8080/rest/fixedTag/"+this.findFixedTagName);
+            const resp = await axios.get("${contextPath}/rest/fixedTag/"+this.findFixedTagName);
             this.findFixedTagList = resp.data;
             console.log(this.findFixedTagList);
             // console.log("조회 실행");

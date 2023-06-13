@@ -80,6 +80,11 @@ public class PostShowRepoImpl implements PostShowRepo{
 	public Integer selectSessionMemberAttachmentNo(String memberId) {		
 		return sqlSession.selectOne("postShow.selectSessionMemberAttachmentNo",memberId);
 	}
+
+	@Override
+	public PostShowVO selectOnePost(Long postNo) {		
+		return sqlSession.selectOne("postShow.selectOnePost",postNo);
+	}
 }
 
 

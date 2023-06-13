@@ -2,9 +2,18 @@
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>   
 <jsp:include page="/WEB-INF/views/template/header_member.jsp"></jsp:include> 
-	<br><br>
+
+<style>
+	.member-container {
+		position: fixed;
+		left: 50%;
+		transform: translate(-50%, 0%);  
+		width: 600px;    
+	}
+</style>
+
 	<div class="d-flex" id ="app">
-	<div class="custom-container justify-content-center" style="background-color:white; margin: 0 auto; width:700px">
+	<div class="custom-container justify-content-center member-container">
 	<div class="row-page">
 	
 		<div v-show="page==1"  class="row justify-content-center" style="text-align:center;">
@@ -12,7 +21,7 @@
 					<h2 class="font-purple1 text-start">비밀번호 찾기</h2>
 				</div>
 				<div class="row ">
-					<h3 class="font-gray2 text-start" >비밀번호를 찾고자하는 아이디를 입력해주세요.</h3>
+					<h5 class="font-gray2 text-start" >비밀번호를 찾고자하는 아이디를 입력해주세요.</h5>
 				</div>
 				<div class="custom-hr mb-3"></div>
 				

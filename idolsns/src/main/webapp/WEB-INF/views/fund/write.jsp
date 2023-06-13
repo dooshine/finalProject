@@ -48,7 +48,7 @@ $(function(){
 													.val(response.attachmentNo);
 						$("form").prepend(input);
 
-						var imgNode = $("<img>").attr("src", "http://localhost:8080/rest/attachment/download/"+response.attachmentNo);
+						var imgNode = $("<img>").attr("src", "${contextPath}/rest/attachment/download/"+response.attachmentNo);
 						imgNode.attr('width','100%');
 						$("[name=postContent]").summernote('insertNode', imgNode.get(0));
 					},
@@ -314,7 +314,7 @@ $(function(){
             		async loadFindFixedTagList(){
                         if(this.findFixedTagName.length == 0) return;
 
-                        const resp = await axios.get("http://localhost:8080/rest/fixedTag/"+this.findFixedTagName);
+                        const resp = await axios.get("${contextPath}/rest/fixedTag/"+this.findFixedTagName);
                         this.findFixedTagList = resp.data;
                         console.log(this.findFixedTagList);
                         // console.log("조회 실행");

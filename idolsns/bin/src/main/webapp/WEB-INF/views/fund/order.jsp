@@ -144,7 +144,7 @@
 		    },
 		    methods: {
 		      async loadMemberPoint() {
-		        const url = "http://localhost:8080/rest/member/" + memberId;
+		        const url = "${contextPath}/rest/member/" + memberId;
 		        const data = {
 		          memberId: this.memberId
 		        };

@@ -19,19 +19,28 @@
 			padding-left: 12px;
 		}	   
 
-			
+		a {
+			text-decoration: none;
+			color:inherit;
+		}
+		
+		
 	</style>
 
 <div id="app">
   <div class="custom-container">
     <h3 class="font-bold mt-5 mb-3" style="padding-left: 0.5em">스타 사용 내역</h3>
     <div style="padding-left: 0.5em; padding-right: 0.5em;">
-      <div class="custom-hr-big" style="background-color: #7f7f7f;"></div>
+      <div class="custom-hr-big"></div>
       <table class="table">
-        <tr class="col-12">
-          <th class="col-3">참여 펀딩</th>
-          <td>{{ fundDetail.fundTitle }}</td>
-        </tr>
+       	<tr class="col-12">
+		  <th class="col-3">참여 펀딩</th>
+		  <td>
+		    <a :href="'${contextPath}/fund/detail?postNo=' + fundDetail.postNo">
+		      {{ fundDetail.fundTitle }}
+		    </a>
+		  </td>
+		</tr>
         <tr>
           <th>후원 스타</th>
           <td>{{ formatCurrency(fundDto.fundPrice) }}스타</td>

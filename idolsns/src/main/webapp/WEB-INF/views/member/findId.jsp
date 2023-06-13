@@ -2,9 +2,19 @@
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>   
 <jsp:include page="/WEB-INF/views/template/header_member.jsp"></jsp:include> 
-	<br><br>
-	<div class="container" id = app>
-	<div class="col-6 custom-container" style="background-color:white; margin-left: 300px;">
+
+<style>
+	.member-container {
+		position: fixed;
+		left: 50%;
+		transform: translate(-50%, 0%);  
+		width: 600px;    
+	}
+</style>
+
+
+	<div id = "app">
+	<div class="custom-container member-container">
 	<div class="row page">
 		
 		<div v-show ="page==1">

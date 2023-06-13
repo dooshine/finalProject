@@ -187,7 +187,7 @@
             전체 <b class="total-cnt">{{memberList.length}}</b>건
         </div>
         <div class="col-8 mb-1 d-flex justify-content-end">
-            <button class="custom-btn btn-purple1" @click="changeMember"><i class="fa-solid fa-xmark me-2"></i>삭제</button>
+            <!-- <button class="custom-btn btn-purple1" @click="changeMember"><i class="fa-solid fa-xmark me-2"></i>탈퇴</button> -->
         </div>
     </div>
     <div class="row">
@@ -240,40 +240,40 @@
 
 <!-- ######################## 회원리스트 페이지네이션 시작 ########################-->
    <div class="row my-5">
-    <div class="col text-center">
-        <nav aria-label="...">
-            <ul class="pagination justify-content-center">
-                <!-- 첫 페이지로 이동 -->
-                <li class="page-item" :class="{disabled: pageObj.isFirst}">
-                    <span class="page-link cursor-pointer" @click="showFirstPage">&laquo;</span>
-                </li>
-                <!-- 이전 블럭으로 이동 -->
-                <li class="page-item" :class="{disabled: !pageObj.hasPrev}">
-                    <span class="page-link cursor-pointer" @click="showPrevBlock">&lt;</span>
-                </li>
-                <!-- 페이지번호 이동 -->
-                <li class="page-item"
-                    :class="{active: pageObj.startBlock + i - 1 === pageObj.page}"
-                    :aria-current="{page: pageObj.startBlock + i - 1 === pageObj.page}"
-                    v-for="i in pageObj.finishBlock-pageObj.startBlock+1" :key="i">
-                    <span href="#" class="page-link"
-                        :class="{'cursor-pointer': pageObj.startBlock + i - 1 !== pageObj.page}"
-                        @click="showTargetPage(pageObj.startBlock + i - 1)">
-                        {{pageObj.startBlock + i - 1}}
-                    </span>
-                </li>
-                <!-- 다음 블럭으로 이동 -->
-                <li class="page-item" :class="{disabled: !pageObj.hasNext}">
-				    <span class="page-link cursor-pointer" @click="showNextBlock">&gt;</span>
-				</li>
-                <!-- 마지막 페이지로 이동 -->
-                <li class="page-item" :class="{disabled: pageObj.isLast}">
-                    <span class="page-link cursor-pointer" @click="showLastPage">&raquo;</span>
-                </li>
-            </ul>
-        </nav>
+        <div class="col text-center">
+            <nav aria-label="...">
+                <ul class="pagination justify-content-center">
+                    <!-- 첫 페이지로 이동 -->
+                    <li class="page-item" :class="{disabled: pageObj.isFirst}">
+                        <span class="page-link cursor-pointer" @click="showFirstPage">&laquo;</span>
+                    </li>
+                    <!-- 이전 블럭으로 이동 -->
+                    <li class="page-item" :class="{disabled: !pageObj.hasPrev}">
+                        <span class="page-link cursor-pointer" @click="showPrevBlock">&lt;</span>
+                    </li>
+                    <!-- 페이지번호 이동 -->
+                    <li class="page-item"
+                        :class="{active: pageObj.startBlock + i - 1 === pageObj.page}"
+                        :aria-current="{page: pageObj.startBlock + i - 1 === pageObj.page}"
+                        v-for="i in pageObj.finishBlock-pageObj.startBlock+1" :key="i">
+                        <span href="#" class="page-link"
+                            :class="{'cursor-pointer': pageObj.startBlock + i - 1 !== pageObj.page}"
+                            @click="showTargetPage(pageObj.startBlock + i - 1)">
+                            {{pageObj.startBlock + i - 1}}
+                        </span>
+                    </li>
+                    <!-- 다음 블럭으로 이동 -->
+                    <li class="page-item" :class="{disabled: !pageObj.hasNext}">
+                        <span class="page-link cursor-pointer" @click="showNextBlock">&gt;</span>
+                    </li>
+                    <!-- 마지막 페이지로 이동 -->
+                    <li class="page-item" :class="{disabled: pageObj.isLast}">
+                        <span class="page-link cursor-pointer" @click="showLastPage">&raquo;</span>
+                    </li>
+                </ul>
+            </nav>
+        </div>
     </div>
-</div>
 <!-- ######################## 회원리스트 페이지네이션 끝 ########################-->
 
 
@@ -323,7 +323,7 @@
           // 페이지네이션 Obj
           pageObj: {
             page: 1,
-            size: 1,
+            size: 15,
             blocksize: 5,
             total: 0, 
 
@@ -386,18 +386,11 @@
       methods: {
         // 멤버 불러오기
         async loadMemberList(){
-            const url = "http://localhost:8080/rest/admin/member"
+            const url = "${contextPath}/rest/admin/member"
             const response = await axios.post(url, this.memberSearchVO);
             console.log(response.data);
             this.memberList = response.data;
         },
-        // 회원 비동기 검색
-        // async searchMember(){
-            // const url = "http://localhost:8080/rest/report/test/";
-            // const resp = await axios.post(url, this.memberSearchVO);
-            // this.memberList = _.cloneDeep(resp.data);
-            // console.table(this.memberSearchVO);
-        // },
 
         // 회원 개별선택
         checkMember(e, memberId){
@@ -416,16 +409,6 @@
             // 사용자 확인
             const selectedCnt = this.selectedMemberList.length;
             if(selectedCnt===0 && !confirm(selectedCnt + "개의 회원을 변경하시겠습니까?")) return;
-
-            console.table(this.selectedMemberList)
-
-            // URL
-            // const url = "http://localhost:8080/rest/artist/"
-            // 아티스트 삭제
-
-            // const resp = await axios.delete(url, { 
-                // data: this.selectedMemberList,
-            // });
 
             // 선택항목 초기화
             this.setSelectedMemberEmpty();

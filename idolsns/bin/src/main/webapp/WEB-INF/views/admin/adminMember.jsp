@@ -341,14 +341,14 @@
       methods: {
         // 멤버 불러오기
         async loadMemberList(){
-            const url = "http://localhost:8080/rest/admin/member"
+            const url = "${contextPath}/rest/admin/member"
             const response = await axios.post(url, this.memberSearchVO);
             console.log(response.data);
             this.memberList = response.data;
         },
         // 회원 비동기 검색
         // async searchMember(){
-            // const url = "http://localhost:8080/rest/report/test/";
+            // const url = "${contextPath}/rest/report/test/";
             // const resp = await axios.post(url, this.memberSearchVO);
             // this.memberList = _.cloneDeep(resp.data);
             // console.table(this.memberSearchVO);
@@ -375,7 +375,7 @@
             console.table(this.selectedMemberList)
 
             // URL
-            // const url = "http://localhost:8080/rest/artist/"
+            // const url = "${contextPath}/rest/artist/"
             // 아티스트 삭제
 
             // const resp = await axios.delete(url, { 

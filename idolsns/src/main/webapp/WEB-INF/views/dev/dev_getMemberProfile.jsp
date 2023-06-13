@@ -68,7 +68,7 @@
       methods: {
         // 테스트
         async test(){
-            const url = "http://localhost:8080/rest/member/getMemberProfile";
+            const url = "${contextPath}/rest/member/getMemberProfile";
             
             const resp = await axios.get(url, {
                 params: {

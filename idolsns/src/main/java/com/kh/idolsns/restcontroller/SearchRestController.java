@@ -6,11 +6,13 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.kh.idolsns.dto.SearchMemberDto;
+import com.kh.idolsns.vo.MemberSearchVO;
 
 @CrossOrigin
 @RestController
@@ -22,8 +24,10 @@ public class SearchRestController {
 
     // 회원검색결과 조회
     @GetMapping("/member")
-    public List<SearchMemberDto> selectSearchMember(@RequestParam String memberId){
-        return sqlSession.selectList("search.selectSearchMember", memberId);
+    public List<SearchMemberDto> selectSearchMember(@ModelAttribute MemberSearchVO memberSearchVO){
+    // public List<SearchMemberDto> selectSearchMember(@RequestParam String memberId){
+        return sqlSession.selectList("search.selectSearchMember", memberSearchVO);
+        // return null;
     }
 
     // 회원검색결과 조회

@@ -71,7 +71,7 @@
             </td>
             <td>
               <div class="search-table-col">
-                <button class="btn rounded-pill" :class="{'btn-primary':!artistSearch.isFollowPage, 'btn-secondary': artistSearch.isFollowPage}"  v-text="artistSearch.isFollowPage?'팔로우취소':'팔로우하기'" @click="followPage(artistSearch)">팔로우하기</button>
+                <button class="btn rounded-pill" :class="{'btn-primary':!artistSearch.isFollowPage, 'btn-secondary': artistSearch.isFollowPage}"  v-text="artistSearch.isFollowPage?'팔로우취소':'팔로우하기'" @click="followPage(artistSearch)"></button>
               </div>
             </td>
           </tr>
@@ -122,7 +122,7 @@
           // 로그인X → 실행 X
           if(memberId==="") return;
           // url
-          const url = "http://localhost:8080/rest/follow/memberFollowInfo/"
+          const url = "${contextPath}/rest/follow/memberFollowInfo/"
           // 팔로우 목록 load
           const resp = await axios.get(url, {params:{memberId: memberId}});
           // 로그인 팔로우 정보 로드
@@ -138,7 +138,7 @@
           const q = params.get("q")
 
           // url
-          const url = "http://localhost:8080/rest/artist/search";
+          const url = "${contextPath}/rest/artist/search";
 
           // 조회
           const resp = await axios.get(url, { params: {q: q, page: this.artistPage++}});
@@ -219,14 +219,14 @@
         // 대표페이지 팔로우 생성
         async createFollow(){
             // 팔로우 생성 url
-            const url = "http://localhost:8080/rest/follow/";
+            const url = "${contextPath}/rest/follow/";
             await axios.post(url, this.followObj);
             // [develope] 
         },
         // 대표페이지 팔로우 취소
         async deleteFollow(){
             // 팔로우 생성 url
-            const url = "http://localhost:8080/rest/follow/";
+            const url = "${contextPath}/rest/follow/";
             await axios.delete(url, {
                 data: this.followObj,
             });

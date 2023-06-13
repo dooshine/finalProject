@@ -16,7 +16,7 @@
 		    width: 100%;
 		  }
           
-    	}
+    	
     
     		}
    		.table th {
@@ -43,7 +43,7 @@
    		  <form id="orderProcess" method="post" action="/fund/order">
     		
     		<div class="container border mt-5 d-flex" style="padding:1em;">
-    			<img src="/download?attachmentNo=${fundMainImageDto.attachmentNo}" class="col-5">
+    			<img src="/download?attachmentNo=${fundMainImageDto.attachmentNo}" class="col-5" style="height:200px;">
     			
     			<div class="col-7 p-3">
     				<div class="font-bold" style="font-size:25px;">${fundPostDto.fundTitle}</div> 
@@ -55,7 +55,7 @@
     		
     		
     		<div class= "mt-5">
-    			<h4 class="title">후원정보</h4>
+    			<h4 class="font-bold">후원정보</h4>
     		</div>
     		<hr style="background-color: black; height: 2px">
     	
@@ -76,9 +76,9 @@
 			<input type="hidden" name="postNo" value="${fundPostDto.postNo}">
 
 			
-	  	<div>
+	  	<div style="font-size:20px;">
         	<p class="container rounded p-3 border">내 스타: 
-        	<span class="amount" style="color:#77E9CC; font-weight:bold">{{ formattedAmount }}</span>원</p>
+        	<span class="amount" style="color:#6A53FB; font-weight:bold;">{{ formattedAmount }}</span>스타</p>
         </div>	
 			
 			
@@ -87,7 +87,7 @@
 			  <span class="input-group-text" id="inputGroup-sizing-default">후원 스타</span>
 			  <input type="number" name="fundPrice" class="form-control" 
 			    aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm"
-			    placeholder="후원 금액을 입력하세요" v-model="fundPrice" @input="validateFundPrice" min="0">
+			    placeholder="후원 스타 액수를 입력하세요" v-model="fundPrice" @input="validateFundPrice" min="0">
 			</div>
 						
 			<!-- Add the error message -->
@@ -154,7 +154,7 @@
 		    },
 		    methods: {
 		      async loadMemberPoint() {
-		        const url = "http://localhost:8080/rest/member/" + memberId;
+		        const url = "${contextPath}/rest/member/" + memberId;
 		        const data = {
 		          memberId: this.memberId
 		        };
