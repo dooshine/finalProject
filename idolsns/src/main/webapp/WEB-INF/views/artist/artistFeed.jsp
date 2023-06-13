@@ -1666,7 +1666,7 @@
 		// 대표페이지 팔로우 대상 설정
 		setFollowPageObj (){
             // 아티스트 이름
-            const artistName = window.location.pathname.split("/").at(-1);
+            const artistName = window.location.pathname.split("/").at(-2);
             // 팔로우 대상 유형
             this.followPageObj.followTargetType = "대표페이지";
             // 팔로우 대상 PK
