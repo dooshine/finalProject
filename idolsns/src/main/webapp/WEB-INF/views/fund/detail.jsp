@@ -205,7 +205,7 @@
 						    	</div>
 					    </button>
 					
-						<button type="submit" class="btn-purple1 custom-btn col-8"  style="font-size:25px; vertical-align:middle;"  @click="order">
+						<button type="submit" class="btn-purple1 custom-btn col-8"  style="font-size:23px; vertical-align:middle;"  @click="order">
 						후원하기</button>
 					</div>	
 				</div>			

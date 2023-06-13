@@ -95,7 +95,17 @@
 			vertical-align: middle;
 		}
 	   
-	    
+	       .pagination .page-item.active .page-link {
+		  background-color: #6A53FB;
+		  border-color: #6A53FB;
+		  color: #fff;
+		}
+				
+				
+					
+				
+		
+			    
 	</style>
 
 
