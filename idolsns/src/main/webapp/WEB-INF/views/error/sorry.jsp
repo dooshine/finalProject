@@ -8,7 +8,7 @@
 display: flex; flex-direction: column; justify-content: center; align-items: center;">
 	<div>
 		<a href="${pageContext.request.contextPath}/">
-		<button class="custom-btn btn-round btn-purple1" style="font-size:25px; margin-top: 350px;">메인으로 돌아가기</button>
+		<button class="custom-btn btn-round btn-purple1" style="font-size:25px; margin-top:150px;">홈으로 돌아가기</button>
 		</a>
 	</div>
 </div>
