@@ -274,7 +274,7 @@
 	        		
 	        		<!-- 수정 폼 -->
 		        	<div v-if="updateReplyObj.index == i" class="ms-3 grey-f5f5f5 rounded-4">
-				    	<textarea @blur="setUpdateReplyObj($event, i)" class="row grey-f5f5f5 rounded-3 font-gray2 col-10 p-3" 
+				    	<textarea @blur="setUpdateReplyObj($event, i)" class="row grey-f5f5f5 rounded-4 font-gray2 mx-0 col-10 p-3" 
 		       				placeholder="수정 내용">{{ reply.replyContent }}</textarea>
 		       			<div class="d-flex">
 			        		<div class="col text-start ps-2">
@@ -347,7 +347,7 @@
 	        		
           			<!-- 수정 폼 -->
 		        	<div v-if="updateReplyObj.index == i" class="grey-f5f5f5 rounded-4">
-				    	<textarea @blur="setUpdateReplyObj($event, i)" class="row grey-f5f5f5 rounded-3 font-gray2 mx-0 p-3 col-12" 
+				    	<textarea @blur="setUpdateReplyObj($event, i)" class="row grey-f5f5f5 rounded-4 font-gray2 mx-0 p-3 col-12" 
 		       				placeholder="수정 내용">{{ reply.replyContent }}</textarea>
 		       			<div class="d-flex">
 			        		<div class="col text-start ps-2">
@@ -487,12 +487,22 @@
 	          	<div v-else v-for="(fund, index) in fundVO">
 		          	<div class="row w-100">
 		          		<div class="col-2">
-							{{ fund.rank }}위        			
+							{{ fund.rank }}위   			
 		          		</div>
-		          		<div class="col-6">
-							{{ fund.memberNick }} ({{ fund.memberId }})	          			
-		          		</div>
-		          		<div class="col-3 d-flex justify-content-end">
+		          		<div class="col-5 px-0">
+			                <div v-if="fund.showDetails">
+			                  {{ fund.memberNick }} ({{ fund.memberId }})
+			                </div>
+			                <div v-else>
+			                  <div class="text-ellipsis" style="width: 100px; overflow: hidden; white-space: nowrap;">
+			                    {{ fund.memberNick }} ({{ fund.memberId }})
+			                  </div>
+			                  <button class="btn-show-more" @click="fund.showDetails = !fund.showDetails">
+			                    더보기
+			                  </button>
+			                </div>
+		                </div>
+		          		<div class="col-4 d-flex justify-content-end">
 							{{ formatCurrency(fund.fundTotal) }}원         			
 		          		</div>
 		          		<div v-if="fund.rank < 4" class="col-1">
@@ -783,11 +793,11 @@
 					this.reReplies[i] = false;
 				},
 				// 태그 클릭시 
-// 				tagLink(i){
-// 					console.log(this.fundDetail.tagNames[i]);
-// 					const url = ""
-// 					window.location.href = url;
-// 				},
+				tagLink(i){
+// 					console.log("console.log(this.fundDetail.tagNames[i]);"+this.fundDetail.tagNames[i]);
+					const url = "/search/post?q="+this.fundDetail.tagNames[i];
+					window.location.href = url;
+				},
 				// 모달 열기&닫기
 				showModal(i){
 					this.replies[i].modal = true;
@@ -892,6 +902,7 @@
 	              this.getSessionMemberAttachmentNo();
 		    	},
 		    mounted() {
+		    		
 		    	}
 		  }).mount("#app");
 		</script>
