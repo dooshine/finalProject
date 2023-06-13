@@ -85,7 +85,7 @@ function loadCalendar() {
 		    calendarNo = arg.event.id;
 		    //console.log("click calendarNo: " + calendarNo);
 		    $.ajax({
-		        url: contextPath + "/calendar/detail/" + calendarNo,
+		        url: "${contextPath}/calendar/detail/" + calendarNo,
 		        method: "get",
 		        success: function(resp) {
 		            /*console.log(resp);
@@ -108,7 +108,7 @@ function loadCalendar() {
 		            });
 		            $("#delete-schedule").on("click", function() {
 		                $.ajax({
-		                    url: contextPath + "/calendar/" + calendarNo,
+		                    url: "${contextPath}/calendar/" + calendarNo,
 		                    method: "delete",
 		                    success: function() {
 		                    	$("#deleteAlertModal").hide();
@@ -172,7 +172,7 @@ function loadCalendar() {
 		    });
 			// ajax
 			$.ajax({
-		        url: contextPath + "/calendar/date",
+		        url: "${contextPath}/calendar/date",
 		        method: "put",
 		        contentType: 'application/json',
 		        data: data,
@@ -204,7 +204,7 @@ document.addEventListener('DOMContentLoaded', loadCalendar);
 function loadMemberCalendar() {
 	if(memberId === "") return;
 	return $.ajax({
-		url: contextPath + "/calendar/load/" + memberId,
+		url: "${contextPath}/calendar/load/" + memberId,
 		success:function(resp){
 			//console.log(resp);
 			calendar.removeAllEvents();
@@ -239,7 +239,7 @@ function addSchedule() {
 			"calendarMemo": calendarMemo
 		};
 		axios({
-			url: contextPath + "/calendar/add",
+			url: "${contextPath}/calendar/add",
 			method:"post",
 			data:JSON.stringify(dto),
 			headers: { 'Content-Type': 'application/json' }
@@ -268,7 +268,7 @@ function editSchedule() {
     });
 	//console.log("calendarNo: " + calendarNo);
 	$.ajax({
-        url: contextPath + "/calendar/content",
+        url: "${contextPath}/calendar/content",
         method: "put",
         contentType: 'application/json',
         data: data,
@@ -407,6 +407,6 @@ $(function() {
 // 로그인하러 가기 버튼
 $(function() {
 	$(".calendar-login-btn").on("click", function() {
-	    window.location.href = contextPath + "/member/login";
+	    window.location.href = "${contextPath}/member/login";
 	});
 })

@@ -386,7 +386,7 @@
       methods: {
         // 멤버 불러오기
         async loadMemberList(){
-            const url = "http://localhost:8080/rest/admin/member"
+            const url = "${contextPath}/rest/admin/member"
             const response = await axios.post(url, this.memberSearchVO);
             console.log(response.data);
             this.memberList = response.data;

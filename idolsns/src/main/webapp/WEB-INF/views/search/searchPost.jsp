@@ -360,7 +360,7 @@
         // 좋아요 관련 비동기 처리-----------------------------------
         // 아이디 접속해 있고, 좋아요 클릭시에 실행
         checkLike(postNo,index){
-          axios.get('http://localhost:8080/rest/post/like/'+postNo)
+          axios.get('${contextPath}/rest/post/like/'+postNo)
             .then(response => {
               // 응답이 좋아요면 좋아요 +1
               if(response.data== 'Like'){
@@ -387,7 +387,7 @@
             postNoList.push(post.postNo); 
           })
           
-          axios.get('http://localhost:8080/rest/post/like/index/'+postNoList)
+          axios.get('${contextPath}/rest/post/like/index/'+postNoList)
             .then(response => {               			
             this.postLikeIndexList = response.data;                			
           })
@@ -402,7 +402,7 @@
         async replySending(postNo,index){
           try{
             const replyDto = {postNo: postNo, replyContent:this.replyContent};
-              const response = await axios.post('http://localhost:8080/rest/post/reply/',replyDto);
+              const response = await axios.post('${contextPath}/rest/post/reply/',replyDto);
               this.fetchPosts();
             }
           catch (error){
@@ -426,7 +426,7 @@
         async rereplySending(postNo,replyNo,index){
           try{
             const replyDto = {postNo: postNo, replyContent:this.rereplyContent, replyGroupNo: replyNo};
-              const response = await axios.post('http://localhost:8080/rest/post/rereply/',replyDto);
+              const response = await axios.post('${contextPath}/rest/post/rereply/',replyDto);
               this.fetchPosts();
             }
           catch (error){
@@ -450,7 +450,7 @@
         // 댓글 삭제
         async deleteReply(replyNo){
           try{
-            await axios.delete('http://localhost:8080/rest/post/reply/delete/'+replyNo);
+            await axios.delete('${contextPath}/rest/post/reply/delete/'+replyNo);
             this.fetchPosts();
           }
           catch (error){
@@ -461,7 +461,7 @@
         // 대댓글 삭제
         async deleteRereply(replyNo){
           try{
-            await axios.delete('http://localhost:8080/rest/post/reply/reDelete/'+replyNo);
+            await axios.delete('${contextPath}/rest/post/reply/reDelete/'+replyNo);
             this.fetchPosts();
           }
           catch(error){
@@ -477,7 +477,7 @@
           // 로그인X → 실행 X
           if(memberId==="") return;
           // url
-          const url = "http://localhost:8080/rest/follow/memberFollowInfo/"
+          const url = "${contextPath}/rest/follow/memberFollowInfo/"
           // 팔로우 목록 load
           const resp = await axios.get(url, {params:{memberId: memberId}});
           // 로그인 팔로우 정보 로드
@@ -552,14 +552,14 @@
         // 대표페이지 팔로우 생성
         async createFollow(){
             // 팔로우 생성 url
-            const url = "http://localhost:8080/rest/follow/";
+            const url = "${contextPath}/rest/follow/";
             await axios.post(url, this.followObj);
             // [develope] 
         },
         // 대표페이지 팔로우 취소
         async deleteFollow(){
             // 팔로우 생성 url
-            const url = "http://localhost:8080/rest/follow/";
+            const url = "${contextPath}/rest/follow/";
             await axios.delete(url, {
                 data: this.followObj,
             });
@@ -574,7 +574,7 @@
           const q = params.get("q");
 
           // url
-          const url = "http://localhost:8080/rest/post/pageReload/fixedTagPost";
+          const url = "${contextPath}/rest/post/pageReload/fixedTagPost";
 
           // 조회
           const resp = await axios.post(url, { page: this.postPage, fixedTagName: q } );
@@ -584,7 +584,7 @@
           this.getLikePostIndex(this.fixedTagSearchList);
         },
         getAttachmentUrl(attachmentNo) {		
-          return "http://localhost:8080/rest/attachment/download/"+attachmentNo;
+          return "${contextPath}/rest/attachment/download/"+attachmentNo;
         },
 
         // 풀네임 생성

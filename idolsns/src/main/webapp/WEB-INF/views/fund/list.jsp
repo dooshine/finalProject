@@ -350,7 +350,7 @@
                   async fetchFundingList() {
            	   		if(this.finish) return;
            	   		
-                  const resp = await axios.get("http://localhost:8080/rest/fund/page/"+this.searchPage,
+                  const resp = await axios.get("${contextPath}/rest/fund/page/"+this.searchPage,
                         {
                 	  params: {
                 		  	// 검색어
@@ -380,7 +380,7 @@
                 	   	if(this.finish) return;
                 	   	  this.searchPage=1;
                 	   	  
-		                  const resp = await axios.get("http://localhost:8080/rest/fund/page/"+this.searchPage,
+		                  const resp = await axios.get("${contextPath}/rest/fund/page/"+this.searchPage,
 		                        {
 		                	  params: {
 		                		  	// 검색어
@@ -419,7 +419,7 @@
                    		postNoList.push(funding.postNo); 
                    	})
                    	
-               		axios.get('http://localhost:8080/rest/fund/like/index/'+postNoList)
+               		axios.get('${contextPath}/rest/fund/like/index/'+postNoList)
                			.then(response => {               			
                			this.postLikeIndexList = response.data;  
                			console.log("postLikeIndexList--------"+this.postLikeIndexList);
@@ -505,7 +505,7 @@
 //     					if(!this.checkLogin()) return;
     					
 //     					const postNo = funding.postNo;
-//     					axios.get('http://localhost:8080/rest/post/like/'+postNo)
+//     					axios.get('${contextPath}/rest/post/like/'+postNo)
 //                 		.then(response => {
 //                 			console.log("checkLike = " +response.data);
 //                 			this.checkFundLike();
@@ -520,14 +520,14 @@
     				// 좋아요 체크
     				async checkFundLike() {
     					const postNo = this.fundDetail.postNo;
-    					const resp = await axios.get("http://localhost:8080/rest/post/like/check/"+postNo);
+    					const resp = await axios.get("${contextPath}/rest/post/like/check/"+postNo);
     					this.fundings.isLiked = resp.data;
     				},
     				// 아이디 접속해 있고, 좋아요 클릭시에 실행
                  	checkLike(postNo,index){
     					// if not logged in
     					if(!this.checkLogin()) return;
-                    	axios.get('http://localhost:8080/rest/post/like/'+postNo)
+                    	axios.get('${contextPath}/rest/post/like/'+postNo)
                     		.then(response => {
                     			console.log(response.data);
                     			// 응답이 좋아요면

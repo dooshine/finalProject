@@ -21,7 +21,7 @@
     },
     methods: {
         async restTest(){
-            const url = "http://localhost:8080/dev/restInterceptor";
+            const url = "${contextPath}/dev/restInterceptor";
 
             // const resp = axios.get(url);
             // ↓

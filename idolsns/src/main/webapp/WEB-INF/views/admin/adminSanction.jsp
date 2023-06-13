@@ -222,7 +222,7 @@
         // Load 신고 리스트
         async loadSanctionList () {
             // 신고리스트 조회 URL
-            const url = "http://localhost:8080/rest/sanction/list";
+            const url = "${contextPath}/rest/sanction/list";
             // 비동기 신고리스트 조회 실행
             const resp = await axios.post(url, {});
             // vue.data.reportList에 resp.data 복사
@@ -250,7 +250,7 @@
             if(!confirm(selectedSanctionCnt + "개의 제재 내역을 정말 삭제하시겠습니까?")) return;
 
             // 신고 api url
-            const url = "http://localhost:8080/rest/sanction/"
+            const url = "${contextPath}/rest/sanction/"
             
             // 신고 삭제 호출
             const resp = await axios.delete(url, { 

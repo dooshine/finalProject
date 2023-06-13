@@ -36,7 +36,7 @@
        	<tr class="col-12">
 		  <th class="col-3">참여 펀딩</th>
 		  <td>
-		    <a :href="'http://localhost:8080/fund/detail?postNo=' + fundDetail.postNo">
+		    <a :href="'${contextPath}/fund/detail?postNo=' + fundDetail.postNo">
 		      {{ fundDetail.fundTitle }}
 		    </a>
 		  </td>

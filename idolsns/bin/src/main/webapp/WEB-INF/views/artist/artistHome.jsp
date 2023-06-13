@@ -260,7 +260,7 @@
             // 대표페이지 이름
             const artistEngNameLower = window.location.pathname.split("/").at(-1);
 			// url
-            const url = "http://localhost:8080/rest/artist/";
+            const url = "${contextPath}/rest/artist/";
 			// 조회
             const resp = await axios.get(url, { params: { artistEngNameLower: artistEngNameLower } });
 			// 조회 결과 없을 시 
@@ -278,7 +278,7 @@
             // 로그인X → 실행 X
             if(memberId==="") return;
 
-            const url = "http://localhost:8080/rest/follow/memberFollowInfo/"
+            const url = "${contextPath}/rest/follow/memberFollowInfo/"
 
             const resp = await axios.get(url, {params:{memberId: memberId}});
 
@@ -339,7 +339,7 @@
         // 대표페이지 팔로우 생성
         async createFollowPage(){
             // 팔로우 생성 url
-            const url = "http://localhost:8080/rest/follow/";
+            const url = "${contextPath}/rest/follow/";
             await axios.post(url, this.followPageObj);
             // [develope] 
             console.log(this.followPageObj.memberId + "님의 " + this.followPageObj.followTargetPrimaryKey + "님 팔로우 생성");
@@ -347,7 +347,7 @@
         // 대표페이지 팔로우 취소
         async deleteFollow(){
             // 팔로우 생성 url
-            const url = "http://localhost:8080/rest/follow/";
+            const url = "${contextPath}/rest/follow/";
             await axios.delete(url, {
                 data: this.followPageObj,
             });

@@ -1313,7 +1313,7 @@
         // 좋아요 관련 비동기 처리-----------------------------------
         // 아이디 접속해 있고, 좋아요 클릭시에 실행
         checkLike(postNo,index){
-          axios.get('http://localhost:8080/rest/post/like/'+postNo)
+          axios.get('${contextPath}/rest/post/like/'+postNo)
             .then(response => {
               // 응답이 좋아요면 좋아요 +1
               if(response.data== 'Like'){
@@ -1340,7 +1340,7 @@
             postNoList.push(post.postNo); 
           })
           
-          axios.get('http://localhost:8080/rest/post/like/index/'+postNoList)
+          axios.get('${contextPath}/rest/post/like/index/'+postNoList)
             .then(response => {               			
             this.postLikeIndexList = response.data;                			
           })
@@ -1360,7 +1360,7 @@
             this.loading = true;
             
             // 1페이지 부터 현재 페이지 까지 전부 가져옴 
-            const resp = await axios.get("http://localhost:8080/rest/post/pageReload/"+this.page);
+            const resp = await axios.get("${contextPath}/rest/post/pageReload/"+this.page);
             this.posts = resp.data;
             this.getLikePostIndex(this.posts);
             this.getReplyAllList(this.posts);
@@ -1383,7 +1383,7 @@
     	async deletePost(){
     		var postNo = this.deletePostNo;
         	try{
-        		await axios.delete('http://localhost:8080/rest/post/'+postNo);
+        		await axios.delete('${contextPath}/rest/post/'+postNo);
         		this.fetchPosts();
         	}
         	catch (error){
@@ -1402,7 +1402,7 @@
 	    	};
 	    	
 	    	try {
-	    		await axios.put('http://localhost:8080/rest/post/',postDto);
+	    		await axios.put('${contextPath}/rest/post/',postDto);
 	    		
 	    	}
 	    	catch(error){
@@ -1419,11 +1419,11 @@
 	    	this.modalImageUrl = this.getAttachmentUrl(attachmentNo)
 	    },
         getAttachmentUrl(attachmentNo) {		
-    		return "http://localhost:8080/rest/attachment/download/"+attachmentNo;
+    		return "${contextPath}/rest/attachment/download/"+attachmentNo;
         },
         async checkFileType(attachmentNo) {
             try {
-                const response = await axios.head('http://localhost:8080/rest/attachment/download/post/' + attachmentNo);
+                const response = await axios.head('${contextPath}/rest/attachment/download/post/' + attachmentNo);
                 const contentType = response.headers['content-type'];
                 if (contentType.includes('image')) {
                     return 'image';
@@ -1482,7 +1482,7 @@
 			// 로그인X → 실행 X
 			if(this.memberId===null) return;
 			// url
-			const url = "http://localhost:8080/rest/follow/memberFollowInfo/"
+			const url = "${contextPath}/rest/follow/memberFollowInfo/"
 			// 팔로우 목록 load
 			const resp = await axios.get(url, {params:{memberId: this.memberId}});
 
@@ -1510,7 +1510,7 @@
                 followTargetPrimaryKey: followedMemberId
             };
             
-            const url = "http://localhost:8080/rest/follow/";
+            const url = "${contextPath}/rest/follow/";
             await axios.post(url,followDto);
            
 
@@ -1536,7 +1536,7 @@
             };                    
             
             // 팔로우 삭제 
-            const url = "http://localhost:8080/rest/follow/";
+            const url = "${contextPath}/rest/follow/";
             await axios.delete(url, {
                 data: followDto,
             });
@@ -1572,7 +1572,7 @@
         	};
         	console.log(this.reportDto);
         	
-        	const url = "http://localhost:8080/rest/report/";
+        	const url = "${contextPath}/rest/report/";
         	try{
         		const resp = await axios.post(url, reportDto);
         	}
@@ -1586,7 +1586,7 @@
      	// 좋아요 관련 비동기 처리-----------------------------------
      	// 아이디 접속해 있고, 좋아요 클릭시에 실행
      	checkLike(postNo,index){
-        	axios.get('http://localhost:8080/rest/post/like/'+postNo)
+        	axios.get('${contextPath}/rest/post/like/'+postNo)
         		.then(response => {
         			console.log(response.data);
         			// 응답이 좋아요면 좋아요 +1
@@ -1615,7 +1615,7 @@
         		postNoList.push(post.postNo); 
         	})
         	
-       		axios.get('http://localhost:8080/rest/post/like/index/'+postNoList)
+       		axios.get('${contextPath}/rest/post/like/index/'+postNoList)
        			.then(response => {               			
        			this.postLikeIndexList = response.data;                			
        		})
@@ -1628,7 +1628,7 @@
         
      	// 고정 태그 맵핑
      	searchFixedTag(data){
-        	this.searchUrl = 'http://localhost:8080/search/post/?q='+data;
+        	this.searchUrl = '${contextPath}/search/post/?q='+data;
         },
      	
      	
@@ -1637,7 +1637,7 @@
         async replySending(postNo,index){
         	try{
         		const replyDto = {postNo: postNo, replyContent:this.replyContent};
-            	const response = await axios.post('http://localhost:8080/rest/post/reply/',replyDto);
+            	const response = await axios.post('${contextPath}/rest/post/reply/',replyDto);
             	this.fetchPosts();
             }
         	catch (error){
@@ -1672,7 +1672,7 @@
         async rereplySending(postNo,replyNo,index){
         	try{
         		const replyDto = {postNo: postNo, replyContent:this.rereplyContent, replyGroupNo: replyNo};
-            	const response = await axios.post('http://localhost:8080/rest/post/rereply/',replyDto);
+            	const response = await axios.post('${contextPath}/rest/post/rereply/',replyDto);
             	this.fetchPosts();
             }
         	catch (error){
@@ -1700,7 +1700,7 @@
         // 댓글 삭제
         async deleteReply(replyNo){
         	try{
-        		await axios.delete('http://localhost:8080/rest/post/reply/delete/'+replyNo);
+        		await axios.delete('${contextPath}/rest/post/reply/delete/'+replyNo);
         		this.fetchPosts();
         	}
         	catch (error){
@@ -1711,7 +1711,7 @@
         // 대댓글 삭제
         async deleteRereply(replyNo){
         	try{
-        		await axios.delete('http://localhost:8080/rest/post/reply/reDelete/'+replyNo);
+        		await axios.delete('${contextPath}/rest/post/reply/reDelete/'+replyNo);
         		this.fetchPosts();
         	}
         	catch(error){
@@ -1854,7 +1854,7 @@
     	async loadFindFixedTagList(){
             if(this.findFixedTagName.length == 0) return;
 
-            const resp = await axios.get("http://localhost:8080/rest/fixedTag/"+this.findFixedTagName);
+            const resp = await axios.get("${contextPath}/rest/fixedTag/"+this.findFixedTagName);
             this.findFixedTagList = resp.data;
 			// console.log(this.findFixedTagList);
             // console.log("조회 실행");
@@ -1873,7 +1873,7 @@
         async getSessionMemberAttachmentNo(){
         	if(this.memberId !=null)
         	{
-        		const resp = await axios.get("http://localhost:8080/rest/post/sessionAttachmentNo/");	
+        		const resp = await axios.get("${contextPath}/rest/post/sessionAttachmentNo/");	
         		this.sessionMemberAttachmentNo = resp.data;
         		return this.sessionMemberAttachmentNo; 
         	}
@@ -1886,7 +1886,7 @@
           // 로그인X → 실행 X
           if(memberId==="") return;
           // url
-          const url = "http://localhost:8080/rest/follow/memberFollowInfo/"
+          const url = "${contextPath}/rest/follow/memberFollowInfo/"
           // 팔로우 목록 load
           const resp = await axios.get(url, {params:{memberId: memberId}});
           // 로그인 팔로우 정보 로드
@@ -1961,14 +1961,14 @@
         // 대표페이지 팔로우 생성
         async createFollow(){
             // 팔로우 생성 url
-            const url = "http://localhost:8080/rest/follow/";
+            const url = "${contextPath}/rest/follow/";
             await axios.post(url, this.followObj);
             // [develope] 
         },
         // 대표페이지 팔로우 취소
         async deleteFollow(){
             // 팔로우 생성 url
-            const url = "http://localhost:8080/rest/follow/";
+            const url = "${contextPath}/rest/follow/";
             await axios.delete(url, {
                 data: this.followObj,
             });
@@ -1983,7 +1983,7 @@
           const q = params.get("q");
 
           // url
-          const url = "http://localhost:8080/rest/post/pageReload/fixedTagPost";
+          const url = "${contextPath}/rest/post/pageReload/fixedTagPost";
 
   		// 페이지가 1페이지고(10개의 게시물만 보이고), 최초 mounted가 실행된 이후에 새로 호출 되었을 경우,
   		// 아예 페이지 새로 고침
@@ -2006,7 +2006,7 @@
           this.firstMountFlag = true;
         },
         getAttachmentUrl(attachmentNo) {		
-          return "http://localhost:8080/rest/attachment/download/"+attachmentNo;
+          return "${contextPath}/rest/attachment/download/"+attachmentNo;
         },
 
         // 풀네임 생성

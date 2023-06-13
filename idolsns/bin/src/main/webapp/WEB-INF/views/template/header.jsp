@@ -552,7 +552,7 @@
 							<div class="customModalBody">
 								<div v-for="(member, index) in chatMemberList" class="w-100 mb-3 d-flex w-100">
 									<a class="d-flex align-items-center col-9 link-to-profile" 
-											:href="'http://localhost:8080/member/mypage/' + member.memberId">
+											:href="'${contextPath}/member/mypage/' + member.memberId">
 										<div class="me-3">
 											<img :src="member.profileSrc" class="profileImg" style="height: 45px; width: 45px;">
 										</div>

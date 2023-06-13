@@ -215,7 +215,7 @@
             if(this.attachmentList[index] === null) return;
 
             // URL
-            const url = "http://localhost:8080/rest/admin/artistProfile";
+            const url = "${contextPath}/rest/admin/artistProfile";
             
             // 폼데이터 생성
             const formData = new FormData();
@@ -272,7 +272,7 @@
 
             // 2. 중복 검사
             // URL
-            const isArtistExistUrl = "http://localhost:8080/rest/artist/check";
+            const isArtistExistUrl = "${contextPath}/rest/artist/check";
             // 아티스트 중복검사
 
             console.log(this.newArtistObj.artistEngNameLower);
@@ -285,7 +285,7 @@
             // 3. 아티스트 생성
             
             // URL
-            const createArtisturl = "http://localhost:8080/rest/artist/";
+            const createArtisturl = "${contextPath}/rest/artist/";
             
             // 폼데이터 생성
             const formData = new FormData();
@@ -312,7 +312,7 @@
         // 아티스트 목록 조회
         async loadArtistViewList () {
             // URL
-            const url = "http://localhost:8080/rest/admin/artistView";
+            const url = "${contextPath}/rest/admin/artistView";
             // 비동기 아티스트 목록 조회
             const resp = await axios.get(url);
             // 반영
@@ -378,7 +378,7 @@
             if(selectedCnt===0 && !confirm(selectedCnt + "개의 대표페이지를 삭제하시겠습니까?")) return;
 
             // URL
-            const url = "http://localhost:8080/rest/artist/"
+            const url = "${contextPath}/rest/artist/"
             // 아티스트 삭제
 
             const resp = await axios.delete(url, { 

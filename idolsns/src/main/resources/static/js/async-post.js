@@ -95,7 +95,7 @@
 					console.log(postDto+"보낸 데이터");
 					// 게시글을 비동기로 서버에 등록 
 					$.ajax({
-						  url: "http://localhost:8080/rest/post/",
+						  url: "${contextPath}/rest/post/",
 						  method: "post",
 						  data: postDto,
 						  success: function(postNo) {
@@ -106,7 +106,7 @@
 								 postNo: postNo
 							};
 							$.ajax({
-								url: "http://localhost:8080/rest/post/fixed",
+								url: "${contextPath}/rest/post/fixed",
 								method: "post",
 								data: JSON.stringify(fixedTagData),
 								contentType: "application/json; charset=utf-8",
@@ -124,7 +124,7 @@
 						 	};
 						 	console.log("태그등록은?");
 						 	$.ajax({
-								url: "http://localhost:8080/rest/post/tag",
+								url: "${contextPath}/rest/post/tag",
 								method: "post",
 								data: JSON.stringify(tagData),
 								contentType: "application/json; charset=utf-8",
@@ -158,7 +158,7 @@
 							
 							// 게시물 타입 등록 
 							$.ajax({
-									url: "http://localhost:8080/rest/post/postType",
+									url: "${contextPath}/rest/post/postType",
 									method: "post",
 									contentType: "application/json",
 								    data: JSON.stringify(postTypeData),
@@ -179,7 +179,7 @@
 								};
 								console.log(mapPlace);
 								$.ajax({
-									url: "http://localhost:8080/rest/post/map",
+									url: "${contextPath}/rest/post/map",
 									method: "post",									
 									data: postDto,
 									success: function(result){
@@ -202,7 +202,7 @@
 							if(files.length>0){
 								console.log("총 "+files.length+"개의 파일이 전송되었습니다");
 								$.ajax({
-								      url: "http://localhost:8080/rest/attachment/upload2?postNo="+postNo,
+								      url: "${contextPath}/rest/attachment/upload2?postNo="+postNo,
 								      type: 'POST',
 								      data: formData,
 								      contentType: false, // do not set content type
