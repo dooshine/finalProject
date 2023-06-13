@@ -74,8 +74,8 @@
          FROM (
                 SELECT p.*
                 FROM post p
-                right JOIN post_like pl ON p.member_id = pl.member_id and p.post_no = pl.post_no
-                WHERE p.member_id = #{memberId} AND p.post_type != '펀딩'
+                right JOIN post_like pl ON p.post_no = pl.post_no
+                WHERE pl.member_id = #{memberId} AND p.post_type != '펀딩'
          ) testuserP
         left outer join schedule_post sp on testuserP.post_no = sp.post_no
         Left outer join together_post tp on testuserP.post_no = tp.post_no
@@ -127,6 +127,20 @@
         <include refid="topNfooter"></include>
 	</select>
 	
+	<select id="selectOnePost" resultType="PostShowVO">
+		SELECT testuserP.*,sp.schedule_start, sp.schedule_end,
+                    tp.together_start, tp.together_end,
+                    m.map_place, m.map_name, mb.member_nick , mpi.attachment_no 
+        FROM (  SELECT * 
+                FROM post
+                WHERE post_no = #{postNo}
+        ) testuserP
+        left outer join schedule_post sp on testuserP.post_no = sp.post_no
+        Left outer join together_post tp on testuserP.post_no = tp.post_no
+        Left outer join map m on testuserP.post_no = m.post_no
+        Left OUTER JOIN member mb ON testuserP.member_id = mb.member_id
+        Left OUTER JOIN member_profile_image mpi ON testuserP.member_id = mpi.member_id	
+	</select>
 	
 	
 	<resultMap id="postShowResultMap" type="PostShowVO">

@@ -140,8 +140,9 @@ public class PostController {
     }
     								
     @GetMapping("/linkPost/{postNo}")
-    public String linkPost(@PathVariable Long postNo)
-    {
+    public String linkPost(@PathVariable Long postNo, Model model)
+    {	
+    	model.addAttribute("postNo",postNo);
     	return "/post/linkPost";
     }
 }
