@@ -549,7 +549,7 @@
 	                const postNo = this.fundDetail.postNo; // 게시물 번호
 	                const resp = await axios.get("${contextPath}/rest/reply/fund/"+postNo);
 	                this.replies = resp.data; // Vue data에 저장
-	               	console.log(resp.data);
+	               	//console.log(resp.data);
 	              },
 	            // 작성한 comment 서버로 전송
                 async addReply() {
@@ -655,7 +655,7 @@
 					const postNo = this.fundDetail.postNo;
 					axios.get('${contextPath}/rest/post/like/'+postNo)
             		.then(response => {
-            			console.log("checkLike = " +response.data);
+            			//console.log("checkLike = " +response.data);
             			this.checkFundLike();
             			
             				
@@ -692,7 +692,7 @@
                 getTimeDiff() {
                       const startDate = new Date(this.fundDetail.postStart);
                       const endDate = new Date(this.fundDetail.postEnd);
-                      console.log(this.fundDetail);
+                      //console.log(this.fundDetail);
                       const currentDate = new Date();
                       const fundState = this.fundDetail.fundState;
                       const timeDiff = endDate.getTime() - startDate.getTime();

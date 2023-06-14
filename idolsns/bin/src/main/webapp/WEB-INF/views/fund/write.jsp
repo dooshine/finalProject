@@ -211,7 +211,7 @@ $(function(){
 
                         const resp = await axios.get("${contextPath}/rest/fixedTag/"+this.findFixedTagName);
                         this.findFixedTagList = resp.data;
-                        console.log(this.findFixedTagList);
+                        //console.log(this.findFixedTagList);
                         // console.log("조회 실행");
                     },
                     // 고정태그 추가

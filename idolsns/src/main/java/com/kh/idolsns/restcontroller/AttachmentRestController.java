@@ -122,19 +122,19 @@ public class AttachmentRestController {
 	//업로드
 	@PostMapping("/upload2")
 	public AttachmentDto upload(@RequestParam Long postNo,@RequestParam List<MultipartFile> attach) throws IllegalStateException, IOException {
-		System.out.println("postNo는 = "+postNo);
+		/*System.out.println("postNo는 = "+postNo);
 		System.out.println(attach);
-		System.out.println(attach.size());
+		System.out.println(attach.size());*/
 
 		// 임시 저장용 PostImageDto
 		PostImageDto tempPostImageDto = new PostImageDto(); 
 		for(int i=0;i<attach.size();i++) {
-			System.out.println(attach.get(i).isEmpty());
+			//System.out.println(attach.get(i).isEmpty());
 			// getName은 <input name="attach"> 여기서 name에 해당한다.
-			System.out.println("name = " + attach.get(i).getName());
+			/*System.out.println("name = " + attach.get(i).getName());
 			System.out.println("original file name = " + attach.get(i).getOriginalFilename());
 			System.out.println("content type = " + attach.get(i).getContentType());
-			System.out.println("size = " + attach.get(i).getSize());
+			System.out.println("size = " + attach.get(i).getSize());*/
 			
 			
 			if(!attach.isEmpty()) {//파일이 있을 경우
@@ -142,7 +142,7 @@ public class AttachmentRestController {
 				// 파일 및 파일 형식 판별 --------------------------------
 				String contentType = attach.get(i).getContentType(); 
 				String fileType = null; 
-				System.out.println("dir는 다음과 같습니다 "+dir);
+				//System.out.println("dir는 다음과 같습니다 "+dir);
 				
 				// 번호 생성 - DB에 저장하기 위함 번호대로 저장
 				Integer attachmentNo = attachmentRepo.sequence();
@@ -152,7 +152,7 @@ public class AttachmentRestController {
 				{
 					// 비디오파일형식 판별 ex) mp4, wav
 					fileType = contentType.replaceAll("video/","");
-					System.out.println("비디오입니다. 파일확장자는 "+fileType+" 입니다.");
+					//System.out.println("비디오입니다. 파일확장자는 "+fileType+" 입니다.");
 					// 빈 파일 생성 파일명=시퀀스.파일형식 ex) 1.png, 2.jpeg, 3.mp4  
 					File target = new File(dir, String.valueOf(attachmentNo)+"."+fileType);
 					attach.get(i).transferTo(target);
@@ -162,7 +162,7 @@ public class AttachmentRestController {
 				{
 					// 사진파일형식 판별 ex) jpeg, png
 					fileType = contentType.replaceAll("image/","");
-					System.out.println("사진입니다. 파일확장자는 "+fileType+" 입니다.");
+					//System.out.println("사진입니다. 파일확장자는 "+fileType+" 입니다.");
 					File target = new File(dir, String.valueOf(attachmentNo));
 					attach.get(i).transferTo(target);
 				}			

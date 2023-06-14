@@ -428,7 +428,7 @@
             const isArtistExistUrl = "${contextPath}/rest/artist/check";
             // 아티스트 중복검사
 
-            console.log(this.newArtistObj.artistEngNameLower);
+            //console.log(this.newArtistObj.artistEngNameLower);
             const isArtistExist = await axios.get(isArtistExistUrl, {params: {artistEngNameLower: this.newArtistObj.artistEngNameLower}});
             if(isArtistExist.data){
                 alert("아티스트의 영어 소문자 이름이 중복되므로 다시 입력해주세요");
@@ -472,7 +472,7 @@
             this.artistViewList = resp.data;
             this.attachmentList = new Array(this.artistViewList.length).fill(null);
             this.previewURLList = new Array(this.artistViewList.length).fill(null);
-            console.log("조회 실행");
+            //console.log("조회 실행");
         },
         // 아티스트 전체선택
         checkAllArtist(e){

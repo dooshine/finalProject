@@ -260,7 +260,7 @@
                   			memberEmail : this.memberEmail
                   		}
                   	});
-                  	console.log("키:" + response.data);
+                  	//console.log("키:" + response.data);
                   	// 인증번호
                   	this.key = response.data;
                   	

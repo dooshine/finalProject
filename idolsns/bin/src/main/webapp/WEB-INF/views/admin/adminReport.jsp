@@ -96,7 +96,7 @@
             } else {
                 delete this.selectedReportList[reportNo];
             }
-            console.log(this.selectedReportList);
+            //console.log(this.selectedReportList);
         },
         // 신고 삭제
         async deleteReport(){

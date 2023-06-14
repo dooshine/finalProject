@@ -367,7 +367,7 @@
                	  this.fundings.push(...resp.data);
                	  
                	  this.getLikePostIndex(this.fundings);
-                  console.log(resp.data);
+                  //console.log(resp.data);
                   this.searchPage++;
                   
                   // 데이터가 12개 미만이면 더 읽을게 없다
@@ -422,7 +422,7 @@
                		axios.get('${contextPath}/rest/fund/like/index/'+postNoList)
                			.then(response => {               			
                			this.postLikeIndexList = response.data;  
-               			console.log("postLikeIndexList--------"+this.postLikeIndexList);
+               			//console.log("postLikeIndexList--------"+this.postLikeIndexList);
                		})
                		.catch(error => {
                			console.error(error);
@@ -530,7 +530,7 @@
     					if(!this.checkLogin()) return;
                     	axios.get('${contextPath}/rest/post/like/'+postNo)
                     		.then(response => {
-                    			console.log(response.data);
+                    			//console.log(response.data);
                     			// 응답이 좋아요면
                     			if(response.data== 'Like'){
                     				this.postLikeIndexList.push(index);                			

@@ -102,7 +102,7 @@ public class PointController {
 		vo.setTid((String)session.getAttribute("tid"));
 		
 		String dump = (String)session.getAttribute("tid");
-		System.out.println("dump="+dump);
+		//System.out.println("dump="+dump);
 		
 		
 		session.removeAttribute("partner_order_id");
@@ -117,7 +117,7 @@ public class PointController {
 	    KakaoPayChargeRequestVO chargeRequestVO = new KakaoPayChargeRequestVO();
 	    chargeRequestVO.setMemberId((String) session.getAttribute("memberId"));
 	    chargeRequestVO.setPaymentTotal(response.getAmount().getTotal());
-	    System.out.println("chargeRequestVO: " + chargeRequestVO);
+	    //System.out.println("chargeRequestVO: " + chargeRequestVO);
 	    kakaoPayService.charge(chargeRequestVO);
 	    
 	

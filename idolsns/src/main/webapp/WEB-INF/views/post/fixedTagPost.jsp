@@ -534,7 +534,7 @@
                     		fixedTagName: this.fixedTagName
                     };
                    	
-                    console.log(fixedTagPostData);
+                    //console.log(fixedTagPostData);
                     
                     const resp = await axios.post("${contextPath}/rest/post/pageReload/fixedTagPost",fixedTagPostData);
 	                this.posts = resp.data;
@@ -591,7 +591,7 @@
              	checkLike(postNo,index){
                 	axios.get('${contextPath}/rest/post/like/'+postNo)
                 		.then(response => {
-                			console.log(response.data);
+                			//console.log(response.data);
                 			// 응답이 좋아요면 좋아요 +1
                 			if(response.data== 'Like'){
                 				this.posts[index].likeCount = this.posts[index].likeCount + 1; 
@@ -675,8 +675,8 @@
 					this.rereplyContent = ''; 
 					this.tempPostNo = postNo;
 					this.tempReplyNo = replyNo;
-					console.log(postNo);
-                	console.log(replyNo);
+					//console.log(postNo);
+                	//console.log(replyNo);
                 },
                 
                 hideRereplyInput(){

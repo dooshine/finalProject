@@ -388,7 +388,7 @@
         async loadMemberList(){
             const url = "${contextPath}/rest/admin/member"
             const response = await axios.post(url, this.memberSearchVO);
-            console.log(response.data);
+            //console.log(response.data);
             this.memberList = response.data;
         },
 

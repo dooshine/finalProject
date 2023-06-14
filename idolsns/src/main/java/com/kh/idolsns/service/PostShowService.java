@@ -44,7 +44,7 @@ public class PostShowService {
 		PostShowVO postShowVO = postShowRepo.selectOne(postNo);
 		postShowVO.setFreeTagList(tagRepo.selectAll(postNo));
 		postShowVO.setAttachmentList(postImageRepo.selectAttachNoList(postNo));
-		log.debug("postShowVO is {}",postShowVO);
+		//log.debug("postShowVO is {}",postShowVO);
 	}
 	
 	// 모든 게시물 한번에 전달

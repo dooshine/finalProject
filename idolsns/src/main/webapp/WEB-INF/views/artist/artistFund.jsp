@@ -463,7 +463,7 @@
             await axios.delete(url, {
                 data: this.followPageObj,
             });
-            console.log("이거 삭제되는거니?")
+            //console.log("이거 삭제되는거니?")
             
         },
         // 팔로우 토글
@@ -516,7 +516,7 @@
                 		return new URLSearchParams(params).toString();
                 	}
                     });
-              console.log(resp.data);
+              //console.log(resp.data);
               this.fundings = [...resp.data];
               this.searchPage++;
               
@@ -554,7 +554,7 @@
 				if(!this.checkLogin()) return;
             	axios.get('${pageContext.request.contextPath}/rest/post/like/'+postNo)
             		.then(response => {
-            			console.log(response.data);
+            			//console.log(response.data);
             			// 응답이 좋아요면
             			if(response.data== 'Like'){
             				this.postLikeIndexList.push(index);                			

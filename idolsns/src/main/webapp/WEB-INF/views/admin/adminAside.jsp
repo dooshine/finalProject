@@ -116,7 +116,7 @@
 	  },
 
 	  loadAsideTab(){
-		console.log(window.location.pathname);
+		//console.log(window.location.pathname);
 		const pathName = window.location.pathname;
 		if(pathName === "/admin/"){
 			this.asideTab = "관리자홈";

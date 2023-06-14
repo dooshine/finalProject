@@ -22,7 +22,7 @@ public class SchedulerServiceImpl implements SchedulerService{
 	@Scheduled(cron = "0 0 0 * * *")
 	@Override
 	public void clearMemberData() {
-		log.debug("d");
+		//log.debug("d");
 		memberRepo.clean();
 	}
 	
@@ -31,7 +31,7 @@ public class SchedulerServiceImpl implements SchedulerService{
 	@Override
 	public void updateFundState() {
 		fundPostRepo.updateFundState();
-		log.debug("펀딩상태 업데이트 완료!");
+		//log.debug("펀딩상태 업데이트 완료!");
 	}
 	
 }

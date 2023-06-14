@@ -342,7 +342,7 @@
             const url = "${contextPath}/rest/follow/";
             await axios.post(url, this.followPageObj);
             // [develope] 
-            console.log(this.followPageObj.memberId + "님의 " + this.followPageObj.followTargetPrimaryKey + "님 팔로우 생성");
+            //console.log(this.followPageObj.memberId + "님의 " + this.followPageObj.followTargetPrimaryKey + "님 팔로우 생성");
         },
         // 대표페이지 팔로우 취소
         async deleteFollow(){
@@ -352,7 +352,7 @@
                 data: this.followPageObj,
             });
             // [develope]
-            console.log(this.followPageObj.memberId + "님의 " + this.followPageObj.followTargetPrimaryKey + "님 팔로우 제거");
+            //console.log(this.followPageObj.memberId + "님의 " + this.followPageObj.followTargetPrimaryKey + "님 팔로우 제거");
         },
         // 팔로우 토글
         async toggleFollow(){
@@ -363,7 +363,7 @@
                 }
             }
             // 팔로우 확인 url
-            console.log(this.checkFollow()); 
+            //console.log(this.checkFollow()); 
         },
         
 
@@ -386,11 +386,11 @@
     	//고정태그 찾기
     	async loadTags() {
 			  const tagName = this.artistObj.artistName;
-			  console.log("태그:" + tagName);
+			  //console.log("태그:" + tagName);
 			  const url = "/rest/post/" + tagName;
 			
 			  const resp = await axios.get(url);
-			  console.log("내놔:" + resp.data);
+			  //console.log("내놔:" + resp.data);
 			  this.postShowDto = resp.data;
 			
 			
@@ -423,7 +423,7 @@
 	     		console.table(filterArray);
 	     		
 	     		ps.keywordSearch(filterArray,(data, status, pagination)=>{
-	     			console.log(data,status,pagination);
+	     			//console.log(data,status,pagination);
 	     			if(status === kakao.maps.services.Status.OK) {
 	     				this.displayMarker({x:data.x, y:data.y});
 	     			}

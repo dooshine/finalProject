@@ -373,11 +373,11 @@
         // 신고 이유 설정
         setReportFor(reportFor){
             this.reportDto.reportFor = reportFor;
-            console.log(this.reportDto.reportFor);
+            //console.log(this.reportDto.reportFor);
         },
         // 회원신고 생성
         async reportMember(target){
-            console.log(this.reportDto);
+            //console.log(this.reportDto);
             const url = "${contextPath}/rest/report/"
             const resp = await axios.post(url, this.reportDto);
         },
@@ -399,7 +399,7 @@
             if(memberId==="") return;
             const url = "${contextPath}/rest/follow/member";
             const resp = await axios.get(url, { param: {memberId: memberId} });
-            console.log(resp.data);
+            //console.log(resp.data);
         },
 
 

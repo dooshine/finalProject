@@ -20,7 +20,7 @@ public class ArtistController {
     @GetMapping("/{artistEngNameLower}/feed")
     public String feed(@PathVariable String artistEngNameLower, Model model) throws NoHandlerFoundException{
 
-        System.out.println("artistEngNameLower: " + artistEngNameLower);
+        //System.out.println("artistEngNameLower: " + artistEngNameLower);
         boolean isArtistExist = artistRepo.isArtistExistByArtistEngNameLower(artistEngNameLower);
         if(!isArtistExist){
             throw new NoHandlerFoundException(null, null, null);

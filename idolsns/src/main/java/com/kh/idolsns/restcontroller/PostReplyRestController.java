@@ -45,7 +45,7 @@ public class PostReplyRestController {
 	    dto.setReplyContent(replyDto.getReplyContent());
 	    dto.setReplyGroupNo(sequence); 
 	   
-	    System.out.println("dto is : "+ dto);
+	    //System.out.println("dto is : "+ dto);
 	    replyRepo.addReply(dto);
 	}
 	
@@ -63,7 +63,7 @@ public class PostReplyRestController {
 		dto.setReplyContent(replyDto.getReplyContent());
 		dto.setReplyGroupNo(replyDto.getReplyGroupNo());
 		
-		System.out.println("dto is : "+ dto);
+		//System.out.println("dto is : "+ dto);
 		replyRepo.addReply(dto); 
 	}
 	

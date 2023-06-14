@@ -30,7 +30,7 @@ public class MemberInterceptor implements HandlerInterceptor{
 			//response.sendRedirect("/member/login");//return "redirect:/member/login"
 			//response.sendError(401);
 			//return false;
-			log.debug("로그인 후 이용 가능합니다");
+			//log.debug("로그인 후 이용 가능합니다");
 			throw new RequireLoginException("로그인 후 이용 가능합니다");
 		}   
     }

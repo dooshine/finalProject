@@ -67,10 +67,10 @@
                 data: data,
                 success: function(){
                     $(".input-input").val("");
-                    console.log("비동기 생성 성공");
+                    //console.log("비동기 생성 성공");
                 },
                 error: function(){
-                    console.log("비동기 생성 실패")
+                    //console.log("비동기 생성 실패")
                 }
             })
         })
@@ -81,11 +81,11 @@
                 url: "${contextPath}/rest/post/",
                 method: "get",
                 success: function(response){
-                    console.log(response);
+                    //console.log(response);
                     // $(".list-target").append()
                 },
                 error: function(){
-                    console.log("비동기 생성 실패")
+                    //console.log("비동기 생성 실패")
                 }
             })
         })
@@ -97,11 +97,11 @@
                 url: "${contextPath}/rest/post/" + postNo,
                 method: "get",
                 success: function(response){
-                    console.log(response);
+                    //console.log(response);
                     // $(".list-target").append()
                 },
                 error: function(){
-                    console.log("비동기 생성 실패")
+                    //console.log("비동기 생성 실패")
                 }
             })
         })

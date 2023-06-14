@@ -33,11 +33,11 @@
 
             axios.get(url)
                 .then((response)=>{
-                    console.log(response.data);
+                    //console.log(response.data);
                 })
                 .catch((error)=>{
                     if(error.response.status === 500){
-                        console.log("로그인이 안됐심더");
+                        //console.log("로그인이 안됐심더");
                         window.location.href="http://naver.com";
                     }
                 });
@@ -65,7 +65,7 @@
                                   
           const resp = await axios.post("${contextPath}/rest/post/pageReload/memberLikePost",likedPostData);
           this.posts = resp.data;
-          console.log(this.posts);
+          //console.log(this.posts);
           // this.getLikePostIndex(this.posts);
           // this.getReplyAllList(this.posts);
           // this.page++;

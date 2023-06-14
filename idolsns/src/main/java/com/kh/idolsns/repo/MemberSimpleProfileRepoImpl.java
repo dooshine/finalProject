@@ -16,7 +16,7 @@ public class MemberSimpleProfileRepoImpl implements MemberSimpleProfileRepo {
 
 	@Override
 	public List<MemberSimpleProfileDto> profile(List<String> memberIdList) {
-		System.out.println(memberIdList.toString());
+		//System.out.println(memberIdList.toString());
 		return sql.selectList("simpleProfile.profile", Map.of("memberIdList", memberIdList));
 	}
 

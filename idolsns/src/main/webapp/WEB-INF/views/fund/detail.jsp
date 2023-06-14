@@ -616,9 +616,9 @@
                       const timeDiff = endDate.getTime() - currentDate.getTime();
                       const timeDiff2 = startDate.getTime() - currentDate.getTime();
                       
-                      console.log("endDate.getTime()= "+endDate.getTime());
-                      console.log("currentDate.getTime()= "+currentDate.getTime());
-                      console.log("timeDiff= "+timeDiff);
+                      //console.log("endDate.getTime()= "+endDate.getTime());
+                      //console.log("currentDate.getTime()= "+currentDate.getTime());
+                      //console.log("timeDiff= "+timeDiff);
                       
                    // 시작날짜가 오늘보다 뒤인경우
                       if(timeDiff2 >= 0) {
@@ -670,7 +670,7 @@
         		async loadFundVO(){
 			    	const postNo = this.fundDetail.postNo;
 					const resp = await axios.get("${contextPath}/rest/fund/fundlist/"+postNo);	  
-					console.log("FundVO====="+resp.data.fundWithNickDtos);
+					//console.log("FundVO====="+resp.data.fundWithNickDtos);
 					this.fundVO = resp.data.fundWithNickDtos;
 					this.fundDetail.fundTotal = resp.data.fundTotal;
 					this.fundDetail.fundSponsorCount = resp.data.fundSponsorCount;
@@ -774,7 +774,7 @@
 					// 로그인이 안되어 있으면
 					if(!this.checkLogin()) return;
 					this.reReplies[i] = true
-					console.log("i = "+ reReplies[i]);
+					//console.log("i = "+ reReplies[i]);
 					this.cancelUpdate();
 				},
 				// 수정 폼 보여주기 & 대댓글 폼 숨기기

@@ -122,7 +122,7 @@ Vue.createApp({
       async loadPaymentDetail() {
         try {
           const url = "/rest/point/" + this.paymentNo;
-          console.log(url);
+          //console.log(url);
           const response = await axios.get(url);
           this.paymentDto = response.data;
           

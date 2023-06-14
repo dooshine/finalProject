@@ -73,7 +73,7 @@ public class TestFundList {
 			}
 		}
 		for(FundPostImageDto dto : templist) {
-			log.debug("no = {}" , dto.getPostNo());
+			//log.debug("no = {}" , dto.getPostNo());
 			
 		}
 	}

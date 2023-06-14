@@ -3,14 +3,14 @@
 				
 				// 지도 위치 출력
 				$(".bttest").click(function(){
-					console.log(mapPlace);
+					//console.log(mapPlace);
 				});
 
 				// 1. 카테고리를 저장할 변수 선언 및 카테고리 전역 변수 categori에 저장
 				let categori = ""; 
 				$(".modal2").click(function(){
 					categori = this.innerText.trim();
-					console.log(categori);					
+					//console.log(categori);					
 				});				
 				
 				// 1-1. 행사일정의 날짜 및 시간 scheduleStart, scheduleEnd에 저장
@@ -53,9 +53,9 @@
 				let showTag = []; 			
 				// 태그 추가 버튼 클릭 시, 
 				$(".tag-btn").click(function(){
-					console.log("클릭함")
+					//console.log("클릭함")
 					let tagInput = $(".tag-input").val();
-					console.log(tagInput);								
+					//console.log(tagInput);								
 					if(tagInput==""||tagInput==null) // 태그 입력창에 아무것도 안적혀 있다면
 					{		
 						return
@@ -72,7 +72,7 @@
 					let allTag = showTag.join(", "); // 배열 문자열로 변환
 					$(".all-tag").text(allTag); // 변환된 문자열을 출력
 					
-					console.log("태그에 저장된 내용은 다음과 같습니다  : "+tag);
+					//console.log("태그에 저장된 내용은 다음과 같습니다  : "+tag);
 					});
 				
 				
@@ -92,7 +92,7 @@
 					
 					
 					
-					console.log(postDto+"보낸 데이터");
+					//console.log(postDto+"보낸 데이터");
 					// 게시글을 비동기로 서버에 등록 
 					$.ajax({
 						  url: "${contextPath}/rest/post/",
@@ -111,10 +111,10 @@
 								data: JSON.stringify(fixedTagData),
 								contentType: "application/json; charset=utf-8",
 								success: function(result) {
-									console.log(result);
+									//console.log(result);
 								},
 								  error: function(xhr, status, error) {
-								    console.log(error);
+								    //console.log(error);
 								}
 							});
 						 	// 게시물 등록 성공 시에, 태그 정보를 비동기로 서버에 등록  
@@ -122,14 +122,14 @@
 						 		tag: tag,
 						 		postNo: postNo
 						 	};
-						 	console.log("태그등록은?");
+						 	//console.log("태그등록은?");
 						 	$.ajax({
 								url: "${contextPath}/rest/post/tag",
 								method: "post",
 								data: JSON.stringify(tagData),
 								contentType: "application/json; charset=utf-8",
 								success: function(result) {
-									console.log("태그 등록은 됌");
+									//console.log("태그 등록은 됌");
 									// 게시글 작성 이후 변수들 초기화 
 									categori ="";
 									$(".tag-input").val("");
@@ -139,8 +139,8 @@
 									$(".post").val("");
 								},
 								  error: function(xhr, status, error) {
-								    console.log(error);
-								    console.log("태그 등록은 안됌");
+								    //console.log(error);
+								    //console.log("태그 등록은 안됌");
 								    
 								}
 							});
@@ -154,7 +154,7 @@
 								scheduleEnd: scheduleEnd
 							};
 							
-							console.log("게시물 일정 체크 scheduleStart : "+scheduleStart);
+							//console.log("게시물 일정 체크 scheduleStart : "+scheduleStart);
 							
 							// 게시물 타입 등록 
 							$.ajax({
@@ -163,10 +163,10 @@
 									contentType: "application/json",
 								    data: JSON.stringify(postTypeData),
 									success: function(result){
-										console.log(result)
+										//console.log(result)
 									},
 									error: function(xhr,status,error){
-										console.log(error);
+										//console.log(error);
 									}
 							});														
 							
@@ -177,17 +177,17 @@
 									mapPlace : mapPlace,
 									mapName : mapName
 								};
-								console.log(mapPlace);
+								//console.log(mapPlace);
 								$.ajax({
 									url: "${contextPath}/rest/post/map",
 									method: "post",									
 									data: postDto,
 									success: function(result){
-										console.log(result);
+										//console.log(result);
 										
 									},
 									error: function(xhr,status,error){
-										console.log(error);
+										//console.log(error);
 									}									
 									
 								});
@@ -200,7 +200,7 @@
 							}
 							
 							if(files.length>0){
-								console.log("총 "+files.length+"개의 파일이 전송되었습니다");
+								//console.log("총 "+files.length+"개의 파일이 전송되었습니다");
 								$.ajax({
 								      url: "${contextPath}/rest/attachment/upload2?postNo="+postNo,
 								      type: 'POST',
@@ -208,7 +208,7 @@
 								      contentType: false, // do not set content type
 								      processData: false, // do not process data
 								      success: function(data) {
-								        console.log(data);
+								        //console.log(data);
 										// 전송할 파일 초기화 기존에 선언했던 formData를 다시 재 선언함으로써 초기화 진행  
 										formData = new FormData();
 										// 미리보기에 존재하는 데이터를 모두 초기화
@@ -220,7 +220,7 @@
 								      },
 								      error: function(xhr, status, error) {
 								        // handle error response
-								        console.log(error);
+								       // console.log(error);
 								      }
 								});
 							}
@@ -230,8 +230,8 @@
 				 	
 						  },
 						  error: function(xhr, status, error) {
-							console.log("글을 생성하지 못했오")
-						    console.log(error);
+							//console.log("글을 생성하지 못했오")
+						    //console.log(error);
 						  }
 						  
 						  
@@ -267,7 +267,7 @@
 
 					  const MAX_FILES = 5; // 최대 파일 갯수
 					  
-					  console.log("파일길이는 : "+files.length)
+					  //console.log("파일길이는 : "+files.length)
 
 					  for (let i = 0; i < files.length; i++) {
 						 
