@@ -157,10 +157,10 @@ public class FundController {
             postImageRepo.insert(postImageDto);
          }
       }
-      System.out.println("newFixedTagList--------------------"+newFixedTagList);
+      //System.out.println("newFixedTagList--------------------"+newFixedTagList);
       // 태그 등록
       if(newFixedTagList != null) { // 태그 선택을 했으면 실행
-    	  System.out.println("이거 나오면 안됨!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+    	  //System.out.println("이거 나오면 안됨!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
     	  for(String tagName: newFixedTagList) {
     		  tagRepo.insert(TagDto.builder()
     				  .postNo(postNo)

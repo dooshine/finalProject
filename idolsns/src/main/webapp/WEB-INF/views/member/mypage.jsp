@@ -1188,8 +1188,8 @@
                   
                   this.memberId = memberId;
                   this.memberNick=memberNick;
-                  console.log("아이디 : "+this.memberId);
-                  console.log("닉네임 : "+this.memberNick);
+                  //console.log("아이디 : "+this.memberId);
+                  //console.log("닉네임 : "+this.memberNick);
                },
                
                async followCnt() {
@@ -1212,7 +1212,7 @@
                   this.FollowMemberList = FollowMemberList;
                   this.FollowerMemberList = FollowerMemberList;
                   this.FollowPageList = FollowPageList;
-                  console.log("팔로우리스트 : "+this.FollowMemberList);
+                  //console.log("팔로우리스트 : "+this.FollowMemberList);
                },
                
                showModal(){
@@ -1268,9 +1268,9 @@
                    });
                    
                    this.memberProfileImageObj = response.data;
-                   console.log("this.memberProfileImageObj : "+this.memberProfileImageObj);
+                   //console.log("this.memberProfileImageObj : "+this.memberProfileImageObj);
                    const attachmentNo = this.memberProfileImageObj.attachmentNo;   
-                      console.log("attachmentNo : " +attachmentNo);
+                      //console.log("attachmentNo : " +attachmentNo);
                       const url = "/rest/attachment/download/"+attachmentNo;
                    this.previewURL = url;                   
                 },
@@ -1374,7 +1374,7 @@
                 	  });
                 	  this.FollowListProfile.push(...response.data);
                 	  
-                	  console.log("로그인 :  " +this.memberId);
+                	  //console.log("로그인 :  " +this.memberId);
                   },
                   
                   //팔로워 리스트 멤버별 프로필 조회
@@ -1396,7 +1396,7 @@
 						});
 
 						  this.PageListProfile.push(...response.data);
-						  console.log(" this.PageListProfile : "+ this.PageListProfile);
+						  //console.log(" this.PageListProfile : "+ this.PageListProfile);
 						},
                   
                   //프로필 리스트 팔로우 취소
@@ -1483,7 +1483,7 @@
 							Id : this.memberId
 						}
 			    	});
-			    	console.log(response.data);
+			    	//console.log(response.data);
 			    	if(response.data == true) {
 			    		this.follow = true;
 			    	}	
@@ -1533,7 +1533,7 @@
                       		likedMemberId: this.memberId
                       };
                      	
-                      console.log(likedPostData);
+                      //console.log(likedPostData);
                       
                       const resp = await axios.post("${contextPath}/rest/post/pageReload/memberLikePost",likedPostData);
   	                this.posts = resp.data;
@@ -1561,7 +1561,7 @@
                     		writeMemberId: this.writeMemberId
                     };
                    	
-                    console.log(writePostData);
+                    //console.log(writePostData);
                     
                     const resp = await axios.post("${contextPath}/rest/post/pageReload/memberWritePost",writePostData);
 	                this.posts = resp.data;
@@ -1629,7 +1629,7 @@
                	checkLike(postNo,index){
                   	axios.get('${contextPath}/rest/post/like/'+postNo)
                   		.then(response => {
-                  			console.log(response.data);
+                  			//console.log(response.data);
                   			// 응답이 좋아요면 좋아요 +1
                   			if(response.data== 'Like'){
                   				this.posts[index].likeCount = this.posts[index].likeCount + 1; 
@@ -1713,8 +1713,8 @@
   					this.rereplyContent = ''; 
   					this.tempPostNo = postNo;
   					this.tempReplyNo = replyNo;
-  					console.log(postNo);
-                  	console.log(replyNo);
+  					//console.log(postNo);
+                  	//console.log(replyNo);
                   },
                   
                   hideRereplyInput(){

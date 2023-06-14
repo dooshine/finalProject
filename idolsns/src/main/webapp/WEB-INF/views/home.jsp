@@ -1934,7 +1934,7 @@
             	// 게시글 작성 시 글타입을 표현하기 위한 함수
             	setPostType(type){
             		this.postType = type;
-            		console.log(this.postType);
+            		//console.log(this.postType);
             	},
             	
             	// 게시글 삭제 
@@ -2128,14 +2128,14 @@
                 		reportTargetPrimaryKey: this.reportMemberId,
                 		reportFor: this.reportReason
                 	};
-                	console.log(this.reportDto);
+                	//console.log(this.reportDto);
                 	
                 	const url = "${contextPath}/rest/report/";
                 	try{
                 		const resp = await axios.post(url, reportDto);
                 	}
                 	catch(error){
-                		console.log(error);
+                		//console.log(error);
                 	}
                 },
              	// 유저 신고 관련 처리 ------------------------------------
@@ -2146,7 +2146,7 @@
              	checkLike(postNo,index){
                 	axios.get('${contextPath}/rest/post/like/'+postNo)
                 		.then(response => {
-                			console.log(response.data);
+                			//console.log(response.data);
                 			// 응답이 좋아요면 좋아요 +1
                 			if(response.data== 'Like'){
                 				this.posts[index].likeCount = this.posts[index].likeCount + 1; 
@@ -2245,8 +2245,8 @@
 					this.rereplyContent = ''; 
 					this.tempPostNo = postNo;
 					this.tempReplyNo = replyNo;
-					console.log(postNo);
-                	console.log(replyNo);
+					//console.log(postNo);
+                	//console.log(replyNo);
                 },
                 
                 hideRereplyInput(){
@@ -2313,7 +2313,7 @@
              	// 게시글 삭제 ----------------------------------
              	setDeletePostNo(postNo){
   					this.deletePostNo = postNo;
-  					console.log("삭제번호는"+postNo);
+  					//console.log("삭제번호는"+postNo);
   					this.hidePostModal();
              	},
              	             	
@@ -2329,9 +2329,9 @@
              	
              	setMapPlace(){
              		this.placeName = document.querySelector('.placeName').innerText;
-             		console.log("하하"+this.placeName);
+             		//console.log("하하"+this.placeName);
              		this.address = document.querySelector('.address').innerText;
-             		console.log("호호"+this.address);
+             		//console.log("호호"+this.address);
              	},             	
              	
             	// 모달창 클릭 시 지도 정보 불러오기-------------------------
@@ -2342,7 +2342,7 @@
             		var markers = [];
             		keyword2 = keyword2.replace(/\s+\d+$/, '');
 					var keyword = keyword1
-					console.log(keyword);
+					//console.log(keyword);
             		// 지도 정보를 담을 변수
             		let mapPlace = "기본";
 

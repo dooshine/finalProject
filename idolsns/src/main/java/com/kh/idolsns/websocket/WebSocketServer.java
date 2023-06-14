@@ -23,7 +23,7 @@ public class WebSocketServer extends TextWebSocketHandler {
 	
 	@Override
 	public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
-		log.debug("status: " + status);
+		//log.debug("status: " + status);
 		chatService.disconnectHandler(session);
 	}
 	

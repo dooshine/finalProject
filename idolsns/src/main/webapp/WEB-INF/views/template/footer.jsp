@@ -206,7 +206,7 @@
 				},
 				// 새 채팅 알림 있는지 확인
 				async loadChatNoti() {
-					console.log("memberId: " + this.memberId);
+					//console.log("memberId: " + this.memberId);
 					if(this.memberId.length > 0 && this.chatRoomList.length > 0) {
 						const url = "${pageContext.request.contextPath}/chat/message/noti/" + this.memberId;
 						const resp = await axios.get(url);
@@ -431,7 +431,7 @@
 						this.chatRoomList.push(...resp.data);
 						this.loadChatRoomNoti();
 						
-						console.log("resp.data.length: " + resp.data.length);
+						//console.log("resp.data.length: " + resp.data.length);
 						// 갠톡인 경우 상대방 아이디 따로 빼두기
 						for (let i = 0; i < resp.data.length; i++) {
 							if (resp.data[i].chatRoomType === 'P') {
@@ -596,7 +596,7 @@
 					    member = this.followProfileList.find(member => member.memberId === findId);
 					}
 					
-					console.log("findId: " + findId);
+					//console.log("findId: " + findId);
 					if(member) {						
 						return {
 							memberNick: member.memberNick,
@@ -702,7 +702,7 @@
 						else {
 							targetId = this.roomInfo.chatRoomName2;
 						}
-						console.log("targetId: " + targetId);
+						//console.log("targetId: " + targetId);
 						const url = "${pageContext.request.contextPath}/chat/chatRoom/reinvite";
 						const data2 = {
 							chatRoomNo: this.chatRoomNo,
@@ -755,7 +755,7 @@
 						else {
 							targetId = this.roomInfo.chatRoomName2;
 						}
-						console.log("targetId: " + targetId);
+						//console.log("targetId: " + targetId);
 						const url = "${pageContext.request.contextPath}/chat/chatRoom/reinvite";
 						const data2 = {
 							chatRoomNo: this.chatRoomNo,

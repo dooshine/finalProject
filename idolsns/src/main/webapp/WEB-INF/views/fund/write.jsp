@@ -316,7 +316,7 @@ $(function(){
 
                         const resp = await axios.get("${contextPath}/rest/fixedTag/"+this.findFixedTagName);
                         this.findFixedTagList = resp.data;
-                        console.log(this.findFixedTagList);
+                        //console.log(this.findFixedTagList);
                         // console.log("조회 실행");
                     },
                     // 고정태그 추가
@@ -384,7 +384,7 @@ $(function(){
 		            fileLengthCheck() {
 		            	// 파일 업로드 처리
 		                const fileInput = this.$refs.fileInput;
-		            	console.log("fileInput-----"+fileInput.files.length);
+		            	//console.log("fileInput-----"+fileInput.files.length);
 		            	// if not uploaded
 		                if (fileInput.files.length === 0) {
 		                  this.funding.isFileInputValid = false;

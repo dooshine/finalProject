@@ -169,7 +169,7 @@
             const resp = await axios.get(url, { params: {memberId: this.targetMemberId} });
             // data 반영
             this.targetMemberFollowCnt = resp.data;
-            console.log("야호");
+            //console.log("야호");
         },
 
       },

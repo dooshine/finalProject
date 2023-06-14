@@ -79,7 +79,7 @@
                 }
             })
 
-            console.log(resp.data);
+            //console.log(resp.data);
 
             this.memberProfileList = resp.data;
         }

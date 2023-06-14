@@ -40,11 +40,11 @@ public class AttachmentController {
 	// 파일업로드
 	@PostMapping("/upload3")
 	public String upload3(@RequestParam MultipartFile attach) throws IllegalStateException, IOException {
-		System.out.println(attach.isEmpty());
+		/*System.out.println(attach.isEmpty());
 		System.out.println("name = " + attach.getName());
 		System.out.println("original file name = " + attach.getOriginalFilename());
 		System.out.println("content type = " + attach.getContentType());
-		System.out.println("size = " + attach.getSize());
+		System.out.println("size = " + attach.getSize());*/
 		
 		if(!attach.isEmpty()) {//파일이 있을 경우
 			//번호 생성

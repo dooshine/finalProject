@@ -156,7 +156,7 @@ function ifClick(){
 	    // div 내부의 road 클래스를 가진 span 태그들을 선택합니다.
 	    var roadSpans = div.querySelectorAll('.roadName');
 		var pi =  placeInfos[0].innerText;
-		console.log(pi)
+		//console.log(pi)
 		
 	    // 각 span 태그에 적힌 내용을 콘솔에 출력합니다.
 	    roadSpans.forEach(function(span) {

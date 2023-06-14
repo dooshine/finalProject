@@ -76,7 +76,7 @@ public class KakaoPayServiceImpl implements KakaoPayService {
 		body.add("approval_url", currentPath + (endSlash ? "success" : "/success"));
 		body.add("fail_url", currentPath + (endSlash ? "fail" : "/fail") );
 		body.add("cancel_url", currentPath + (endSlash ? "cancel" : "/cancel") );
-		log.debug("currentPath = {}", currentPath);
+		//log.debug("currentPath = {}", currentPath);
 		
 		//바디+헤더
 		HttpEntity entity = new HttpEntity(body, headers);

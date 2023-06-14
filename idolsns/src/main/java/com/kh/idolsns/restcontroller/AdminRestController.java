@@ -84,7 +84,7 @@ public class AdminRestController {
     // DELETE 태그 삭제(이름으로)
     @DeleteMapping("/tagName")
     public void deleteTag(@RequestBody List<String> tagNameList){
-        System.out.println(tagNameList);
+        //System.out.println(tagNameList);
         // adminService.deleteTagByName(tagNameList);
     }
 

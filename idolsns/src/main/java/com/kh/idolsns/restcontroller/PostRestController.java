@@ -122,7 +122,7 @@ public class PostRestController {
         // 통합 게시물 시퀀스 발행	
 		 Long postNo = postRepo.sequence();
 		 
-		 System.out.println("postNo는 : "+postNo);
+		 //System.out.println("postNo는 : "+postNo);
 		 // # 통합 게시물 생성 
 		 // 1. 통합게시물 번호 설정
 		 postDto.setPostNo(postNo); // 세션에 있는거 확인할 때는 이거
@@ -188,7 +188,7 @@ public class PostRestController {
     //--------------------- 태그정보 불러오기
     @GetMapping("/tag/{postNo}")
     public List<String> getTag(@PathVariable("postNo") Long postNo){
-    	System.out.println("postNo는 : "+postNo);
+    	//System.out.println("postNo는 : "+postNo);
     	return tagRepo.selectAll(postNo);
     }
     
@@ -196,7 +196,7 @@ public class PostRestController {
     @PostMapping("/map")
     public void maping(MapDto mapDto) {
     	if(mapDto!=null) {
-    		System.out.println(mapDto+"는 mapDto입니다.");
+    		//System.out.println(mapDto+"는 mapDto입니다.");
     		mapRepo.insert(mapDto);
     	}
     	
@@ -338,7 +338,7 @@ public class PostRestController {
     	String writeMemberId = (String) writePostData.get("pageMemberId");
     	List<PostShowVO> posts = postShowService.writedPostShowByPagingReload(page, writeMemberId);
     	for(PostShowVO post : posts) {
-    		System.out.println(post);
+    		//System.out.println(post);
     	}
     	return posts;
     	
@@ -350,9 +350,9 @@ public class PostRestController {
     	
     	Integer page = (Integer) fixedTagPostData.get("page"); 
     	String fixedTagName = (String) fixedTagPostData.get("fixedTagName");
-    	System.out.println("답을 알려줘 page는 "+page);
+    	/*System.out.println("답을 알려줘 page는 "+page);
     	System.out.println("키키키");
-    	System.out.println("답을 알려줘 fixedTagName는 "+fixedTagName);
+    	System.out.println("답을 알려줘 fixedTagName는 "+fixedTagName);*/
     	
     	List<PostShowVO> posts = postShowService.fixedTagPostShowByPagingReload(page, fixedTagName);
     	

@@ -1691,8 +1691,8 @@
                   
                   this.memberId = memberId;
                   this.memberNick=memberNick;
-                  console.log("아이디 : "+this.memberId);
-                  console.log("닉네임 : "+this.memberNick);
+                  //console.log("아이디 : "+this.memberId);
+                  //console.log("닉네임 : "+this.memberNick);
                },
                
                async followCnt() {
@@ -1715,7 +1715,7 @@
                   this.FollowMemberList = FollowMemberList;
                   this.FollowerMemberList = FollowerMemberList;
                   this.FollowPageList = FollowPageList;
-                  console.log("팔로우리스트 : "+this.FollowMemberList);
+                  //console.log("팔로우리스트 : "+this.FollowMemberList);
                },
                
                showModal(){
@@ -1771,9 +1771,9 @@
                    });
                    
                    this.memberProfileImageObj = response.data;
-                   console.log("this.memberProfileImageObj : "+this.memberProfileImageObj);
+                   //console.log("this.memberProfileImageObj : "+this.memberProfileImageObj);
                    const attachmentNo = this.memberProfileImageObj.attachmentNo;   
-                      console.log("attachmentNo : " +attachmentNo);
+                      //console.log("attachmentNo : " +attachmentNo);
                       const url = "/rest/attachment/download/"+attachmentNo;
                    this.previewURL = url;                   
                 },
@@ -1876,7 +1876,7 @@
                 	  });
                 	  this.FollowListProfile.push(...response.data);
                 	  
-                	  console.log("로그인 :  " +this.memberId);
+                	  //console.log("로그인 :  " +this.memberId);
                   },
                   
                   //팔로워 리스트 멤버별 프로필 조회
@@ -1898,7 +1898,7 @@
 						});
 
 						  this.PageListProfile.push(...response.data);
-						  console.log(" this.PageListProfile : "+ this.PageListProfile);
+						  //console.log(" this.PageListProfile : "+ this.PageListProfile);
 						},
                   
                   //프로필 리스트 팔로우 취소
@@ -1985,7 +1985,7 @@
 							Id : this.memberId
 						}
 			    	});
-			    	console.log(response.data);
+			    	//console.log(response.data);
 			    	if(response.data == true) {
 			    		this.follow = true;
 			    	}	
@@ -2031,7 +2031,7 @@
                                             
 	                  const resp = await axios.post("${contextPath}/rest/post/pageReload/memberWritePost",writePostData);
   	                 this.posts = resp.data;
-  	                 console.log("게시물은 "+this.posts);
+  	                 //console.log("게시물은 "+this.posts);
   	                 this.getLikePostIndex(this.posts);
 	                 this.getReplyAllList(this.posts);
   	                 this.page++;
@@ -2088,7 +2088,7 @@
              // 게시글 작성 시 글타입을 표현하기 위한 함수
             	setPostType(type){
             		this.postType = type;
-            		console.log(this.postType);
+            		//console.log(this.postType);
             	},
             	
             	// 게시글 삭제 
@@ -2281,14 +2281,14 @@
                 		reportTargetPrimaryKey: this.reportMemberId,
                 		reportFor: this.reportReason
                 	};
-                	console.log(this.reportDto);
+                	//console.log(this.reportDto);
                 	
                 	const url = "${contextPath}/rest/report/";
                 	try{
                 		const resp = await axios.post(url, reportDto);
                 	}
                 	catch(error){
-                		console.log(error);
+                		//console.log(error);
                 	}
                 },
              	// 유저 신고 관련 처리 ------------------------------------
@@ -2299,7 +2299,7 @@
              	checkLike(postNo,index){
                 	axios.get('${contextPath}/rest/post/like/'+postNo)
                 		.then(response => {
-                			console.log(response.data);
+                			//console.log(response.data);
                 			// 응답이 좋아요면 좋아요 +1
                 			if(response.data== 'Like'){
                 				this.posts[index].likeCount = this.posts[index].likeCount + 1; 
@@ -2398,8 +2398,8 @@
 					this.rereplyContent = ''; 
 					this.tempPostNo = postNo;
 					this.tempReplyNo = replyNo;
-					console.log(postNo);
-                	console.log(replyNo);
+					//console.log(postNo);
+                	///console.log(replyNo);
                 },
                 
                 hideRereplyInput(){
@@ -2481,9 +2481,9 @@
              	
              	setMapPlace(){
              		this.placeName = document.querySelector('.placeName').innerText;
-             		console.log("하하"+this.placeName);
+             		//console.log("하하"+this.placeName);
              		this.address = document.querySelector('.address').innerText;
-             		console.log("호호"+this.address);
+             		//console.log("호호"+this.address);
              	},             	
              	
             	// 모달창 클릭 시 지도 정보 불러오기-------------------------
@@ -2494,7 +2494,7 @@
             		var markers = [];
             		keyword2 = keyword2.replace(/\s+\d+$/, '');
 					var keyword = keyword1
-					console.log(keyword);
+					//console.log(keyword);
             		// 지도 정보를 담을 변수
             		let mapPlace = "기본";
 
@@ -2570,7 +2570,7 @@
             	},
             	setPageMemberId(){
             		const pageMemberId  = '${pageMemberId}';
-            		console.log("테스트 멤버아이디"+pageMemberId);
+            		//console.log("테스트 멤버아이디"+pageMemberId);
             		if (pageMemberId&& pageMemberId !== null){
             			this.pageMemberId = pageMemberId;
             		}

@@ -17,6 +17,6 @@ public class Test02 {
 	
 	@Test
 	public void test() {
-		log.debug("아이디 삭제 작업 ; {}", memberRepo.deleteMemberProc("testuser7"));
+		//log.debug("아이디 삭제 작업 ; {}", memberRepo.deleteMemberProc("testuser7"));
 	}
 }

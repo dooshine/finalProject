@@ -203,7 +203,7 @@
 				},
 				// 새 채팅 알림 있는지 확인
 				async loadChatNoti() {
-					console.log("memberId: " + this.memberId);
+					//console.log("memberId: " + this.memberId);
 					if(this.memberId.length > 0 && this.chatRoomList.length > 0) {
 						const url = "${pageContext.request.contextPath}/chat/message/noti/" + this.memberId;
 						const resp = await axios.get(url);
@@ -428,7 +428,7 @@
 						this.chatRoomList.push(...resp.data);
 						this.loadChatRoomNoti();
 						
-						console.log("resp.data.length: " + resp.data.length);
+						//console.log("resp.data.length: " + resp.data.length);
 						// 갠톡인 경우 상대방 아이디 따로 빼두기
 						for (let i = 0; i < resp.data.length; i++) {
 							if (resp.data[i].chatRoomType === 'P') {
@@ -575,8 +575,8 @@
 				},
 				findMemberByIdInRoom() {
 					let findId = "";
-					console.log("findMemberByIdInRoom memberId: " + findId);
-					console.log("this.roomInfo.chatRoomName1: " + this.roomInfo.chatRoomName1);
+					//console.log("findMemberByIdInRoom memberId: " + findId);
+					//console.log("this.roomInfo.chatRoomName1: " + this.roomInfo.chatRoomName1);
 					if(this.roomInfo.chatRoomName1 != this.memberId) {
 						findId = this.roomInfo.chatRoomName1;
 					}
@@ -714,7 +714,7 @@
 						this.fileSizeAlert = true;
 						return;
 					}
-					console.log("전송")
+					//console.log("전송")
 					const formData = new FormData();
 					formData.append("attach", file);
 					const url = "${pageContext.request.contextPath}/rest/attachment/upload";

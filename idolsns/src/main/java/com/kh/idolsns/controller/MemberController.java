@@ -169,7 +169,7 @@ public class MemberController {
 	@GetMapping("/mypage/{memberId}")
 	public String mypage(@PathVariable String memberId, HttpSession session, Model model) {
 		MemberDto memberDto = memberRepo.selectOne(memberId);
-		System.out.println(memberDto);
+		//System.out.println(memberDto);
 		model.addAttribute("memberDto", memberDto);
 		return "member/mypage";
 	}
@@ -178,7 +178,7 @@ public class MemberController {
 	@GetMapping("/mypage1/{memberId}")
 	public String mypage1(@PathVariable String memberId, HttpSession session, Model model) {
 		MemberDto memberDto = memberRepo.selectOne(memberId);
-		System.out.println(memberDto);
+		//System.out.println(memberDto);
 		model.addAttribute("memberDto", memberDto);
 		
 		String pageMemberId = memberId; 
@@ -190,7 +190,7 @@ public class MemberController {
 	@GetMapping("/mypage2/{memberId}")
 	public String mypage2(@PathVariable String memberId, HttpSession session, Model model) {
 		MemberDto memberDto = memberRepo.selectOne(memberId);
-		System.out.println(memberDto);
+		//System.out.println(memberDto);
 		model.addAttribute("memberDto", memberDto);
 
 		String pageMemberId = memberId; 
@@ -220,7 +220,7 @@ public class MemberController {
 //		result.put("memberNick", memberDto.getMemberNick());
 		
 		MemberDto memberDto = memberRepo.selectOne(memberId);
-		System.out.println(memberDto);
+		//System.out.println(memberDto);
 		
 		return memberDto;
 	}
@@ -315,7 +315,7 @@ public class MemberController {
 		result.put("MemberFollowerCnt", memberFollowCntDto.getMemberFollowerCnt());
 		result.put("MemberPageCnt", memberFollowCntDto.getMemberPageCnt());
 		
-		System.out.println(result);
+		//System.out.println(result);
 		
 		return result;
 	}

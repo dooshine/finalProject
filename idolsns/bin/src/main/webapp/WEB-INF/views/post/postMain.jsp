@@ -918,7 +918,7 @@
              	checkLike(postNo,index){
                 	axios.get('${contextPath}/rest/post/like/'+postNo)
                 		.then(response => {
-                			console.log(response.data);
+                			//console.log(response.data);
                 			// 응답이 좋아요면 좋아요 +1
                 			if(response.data== 'Like'){
                 				this.posts[index].likeCount = this.posts[index].likeCount + 1; 
@@ -1002,8 +1002,8 @@
 					this.rereplyContent = ''; 
 					this.tempPostNo = postNo;
 					this.tempReplyNo = replyNo;
-					console.log(postNo);
-                	console.log(replyNo);
+					//console.log(postNo);
+                	//console.log(replyNo);
                 },
                 
                 hideRereplyInput(){

@@ -270,7 +270,7 @@
 
         // 팔로우 버튼
         async followMember(targetId, i){
-            console.log(this.isFollowMemberList[i]);
+            //console.log(this.isFollowMemberList[i]);
             const isFollowing = this.isFollowMemberList[i];
             if(isFollowing) {
                 // 팔로우 삭제

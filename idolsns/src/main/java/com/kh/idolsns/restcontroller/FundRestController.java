@@ -59,7 +59,7 @@ public class FundRestController {
 	public List<FundListWithTagDto> paging(@PathVariable int page,
 			@ModelAttribute FundSearchVO vo
 			) {
-		System.out.println("----------------------vo----------------------"+vo);
+		//System.out.println("----------------------vo----------------------"+vo);
 		
 		List<FundListWithTagDto> list = fundPostImageRepo.selectListWithTag(page, vo);
 		
@@ -116,7 +116,7 @@ public class FundRestController {
 		vo.setFundTotal(fundTotal);
 		vo.setFundSponsorCount(sponsorCount);
 		
-		System.out.println("-------------------FundVO-----------"+vo);
+		//System.out.println("-------------------FundVO-----------"+vo);
 		
 	    return vo;
 	}
@@ -191,7 +191,7 @@ public class FundRestController {
 	@GetMapping("/duplicateTitleCheck/{fundTitle}")
 	public boolean duplicateCheck(@PathVariable String fundTitle) {
 		Integer count = sqlSession.selectOne("fundPost.duplicateCheck", fundTitle);
-		System.out.println(count > 0);
+		//System.out.println(count > 0);
 		return count > 0;
 	}
 }

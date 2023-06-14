@@ -31,7 +31,7 @@ public class TestJJy {
 		List<PostShowVO> list =  postShowService.fixedTagPostShowByPagingReload(page, "아이브");
 	
 		for(PostShowVO vo : list) {
-			System.out.println(vo);
+			//System.out.println(vo);
 		}
 				
 		

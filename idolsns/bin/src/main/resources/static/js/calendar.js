@@ -60,8 +60,8 @@ function loadCalendar() {
 			//if(arg.end.length > 0) arg.end = "";
 			/*const startDate = arg.start;
 			const endDate = arg.end;*/
-			console.log("startDate : " + startDate);
-			console.log("endDate : " + endDate);
+			//console.log("startDate : " + startDate);
+			//console.log("endDate : " + endDate);
 			$("#scheduleDate").val(
 				moment(startDate).format('YYYY년 MM월 DD일')
 				+ " - " + 
@@ -258,9 +258,9 @@ function editSchedule() {
 	if(memberId === "") return;
 	const calendarTitle = $("#calendarTitleEdit").val();
 	const calendarMemo = $("#calendarMemoEdit").val();
-	console.log("calendarNo: " + calendarNo);
-	console.log("calendarTitle: " + calendarTitle);
-	console.log("calendarMemo: " + calendarMemo);
+	//console.log("calendarNo: " + calendarNo);
+	//console.log("calendarTitle: " + calendarTitle);
+	//console.log("calendarMemo: " + calendarMemo);
 	const data = JSON.stringify({
         calendarNo: calendarNo,
         calendarTitle: calendarTitle,
