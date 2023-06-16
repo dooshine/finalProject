@@ -49,11 +49,11 @@
     text-decoration: none;
   }
   #artist-header a.artist-header-tab-active {
-  	color: black;
+	color: #6A53FB;
   }
   #artist-header a.artist-header-tab:not(.artist-header-tab-active):hover {
 	cursor: pointer;
-  	color: #404040
+	color: #7d6afb;
   }
 </style>
 
@@ -108,7 +108,7 @@
 					지도
 				</a>
 				<a class="font-bold px-4 artist-header-tab" :href="makeHref('fund')">
-					후원
+					펀딩
                 </a>
 			</div>
 		</div>
@@ -141,6 +141,9 @@
 								{{ post.mapName }}
 							</div>
 						</template>
+					</div>
+					<div v-if="postShowDto.length === 0">
+						<h3>{{artistObj.artistName}}관련 지도정보가 없습니다</h3>
 					</div>
 				</div>
 			</div>
@@ -208,7 +211,7 @@
 				};
     	  		document.head.appendChild(script);
 				
-				// this.showMap(this.postShowDto[0].mapName,this.postShowDto[0].mapPlace);
+				
 
 			}
 			
@@ -232,7 +235,6 @@
 			this.artistObj = resp.data;
 			
 			await this.loadTags();
-			this.showMap(this.postShowDto[0].mapName,this.postShowDto[0].mapPlace);
 			
 			this.tagName = this.artistObj.artistName; // 태그명 설정
 		},
@@ -343,8 +345,16 @@
 		
 			const resp = await axios.get(url);
 			this.postShowDto = resp.data;
-		
+			
 			await this.loadPositions();
+
+			// 카카오 맵 첫장소 띄우기
+			for(let i = 0; i<this.postShowDto.length; i++){
+				if(this.postShowDto[i].mapName!==null){
+					this.showMap(this.postShowDto[i].mapName,this.postShowDto[i].mapPlace);
+					break;
+				}
+			}
 		},
 
 		// 키워드 검색 완료 시 호출되는 콜백함수 입니다
@@ -436,7 +446,7 @@
   		},
 		// ######################## 맵 method 끝 ########################
       },
-      mounted(){  
+      async mounted(){  
 
 		// 카카오맵 API 로드
 		const script = document.createElement('script');
@@ -448,12 +458,14 @@
 				this.loadMemberFollowInfo();
 			});
 		};
+		
 
-		document.head.appendChild(script);
+		await document.head.appendChild(script);
         // 1. 아티스트 정보 로드
         this.loadArtist();
         // 2. 로그인 한 사람 팔로우 정보 로드
         this.loadMemberFollowInfo();
+
       },
 	  created(){
 		

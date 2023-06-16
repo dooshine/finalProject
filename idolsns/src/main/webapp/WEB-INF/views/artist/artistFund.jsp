@@ -49,11 +49,11 @@
     text-decoration: none;
   }
   #artist-header a.artist-header-tab-active {
-  	color: black;
+    color: #6A53FB;
   }
   #artist-header a.artist-header-tab:not(.artist-header-tab-active):hover {
 	cursor: pointer;
-  	color: #404040
+    color: #7d6afb;
   }
   
   
@@ -280,7 +280,7 @@
 					지도
 				</a>
 				<a class="font-bold px-4 artist-header-tab artist-header-tab-active" :href="makeHref('fund')">
-					후원
+					펀딩
                 </a>
 			</div>
 		</div>
@@ -331,6 +331,9 @@
                    </div>
                    
                  </div>
+                 <div v-if="fundings.length===0">
+                    <h3 class="pb-4 px-4">{{artistObj.artistName}}태그를 사용한 펀딩게시물이 없습니다</h3>
+                </div>
                  <!-- 펀딩 리스트 끝! -->
 
 	</div>

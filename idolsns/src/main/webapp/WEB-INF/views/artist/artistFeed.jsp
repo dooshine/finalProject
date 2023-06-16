@@ -49,11 +49,11 @@
     text-decoration: none;
   }
   #artist-header a.artist-header-tab-active {
-  	color: black;
+  	color: #6A53FB;
   }
   #artist-header a.artist-header-tab:not(.artist-header-tab-active):hover {
 	cursor: pointer;
-  	color: #404040
+  	color: #7d6afb;
   }
   .grey {
 	color: grey;
@@ -195,7 +195,7 @@
 					지도
 				</a>
 				<a class="font-bold px-4 artist-header-tab" :href="makeHref('fund')">
-					후원
+					펀딩
                 </a>
 			</div>
 		</div>
@@ -1376,6 +1376,9 @@
 		<!-- 글 박스 루프 1개-->
 
 	</div>
+	<div v-if="posts.length===0">
+		<h3 class="p-4">{{artistObj.artistName}}태그를 사용한 게시물이 없습니다</h3>
+	</div>
 	<!--------------- 게시물들 반복구간 ------------->
 
 	</div>
@@ -1637,6 +1640,8 @@
 
             this.loadArtist();
             this.loadMemberFollowInfo();
+
+			this.checkFollow();
         },
 
         // 대표페이지 팔로우 생성
