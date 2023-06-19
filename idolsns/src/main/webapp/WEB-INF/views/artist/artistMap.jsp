@@ -66,7 +66,7 @@
 	        <!-- 대표페이지 프로필 사진 -->
 	        <div class="my-auto" >
 	            <div class="border artist-profile-img rounded-circle overflow-hidden">
-	                <img class="artist-profile-img" :src="artistObj.profileSrc">
+	                <img class="artist-profile-img" :src="'${pageContext.request.contextPath}' + artistObj.profileSrc">
 	            </div>
 	        </div>
 	
@@ -227,7 +227,7 @@
             // 대표페이지 이름
             const artistEngNameLower = window.location.pathname.split("/").at(-2);
 			// url
-            const url = "${contextPath}/rest/artist/";
+            const url = contextPath + "/rest/artist/";
 			// 조회
             const resp = await axios.get(url, { params: { artistEngNameLower: artistEngNameLower } });
 			// 조회 결과 없을 시 
@@ -244,7 +244,7 @@
             // 로그인X → 실행 X
             if(memberId==="") return;
 
-            const url = "${contextPath}/rest/follow/memberFollowInfo/"
+            const url = contextPath + "/rest/follow/memberFollowInfo/"
 
             const resp = await axios.get(url, {params:{memberId: memberId}});
 
@@ -304,7 +304,7 @@
         // 대표페이지 팔로우 취소
         async deleteFollow(){
             // 팔로우 생성 url
-            const url = "${contextPath}/rest/follow/";
+            const url = contextPath + "/rest/follow/";
             await axios.delete(url, {
                 data: this.followPageObj,
             });

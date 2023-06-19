@@ -40,10 +40,10 @@
     		
     		
     		
-   		  <form id="orderProcess" method="post" action="/fund/order">
+   		  <form id="orderProcess" method="post" action="${pageContext.request.contextPath}/fund/order">
     		
     		<div class="container border mt-5 d-flex" style="padding:1em;">
-    			<img src="/download?attachmentNo=${fundMainImageDto.attachmentNo}" class="col-5" style="height:200px;">
+    			<img src="${pageContext.request.contextPath}/download?attachmentNo=${fundMainImageDto.attachmentNo}" class="col-5" style="height:200px;">
     			
     			<div class="col-7 p-3">
     				<div class="font-bold" style="font-size:25px;">${fundPostDto.fundTitle}</div> 
@@ -154,7 +154,7 @@
 		    },
 		    methods: {
 		      async loadMemberPoint() {
-		        const url = "${contextPath}/rest/member/" + memberId;
+		        const url = contextPath + "/rest/member/" + memberId;
 		        const data = {
 		          memberId: this.memberId
 		        };

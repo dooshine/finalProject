@@ -42,7 +42,7 @@
         // Load 신고 리스트
         async loadReportList () {
             // 신고리스트 조회 URL
-            const url = "${contextPath}/rest/report/list";
+            const url = contextPath + "/rest/report/list";
             // 비동기 신고리스트 조회 실행
             const resp = await axios.post(url, {});
             // vue.data.reportList에 resp.data 복사
@@ -71,7 +71,7 @@
             if(!confirm(selectedReportCnt + "개의 신고 내역을 정말 삭제하시겠습니까?")) return;
 
             // 신고 api url
-            const url = "${contextPath}/rest/report/"
+            const url = contextPath + "/rest/report/"
             
             // 신고 삭제 호출
             const resp = await axios.delete(url, { 

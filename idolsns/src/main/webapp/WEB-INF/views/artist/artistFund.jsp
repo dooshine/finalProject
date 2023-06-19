@@ -238,7 +238,7 @@
 	        <!-- 대표페이지 프로필 사진 -->
 	        <div class="my-auto" >
 	            <div class="border artist-profile-img rounded-circle overflow-hidden">
-	                <img class="artist-profile-img " :src="artistObj.profileSrc">
+	                <img class="artist-profile-img " :src="'${pageContext.request.contextPath}' + artistObj.profileSrc">
 	            </div>
 	        </div>
 	

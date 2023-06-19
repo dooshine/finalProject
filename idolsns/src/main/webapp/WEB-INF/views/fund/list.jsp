@@ -191,7 +191,7 @@
 			
 			
 		<div class="d-flex col rounded-4 bg-light p-3 mt-3 mb-3" style="width:100%; height:300px; float: none;
-			background-image: url('/static/image/fund_main.jpg'); background-size: cover; background-position: center;">
+			background-image: url('${pageContext.request.contextPath}/static/image/fund_main.jpg'); background-size: cover; background-position: center;">
 			    <div class="mx-5" style="display: flex; flex-direction: column; justify-content: center; align-items: left; text-align: left;">
 			        <div class="font-bold" style="font-size:35px; color:white;">
 			            내 손으로 만드는 아이돌 이벤트!
@@ -350,7 +350,7 @@
                   async fetchFundingList() {
            	   		if(this.finish) return;
            	   		
-                  const resp = await axios.get("${contextPath}/rest/fund/page/"+this.searchPage,
+                  const resp = await axios.get(contextPath + "/rest/fund/page/"+this.searchPage,
                         {
                 	  params: {
                 		  	// 검색어
@@ -380,7 +380,7 @@
                 	   	if(this.finish) return;
                 	   	  this.searchPage=1;
                 	   	  
-		                  const resp = await axios.get("${contextPath}/rest/fund/page/"+this.searchPage,
+		                  const resp = await axios.get(contextPath + "/rest/fund/page/"+this.searchPage,
 		                        {
 		                	  params: {
 		                		  	// 검색어
@@ -419,7 +419,7 @@
                    		postNoList.push(funding.postNo); 
                    	})
                    	
-               		axios.get('${contextPath}/rest/fund/like/index/'+postNoList)
+               		axios.get(contextPath + '/rest/fund/like/index/'+postNoList)
                			.then(response => {               			
                			this.postLikeIndexList = response.data;  
                			//console.log("postLikeIndexList--------"+this.postLikeIndexList);
@@ -506,7 +506,7 @@
 //     					if(!this.checkLogin()) return;
     					
 //     					const postNo = funding.postNo;
-//     					axios.get('${contextPath}/rest/post/like/'+postNo)
+//     					axios.get(contextPath + '/rest/post/like/'+postNo)
 //                 		.then(response => {
 //                 			console.log("checkLike = " +response.data);
 //                 			this.checkFundLike();
@@ -521,14 +521,14 @@
     				// 좋아요 체크
     				async checkFundLike() {
     					const postNo = this.fundDetail.postNo;
-    					const resp = await axios.get("${contextPath}/rest/post/like/check/"+postNo);
+    					const resp = await axios.get(contextPath + "/rest/post/like/check/"+postNo);
     					this.fundings.isLiked = resp.data;
     				},
     				// 아이디 접속해 있고, 좋아요 클릭시에 실행
                  	checkLike(postNo,index){
     					// if not logged in
     					if(!this.checkLogin()) return;
-                    	axios.get('${contextPath}/rest/post/like/'+postNo)
+                    	axios.get(contextPath + '/rest/post/like/'+postNo)
                     		.then(response => {
                     			//console.log(response.data);
                     			// 응답이 좋아요면

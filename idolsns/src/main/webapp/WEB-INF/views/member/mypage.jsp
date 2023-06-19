@@ -8,7 +8,7 @@
       <div class="container">
          <div class="row" >
             <div class="col-4" >
-                  <img :src="memberProfileImageObj !== ''  && memberProfileImageObj.attachmentNo !== undefined ? '/download/?attachmentNo='+memberProfileImageObj.attachmentNo :  ' /static/image/profileDummy.png' "
+                  <img :src="memberProfileImageObj !== ''  && memberProfileImageObj.attachmentNo !== undefined ? '${pageContext.request.contextPath}/download/?attachmentNo='+memberProfileImageObj.attachmentNo :  '${pageContext.request.contextPath}/static/image/profileDummy.png' "
                   style="width: 200px; height: 200px; border-radius: 100%;">
             </div>
             <div class="col-3">
@@ -54,11 +54,11 @@
          
           <div class="modal" tabindex = "-1" role="dialog" id="settingsModal" data-bs-backdrop="static" ref="settingsModal">
             <div class="modal-dialog" role="document">
-               <div class="modal-content   ">
+               <div class="modal-content">
                   <div class="modal-header">
                      <i class="fa-solid fa-xmark" style="color: #bcc0c8;" data-bs-dismiss="modal" aria-label="Close"></i>
                   </div>
-                  <div class="modal-body ">
+                  <div class="modal-body">
                   	<div class="row">
 	                     <i class="fa-solid fa-lock" @click="goToPassword()">비밀번호 변경</i>
                   	</div>
@@ -220,7 +220,7 @@
                 	<!-- 프로필 사진과 아이디 -->
                 	<div class="row mt-1">
 			            <div class="col-1 col-md-1 col-lg-1 d-flex align-items-center justify-content-center">
-			               <img class="rounded-circle img-fluid" src="static/image/profileDummy.png">
+			               <img class="rounded-circle img-fluid" src="${pageContext.request.contextPath}/static/image/profileDummy.png">
 			            </div>
 			            <div class="col-10 col-md-10 col-lg-10 align-items-center justify-content-start">
 														
@@ -458,7 +458,7 @@
 										
 				                		<div class="col-2 text-center ">
 				                			<div class="row w-50 h-50 text-center m-auto">
-				                				<img class="img-fluid rounded-circle " src="static/image/profileDummy.png">
+				                				<img class="img-fluid rounded-circle " src="${pageContext.request.contextPath}/static/image/profileDummy.png">
 				                			</div>
 				                			<div class="row w-50 h-50 text-center m-auto">
 				                				<h6 class="fs-7">{{reply.replyId}}</h6>
@@ -490,7 +490,7 @@
 				                					</div>
 				                					<div class="col-2 text-center">
 				                						<div class="row w-50 h-50 text-center m-auto">
-					                						<img class="img-fluid rounded-circle " src="static/image/profileDummy.png">
+					                						<img class="img-fluid rounded-circle " src="${pageContext.request.contextPath}/static/image/profileDummy.png">
 					                					</div>
 							                			<div class="row w-50 h-50 text-center m-auto">
 							                				<h6 class="fs-7">{{rereply.replyId}}</h6>
@@ -515,7 +515,7 @@
 		                					</div>
 		                					<div class="col-2 text-center">
 		                						<div class="row w-50 h-50 text-center m-auto">
-			                						<img class="img-fluid rounded-circle " src="static/image/profileDummy.png">
+			                						<img class="img-fluid rounded-circle " src="${pageContext.request.contextPath}/static/image/profileDummy.png">
 			                					</div>
 					                			<div class="row w-50 h-50 text-center m-auto">
 					                				<h6 class="fs-7">${memberId }</h6>
@@ -540,7 +540,7 @@
 							<!-- 댓글 작성버튼 눌렸을 때만 나오게됨 -->
 		                	<div class="row" v-if="replyFlagList[index]"> 
 		                		<div class="col-1">
-		                			<img class="rounded-circle img-fluid" src="static/image/profileDummy.png">
+		                			<img class="rounded-circle img-fluid" src="${pageContext.request.contextPath}/static/image/profileDummy.png">
 		                		</div>
 		                		<div class="col-10 mt-1">
 		                			<input type="text" placeholder=" 댓글을 입력하세요." v-model="replyContent" class="w-100 rounded-4 border border-secondary "> 
@@ -631,7 +631,7 @@
                 	<!-- 프로필 사진과 아이디 -->
                 	<div class="row mt-1">
 			            <div class="col-1 col-md-1 col-lg-1 d-flex align-items-center justify-content-center">
-			               <img class="rounded-circle img-fluid" src="static/image/profileDummy.png">
+			               <img class="rounded-circle img-fluid" src="${pageContext.request.contextPath}/static/image/profileDummy.png">
 			            </div>
 			            <div class="col-10 col-md-10 col-lg-10 align-items-center justify-content-start">
 														
@@ -869,7 +869,7 @@
 										
 				                		<div class="col-2 text-center ">
 				                			<div class="row w-50 h-50 text-center m-auto">
-				                				<img class="img-fluid rounded-circle " src="static/image/profileDummy.png">
+				                				<img class="img-fluid rounded-circle " src="${pageContext.request.contextPath}/static/image/profileDummy.png">
 				                			</div>
 				                			<div class="row w-50 h-50 text-center m-auto">
 				                				<h6 class="fs-7">{{reply.replyId}}</h6>
@@ -901,7 +901,7 @@
 				                					</div>
 				                					<div class="col-2 text-center">
 				                						<div class="row w-50 h-50 text-center m-auto">
-					                						<img class="img-fluid rounded-circle " src="static/image/profileDummy.png">
+					                						<img class="img-fluid rounded-circle " src="${pageContext.request.contextPath}/static/image/profileDummy.png">
 					                					</div>
 							                			<div class="row w-50 h-50 text-center m-auto">
 							                				<h6 class="fs-7">{{rereply.replyId}}</h6>
@@ -926,7 +926,7 @@
 		                					</div>
 		                					<div class="col-2 text-center">
 		                						<div class="row w-50 h-50 text-center m-auto">
-			                						<img class="img-fluid rounded-circle " src="static/image/profileDummy.png">
+			                						<img class="img-fluid rounded-circle " src="${pageContext.request.contextPath}/static/image/profileDummy.png">
 			                					</div>
 					                			<div class="row w-50 h-50 text-center m-auto">
 					                				<h6 class="fs-7">${memberId }</h6>
@@ -951,7 +951,7 @@
 							<!-- 댓글 작성버튼 눌렸을 때만 나오게됨 -->
 		                	<div class="row" v-if="replyFlagList[index]"> 
 		                		<div class="col-1">
-		                			<img class="rounded-circle img-fluid" src="static/image/profileDummy.png">
+		                			<img class="rounded-circle img-fluid" src="${pageContext.request.contextPath}/static/image/profileDummy.png">
 		                		</div>
 		                		<div class="col-10 mt-1">
 		                			<input type="text" placeholder=" 댓글을 입력하세요." v-model="replyContent" class="w-100 rounded-4 border border-secondary "> 
@@ -1101,7 +1101,7 @@
                      this.$refs.fileInput.click();
                    },
                async profile() {
-                  const response = await axios.get("/member/profile",{
+                  const response = await axios.get(contextPath + "/member/profile",{
                 	  params : {
                 		  memberId : this.memberId
                 	  }
@@ -1115,7 +1115,7 @@
                },
                
                async followCnt() {
-                  const response = await axios.get("/member/followCnt",{
+                  const response = await axios.get(contextPath + "/member/followCnt",{
                 	  params : {
                 		  memberId : this.memberId
                 	  }
@@ -1128,7 +1128,7 @@
                },
                
                async followList() {
-                  const response = await axios.get("/member/followList/"+this.memberId);
+                  const response = await axios.get(contextPath + "/member/followList/"+this.memberId);
                   const{FollowMemberList, FollowerMemberList, FollowPageList} = response.data;
                   
                   this.FollowMemberList = FollowMemberList;
@@ -1183,7 +1183,7 @@
                },
                
                async profileImage() {
-                   const response = await axios.get("/member/profileImage",{
+                   const response = await axios.get(contextPath + "/member/profileImage",{
                 	   params : {
                 		   memberId : this.memberId
                 	   }
@@ -1193,14 +1193,14 @@
                    //console.log("this.memberProfileImageObj : "+this.memberProfileImageObj);
                    const attachmentNo = this.memberProfileImageObj.attachmentNo;   
                       //console.log("attachmentNo : " +attachmentNo);
-                      const url = "/rest/attachment/download/"+attachmentNo;
+                      const url = contextPath + "/rest/attachment/download/"+attachmentNo;
                    this.previewURL = url;                   
                 },
                
                
                async nickDuplicatedCheck(memberNick) {
 
-                       const resp = await axios.get("/member/nickDuplicatedCheck", {
+                       const resp = await axios.get(contextPath + "/member/nickDuplicatedCheck", {
                            params : {
                                memberNick : this.editedNickname
                            }
@@ -1214,7 +1214,7 @@
                      },
                
                async updateNickname(memberNick) {
-                  const response = await axios.get("/member/nickname",{
+                  const response = await axios.get(contextPath + "/member/nickname",{
                      params:{
                         memberNick : this.editedNickname
                      }
@@ -1274,7 +1274,7 @@
                        this.previewURL = URL.createObjectURL(file);
                      
                       // URL
-                      const url = "${contextPath}/rest/member/memberProfile";
+                      const url = contextPath + "/rest/member/memberProfile";
 
                       // 폼데이터 생성
                       const formData = new FormData();
@@ -1289,7 +1289,7 @@
                   
                   //팔로우 리스트 멤버별 프로필 조회
                   async followListProfile() {
-                	  const response =await axios.get("/member/followListProfile",{
+                	  const response =await axios.get(contextPath + "/member/followListProfile",{
                 		  params :{
                 			  memberId : this.memberId
                 		  }
@@ -1301,7 +1301,7 @@
                   
                   //팔로워 리스트 멤버별 프로필 조회
                   async followerListProfile() {
-					  const response = await axios.get("/member/followerListProfile", {
+					  const response = await axios.get(contextPath + "/member/followerListProfile", {
 					    params: {
 					    	followTargetPrimaryKey: this.memberId
 					    }
@@ -1682,7 +1682,7 @@
                // 대댓글 삭제!!!내가!!!
                   async deleteRereply(replyNo){
                   	try{
-                  		await axios.delete('${contextPath}/rest/post/reply/reDelete/'+replyNo);
+                  		await axios.delete(contextPath + '/rest/post/reply/reDelete/'+replyNo);
                   		this.fetchPostsW();
                   	}
                   	catch(error){

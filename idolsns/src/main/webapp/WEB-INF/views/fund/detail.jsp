@@ -254,7 +254,7 @@
           		<div class="col-1">
           			<img v-if="reply.attachmentNo && reply.attachmentNo !=null" class="img-fluid rounded-circle" 
           			:src="getAttachmentUrl(reply.attachmentNo)" @click="linkToMypage(reply.replyId)"> 
-       				<img v-else class="img-fluid rounded-circle" src="/static/image/profileDummy.png">
+       				<img v-else class="img-fluid rounded-circle" src="${pageContext.request.contextPath}/static/image/profileDummy.png">
           		</div>
           		
           		<div class="col-10 align-items-center">
@@ -326,7 +326,7 @@
           		<div class="col-1">
           			<img v-if="reply.attachmentNo && reply.attachmentNo !=null" class="img-fluid rounded-circle" 
           			:src="getAttachmentUrl(reply.attachmentNo)" @click="linkToMypage(reply.replyId)"> 
-       				<img v-else class="img-fluid rounded-circle" src="/static/image/profileDummy.png">
+       				<img v-else class="img-fluid rounded-circle" src="${pageContext.request.contextPath}/static/image/profileDummy.png">
           		</div>
           		
           		<div class="col-10 align-items-center">
@@ -402,7 +402,7 @@
 		          		<div class="col-1">
 		          			<img v-if="reply.attachmentNo && reply.attachmentNo !=null" class="img-fluid rounded-circle" 
 		          			:src="getAttachmentUrl(sessionMemberAttachmentNo)"> 
-		       				<img v-else class="img-fluid rounded-circle" src="/static/image/profileDummy.png">
+		       				<img v-else class="img-fluid rounded-circle" src="${pageContext.request.contextPath}/static/image/profileDummy.png">
 		          		</div>
 	        			<div class="col-10">
 	        				<div  class="pt-2 ps-2 pe-2 w-100 rounded-4 grey-f5f5f5">
@@ -652,13 +652,13 @@
 			    // FundPostListDto 불러오기
 			    async loadFundPosts(){
 			    	const postNo = this.fundDetail.postNo;
-					const resp = await axios.get("${contextPath}/rest/fund/"+postNo);
+					const resp = await axios.get(contextPath + "/rest/fund/"+postNo);
 					this.fundDetail = { ...this.fundDetail, ...resp.data };
         		},
         		// postNo의 attachmentNo list 불러오기 
         		async loadAttachNos(){
         			const postNo = this.fundDetail.postNo;
-					const resp = await axios.get("${contextPath}/rest/fund/attaches/"+postNo);	  
+					const resp = await axios.get(contextPath + "/rest/fund/attaches/"+postNo);	  
 					this.fundDetail.attachmentNos.push(...resp.data);
         		},
         		async loadTagNames() {
@@ -713,7 +713,7 @@
 				// 대댓글 작성
                 async addReReply(i) {
 	            	if(this.reRepliesObjList[i].replyId == "") return;
-				   	const resp = await axios.post("${contextPath}/rest/reply/fund", 
+				   	const resp = await axios.post(contextPath + "/rest/reply/fund", 
 						  										this.reRepliesObjList[i]);
 				   // 댓글창 지우기 
 				   this.reReplies[i] = false
@@ -742,7 +742,7 @@
 				// 댓글 삭제
 				async deleteReply(i){
 					const replyNo = this.replies[i].replyNo;
-					const resp = await axios.delete("${contextPath}/rest/reply/fund/"+replyNo);
+					const resp = await axios.delete(contextPath + "/rest/reply/fund/"+replyNo);
 					this.loadReplies();
 				},
 				
@@ -756,7 +756,7 @@
 				// 댓글 수정
 				async saveUpdate(i) {
 					// 수정된 댓글 서버로 전송 
-					const resp = await axios.put("${contextPath}/rest/reply/fund/", 
+					const resp = await axios.put(contextPath + "/rest/reply/fund/", 
 													this.updateReplyObj);
 					// 수정된 데이터 저장 
 					this.replies[i].replyContent = this.updateReplyObj.replyContent;
@@ -803,7 +803,7 @@
 					if(!this.checkLogin()) return;
 					
 					const postNo = this.fundDetail.postNo;
-					axios.get('${contextPath}/rest/post/like/'+postNo)
+					axios.get(contextPath + '/rest/post/like/'+postNo)
             		.then(response => {
 //             			console.log("checkLike = " +response.data);
             			// 응답이 좋아요면 좋아요 +1
@@ -825,14 +825,14 @@
 				// 좋아요 체크
 				async checkFundLike() {
 					const postNo = this.fundDetail.postNo;
-					const resp = await axios.get("${contextPath}/rest/post/like/check/"+postNo);
+					const resp = await axios.get(contextPath + "/rest/post/like/check/"+postNo);
 					this.isLiked = resp.data;
 				},
 				
 				// 좋아요 수
 				async loadLikeCount() {
 					const postNo = this.fundDetail.postNo;
-					const resp = await axios.get("${contextPath}/rest/fund/likeCount/"+postNo);
+					const resp = await axios.get(contextPath + "/rest/fund/likeCount/"+postNo);
 					this.likeCount = resp.data;
 				},
 				
@@ -840,14 +840,14 @@
                 
                 // 이미지 불러오기 
                 getAttachmentUrl(attachmentNo) {      
-                    return "${contextPath}/rest/attachment/download/"+attachmentNo;
+                    return contextPath + "/rest/attachment/download/"+attachmentNo;
                 },
                 
                 // 세션 아이디의 프로필 이미지 불러오기 메소드에 추가
                 async getSessionMemberAttachmentNo(){
                    if(this.memberId !=null)
                    {
-                      const resp = await axios.get("${contextPath}/rest/post/sessionAttachmentNo/");   
+                      const resp = await axios.get(contextPath + "/rest/post/sessionAttachmentNo/");   
                       this.sessionMemberAttachmentNo = resp.data;
                       return this.sessionMemberAttachmentNo; 
                    }
@@ -855,7 +855,7 @@
                 
                 // 멤버 프로필 이미지 불러오기
                 async fetchMemberImage() {
-                	const resp = await axios.get("${contextPath}/rest")
+                	const resp = await axios.get(contextPath + "/rest")
                 },
                 
 				

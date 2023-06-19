@@ -46,7 +46,7 @@
             attachmentNo: {{memberProfile.attachmentNo}}
         </div>
         <div class="col ms-3">
-            <img :src="memberProfile.profileSrc" style="height: 50px; width: 50px;">
+            <img :src="'${pageContext.request.contextPath}' + memberProfile.profileSrc" style="height: 50px; width: 50px;">
         </div>
     </div>
 </div>
@@ -68,7 +68,7 @@
       methods: {
         // 테스트
         async test(){
-            const url = "${contextPath}/rest/member/getMemberProfile";
+            const url = contextPath + "/rest/member/getMemberProfile";
             
             const resp = await axios.get(url, {
                 params: {

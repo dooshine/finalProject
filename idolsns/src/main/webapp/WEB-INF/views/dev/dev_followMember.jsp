@@ -73,7 +73,7 @@
             // 비로그인시 실행X
             if(memberId==="") return;
             // url
-            const url = "${contextPath}/rest/follow/member";
+            const url = contextPath + "/rest/follow/member";
             // api호출
             const resp = await axios.get(url);
             // data 반영

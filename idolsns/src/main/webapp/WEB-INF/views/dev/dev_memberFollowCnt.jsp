@@ -154,7 +154,7 @@
         // [함수] 모든회원 팔로우 통계 조회
         async loadAllMemberFollowCntList(){
             // url
-            const url = "${contextPath}/rest/follow/memberFollowCnt";
+            const url = contextPath + "/rest/follow/memberFollowCnt";
             // api호출
             const resp = await axios.get(url);
             // data 반영
@@ -164,7 +164,7 @@
         // [함수] 특정회원 팔로우 통계 조회
         async selectTargetMemberFollowCnt(){
             // url
-            const url = "${contextPath}/rest/follow/memberFollowCnt";
+            const url = contextPath + "/rest/follow/memberFollowCnt";
             // api호출
             const resp = await axios.get(url, { params: {memberId: this.targetMemberId} });
             // data 반영
