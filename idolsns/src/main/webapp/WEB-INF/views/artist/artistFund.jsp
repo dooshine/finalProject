@@ -386,7 +386,7 @@
             // 대표페이지 이름
             const artistEngNameLower = window.location.pathname.split("/").at(-2);
 			// url
-            const url = "${pageContext.request.contextPath}/rest/artist/";
+            const url = contextPath + "/rest/artist/";
 			// 조회
             const resp = await axios.get(url, { params: { artistEngNameLower: artistEngNameLower } });
 			// 조회 결과 없을 시 
@@ -401,7 +401,7 @@
             // 로그인X → 실행 X
             if(memberId==="") return;
 
-            const url = "${pageContext.request.contextPath}/rest/follow/memberFollowInfo/"
+            const url = contextPath + "/rest/follow/memberFollowInfo/"
 
             const resp = await axios.get(url, {params:{memberId: memberId}});
 
@@ -455,13 +455,13 @@
         // 대표페이지 팔로우 생성
         async createFollowPage(){
             // 팔로우 생성 url
-            const url = "${pageContext.request.contextPath}/rest/follow/";
+            const url = contextPath + "/rest/follow/";
             await axios.post(url, this.followPageObj);
         },
         // 대표페이지 팔로우 취소
         async deleteFollow(){
             // 팔로우 생성 url
-            const url = "${pageContext.request.contextPath}/rest/follow/";
+            const url = contextPath + "/rest/follow/";
             // console.log(url);
             await axios.delete(url, {
                 data: this.followPageObj,
@@ -505,7 +505,7 @@
     	   	if(this.finish) return;
     	   	  this.searchPage=1;
     	   	  
-              const resp = await axios.get("${pageContext.request.contextPath}/rest/fund/page/"+this.searchPage,
+              const resp = await axios.get(contextPath + "/rest/fund/page/"+this.searchPage,
                     {
             	  params: {
             		  	// 검색어
@@ -531,7 +531,7 @@
        
 	       // 이미지 주소 설정
 	       getImageUrl(funding) {
-	           const imageUrl = "/rest/attachment/download/" + funding.attachmentNo;
+	           const imageUrl = contextPath + "/rest/attachment/download/" + funding.attachmentNo;
 	           return imageUrl;
            },
            
@@ -547,7 +547,7 @@
         	 // 좋아요 체크
 			async checkFundLike() {
 				const postNo = this.fundDetail.postNo;
-				const resp = await axios.get("${pageContext.request.contextPath}/rest/post/like/check/"+postNo);
+				const resp = await axios.get(contextPath + "/rest/post/like/check/"+postNo);
 				this.fundings.isLiked = resp.data;
 			},
 			
@@ -555,7 +555,7 @@
          	checkLike(postNo,index){
 				// if not logged in
 				if(!this.checkLogin()) return;
-            	axios.get('${pageContext.request.contextPath}/rest/post/like/'+postNo)
+            	axios.get(contextPath + '/rest/post/like/'+postNo)
             		.then(response => {
             			//console.log(response.data);
             			// 응답이 좋아요면

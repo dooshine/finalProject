@@ -270,7 +270,7 @@
             artistEngName: "",
             artistEngNameLower: "",
             attachment: null,
-            previewURL: "/static/image/profileDummy.png",
+            previewURL: contextPath + "/static/image/profileDummy.png",
           },
 
           artistSearchObj : {

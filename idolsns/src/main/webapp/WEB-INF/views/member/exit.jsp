@@ -86,7 +86,7 @@
                  },
                  
                  async exitPw() {
-                	 const response = await axios.get("/member/exitPw",{
+                	 const response = await axios.get(contextPath + "/member/exitPw",{
                 		 params :{
                 			 memberPw : this.password
                 		 }

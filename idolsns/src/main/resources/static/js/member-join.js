@@ -95,7 +95,7 @@ $(function(){
         }
 
         $.ajax({
-            url:"/rest/member/memberNick/"+memberNick,
+            url: contextPath + "/rest/member/memberNick/"+memberNick,
             method:"get",
             success:function(response) {
                 if(response == "Y") {

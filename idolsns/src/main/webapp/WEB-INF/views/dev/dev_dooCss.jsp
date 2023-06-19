@@ -62,7 +62,7 @@
 	    <div class="bg-white mb-2 p-4 rounded-4">
 	        <div class="row mt-1">
 	            <div class="col-1 col-md-1 col-lg-1 d-flex align-items-center justify-content-center">
-	               <img class="rounded-circle img-fluid" src="static/image/profileDummy.png">
+	               <img class="rounded-circle img-fluid" src="${pageContext.request.contextPath}/static/image/profileDummy.png">
 	            </div>
 	            <div class="col-11 col-md-11 col-lg-11 d-flex align-items-center justify-content-center">
 	                <button type="button" class="btn btn-white btn-outline-secondary rounded-pill col-12 border border-secondary" data-bs-target="#modal1" data-bs-toggle="modal">${memberId}님 무슨 생각을 하고 계신가요?</button>
@@ -447,7 +447,7 @@
                 	<!-- 프로필 사진과 아이디 -->
                 	<div class="row mt-1">
 			            <div class="col-1 col-md-1 col-lg-1 d-flex align-items-center justify-content-center">
-			               <img class="rounded-circle img-fluid" src="static/image/profileDummy.png">
+			               <img class="rounded-circle img-fluid" src="${pageContext.request.contextPath}/static/image/profileDummy.png">
 			            </div>
 			            <div class="col-10 col-md-10 col-lg-10 align-items-center justify-content-start">
 														
@@ -686,7 +686,7 @@
 										<!-- 프로필 이미지 -->
 				                		<div class="col-1">
 				                			<div class="row mt-2 text-center">
-				                				<img class="img-fluid rounded-circle " src="static/image/profileDummy.png">
+				                				<img class="img-fluid rounded-circle " src="${pageContext.request.contextPath}/static/image/profileDummy.png">
 				                			</div>
 <!-- 				                			<div class="row w-50 h-50 text-center m-auto"> -->
 <!-- 				                				<h6 class="fs-7"></h6> -->
@@ -735,7 +735,7 @@
 				                					</div>
 				                					<div class="col-2 text-center">
 				                						<div class="row w-50 h-50 text-center m-auto">
-					                						<img class="img-fluid rounded-circle " src="static/image/profileDummy.png">
+					                						<img class="img-fluid rounded-circle " src="${pageContext.request.contextPath}/static/image/profileDummy.png">
 					                					</div>
 							                			<div class="row w-50 h-50 text-center m-auto">
 							                				<h6 class="fs-7">{{rereply.replyId}}</h6>
@@ -760,7 +760,7 @@
 		                					</div>
 		                					<div class="col-2 text-center">
 		                						<div class="row w-50 h-50 text-center m-auto">
-			                						<img class="img-fluid rounded-circle " src="static/image/profileDummy.png">
+			                						<img class="img-fluid rounded-circle " src="${pageContext.request.contextPath}/static/image/profileDummy.png">
 			                					</div>
 					                			<div class="row w-50 h-50 text-center m-auto">
 					                				<h6 class="fs-7">${memberId }</h6>
@@ -785,7 +785,7 @@
 							<!-- 댓글 작성버튼 눌렸을 때만 나오게됨 -->
 		                	<div class="row" v-if="replyFlagList[index]"> 
 		                		<div class="col-1">
-		                			<img class="rounded-circle img-fluid" src="static/image/profileDummy.png">
+		                			<img class="rounded-circle img-fluid" src="${pageContext.request.contextPath}/static/image/profileDummy.png">
 		                		</div>
 		                		<div class="col-10 mt-1">
 		                			<input type="text" placeholder=" 댓글을 입력하세요." v-model="replyContent" class="w-100 rounded-4 border border-secondary "> 

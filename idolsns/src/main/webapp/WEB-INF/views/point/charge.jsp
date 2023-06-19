@@ -181,7 +181,7 @@
 	            },
 			
 	           	 async loadMemberPoint() {
-	                     const url = "/rest/member/" + memberId;
+	                     const url = contextPath + "/rest/member/" + memberId;
 	                     const data = {
 	                         memberId: this.memberId // 로그인된 멤버 아이디 사용
 	                     };

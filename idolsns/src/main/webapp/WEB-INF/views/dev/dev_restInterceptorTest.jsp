@@ -26,7 +26,7 @@
     },
     methods: {
         async restTest(){
-            const url = contextPath + "/dev/restInterceptor";
+            const url = contextPath + "/dev/rest-Interceptor";
 
             // const resp = axios.get(url);
             // ↓

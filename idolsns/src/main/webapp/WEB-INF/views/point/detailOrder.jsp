@@ -124,7 +124,7 @@
     },
     methods: {
       async loadOrderDetail() {
-        const url = "/rest/fund/order/" + this.fundNo;
+        const url = contextPath + "/rest/fund/order/" + this.fundNo;
         const resp = await axios.get(url);
         this.fundDto = resp.data;
         this.fundDetail.postNo = resp.data.postNo;
@@ -132,7 +132,7 @@
       },
       async loadFundPosts() {
         const postNo = this.fundDetail.postNo;
-        const resp = await axios.get("/rest/fund/" + postNo);
+        const resp = await axios.get(contextPath + "/rest/fund/" + postNo);
         this.fundDetail = { ...this.fundDetail, ...resp.data };
       },
       formatCurrency(value) {

@@ -185,7 +185,7 @@
             methods:{
             	  async idDuplicatedCheck(memberId){
 
-                      const resp = await axios.get("/member/idDuplicatedCheck",{
+                      const resp = await axios.get(contextPath + "/member/idDuplicatedCheck",{
                           params :{
                            memberId : this.memberId
                           }
@@ -199,7 +199,7 @@
                   },
                   
                   async idDuplicatedCheck2(memberId) {
-                	 const resp = await axios.get("/member/idDuplicatedCheck2",{
+                	 const resp = await axios.get(contextPath + "/member/idDuplicatedCheck2",{
                 		 params:{
                 			 memberId : this.memberId
                 		 }
@@ -213,7 +213,7 @@
 
                   async nickDuplicatedCheck(memberNick) {
 
-                    const resp = await axios.get("/member/nickDuplicatedCheck", {
+                    const resp = await axios.get(contextPath + "/member/nickDuplicatedCheck", {
                         params : {
                             memberNick : this.memberNick
                         }
@@ -228,7 +228,7 @@
 
                   async emailDuplicatedCheck(memberEmail) {
 
-                    const resp = await axios.get("/member/emailDuplicatedCheck", {
+                    const resp = await axios.get(contextPath + "/member/emailDuplicatedCheck", {
                         params : {
                             memberEmail : this.memberEmail
                         }
@@ -255,7 +255,7 @@
 	                        },
 	                        // onClick: function(){} // Callback after click
 	                    }).showToast();
-                  	const response = await axios.get("/member/emailSend",{
+                  	const response = await axios.get(contextPath + "/member/emailSend",{
                   		params : {
                   			memberEmail : this.memberEmail
                   		}

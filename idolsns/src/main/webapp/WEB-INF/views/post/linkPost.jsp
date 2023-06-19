@@ -35,7 +35,7 @@
 								
 								<!-- 프로필 사진이 없는 경우 -->
 								<img v-else class="img-fluid p-0" style="max-width: 100%; min-width: 100%;cursor: pointer;"
-									@click="toMemberPage(post.memberId)" src="static/image/profileDummy.png">
+									@click="toMemberPage(post.memberId)" src="${pageContext.request.contextPath}/static/image/profileDummy.png">
 							</div>
 						</div>
 <!-- 						<div class="col-1"></div> -->
@@ -398,7 +398,7 @@
 												<!-- 프로필 사진이 없는 경우 -->
 												<img v-else class="img-fluid p-0" @click="toMemberPage(reply.replyId)"
 												style="width:100%;height:100%;cursor: pointer;"
-												src="static/image/profileDummy.png">
+												src="${pageContext.request.contextPath}/static/image/profileDummy.png">
 												</div>
 											</div>
 											<div class="col-1">
@@ -478,7 +478,7 @@
 														
 														<!-- 대댓글 프로필 사진이 없는 경우 -->
 														<img v-else class="img-fluid p-0" style="width:100%;height:100%;cursor: pointer;" @click="toMemberPage(rereply.replyId)"													 
-															src="static/image/profileDummy.png">
+															src="${pageContext.request.contextPath}/static/image/profileDummy.png">
 														</div>
 													</div>
 													<div class="col-1">
@@ -551,7 +551,7 @@
 															
 															<!-- 프로필 사진이 없는 경우 -->
 															<img v-else class="img-fluid p-0" style="width:100%;height:100%;"															
-															src="static/image/profileDummy.png">
+															src="${pageContext.request.contextPath}/static/image/profileDummy.png">
 													</div>
 												</div>
 												<div class="col-1">
@@ -613,7 +613,7 @@
 														
 														<!-- 프로필 사진이 없는 경우 -->
 														<img v-else class="img-fluid p-0" style="width:100%;height:100%;cursor:pointer;" @click="toMemberPage(reply.replyId)"
-														src="static/image/profileDummy.png">
+														src="${pageContext.request.contextPath}/static/image/profileDummy.png">
 													</div>
 												</div>
 												<div class="col-1"></div>
@@ -693,7 +693,7 @@
 																	
 																	<!-- 프로필 사진이 없는 경우 -->
 																	<img v-else class="img-fluid p-0" style="width:100%;height:100%;cursor: pointer;" @click="toMemberPage(rereply.replyId)"
-																		src="static/image/profileDummy.png">
+																		src="${pageContext.request.contextPath}/static/image/profileDummy.png">
 															</div>
 														</div>
 														<div class="col-1"></div>
@@ -764,7 +764,7 @@
 														
 															<!-- 프로필 사진이 없는 경우 -->
 															<img v-else class="img-fluid p-0" style="width:100%;height:100%;"
-															src="static/image/profileDummy.png">
+															src="${pageContext.request.contextPath}/static/image/profileDummy.png">
 														</div>
 													</div>
 													<div class="col-1"></div>
@@ -823,7 +823,7 @@
 									
 										<!-- 프로필 사진이 없는 경우 -->
 										<img v-else class="img-fluid p-0"											
-											src="static/image/profileDummy.png">
+											src="${pageContext.request.contextPath}/static/image/profileDummy.png">
 									</div>
 <!-- 								<div class="col-1"></div> -->
 								</div>

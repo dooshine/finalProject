@@ -425,7 +425,7 @@
             console.table(this.selectedMemberList)
 
             // URL
-            // const url = contextPath + "{contextPath}/rest/artist/"
+            // const url = contextPath + "/rest/artist/"
             // 아티스트 삭제
 
             // const resp = await axios.delete(url, { 

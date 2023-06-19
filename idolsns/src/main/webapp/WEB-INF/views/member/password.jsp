@@ -63,7 +63,7 @@
                     }
                  },
                  async passwordCheck() {
-                	 const response = await axios.get("/member/passwordCheck",{
+                	 const response = await axios.get(contextPath + "/member/passwordCheck",{
                 		 params :{
                 			 currentPw : this.currentPw
                 		 }

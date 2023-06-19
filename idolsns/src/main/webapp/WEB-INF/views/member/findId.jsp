@@ -67,7 +67,7 @@
     		},
     		methods:{
     			async emailDuplicatedCheck(memberEmail) {
-    				const response = await axios.get("/member/emailDuplicatedCheck", {
+    				const response = await axios.get(contextPath + "/member/emailDuplicatedCheck", {
     					params:{
     						memberEmail : this.memberEmail
     					}
@@ -80,7 +80,7 @@
     				}
     			},
     			async findId(memberEmail) {
-    				const response = await axios.get("/member/findIdFinish", {
+    				const response = await axios.get(contextPath + "/member/findIdFinish", {
     					params:{
     						memberEmail : this.memberEmail
     					}

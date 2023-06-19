@@ -137,7 +137,7 @@
 			<div class="d-flex mt-5 px-3" style="background-color: #f5f5f5; border-radius:5px;">
 				<div class="col py-3">
 				  <div  style="width: 100%; height: 100%; position: relative;">
-				    <img :src="fundDetail.imageURL" alt="예시사진" style="width: 100%; height: 100%; object-fit: cover;">
+				    <img :src="'${pageContext.request.contextPath}' + fundDetail.imageURL" alt="예시사진" style="width: 100%; height: 100%; object-fit: cover;">
 				  </div>
 				</div>
 

@@ -341,7 +341,7 @@
 		// ######################## 맵 method ########################
     	async loadTags() {
 			const tagName = this.artistObj.artistName;
-			const url = "/rest/post/" + tagName;
+			const url = contextPath + "/rest/post/" + tagName;
 		
 			const resp = await axios.get(url);
 			this.postShowDto = resp.data;
