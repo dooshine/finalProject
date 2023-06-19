@@ -467,7 +467,7 @@
       <nav class="navbar navbar-expand-md navbar-light back-white" style="box-shadow: 0px 3px 4px rgba(3, 21, 17, 0.1); height: 100%;">
          <div class="container-fluid d-flex justify-content-center align-items-center" style="height: 100%;">
             <div class="text-center">
-               <a class="navbar-brand" href="${pageContext.request.contextPath}/"><img src="/static/image/logo.png" style="width: 130px;"></a>
+               <a class="navbar-brand" href="${pageContext.request.contextPath}/"><img src="${pageContext.request.contextPath}/static/image/logo.png" style="width: 130px;"></a>
             </div>
          </div>
       </nav>

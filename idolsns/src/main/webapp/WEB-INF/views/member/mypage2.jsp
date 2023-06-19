@@ -126,7 +126,7 @@
 	      
 		         <div class="row" >
 		            <div class="col-4" >
-		                  <img :src="memberProfileImageObj !== ''  && memberProfileImageObj.attachmentNo !== undefined ? '/download/?attachmentNo='+memberProfileImageObj.attachmentNo :  ' /static/image/profileDummy.png' "
+		                  <img :src="memberProfileImageObj !== ''  && memberProfileImageObj.attachmentNo !== undefined ? '${pageContext.request.contextPath}/download/?attachmentNo='+memberProfileImageObj.attachmentNo :  '${pageContext.request.contextPath}/static/image/profileDummy.png' "
 		                  style="width: 200px; height: 200px; border-radius: 100%;">
 		            </div>
 		            <div class="col-3">

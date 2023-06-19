@@ -268,7 +268,7 @@ $(function(){
    	          	      findFixedTagName: "",
          	          findFixedTagList: [],
          	          newFixedTagList: [],
-         	          previewURL: "/static/image/profileDummy.png",
+         	          previewURL: contextPath + "/static/image/profileDummy.png",
          	          el: '#app',
          	          minDate: "",
          	          minDateEnd: "",
