@@ -110,10 +110,10 @@
 			methods: {
 				// 로그인 안한 경우 로그인으로 이동
 				login() {
-					window.location.href = "${pageContext.request.contextPath}/member/login";
+					window.location.href = contextPath + "/member/login";
 				},
 				connect() {
-					const url = "${pageContext.request.contextPath}/ws/server";
+					const url = contextPath + "/ws/server";
 					this.socket = new SockJS(url);
 					// this: 뷰 객체
 					const app = this;
@@ -863,15 +863,15 @@
 				async goToLoginPage() {
 					const response = await axios.get("/member/goToLoginPage");
 					if(response.data == "") {
-						window.location.href = `${pageContext.request.contextPath}/member/login`;
+						window.location.href = contextPath + "/member/login";
 					}
 					else {
-						window.location.href = `${pageContext.request.contextPath}/member/mypage/${memberId}`	;
+						window.location.href = contextPath + "/member/mypage2/" + memberId;
 					}
 				},
 				// 이미지 메세지 모달로 크게 보기위한 url 셋팅
 				setModalImgURL(index) {
-					this.modalImgURL = "${pageContext.request.contextPath}/download?attachmentNo=" + this.messageList[index].attachmentNo;
+					this.modalImgURL = contextPath + "/download?attachmentNo=" + this.messageList[index].attachmentNo;
 				}
 			},
 			computed: {

@@ -1611,7 +1611,7 @@
             //     }
             // }
 
-			const url = "${contextPath}/rest/follow/checkFollowPage";
+			const url = contextPath + "/rest/follow/checkFollowPage";
 
 			const resp = await axios.get(url, {params: {memberId: memberId, followTargetType: '대표페이지', followTargetPrimaryKey: this.artistObj.artistEngNameLower}});
 
@@ -1647,7 +1647,7 @@
         // 대표페이지 팔로우 생성
         async createFollowPage(){
             // 팔로우 생성 url
-            const url = "${contextPath}/rest/follow/";
+            const url = contextPath + "/rest/follow/";
             await axios.post(url, this.followPageObj);
         },
         // 대표페이지 팔로우 취소
@@ -1859,7 +1859,7 @@
 			// 로그인X → 실행 X
 			if(this.memberId===null) return;
 			// url
-			const url = "${contextPath}/rest/follow/memberFollowInfo/"
+			const url = contextPath + "/rest/follow/memberFollowInfo/"
 			// 팔로우 목록 load
 			const resp = await axios.get(url, {params:{memberId: this.memberId}});
 
@@ -2005,7 +2005,7 @@
         
      	// 고정 태그 맵핑
      	searchFixedTag(data){
-        	this.searchUrl = '${contextPath}/search/post/?q='+data;
+        	this.searchUrl = contextPath + '/search/post/?q='+data;
         },
      	
      	
@@ -2320,7 +2320,7 @@
         },
         // 해당 맴버가 쓴 글 페이지로 
         toMemberPage(memberId){
-        	const url = '${contextPath}/member/mypage2/'+memberId;
+        	const url = contextPath + '/member/mypage2/'+memberId;
         	window.location.href = url;
         },
 

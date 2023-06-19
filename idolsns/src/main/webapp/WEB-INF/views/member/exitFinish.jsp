@@ -27,10 +27,10 @@
 		Vue.createApp({
 			methods:{
 				goToLogin() {
-	      		  window.location.href = "${pageContext.request.contextPath}/member/login"; 
+	      		  window.location.href = contextPath + "/member/login"; 
 	      	  },
 				goToJoin() {
-	      		  window.location.href = "${pageContext.request.contextPath}/member/join"; 
+	      		  window.location.href = contextPath + "/member/join"; 
 	      	  },
 			},
 		}).mount("#app");

@@ -663,13 +663,13 @@
         		},
         		async loadTagNames() {
         			const postNo = this.fundDetail.postNo;
-        			const resp = await axios.get("${contextPath}/rest/fund/tag/"+postNo);
+        			const resp = await axios.get(contextPath + "/rest/fund/tag/"+postNo);
         			this.fundDetail.tagNames.push(...resp.data);
         		},
 		       // fundTotal & fundSponsorCount 불러오기
         		async loadFundVO(){
 			    	const postNo = this.fundDetail.postNo;
-					const resp = await axios.get("${contextPath}/rest/fund/fundlist/"+postNo);	  
+					const resp = await axios.get(contextPath + "/rest/fund/fundlist/"+postNo);	  
 					//console.log("FundVO====="+resp.data.fundWithNickDtos);
 					this.fundVO = resp.data.fundWithNickDtos;
 					this.fundDetail.fundTotal = resp.data.fundTotal;
@@ -687,7 +687,7 @@
         		  }
         			
 		      	  const postNo = this.fundDetail.postNo; // Vue 데이터의 postNo 값을 사용
-		      	  window.location.href = "${contextPath}/fund/order?postNo=" + postNo;
+		      	  window.location.href = contextPath + "/fund/order?postNo=" + postNo;
 		      	},
 		      	
 		      	// 3자리 마다 ,
@@ -697,7 +697,7 @@
 	          	// replies 불러오기
 	          	async loadReplies() {
 	                const postNo = this.fundDetail.postNo; // 게시물 번호
-	                const resp = await axios.get("${contextPath}/rest/reply/fund/"+postNo);
+	                const resp = await axios.get(contextPath + "/rest/reply/fund/"+postNo);
 	                this.replies = resp.data; // Vue data에 저장
 // 	               	console.log(resp.data);
 	              },
@@ -705,7 +705,7 @@
                 async addReply() {
 	              if(this.replyObj.replyId == "") return;
 	              this.replyObj.postNo = this.fundDetail.postNo;
-				  const resp = await axios.post("${contextPath}/rest/reply/fund", 
+				  const resp = await axios.post(contextPath + "/rest/reply/fund", 
 						  										this.replyObj);
 				  this.replyObj.replyContent = ""; // 내용 초기화
 				  this.loadReplies(); // 댓글목록 다시 불러옴
@@ -872,12 +872,12 @@
 				
 				// 로그인 페이지로
 				linkToLogin() {
-					window.location.href="/member/login";
+					window.location.href= contextPath + "/member/login";
 				},
 				
 				// 프사 클릭시 마이페이지로
 				linkToMypage(id) {
-					window.location.href="/member/mypage2/"+id;
+					window.location.href= contextPath + "/member/mypage2/"+id;
 				},
 		    },
 		    created() {

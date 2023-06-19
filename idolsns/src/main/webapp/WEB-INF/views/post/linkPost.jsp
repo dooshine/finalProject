@@ -886,7 +886,7 @@
       },
       methods: {
 		async fetchPost(){
-			const resp = await axios.get("${contextPath}/rest/post/onePost/"+this.postNo);
+			const resp = await axios.get(contextPath + "/rest/post/onePost/"+this.postNo);
 			this.post = resp.data;			
 		},
 		// 글 번호 설정
@@ -904,7 +904,7 @@
     	async deletePost(){
     		var postNo = this.deletePostNo;
         	try{
-        		await axios.delete('${contextPath}/rest/post/'+postNo);
+        		await axios.delete(contextPath + '/rest/post/'+postNo);
         		this.fetchNew();
         	}
         	catch (error){
@@ -923,7 +923,7 @@
 	    	};
 	    	
 	    	try {
-	    		await axios.put('${contextPath}/rest/post/',postDto);
+	    		await axios.put(contextPath + '/rest/post/',postDto);
 	    		
 	    	}
 	    	catch(error){
@@ -940,11 +940,11 @@
 	    	this.modalImageUrl = this.getAttachmentUrl(attachmentNo)
 	    },
         getAttachmentUrl(attachmentNo) {		
-    		return "${contextPath}/rest/attachment/download/"+attachmentNo;
+    		return contextPath + "/rest/attachment/download/"+attachmentNo;
         },
         async checkFileType(attachmentNo) {
             try {
-                const response = await axios.head('${contextPath}/rest/attachment/download/post/' + attachmentNo);
+                const response = await axios.head(contextPath + '/rest/attachment/download/post/' + attachmentNo);
                 const contentType = response.headers['content-type'];
                 if (contentType.includes('image')) {
                     return 'image';
@@ -1003,7 +1003,7 @@
 			// 로그인X → 실행 X
 			if(this.memberId===null) return;
 			// url
-			const url = "${contextPath}/rest/follow/memberFollowInfo/"
+			const url = contextPath + "/rest/follow/memberFollowInfo/"
 			// 팔로우 목록 load
 			const resp = await axios.get(url, {params:{memberId: this.memberId}});
 
@@ -1031,7 +1031,7 @@
                 followTargetPrimaryKey: followedMemberId
             };
             
-            const url = "${contextPath}/rest/follow/";
+            const url = contextPath + "/rest/follow/";
             await axios.post(url,followDto);
            
 
@@ -1057,7 +1057,7 @@
             };                    
             
             // 팔로우 삭제 
-            const url = "${contextPath}/rest/follow/";
+            const url = contextPath + "/rest/follow/";
             await axios.delete(url, {
                 data: followDto,
             });
@@ -1093,7 +1093,7 @@
         	};
         	//console.log(this.reportDto);
         	
-        	const url = "${contextPath}/rest/report/";
+        	const url = contextPath + "/rest/report/";
         	try{
         		const resp = await axios.post(url, reportDto);
         	}
@@ -1107,7 +1107,7 @@
      	// 좋아요 관련 비동기 처리-----------------------------------
      	// 아이디 접속해 있고, 좋아요 클릭시에 실행
      	checkLike(postNo,index){
-        	axios.get('${contextPath}/rest/post/like/'+postNo)
+        	axios.get(contextPath + '/rest/post/like/'+postNo)
         		.then(response => {
         			//console.log(response.data);
         			// 응답이 좋아요면 좋아요 +1
@@ -1136,7 +1136,7 @@
         		postNoList.push(post.postNo); 
         	})
         	
-       		axios.get('${contextPath}/rest/post/like/index/'+postNoList)
+       		axios.get(contextPath + '/rest/post/like/index/'+postNoList)
        			.then(response => {               			
        			this.postLikeIndexList = response.data;                			
        		})
@@ -1149,7 +1149,7 @@
         
      	// 고정 태그 맵핑
      	searchFixedTag(data){
-        	this.searchUrl = '${contextPath}/search/post/?q='+data;
+        	this.searchUrl = contextPath + '/search/post/?q='+data;
         },
      	
      	
@@ -1158,7 +1158,7 @@
         async replySending(postNo,index){
         	try{
         		const replyDto = {postNo: postNo, replyContent:this.replyContent};
-            	const response = await axios.post('${contextPath}/rest/post/reply/',replyDto);
+            	const response = await axios.post(contextPath + '/rest/post/reply/',replyDto);
             	this.fetchNew();
             }
         	catch (error){
@@ -1193,7 +1193,7 @@
         async rereplySending(postNo,replyNo,index){
         	try{
         		const replyDto = {postNo: postNo, replyContent:this.rereplyContent, replyGroupNo: replyNo};
-            	const response = await axios.post('${contextPath}/rest/post/rereply/',replyDto);
+            	const response = await axios.post(contextPath + '/rest/post/rereply/',replyDto);
             	this.fetchNew();
             }
         	catch (error){
@@ -1221,7 +1221,7 @@
         // 댓글 삭제
         async deleteReply(replyNo){
         	try{
-        		await axios.delete('${contextPath}/rest/post/reply/delete/'+replyNo);
+        		await axios.delete(contextPath + '/rest/post/reply/delete/'+replyNo);
         		this.fetchNew();
         	}
         	catch (error){
@@ -1232,7 +1232,7 @@
         // 대댓글 삭제
         async deleteRereply(replyNo){
         	try{
-        		await axios.delete('${contextPath}/rest/post/reply/reDelete/'+replyNo);
+        		await axios.delete(contextPath + '/rest/post/reply/reDelete/'+replyNo);
         		this.fetchNew();
         	}
         	catch(error){
@@ -1376,7 +1376,7 @@
     	async loadFindFixedTagList(){
             if(this.findFixedTagName.length == 0) return;
 
-            const resp = await axios.get("${contextPath}/rest/fixedTag/"+this.findFixedTagName);
+            const resp = await axios.get(contextPath + "/rest/fixedTag/"+this.findFixedTagName);
             this.findFixedTagList = resp.data;
 			// console.log(this.findFixedTagList);
             // console.log("조회 실행");
@@ -1395,7 +1395,7 @@
         async getSessionMemberAttachmentNo(){
         	if(this.memberId !=null)
         	{
-        		const resp = await axios.get("${contextPath}/rest/post/sessionAttachmentNo/");	
+        		const resp = await axios.get(contextPath + "/rest/post/sessionAttachmentNo/");	
         		this.sessionMemberAttachmentNo = resp.data;
         		return this.sessionMemberAttachmentNo; 
         	}
@@ -1465,7 +1465,7 @@
         },
         // 해당 맴버가 쓴 글 페이지로 
         toMemberPage(memberId){
-        	const url = '${contextPath}/member/mypage2/'+memberId;
+        	const url = contextPath + '/member/mypage2/'+memberId;
         	window.location.href = url;
         },
 		

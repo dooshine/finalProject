@@ -80,7 +80,7 @@
         },
         methods: {
             goToJoinPage() {
-                location.href = '${pageContext.request.contextPath}/member/join';
+                location.href = contextPath + '/member/join';
             }
         },
         mounted(){

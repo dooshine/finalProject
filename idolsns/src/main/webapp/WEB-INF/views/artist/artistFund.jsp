@@ -537,7 +537,7 @@
            
         	// 상세페이지로 이동
            link(funding){
-              window.location.href = "/fund/detail?postNo="+funding.postNo;;
+              window.location.href = contextPath + "/fund/detail?postNo="+funding.postNo;;
            },
            
         	// 3자리 마다 ,

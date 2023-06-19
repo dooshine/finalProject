@@ -59,8 +59,8 @@
 		<a href="#" v-else @click="toggleMyArtist">
 			<i class="ti ti-star-filled" :class="{selected: asideTab === '대표페이지'}"><span class="ps-2 aside-name-tag"> 내 아이돌</span></i></a>
 		<div v-if="toggleFollowPageList">
-			<a class="d-flex" :href="'/artist/'+followPage.artistEngNameLower + '/feed'" v-for="(followPage, i) in memberFollowObj.followPageList" :key="i">
-				<img class="ms-3 rounded-circle" :src="followPage.profileSrc" style="height: 30px; width: 30px;">
+			<a class="d-flex" :href="'${pageContext.request.contextPath}/artist/'+followPage.artistEngNameLower + '/feed'" v-for="(followPage, i) in memberFollowObj.followPageList" :key="i">
+				<img class="ms-3 rounded-circle" :src="'${pageContext.request.contextPath}' + followPage.profileSrc" style="height: 30px; width: 30px;">
 				<div class="ms-2 aside-name-tag" :class="{selected: isPage(followPage.artistEngNameLower) }">{{fullName(followPage.artistName, followPage.artistEngName)}}</div>
 			</a>
 			<div v-if="memberFollowObj.followPageList===undefined">
@@ -110,7 +110,7 @@
 			// 로그인X → 실행 X
 			if(memberId==="") return;
 			// url
-			const url = "${contextPath}/rest/follow/memberFollowProfileInfo/"
+			const url = contextPath + "/rest/follow/memberFollowProfileInfo/"
 			// 팔로우 목록 load
 			const resp = await axios.get(url, {params:{memberId: memberId}});
 
@@ -124,7 +124,7 @@
 				if(!confirm("로그인이 필요한 페이지 입니다. 로그인하시겠습니까?")){
 					return;
 				}
-				window.location.href="${contextPath}/member/login";
+				window.location.href = contextPath + "/member/login";
 			} else {
 				this.toggleFollowPageList = !this.toggleFollowPageList
 			}

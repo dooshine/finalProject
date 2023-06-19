@@ -228,7 +228,7 @@
 		                     <img :src="getAttachmentUrl(board.attachmentNo)" class="profile-image" style="width:54px; height:54px; margin-left:20px; margin-bottom:10px;">
 		                     </div>
 		                     <div class="col-3">
-		                     <a :href="'/member/mypage2/' + board.followTargetPrimaryKey"  style="color:black; font-size:20px; text-decoration:none;">
+		                     <a :href="'${pageContext.request.contextPath}/member/mypage2/' + board.followTargetPrimaryKey"  style="color:black; font-size:20px; text-decoration:none;">
 							    <span>{{board.followTargetPrimaryKey}}</span>
 							</a>
 		                     </div>
@@ -257,7 +257,7 @@
 		                     <img :src="getAttachmentUrl(board.attachmentNo)" class="profile-image" style="width:54px; height:54px; margin-left:20px; margin-bottom:10px;">
 		                     </div>
 		                     <div class="col-3">
-		                     <a :href="'/member/mypage2/' + board.memberId"  style="color:black; font-size:20px; text-decoration:none;">
+		                     <a :href="'${pageContext.request.contextPath}/member/mypage2/' + board.memberId"  style="color:black; font-size:20px; text-decoration:none;">
 							    <span>{{board.memberId}}</span>
 							</a>
 		                     </div>
@@ -285,7 +285,7 @@
 		                     <img :src="getAttachmentUrl(board.attachmentNo)" class="profile-image" style="width:54px; height:54px; margin-left:20px; margin-bottom:10px;">
 		                     </div>
 		                     <div class="col-3">
-		                    <a :href="'/artist/' + board.followTergetPrimarykey + '/feed'" style="color:black; font-size:20px; text-decoration:none;">
+		                    <a :href="'${pageContext.request.contextPath}/artist/' + board.followTergetPrimarykey + '/feed'" style="color:black; font-size:20px; text-decoration:none;">
 		                    	<span> {{board.followTargetPrimaryKey}}</span>
 							</a>
 		                     </div>
@@ -1678,7 +1678,7 @@
                      this.$refs.fileInput.click();
                    },
                async profile() {
-                  const response = await axios.get("/member/profile",{
+                  const response = await axios.get(contextPath + "/member/profile",{
                 	  params : {
                 		  memberId : this.memberId
                 	  }
@@ -1692,7 +1692,7 @@
                },
                
                async followCnt() {
-                  const response = await axios.get("/member/followCnt",{
+                  const response = await axios.get(contextPath + "/member/followCnt",{
                 	  params : {
                 		  memberId : this.memberId
                 	  }
@@ -1705,7 +1705,7 @@
                },
                
                async followList() {
-                  const response = await axios.get("/member/followList/"+this.memberId);
+                  const response = await axios.get(contextPath + "/member/followList/"+this.memberId);
                   const{FollowMemberList, FollowerMemberList, FollowPageList} = response.data;
                   
                   this.FollowMemberList = FollowMemberList;
@@ -1760,7 +1760,7 @@
                },
                
                async profileImage() {
-                   const response = await axios.get("/member/profileImage",{
+                   const response = await axios.get(contextPath + "/member/profileImage",{
                 	   params : {
                 		   memberId : this.memberId
                 	   }
@@ -1770,14 +1770,14 @@
                    //console.log("this.memberProfileImageObj : "+this.memberProfileImageObj);
                    const attachmentNo = this.memberProfileImageObj.attachmentNo;   
                       //console.log("attachmentNo : " +attachmentNo);
-                      const url = "/rest/attachment/download/"+attachmentNo;
+                      const url = contextPath + "/rest/attachment/download/"+attachmentNo;
                    this.previewURL = url;                   
                 },
                
                
                async nickDuplicatedCheck(memberNick) {
 
-                       const resp = await axios.get("/member/nickDuplicatedCheck", {
+                       const resp = await axios.get(contextPath + "/member/nickDuplicatedCheck", {
                            params : {
                                memberNick : this.editedNickname
                            }
@@ -1791,7 +1791,7 @@
                      },
                
                async updateNickname(memberNick) {
-                  const response = await axios.get("/member/nickname",{
+                  const response = await axios.get(contextPath + "/member/nickname",{
                      params:{
                         memberNick : this.editedNickname
                      }
@@ -1851,7 +1851,7 @@
                        this.previewURL = URL.createObjectURL(file);
                      
                       // URL
-                      const url = "${contextPath}/rest/member/memberProfile";
+                      const url = contextPath + "/rest/member/memberProfile";
 
                       // 폼데이터 생성
                       const formData = new FormData();
@@ -1865,7 +1865,7 @@
                   
                   //팔로우 리스트 멤버별 프로필 조회
                   async followListProfile() {
-                	  const response =await axios.get("/member/followListProfile",{
+                	  const response =await axios.get(contextPath + "/member/followListProfile",{
                 		  params :{
                 			  memberId : this.memberId
                 		  }
@@ -1877,7 +1877,7 @@
                   
                   //팔로워 리스트 멤버별 프로필 조회
                   async followerListProfile() {
-					  const response = await axios.get("/member/followerListProfile", {
+					  const response = await axios.get(contextPath + "/member/followerListProfile", {
 					    params: {
 					    	followTargetPrimaryKey: this.memberId
 					    }
@@ -1887,7 +1887,7 @@
 					
 					//페이지 리스트 멤버별 프로필 조회
 	                  async pageListProfile() {
-						const response = await axios.get("/member/pageListProfile",{
+						const response = await axios.get(contextPath + "/member/pageListProfile",{
 							params : {
 								memberId : this.memberId
 							}
@@ -1899,7 +1899,7 @@
                   
                   //프로필 리스트 팔로우 취소
 				async deleteFollow(followNo, index) {
-					const response = await axios.get("/member/deleteFollow",{
+					const response = await axios.get(contextPath + "/member/deleteFollow",{
 						params : {followNo:followNo}
 					});
 					if (response.data.success) {
@@ -1911,17 +1911,17 @@
 				
 				//비밀번호 변경페이지로 이동
 				goToPassword() {
-			        window.location.href = '/member/password';
+			        window.location.href = contextPath + '/member/password';
 			    },
 			    
 			    //로그아웃
 			    goToLogout() {
-			    	window.location.href = '/member/logout';
+			    	window.location.href = contextPath + '/member/logout';
 			    },
 			    
 			    //회원탈퇴 페이지로 이동
 			    goToExit() {
-			    	window.location.href = '/member/exit';
+			    	window.location.href = contextPath + '/member/exit';
 			    },
 			    
 			    //페이지 확인
@@ -2316,7 +2316,7 @@
                 		})
 					}
                 	
-               		axios.get('${contextPath}/rest/post/like/index/'+postNoList)
+               		axios.get(contextPath + '/rest/post/like/index/'+postNoList)
                			.then(response => {               			
                			this.postLikeIndexList = response.data;                			
                		})
@@ -2329,7 +2329,7 @@
                 
              	// 고정 태그 맵핑
              	searchFixedTag(data){
-                	this.searchUrl = '${contextPath}/search/post/?q='+data;
+                	this.searchUrl = contextPath + '/search/post/?q='+data;
                 },
              	
              	
@@ -2338,7 +2338,7 @@
                 async replySending(postNo,index){
                 	
                 		const replyDto = {postNo: postNo, replyContent:this.replyContent};
-                    	const response = await axios.post('${contextPath}/rest/post/reply/',replyDto);
+                    	const response = await axios.post(contextPath + '/rest/post/reply/',replyDto);
                     	this.fetchNew();
                    		
                 	this.hideReplyInput(index)
@@ -2369,7 +2369,7 @@
                 async rereplySending(postNo,replyNo,index){
                 	try{
                 		const replyDto = {postNo: postNo, replyContent:this.rereplyContent, replyGroupNo: replyNo};
-                    	const response = await axios.post('${contextPath}/rest/post/rereply/',replyDto);
+                    	const response = await axios.post(contextPath + '/rest/post/rereply/',replyDto);
                     	this.fetchNew();
                     }
                 	catch (error){
@@ -2397,7 +2397,7 @@
                 // 댓글 삭제
                 async deleteReply(replyNo){
                 	
-                		await axios.delete('${contextPath}/rest/post/reply/delete/'+replyNo);
+                		await axios.delete(contextPath + '/rest/post/reply/delete/'+replyNo);
                 		this.fetchNew();
                 	
                 
@@ -2405,7 +2405,7 @@
                 // 대댓글 삭제
                 async deleteRereply(replyNo){
                 	try{
-                		await axios.delete('${contextPath}/rest/post/reply/reDelete/'+replyNo);
+                		await axios.delete(contextPath + '/rest/post/reply/reDelete/'+replyNo);
                 		this.fetchNew();
                 	}
                 	catch(error){
@@ -2535,7 +2535,7 @@
             	
             	toWritePage(){ // 좋아요 페이지로
             		let pageMemberId = this.pageMemberId;          		        
-            		const url = '${contextPath}/member/mypage2/'+this.pageMemberId;
+            		const url = contextPath + '/member/mypage2/'+this.pageMemberId;
             		window.location.href = url;
             		
             	},
@@ -2577,10 +2577,8 @@
             	async loadFindFixedTagList(){
                     if(this.findFixedTagName.length == 0) return;
 
-                    const resp = await axios.get("${contextPath}/rest/fixedTag/"+this.findFixedTagName);
+                    const resp = await axios.get(contextPath + "/rest/fixedTag/"+this.findFixedTagName);
                     this.findFixedTagList = resp.data;
-					// console.log(this.findFixedTagList);
-                    // console.log("조회 실행");
                 },
                 // 고정태그 추가
                 addNewFixedTag (newFixedTag){
@@ -2596,7 +2594,7 @@
                 async getSessionMemberAttachmentNo(){
                 	if(this.memberId !=null)
                 	{
-                		const resp = await axios.get("${contextPath}/rest/post/sessionAttachmentNo/");	
+                		const resp = await axios.get(contextPath + "/rest/post/sessionAttachmentNo/");	
                 		this.sessionMemberAttachmentNo = resp.data;
                 		return this.sessionMemberAttachmentNo; 
                 	}
@@ -2687,7 +2685,7 @@
                 },
                 // 해당 맴버가 쓴 글 페이지로 
                 toMemberPage(memberId){
-                	const url = '${contextPath}/member/mypage2/'+memberId;
+                	const url = contextPath + '/member/mypage2/'+memberId;
                 	window.location.href = url;
                 },
 

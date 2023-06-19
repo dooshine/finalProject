@@ -58,7 +58,7 @@
           <tr v-for="(memberSearch, i) in memberSearchList" :key="i" style="height: 300px;">
             <td class="cursor-pointer" @click="moveToMemberPage(memberSearch.memberId)">
               <div class="search-table-col">
-                <img :src="memberSearch.attachmentNo === 0 ? '/static/image/profileDummy.png' : '/download/?attachmentNo=' + memberSearch.attachmentNo" style="height: 50px; width: 50px;">
+                <img :src="memberSearch.attachmentNo === 0 ? '${pageContext.request.contextPath}/static/image/profileDummy.png' : '${pageContext.request.contextPath}/download/?attachmentNo=' + memberSearch.attachmentNo" style="height: 50px; width: 50px;">
               </div>
             </td>
             <td class="cursor-pointer" @click="moveToMemberPage(memberSearch.memberId)">
@@ -135,7 +135,7 @@
           // 로그인X → 실행 X
           if(memberId==="") return;
           // url
-          const url = "${contextPath}/rest/follow/memberFollowInfo/"
+          const url = contextPath + "/rest/follow/memberFollowInfo/"
           // 팔로우 목록 load
           const resp = await axios.get(url, {params:{memberId: memberId}});
           // 로그인 팔로우 정보 로드
@@ -145,14 +145,14 @@
         // 대표페이지 팔로우 생성
         async createFollow(){
             // 팔로우 생성 url
-            const url = "${contextPath}/rest/follow/";
+            const url = contextPath + "/rest/follow/";
             await axios.post(url, this.followObj);
             // [develope] 
         },
         // 대표페이지 팔로우 취소
         async deleteFollow(){
             // 팔로우 생성 url
-            const url = "${contextPath}/rest/follow/";
+            const url = contextPath + "/rest/follow/";
             await axios.delete(url, {
                 data: this.followObj,
             });
@@ -198,7 +198,7 @@
           const q = params.get("q")
 
           // url
-          const url = "${contextPath}/rest/search/member";
+          const url = contextPath + "/rest/search/member";
           // 조회
           const resp = await axios.get(url, { params: {memberId: q, page: this.page}});
 

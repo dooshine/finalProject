@@ -95,7 +95,7 @@
 		  // 로그인X → 실행 X
 		  if(memberId==="") return;
 		  // url
-		  const url = "${contextPath}/rest/follow/memberFollowProfileInfo/"
+		  const url = contextPath + "/rest/follow/memberFollowProfileInfo/"
 		  // 팔로우 목록 load
 		  const resp = await axios.get(url, {params:{memberId: memberId}});
 
@@ -109,7 +109,7 @@
 			  if(!confirm("로그인이 필요한 페이지 입니다. 로그인하시겠습니까?")){
 				  return;
 			  }
-			  window.location.href="${contextPath}/member/login";
+			  window.location.href = contextPath + "/member/login";
 		  } else {
 			  this.toggleFollowPageList = !this.toggleFollowPageList
 		  }

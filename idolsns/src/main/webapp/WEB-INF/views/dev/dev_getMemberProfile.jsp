@@ -12,16 +12,16 @@
 <div class="container-fluid" id="app">
     <div class="row">
         <div class="col">
-            <a href="/dev/follow">팔로우 통합</a>
+            <a href="${pageContext.request.contextPath}/dev/follow">팔로우 통합</a>
         </div>
         <div class="col">
-            <a href="/dev/followMember">모두 팔로우한 회원목록</a>
+            <a href="${pageContext.request.contextPath}/dev/followMember">모두 팔로우한 회원목록</a>
         </div>
         <div class="col">
-            <a href="/dev/memberFollowCnt">팔로우 수</a>
+            <a href="${pageContext.request.contextPath}/dev/memberFollowCnt">팔로우 수</a>
         </div>
         <div class="col">
-            <a href="/dev/memberProfile">회원프로필</a>
+            <a href="${pageContext.request.contextPath}/dev/memberProfile">회원프로필</a>
         </div>
     </div>
     <div class="row">

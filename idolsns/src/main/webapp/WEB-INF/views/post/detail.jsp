@@ -14,11 +14,11 @@
         </aside>
         <article class="col-6">
             <h1>통합게시물 예제</h1>
-            <a href="/post/insert">글쓰기</a>
-            <a href="/post/selectList">목록조회</a>
-            <a href="/post/update?postNo=${postWithNickDto.postNo}">수정</a>
-            <a href="/post/delete?postNo=${postWithNickDto.postNo}">삭제</a>
-            <a href="/post/rest">비동기</a>
+            <a href="${pageContext.request.contextPath}/post/insert">글쓰기</a>
+            <a href="${pageContext.request.contextPath}/post/selectList">목록조회</a>
+            <a href="${pageContext.request.contextPath}/post/update?postNo=${postWithNickDto.postNo}">수정</a>
+            <a href="${pageContext.request.contextPath}/post/delete?postNo=${postWithNickDto.postNo}">삭제</a>
+            <a href="${pageContext.request.contextPath}/post/rest">비동기</a>
             <br><br>
             <hr>
             <h2>${postWithNickDto}</h2>

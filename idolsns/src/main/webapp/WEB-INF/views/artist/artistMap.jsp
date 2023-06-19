@@ -298,7 +298,7 @@
         // 대표페이지 팔로우 생성
         async createFollowPage(){
             // 팔로우 생성 url
-            const url = "${contextPath}/rest/follow/";
+            const url = contextPath + "/rest/follow/";
             await axios.post(url, this.followPageObj);
         },
         // 대표페이지 팔로우 취소

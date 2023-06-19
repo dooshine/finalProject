@@ -312,12 +312,11 @@ $(function(){
             	},
             	methods: {
             		async loadFindFixedTagList(){
-                        if(this.findFixedTagName.length == 0) return;
+						const target = this.findFixedTagName.replace(/[\/?&%# ]/g, "");
+                        if(target.length == 0) return;
 
-                        const resp = await axios.get("${contextPath}/rest/fixedTag/"+this.findFixedTagName);
+						const resp = await axios.get("${contextPath}/rest/fixedTag/"+target);
                         this.findFixedTagList = resp.data;
-                        //console.log(this.findFixedTagList);
-                        // console.log("조회 실행");
                     },
                     // 고정태그 추가
                     addNewFixedTag (newFixedTag){
