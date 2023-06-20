@@ -60,21 +60,21 @@ public class TestFundList {
 //		log.debug("boolean = {}", postEnd.isAfter(currentDate));
 //	}
 	
-	@Test
-	public void test() {
-		// 목록 조회 ( 마감날짜가 지난 펀딩게시글들 )
-		List<FundPostImageDto> list = fundPostImageRepo.selectList();
-		List<FundPostImageDto> templist = new ArrayList<>();
-		LocalDate currentDate = LocalDate.now();
-		for(FundPostImageDto dto : list) {
-			LocalDate postEnd = dto.getPostEnd().toLocalDate();
-			if(currentDate.isAfter(postEnd)) { // 현재날짜가 마감날짜를 지났으면
-				templist.add(dto);
-			}
-		}
-		for(FundPostImageDto dto : templist) {
-			//log.debug("no = {}" , dto.getPostNo());
+	// @Test
+	// public void test() {
+	// 	// 목록 조회 ( 마감날짜가 지난 펀딩게시글들 )
+	// 	List<FundPostImageDto> list = fundPostImageRepo.selectList();
+	// 	List<FundPostImageDto> templist = new ArrayList<>();
+	// 	LocalDate currentDate = LocalDate.now();
+	// 	for(FundPostImageDto dto : list) {
+	// 		LocalDate postEnd = dto.getPostEnd().toLocalDate();
+	// 		if(currentDate.isAfter(postEnd)) { // 현재날짜가 마감날짜를 지났으면
+	// 			templist.add(dto);
+	// 		}
+	// 	}
+	// 	for(FundPostImageDto dto : templist) {
+	// 		//log.debug("no = {}" , dto.getPostNo());
 			
-		}
-	}
+	// 	}
+	// }
 }

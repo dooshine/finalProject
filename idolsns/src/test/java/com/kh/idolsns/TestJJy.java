@@ -23,21 +23,21 @@ public class TestJJy {
 	@Autowired
 	private PostShowService postShowService; 
 
-	@Test
-	public void test() {
+	// @Test
+	// public void test() {
 		
-		int page = 1; 
+	// 	int page = 1; 
 				
-		List<PostShowVO> list =  postShowService.fixedTagPostShowByPagingReload(page, "아이브");
+	// 	List<PostShowVO> list =  postShowService.fixedTagPostShowByPagingReload(page, "아이브");
 	
-		for(PostShowVO vo : list) {
-			//System.out.println(vo);
-		}
+	// 	for(PostShowVO vo : list) {
+	// 		//System.out.println(vo);
+	// 	}
 				
 		
 		
 		
 		
-	}
+	// }
 	
 }
