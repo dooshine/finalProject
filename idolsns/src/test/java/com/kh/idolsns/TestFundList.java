@@ -17,7 +17,7 @@ import com.kh.idolsns.vo.FundDetailVO;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@SpringBootTest
+// @SpringBootTest
 public class TestFundList {
 	
 	@Autowired

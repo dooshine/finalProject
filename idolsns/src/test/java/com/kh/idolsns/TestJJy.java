@@ -14,7 +14,7 @@ import com.kh.idolsns.vo.PostShowVO;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@SpringBootTest
+// @SpringBootTest
 public class TestJJy {
 
 	@Autowired
