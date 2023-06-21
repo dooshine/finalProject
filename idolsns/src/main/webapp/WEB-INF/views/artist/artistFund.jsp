@@ -259,7 +259,7 @@
 	        <div class="col container my-auto">
 	            <div class="row mb-2 justify-content-end" >
 	                <button class="custom-btn btn-round" style="width:150px;" 
-	                :class="{'btn-purple1':!isFollowingArtist, 'btn-purple1-secondary': isFollowingArtist}"  v-text="isFollowingArtist?'팔로우취소':'팔로우하기'" @click="followPage">팔로우하기</button>
+	                :class="{'btn-purple1':!isFollowingArtist, 'btn-purple1-secondary': isFollowingArtist}"  v-text="isFollowingArtist?'팔로우취소':'팔로우하기'" @click="followPage"></button>
 	            </div>
 	            <div class="row justify-content-end">
 	                <button class="custom-btn btn-round btn-gray" style="width:150px;">글쓰기</button>
