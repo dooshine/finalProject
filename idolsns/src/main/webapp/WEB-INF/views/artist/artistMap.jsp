@@ -101,13 +101,13 @@
 		<%-- ######################## 대표페이지 헤더 ######################## --%>
 		<div class="w-100" id="artist-header">
 			<div class="d-flex justify-content-center">
-				<a class="font-bold px-4 artist-header-tab" :href="makeHref('feed')">
-					게시물
+				<a class="font-bold px-4 artist-header-tab artist-header-tab-active" href="feed">
+				게시물
 				</a>
-				<a class="font-bold px-4 artist-header-tab artist-header-tab-active" :href="makeHref('map')">
+				<a class="font-bold px-4 artist-header-tab" href="map">
 					지도
 				</a>
-				<a class="font-bold px-4 artist-header-tab" :href="makeHref('fund')">
+				<a class="font-bold px-4 artist-header-tab" href="fund">
 					펀딩
                 </a>
 			</div>
@@ -327,11 +327,6 @@
             this.followPageObj.followTargetType = "대표페이지";
             // 팔로우 대상 PK
             this.followPageObj.followTargetPrimaryKey = artistName;
-        },
-		makeHref(target){
-            const pathName = window.location.pathname;
-			const pathArr = pathName.split('/').slice();
-			return pathArr.slice(0, pathArr.length-1).join('/') + '/' + target;
         },
 		// ######################## 대표페이지 헤더 끝########################
 
