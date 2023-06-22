@@ -17,16 +17,16 @@
 <div class="container-fluid" id="app">
     <div class="row">
         <div class="col">
-            <a href="/dev/follow">팔로우 통합</a>
+            <a href="${pageContext.request.contextPath}/dev/follow">팔로우 통합</a>
         </div>
         <div class="col">
-            <a href="/dev/followMember">팔로우한 회원목록</a>
+            <a href="${pageContext.request.contextPath}/dev/followMember">팔로우한 회원목록</a>
         </div>
         <div class="col">
-            <a href="/dev/memberFollowCnt">팔로우 수</a>
+            <a href="${pageContext.request.contextPath}/dev/memberFollowCnt">팔로우 수</a>
         </div>
         <div class="col">
-            <a href="/dev/memberProfile">회원프로필</a>
+            <a href="${pageContext.request.contextPath}/dev/memberProfile">회원프로필</a>
         </div>
     </div>
     <!-- # 팔로우한 회원 목록 예시 -->
@@ -73,7 +73,7 @@
             // 비로그인시 실행X
             if(memberId==="") return;
             // url
-            const url = "${contextPath}/rest/follow/member";
+            const url = contextPath + "/rest/follow/member";
             // api호출
             const resp = await axios.get(url);
             // data 반영

@@ -23,7 +23,7 @@
 		Vue.createApp({
 			methods:{
 				goToHome() {
-	      		  window.location.href = "${pageContext.request.contextPath}/"; 
+	      		  window.location.href = contextPath + "/"; 
 	      	  },
 			},
 		}).mount("#app");

@@ -8,7 +8,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<!-- favicon -->
-	<link rel="icon" href="/static/image/favicon.ico">
+	<link rel="icon" href="${pageContext.request.contextPath}/static/image/favicon.ico">
 	<title>스타링크</title>
 
 	<style>

@@ -14,9 +14,9 @@
         </aside>
         <article class="col-6">
             <h1>통합게시물 예제</h1>
-            <a href="/post/insert">글쓰기</a>
-            <a href="/post/selectList">목록조회</a>
-            <a href="/post/rest">비동기</a>
+            <a href="${pageContext.request.contextPath}/post/insert">글쓰기</a>
+            <a href="${pageContext.request.contextPath}/post/selectList">목록조회</a>
+            <a href="${pageContext.request.contextPath}/post/rest">비동기</a>
             <br><br>
             <hr>
 
@@ -62,7 +62,7 @@
             const data = {"postContent": $(".input-input").val()};
 
             $.ajax({
-                url: "${contextPath}/rest/post/",
+                url: contextPath + "/rest/post/",
                 method: "post",
                 data: data,
                 success: function(){
@@ -78,7 +78,7 @@
         $(".list-btn").click(function(){
 
             $.ajax({
-                url: "${contextPath}/rest/post/",
+                url: contextPath + "/rest/post/",
                 method: "get",
                 success: function(response){
                     //console.log(response);
@@ -94,7 +94,7 @@
         $(".detail-btn").click(function(){
             const postNo = $(".detail-postNo").val();
             $.ajax({
-                url: "${contextPath}/rest/post/" + postNo,
+                url: contextPath + "/rest/post/" + postNo,
                 method: "get",
                 success: function(response){
                     //console.log(response);

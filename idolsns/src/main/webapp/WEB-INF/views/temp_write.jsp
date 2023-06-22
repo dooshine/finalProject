@@ -30,7 +30,7 @@
             fd.append("attach", files[0]);
 
             $.ajax({
-              url:"/rest/attachment/upload",
+              url: contextPath + "/rest/attachment/upload",
               method: "post",
               data: fd,
               processData: false,
@@ -100,7 +100,7 @@
   <br /><br />
   <button>작성</button>
   <br /><br />
-  <a href="list">목록</a>
+  <a href="${pageContext.request.contextPath}/list">목록</a>
 </form>
 
 <jsp:include page="/WEB-INF/views/template/footer.jsp"></jsp:include>

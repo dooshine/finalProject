@@ -51,7 +51,7 @@
           <!-- 프로필 사진과 아이디 -->
           <div class="row mt-1">
             <div class="col-1 col-md-1 col-lg-1 d-flex align-items-center justify-content-center">
-              <img class="rounded-circle img-fluid" src="static/image/profileDummy.png">
+              <img class="rounded-circle img-fluid" src="${pageContext.request.contextPath}/static/image/profileDummy.png">
             </div>
             <div class="col-10 col-md-10 col-lg-10 align-items-center justify-content-start">
               <div class="row">
@@ -74,7 +74,7 @@
             <div class="mx-1 px-2 h-20 bg-primary rounded-4 align-items-center justify-content-center">
               <p class="fs-7 text-light">{{ post.postType }}</p>										 
             </div>
-            <a :href="'/search/post/?q=' + fixedTag" v-for="fixedTag in post.fixedTagList" :key="fixedTag" class="mx-1 px-2 h-20 bg-primary rounded-pill align-items-center justify-content-center" style="text-decoration: none;">
+            <a :href="'${pageContext.request.contextPath}/search/post/?q=' + fixedTag" v-for="fixedTag in post.fixedTagList" :key="fixedTag" class="mx-1 px-2 h-20 bg-primary rounded-pill align-items-center justify-content-center" style="text-decoration: none;">
               <p class="fs-7 text-light">{{ fixedTag }}</p>
             </a>
           </div>
@@ -185,7 +185,7 @@
             <!-- 프로필 이미지 -->
               <div class="col-1">
                 <div class="row mt-2 text-center">
-                  <img class="img-fluid rounded-circle " src="static/image/profileDummy.png">
+                  <img class="img-fluid rounded-circle " src="${pageContext.request.contextPath}/static/image/profileDummy.png">
                 </div>
               </div>
                   
@@ -230,7 +230,7 @@
                         </div>
                         <div class="col-2 text-center">
                           <div class="row w-50 h-50 text-center m-auto">
-                            <img class="img-fluid rounded-circle " src="static/image/profileDummy.png">
+                            <img class="img-fluid rounded-circle " src="${pageContext.request.contextPath}/static/image/profileDummy.png">
                           </div>
                           <div class="row w-50 h-50 text-center m-auto">
                             <h6 class="fs-7">{{rereply.replyId}}</h6>
@@ -255,7 +255,7 @@
                     </div>
                     <div class="col-2 text-center">
                       <div class="row w-50 h-50 text-center m-auto">
-                        <img class="img-fluid rounded-circle " src="static/image/profileDummy.png">
+                        <img class="img-fluid rounded-circle " src="${pageContext.request.contextPath}/static/image/profileDummy.png">
                       </div>
                       <div class="row w-50 h-50 text-center m-auto">
                         <h6 class="fs-7">${memberId }</h6>
@@ -280,7 +280,7 @@
             <!-- 댓글 작성버튼 눌렸을 때만 나오게됨 -->
                     <div class="row" v-if="replyFlagList[index]"> 
                       <div class="col-1">
-                        <img class="rounded-circle img-fluid" src="static/image/profileDummy.png">
+                        <img class="rounded-circle img-fluid" src="${pageContext.request.contextPath}/static/image/profileDummy.png">
                       </div>
                       <div class="col-10 mt-1">
                         <input type="text" placeholder=" 댓글을 입력하세요." v-model="replyContent" class="w-100 rounded-4 border border-secondary "> 
@@ -360,7 +360,7 @@
         // 좋아요 관련 비동기 처리-----------------------------------
         // 아이디 접속해 있고, 좋아요 클릭시에 실행
         checkLike(postNo,index){
-          axios.get('${contextPath}/rest/post/like/'+postNo)
+          axios.get(contextPath + '/rest/post/like/'+postNo)
             .then(response => {
               // 응답이 좋아요면 좋아요 +1
               if(response.data== 'Like'){
@@ -387,7 +387,7 @@
             postNoList.push(post.postNo); 
           })
           
-          axios.get('${contextPath}/rest/post/like/index/'+postNoList)
+          axios.get(contextPath + '/rest/post/like/index/'+postNoList)
             .then(response => {               			
             this.postLikeIndexList = response.data;                			
           })
@@ -402,7 +402,7 @@
         async replySending(postNo,index){
           try{
             const replyDto = {postNo: postNo, replyContent:this.replyContent};
-              const response = await axios.post('${contextPath}/rest/post/reply/',replyDto);
+              const response = await axios.post(contextPath + '/rest/post/reply/',replyDto);
               this.fetchPosts();
             }
           catch (error){
@@ -426,7 +426,7 @@
         async rereplySending(postNo,replyNo,index){
           try{
             const replyDto = {postNo: postNo, replyContent:this.rereplyContent, replyGroupNo: replyNo};
-              const response = await axios.post('${contextPath}/rest/post/rereply/',replyDto);
+              const response = await axios.post(contextPath + '/rest/post/rereply/',replyDto);
               this.fetchPosts();
             }
           catch (error){
@@ -450,7 +450,7 @@
         // 댓글 삭제
         async deleteReply(replyNo){
           try{
-            await axios.delete('${contextPath}/rest/post/reply/delete/'+replyNo);
+            await axios.delete(contextPath + '/rest/post/reply/delete/'+replyNo);
             this.fetchPosts();
           }
           catch (error){
@@ -461,7 +461,7 @@
         // 대댓글 삭제
         async deleteRereply(replyNo){
           try{
-            await axios.delete('${contextPath}/rest/post/reply/reDelete/'+replyNo);
+            await axios.delete(contextPath + '/rest/post/reply/reDelete/'+replyNo);
             this.fetchPosts();
           }
           catch(error){
@@ -477,7 +477,7 @@
           // 로그인X → 실행 X
           if(memberId==="") return;
           // url
-          const url = "${contextPath}/rest/follow/memberFollowInfo/"
+          const url = contextPath + "/rest/follow/memberFollowInfo/"
           // 팔로우 목록 load
           const resp = await axios.get(url, {params:{memberId: memberId}});
           // 로그인 팔로우 정보 로드
@@ -552,14 +552,14 @@
         // 대표페이지 팔로우 생성
         async createFollow(){
             // 팔로우 생성 url
-            const url = "${contextPath}/rest/follow/";
+            const url = contextPath + "/rest/follow/";
             await axios.post(url, this.followObj);
             // [develope] 
         },
         // 대표페이지 팔로우 취소
         async deleteFollow(){
             // 팔로우 생성 url
-            const url = "${contextPath}/rest/follow/";
+            const url = contextPath + "/rest/follow/";
             await axios.delete(url, {
                 data: this.followObj,
             });
@@ -574,7 +574,7 @@
           const q = params.get("q");
 
           // url
-          const url = "${contextPath}/rest/post/pageReload/fixedTagPost";
+          const url = contextPath + "/rest/post/pageReload/fixedTagPost";
 
           // 조회
           const resp = await axios.post(url, { page: this.postPage, fixedTagName: q } );
@@ -584,7 +584,7 @@
           this.getLikePostIndex(this.fixedTagSearchList);
         },
         getAttachmentUrl(attachmentNo) {		
-          return "${contextPath}/rest/attachment/download/"+attachmentNo;
+          return contextPath + "/rest/attachment/download/"+attachmentNo;
         },
 
         // 풀네임 생성

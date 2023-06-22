@@ -97,7 +97,7 @@
                 	<!-- 프로필 사진과 아이디 -->
                 	<div class="row mt-1">
 			            <div class="col-1 col-md-1 col-lg-1 d-flex align-items-center justify-content-center">
-			               <img class="rounded-circle img-fluid" src="static/image/profileDummy.png">
+			               <img class="rounded-circle img-fluid" src="${pageContext.request.contextPath}/static/image/profileDummy.png">
 			            </div>
 			            <div class="col-10 col-md-10 col-lg-10 align-items-center justify-content-start">
 														
@@ -335,7 +335,7 @@
 										
 				                		<div class="col-2 text-center ">
 				                			<div class="row w-50 h-50 text-center m-auto">
-				                				<img class="img-fluid rounded-circle " src="static/image/profileDummy.png">
+				                				<img class="img-fluid rounded-circle " src="${pageContext.request.contextPath}/static/image/profileDummy.png">
 				                			</div>
 				                			<div class="row w-50 h-50 text-center m-auto">
 				                				<h6 class="fs-7">{{reply.replyId}}</h6>
@@ -367,7 +367,7 @@
 				                					</div>
 				                					<div class="col-2 text-center">
 				                						<div class="row w-50 h-50 text-center m-auto">
-					                						<img class="img-fluid rounded-circle " src="static/image/profileDummy.png">
+					                						<img class="img-fluid rounded-circle " src="${pageContext.request.contextPath}/static/image/profileDummy.png">
 					                					</div>
 							                			<div class="row w-50 h-50 text-center m-auto">
 							                				<h6 class="fs-7">{{rereply.replyId}}</h6>
@@ -392,7 +392,7 @@
 		                					</div>
 		                					<div class="col-2 text-center">
 		                						<div class="row w-50 h-50 text-center m-auto">
-			                						<img class="img-fluid rounded-circle " src="static/image/profileDummy.png">
+			                						<img class="img-fluid rounded-circle " src="${pageContext.request.contextPath}/static/image/profileDummy.png">
 			                					</div>
 					                			<div class="row w-50 h-50 text-center m-auto">
 					                				<h6 class="fs-7">${memberId }</h6>
@@ -417,7 +417,7 @@
 							<!-- 댓글 작성버튼 눌렸을 때만 나오게됨 -->
 		                	<div class="row" v-if="replyFlagList[index]"> 
 		                		<div class="col-1">
-		                			<img class="rounded-circle img-fluid" src="static/image/profileDummy.png">
+		                			<img class="rounded-circle img-fluid" src="${pageContext.request.contextPath}/static/image/profileDummy.png">
 		                		</div>
 		                		<div class="col-10 mt-1">
 		                			<input type="text" placeholder=" 댓글을 입력하세요." v-model="replyContent" class="w-100 rounded-4 border border-secondary "> 
@@ -536,7 +536,7 @@
                    	
                     //console.log(likedPostData);
                     
-                    const resp = await axios.post("${contextPath}/rest/post/pageReload/memberLikePost",likedPostData);
+                    const resp = await axios.post(contextPath + "/rest/post/pageReload/memberLikePost",likedPostData);
 	                this.posts = resp.data;
 	                this.getLikePostIndex(this.posts);
 	                this.page++;
@@ -551,7 +551,7 @@
             	// 게시글 삭제 
             	async deletePost(postNo){
                 	try{
-                		await axios.delete('${contextPath}/rest/post/'+postNo);
+                		await axios.delete(contextPath + '/rest/post/'+postNo);
                 		this.fetchPosts();
                 	}
                 	catch (error){
@@ -564,11 +564,11 @@
 			    	this.modalImageUrl = this.getAttachmentUrl(attachmentNo)
 			    },
                 getAttachmentUrl(attachmentNo) {		
-            		return "${contextPath}/rest/attachment/download/"+attachmentNo;
+            		return contextPath + "/rest/attachment/download/"+attachmentNo;
                 },
                 async checkFileType(attachmentNo) {
                     try {
-                        const response = await axios.head('${contextPath}/rest/attachment/download/post/' + attachmentNo);
+                        const response = await axios.head(contextPath + '/rest/attachment/download/post/' + attachmentNo);
                         const contentType = response.headers['content-type'];
                         if (contentType.includes('image')) {
                             return 'image';
@@ -589,7 +589,7 @@
              	// 좋아요 관련 비동기 처리-----------------------------------
              	// 아이디 접속해 있고, 좋아요 클릭시에 실행
              	checkLike(postNo,index){
-                	axios.get('${contextPath}/rest/post/like/'+postNo)
+                	axios.get(contextPath + '/rest/post/like/'+postNo)
                 		.then(response => {
                 			//console.log(response.data);
                 			// 응답이 좋아요면 좋아요 +1
@@ -618,7 +618,7 @@
                 		postNoList.push(post.postNo); 
                 	})
                 	
-               		axios.get('${contextPath}/rest/post/like/index/'+postNoList)
+               		axios.get(contextPath + '/rest/post/like/index/'+postNoList)
                			.then(response => {               			
                			this.postLikeIndexList = response.data;                			
                		})
@@ -636,7 +636,7 @@
                 async replySending(postNo,index){
                 	try{
                 		const replyDto = {postNo: postNo, replyContent:this.replyContent};
-                    	const response = await axios.post('${contextPath}/rest/post/reply/',replyDto);
+                    	const response = await axios.post(contextPath + '/rest/post/reply/',replyDto);
                     	this.fetchPosts();
                     }
                 	catch (error){
@@ -660,7 +660,7 @@
                 async rereplySending(postNo,replyNo,index){
                 	try{
                 		const replyDto = {postNo: postNo, replyContent:this.rereplyContent, replyGroupNo: replyNo};
-                    	const response = await axios.post('${contextPath}/rest/post/rereply/',replyDto);
+                    	const response = await axios.post(contextPath + '/rest/post/rereply/',replyDto);
                     	this.fetchPosts();
                     }
                 	catch (error){
@@ -688,7 +688,7 @@
                 // 댓글 삭제
                 async deleteReply(replyNo){
                 	try{
-                		await axios.delete('${contextPath}/rest/post/reply/delete/'+replyNo);
+                		await axios.delete(contextPath + '/rest/post/reply/delete/'+replyNo);
                 		this.fetchPosts();
                 	}
                 	catch (error){
@@ -699,7 +699,7 @@
                 // 대댓글 삭제
                 async deleteRereply(replyNo){
                 	try{
-                		await axios.delete('${contextPath}/rest/post/reply/reDelete/'+replyNo);
+                		await axios.delete(contextPath + '/rest/post/reply/reDelete/'+replyNo);
                 		this.fetchPosts();
                 	}
                 	catch(error){
@@ -795,7 +795,7 @@
             	async loadFindFixedTagList(){
                     if(this.findFixedTagName.length == 0) return;
 
-                    const resp = await axios.get("${contextPath}/rest/fixedTag/"+this.findFixedTagName);
+                    const resp = await axios.get(contextPath + "/rest/fixedTag/"+this.findFixedTagName);
                     this.findFixedTagList = resp.data;
 					// console.log(this.findFixedTagList);
                     // console.log("조회 실행");

@@ -110,10 +110,10 @@
 			methods: {
 				// 로그인 안한 경우 로그인으로 이동
 				login() {
-					window.location.href = "${pageContext.request.contextPath}/member/login";
+					window.location.href = contextPath + "/member/login";
 				},
 				connect() {
-					const url = "${pageContext.request.contextPath}/ws/server";
+					const url = contextPath + "/ws/server";
 					this.socket = new SockJS(url);
 					// this: 뷰 객체
 					const app = this;
@@ -197,7 +197,7 @@
 				async loadChatNoti() {
 					//console.log("memberId: " + this.memberId);
 					if(this.memberId.length > 0 && this.chatRoomList.length > 0) {
-						const url = "${pageContext.request.contextPath}/chat/message/noti/" + this.memberId;
+						const url = contextPath + "/chat/message/noti/" + this.memberId;
 						const resp = await axios.get(url);
 						//console.log(resp.data);
 						if(resp.data === true) this.newChatNoti = true;
@@ -213,7 +213,7 @@
 							this.chatRoomNoList[i] = this.chatRoomList[i].chatRoomNo;
 						}
 						//console.log("chatRoomNoList: " + this.chatRoomNoList);
-						const url = "${pageContext.request.contextPath}/chat/message/noti";
+						const url = contextPath + "/chat/message/noti";
 						const data = {
 								chatRoomNoList: this.chatRoomNoList,
 								memberId: this.memberId
@@ -233,7 +233,7 @@
 				},
 				// 메세지 읽음
 				async readMessage() {
-					const url = "${pageContext.request.contextPath}/chat/message";
+					const url = contextPath + "/chat/message";
 					const data = {
 							chatReceiver: this.memberId,
 							chatRoomNo: this.chatRoomNo
@@ -412,7 +412,7 @@
 				async loadRoomList() {
 					const memberId = this.memberId;
 					if(memberId.length > 0) {
-						const url = "${pageContext.request.contextPath}/chat/chatRoom/" + memberId;
+						const url = contextPath + "/chat/chatRoom/" + memberId;
 						const resp = await axios.get(url);
 						this.chatRoomList.splice(0);
 						this.chatRoomList.push(...resp.data);
@@ -430,7 +430,7 @@
 							    }
 							}
 						}
-						const url2 = "${pageContext.request.contextPath}/rest/member/getMemberProfile";
+						const url2 = contextPath + "/rest/member/getMemberProfile";
 						const resp2 = await axios.get(url2, {
 							params: {
 								memberIdList: this.chatRoomIdList
@@ -444,13 +444,13 @@
 				},
 				// 팔로우 목록 불러오기
 				async loadFollowList() {
-					const url = "${pageContext.request.contextPath}/rest/follow/member";
+					const url = contextPath + "/rest/follow/member";
 					const resp = await axios.get(url);
 					//console.log("data: " + resp.data);
 					this.followList.push(...resp.data);
 					//console.log("followList: " + this.followList);
 					if(this.followList.length > 0) {
-						const url2 = "${pageContext.request.contextPath}/rest/member/getMemberProfile";
+						const url2 = contextPath + "/rest/member/getMemberProfile";
 						const resp2 = await axios.get(url2, {
 							params: {
 								memberIdList: this.followList
@@ -503,7 +503,7 @@
 				// 채팅방 정보 불러오기
 				async loadRoomInfo() {
 					const chatRoomNo = this.chatRoomNo;
-					const url = "${pageContext.request.contextPath}/chat/chatRoom/chatRoomNo/" + chatRoomNo;
+					const url = contextPath + "/chat/chatRoom/chatRoomNo/" + chatRoomNo;
 					const resp = await axios.get(url);
 					this.roomInfo.chatRoomNo = resp.data.chatRoomNo;
 					this.roomInfo.chatRoomName1 = resp.data.chatRoomName1;
@@ -516,7 +516,7 @@
 				async loadChatMember() {
 					const chatRoomNo = this.chatRoomNo;
 					//console.log("chatRoomNo: " + chatRoomNo);
-					const url = "${pageContext.request.contextPath}/chat/chatRoom/chatMember/" + chatRoomNo;
+					const url = contextPath + "/chat/chatRoom/chatMember/" + chatRoomNo;
 					const resp = await axios.get(url);
 					this.chatMemberList.push(...resp.data);
 				},
@@ -532,13 +532,13 @@
 						return {
 							memberNick: member.memberNick,
 							memberId: member.memberId,
-							profileSrc: member.profileSrc
+							profileSrc: contextPath + member.profileSrc
 						}
 					}
 					else return {
 						memberNick: '(알수없음)',
 						memberId: '(알수없음)',
-						profileSrc: '/static/image/profileDummy.png'
+						profileSrc: contextPath + '/static/image/profileDummy.png'
 					}
 				},
 				findMemberByIdInInvite(index) {
@@ -550,13 +550,13 @@
 						return {
 							memberNick: member.memberNick,
 							memberId: member.memberId,
-							profileSrc: member.profileSrc
+							profileSrc: contextPath + member.profileSrc
 						}
 					}
 					else return {
 						memberNick: '(알수없음)',
 						memberId: '(알수없음)',
-						profileSrc: '/static/image/profileDummy.png'
+						profileSrc: contextPath + '/static/image/profileDummy.png'
 					}
 				},
 				findMemberByIdInRoom() {
@@ -576,13 +576,13 @@
 						return {
 							memberNick: member.memberNick,
 							memberId: member.memberId,
-							profileSrc: member.profileSrc
+							profileSrc: contextPath + member.profileSrc
 						}
 					}
 					else return {
 						memberNick: '(알수없음)',
 						memberId: '(알수없음)',
-						profileSrc: '/static/image/profileDummy.png'
+						profileSrc: contextPath + '/static/image/profileDummy.png'
 					}
 				},
 				findMemberByIdInMain(index) {
@@ -604,13 +604,13 @@
 						return {
 							memberNick: member.memberNick,
 							memberId: member.memberId,
-							profileSrc: member.profileSrc
+							profileSrc: contextPath + member.profileSrc
 						}
 					}
 					else return {
 						memberNick: '(알수없음)',
 						memberId: '(알수없음)',
-						profileSrc: '/static/image/profileDummy.png'
+						profileSrc: contextPath + '/static/image/profileDummy.png'
 					}
 				},
 				// 메세지 불러오기
@@ -618,7 +618,7 @@
 					const chatRoomNo = this.chatRoomNo;
 					this.messageList.splice(0);
 					this.getChatJoin();
-					const url = "${pageContext.request.contextPath}/chat/message/" + chatRoomNo;
+					const url = contextPath + "/chat/message/" + chatRoomNo;
 					const resp = await axios.get(url);
 					//console.log("chatMessageTime: " + resp.data[0].chatMessageTime)
 					//console.log("chatJoin: " + this.chatJoin)
@@ -696,7 +696,7 @@
 					//console.log("전송")
 					const formData = new FormData();
 					formData.append("attach", file);
-					const url = "${pageContext.request.contextPath}/rest/attachment/upload";
+					const url = contextPath + "/rest/attachment/upload";
 					const resp = await axios.post(url, formData);
 					if(resp.data) {
 						const data = {
@@ -744,7 +744,7 @@
 				async getChatJoin() {
 					const chatRoomNo = this.chatRoomNo;
 					const memberId = this.memberId;
-					const url = "${pageContext.request.contextPath}/chat/chatRoom/join/";
+					const url = contextPath + "/chat/chatRoom/join/";
 					const data = {
 							chatRoomNo: chatRoomNo,
 							memberId: memberId
@@ -770,7 +770,7 @@
 							memberId: memberId,
 							chatRoomNo: chatRoomNo
 					};
-					const url = "${pageContext.request.contextPath}/chat/chatRoom/leave/";
+					const url = contextPath + "/chat/chatRoom/leave/";
 					const resp = await axios.post(url, data2);
 					this.chatRoomList.splice(0);
 					this.loadRoomList();
@@ -791,7 +791,7 @@
 					if(this.roomInfo.chatRoomName1.length < 1) return;
 					if(this.roomInfo.chatRoomName1.length > 20) return;
 					const chatRoomNo = this.chatRoomNo;
-					const url = "${pageContext.request.contextPath}/chat/chatRoom/changeName";
+					const url = contextPath + "/chat/chatRoom/changeName";
 					const data = this.roomInfo;
 					const resp = await axios.put(url, data);
 					this.loadRoomInfo();
@@ -811,7 +811,7 @@
 					for(let j=0; j<this.selectedMemberList.length; j++) {
 						this.selectedMemberNickList[j] = this.selectedMemberList[j].memberNick;
 					}
-					const url = "${pageContext.request.contextPath}/chat/chatRoom/invite";
+					const url = contextPath + "/chat/chatRoom/invite";
 					//console.log("roomInfo: " + this.roomInfo);
 					const data1 = {
 							chatRoomNo: chatRoomNo,
@@ -861,17 +861,17 @@
 				},
 				//유저버튼 - 로그인 or 마이페이지로 이동
 				async goToLoginPage() {
-					const response = await axios.get("/member/goToLoginPage");
+					const response = await axios.get(contextPath + "/member/goToLoginPage");
 					if(response.data == "") {
-						window.location.href = `${pageContext.request.contextPath}/member/login`;
+						window.location.href = contextPath + "/member/login";
 					}
 					else {
-						window.location.href = `${pageContext.request.contextPath}/member/mypage/${memberId}`	;
+						window.location.href = contextPath + "/member/mypage2/" + memberId;
 					}
 				},
 				// 이미지 메세지 모달로 크게 보기위한 url 셋팅
 				setModalImgURL(index) {
-					this.modalImgURL = "${pageContext.request.contextPath}/download?attachmentNo=" + this.messageList[index].attachmentNo;
+					this.modalImgURL = contextPath + "/download?attachmentNo=" + this.messageList[index].attachmentNo;
 				}
 			},
 			computed: {

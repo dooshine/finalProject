@@ -17,16 +17,16 @@
 <div class="container-fluid" id="app">
     <div class="row">
         <div class="col">
-            <a href="/dev/follow">팔로우 통합</a>
+            <a href="${pageContext.request.contextPath}/dev/follow">팔로우 통합</a>
         </div>
         <div class="col">
-            <a href="/dev/followMember">팔로우한 회원목록</a>
+            <a href="${pageContext.request.contextPath}/dev/followMember">팔로우한 회원목록</a>
         </div>
         <div class="col">
-            <a href="/dev/memberFollowCnt">팔로우 수</a>
+            <a href="${pageContext.request.contextPath}/dev/memberFollowCnt">팔로우 수</a>
         </div>
         <div class="col">
-            <a href="/dev/memberProfile">회원프로필</a>
+            <a href="${pageContext.request.contextPath}/dev/memberProfile">회원프로필</a>
         </div>
     </div>
     <!-- # 팔로우 예시 타이틀 -->
@@ -189,7 +189,7 @@
         // [함수] 모든 회원 목록 불러오기
         async loadMemberList(){
             // url
-            const url = "${contextPath}/rest/admin/member";
+            const url = contextPath + "/rest/admin/member";
             // api호출
             const resp = await axios.post(url,{});
             // data 반영
@@ -205,7 +205,7 @@
             // 비로그인시 실행X
             if(memberId==="") return;
             // url
-            const url = "${contextPath}/rest/follow/member";
+            const url = contextPath + "/rest/follow/member";
             // api호출
             const resp = await axios.get(url);
             // data 반영
@@ -216,7 +216,7 @@
             // 비로그인시 실행X
             if(memberId==="") return;
             // url
-            const url = "${contextPath}/rest/follow/page";
+            const url = contextPath + "/rest/follow/page";
             // api호출
             const resp = await axios.get(url);
             // data 반영
@@ -230,7 +230,7 @@
         // [함수] 페이지 팔로우 여부 확인
         async checkFollowPage(artistName){
             // 팔로우 확인 url
-            const url = "${contextPath}/rest/follow/checkFollowPage/";
+            const url = contextPath + "/rest/follow/checkFollowPage/";
             const resp = await axios.get(url, {
                 params: {followTargetPrimaryKey: artistName},
             });
@@ -239,7 +239,7 @@
         // [함수] 회원 팔로우 여부 확인
         async checkFollowMember(memberId){
             // 팔로우 확인 url
-            const url = "${contextPath}/rest/follow/checkFollowMember";
+            const url = contextPath + "/rest/follow/checkFollowMember";
             const resp = await axios.get(url, {
                 params: {followTargetPrimaryKey: memberId},
             });
@@ -257,14 +257,14 @@
         // 회원 팔로우 생성
         async createFollowMember(followTargetId){
             // url
-            const url = "${contextPath}/rest/follow/member";
+            const url = contextPath + "/rest/follow/member";
             const resp = await axios.post(url, { followTargetPrimaryKey: followTargetId });
         },
 
         // 회원 팔로우 취소
         async deleteFollowMember(followTargetId){
             // url
-            const url = "${contextPath}/rest/follow/member";
+            const url = contextPath + "/rest/follow/member";
             await axios.delete(url, { data: {followTargetPrimaryKey: followTargetId} });
         },
 

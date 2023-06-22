@@ -26,7 +26,7 @@
     },
     methods: {
         async restTest(){
-            const url = "${contextPath}/dev/restInterceptor";
+            const url = contextPath + "/dev/rest-Interceptor";
 
             // const resp = axios.get(url);
             // ↓
@@ -63,7 +63,7 @@
                 likedMemberId: this.memberId
             };
                                   
-          const resp = await axios.post("${contextPath}/rest/post/pageReload/memberLikePost",likedPostData);
+          const resp = await axios.post(contextPath + "/rest/post/pageReload/memberLikePost",likedPostData);
           this.posts = resp.data;
           //console.log(this.posts);
           // this.getLikePostIndex(this.posts);

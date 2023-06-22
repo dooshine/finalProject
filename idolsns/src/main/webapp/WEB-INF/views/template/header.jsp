@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
    
     <!-- favicon -->
-	<link rel="icon" href="/static/image/favicon.ico">
+	<link rel="icon" href="${pageContext.request.contextPath}/static/image/favicon.ico">
     <title>스타링크</title>
     
     
@@ -227,11 +227,10 @@
 				<nav class="navbar navbar-light back-white p-0" style="box-shadow: 0px 3px 4px rgba(3, 21, 17, 0.1);">
 				  	<div class="container-fluid px-4" style="padding-top: 0.5rem; padding-bottom: 0.5rem;">
 				  		<div class="col-3">
-					    	<a class="navbar-brand" href="/"><img src="/static/image/logo.png" style="width:130px;"></a>
-					    	<!-- <a href="dev/loading">(임시)로딩</a> -->
+					    	<a class="navbar-brand" href="${pageContext.request.contextPath}/"><img src="${pageContext.request.contextPath}/static/image/logo.png" style="width:130px;"></a>
 					    </div>
 				    	<div class="col-6 d-flex px-3" id="navbarSupportedContent">
-				      		<form action="/search/post" class="d-flex w-100" method="get">
+				      		<form action="${pageContext.request.contextPath}/search/post" class="d-flex w-100" method="get">
 				      			<div class="search-box w-100">
 					        		<input name="q" class="search-input me-2 w-100" placeholder="STARLINK 검색" type="text" value="${param.q}">
 					        	</div>
@@ -240,17 +239,17 @@
 				    	<div class="col-3 d-flex justify-content-end" id="header-buttons">
 				    		<!-- 알림버튼 -->
 				    		<button class="noti-btn me-2">
-								<img class="noti nav-item hide-part" alt="알림" src="/static/image/notificationIcon.png">
+								<img class="noti nav-item hide-part" alt="알림" src="${pageContext.request.contextPath}/static/image/notificationIcon.png">
 							</button>
 							<!-- 위즈버튼 -->
 							<button class="weez-btn me-2" @click="showChatMainModal" style="position: relative;">
-								<img class="weez nav-item hide-part" alt="위즈" src="/static/image/dmIcon.png">
+								<img class="weez nav-item hide-part" alt="위즈" src="${pageContext.request.contextPath}/static/image/dmIcon.png">
 								<!-- 새 채팅이 있는 경우 새 채팅 알림 마크 -->
 								<div v-if="newChatNoti === true" class="notiMark"></div>
 							</button>
 							<!-- 유저버튼 -->
 							<button class="user-btn d-flex align-items-center" @click="goToLoginPage()">
-								<img class="weez nav-item hide-part" alt="유저" src="/static/image/profileDummy.png">
+								<img class="weez nav-item hide-part" alt="유저" src="${pageContext.request.contextPath}/static/image/profileDummy.png">
 							</button>
 							<!-- <div class="offset-5 col-3">
 					<c:if test="${memberId == null}">
@@ -333,7 +332,7 @@
 												@click="showChatRoomModal(index)" class="hide-style w-100 mb-3">
 										<div class="d-flex align-items-center mb-2">
 											<div class="col-3 d-flex justify-content-center align-items-center" style="height: 45px; width: 45px;">
-												<img :src="findMemberByIdInMain(index).profileSrc" class="profileImg" style="height: 45px; width: 45px;">
+												<img :src="'${pageContext.request.contextPath}' + findMemberByIdInMain(index).profileSrc" class="profileImg" style="height: 45px; width: 45px;">
 											</div>
 											<div class="col-9 ms-3">
 												<div class="d-flex align-items-center mb-2">
@@ -363,7 +362,7 @@
 												@click="showChatRoomModal(index)" class="hide-style w-100 mb-3">
 										<div class="d-flex align-items-center mb-2 chatRoomName">
 											<div class="col-3 d-flex justify-content-center align-items-center" style="height: 45px; width: 45px;">
-												<img :src="findMemberByIdInMain(index).profileSrc" class="profileImg" style="height: 45px; width: 45px;">
+												<img :src="'${pageContext.request.contextPath}' + findMemberByIdInMain(index).profileSrc" class="profileImg" style="height: 45px; width: 45px;">
 											</div>
 											<div class="col-9 ms-3">
 												<div class="d-flex align-items-center mb-2">
@@ -428,7 +427,7 @@
 								<div class="d-flex w-100">
 									<div class="d-flex align-items-center col-9">
 										<div class="me-3">
-											<img :src="follow.profileSrc" class="profileImg" style="height: 45px; width: 45px;">
+											<img :src="'${pageContext.request.contextPath}'+follow.profileSrc" class="profileImg" style="height: 45px; width: 45px;">
 										</div>
 										<div>
 											<div style="font-size: 0.95em;">{{ follow.memberNick }}</div>
@@ -506,7 +505,7 @@
 								<div v-if="message.memberId != memberId">
 									<!-- 프로필 영역 -->
 									<a class="d-flex align-items-center link-to-profile" :href="'${pageContext.request.contextPath}/member/mypage2/' + findMemberById(index).memberId">
-										<img :src="findMemberById(index).profileSrc" v-if="!sameTime(index)" 
+										<img :src="'${pageContext.request.contextPath}' + findMemberById(index).profileSrc" v-if="!sameTime(index)" 
 											class="profileImg me-2" style="height: 30px; width: 30px;">
 										<span style="font-size: 0.8em;" v-if="!sameTime(index)" style="margin: 0;">
 											{{ findMemberById(index).memberNick }}
@@ -592,9 +591,9 @@
 							<div class="customModalBody">
 								<div v-for="(member, index) in chatMemberList" class="w-100 mb-3 d-flex w-100">
 									<a class="d-flex align-items-center col-9 link-to-profile" 
-											:href="'${contextPath}/member/mypage/' + member.memberId">
+											:href="'${pageContext.request.contextPath}/member/mypage2/' + member.memberId">
 										<div class="me-3">
-											<img :src="member.profileSrc" class="profileImg" style="height: 45px; width: 45px;">
+											<img :src="'${pageContext.request.contextPath}' + member.profileSrc" class="profileImg" style="height: 45px; width: 45px;">
 										</div>
 										<div>
 											<div style="font-size: 0.95em;">{{ member.memberNick }}</div>
@@ -697,7 +696,7 @@
 							<div class="d-flex w-100">
 								<div class="d-flex align-items-center col-9">
 									<div class="me-3">
-										<img :src="follow.profileSrc" class="profileImg" style="height: 45px; width: 45px;">
+										<img :src="'${pageContext.request.contextPath}' + follow.profileSrc" class="profileImg" style="height: 45px; width: 45px;">
 									</div>
 									<div>
 										<div style="font-size: 0.95em;">{{ follow.memberNick }}</div>

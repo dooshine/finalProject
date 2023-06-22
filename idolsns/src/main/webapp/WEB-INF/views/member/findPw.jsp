@@ -85,7 +85,7 @@
             	  },
             	  
             	  async  idDuplicatedCheck(memberId){
-            		  const resp = await axios.get("/member/idDuplicatedCheck",{
+            		  const resp = await axios.get(contextPath + "/member/idDuplicatedCheck",{
             			  params:{
             				  memberId : this.memberId
             			  }
@@ -101,7 +101,7 @@
             	  },
             	  
             	  async emailExist(memberId){
-            		  const resp = await axios.get("/member/emailExist", {
+            		  const resp = await axios.get(contextPath + "/member/emailExist", {
             			  params : {
             				  memberId : this.memberId
             			  }
@@ -116,7 +116,7 @@
             	  },
             	  
             	  async sendEmailPassword(memberEmail) {
-            		  const response = await axios.get("/member/sendEmailPassword", {
+            		  const response = await axios.get(contextPath + "/member/sendEmailPassword", {
             			  params : {
             				  memberEmail : this.memberEmail
             			  }
@@ -125,7 +125,7 @@
             	  },
             	  
             	  goToLogin() {
-            		  window.location.href = "${pageContext.request.contextPath}/member/login"; 
+            		  window.location.href = contextPath + "/member/login"; 
             		  Toastify({
                 			 text:"이메일 전송 완료",
                 			 duration:1000,

@@ -56,7 +56,7 @@
           <tr class="hover-back" v-for="(artistSearch, i) in artistSearchList" :key="i">
             <td class="cursor-pointer" @click="goArtistPage(artistSearch)">
               <div class="search-table-col">
-                <img :src="artistSearch.attachmentNo === 0 ? '/static/image/profileDummy.png' : '/download/?attachmentNo=' + artistSearch.attachmentNo" style="width: 50px; height: 50px;">
+                <img :src="artistSearch.attachmentNo === 0 ? '${pageContext.request.contextPath}/static/image/profileDummy.png' : '${pageContext.request.contextPath}/download/?attachmentNo=' + artistSearch.attachmentNo" style="width: 50px; height: 50px;">
               </div>
             </td>
             <td class="cursor-pointer" @click="goArtistPage(artistSearch)">
@@ -122,7 +122,7 @@
           // 로그인X → 실행 X
           if(memberId==="") return;
           // url
-          const url = "${contextPath}/rest/follow/memberFollowInfo/"
+          const url = contextPath + "/rest/follow/memberFollowInfo/"
           // 팔로우 목록 load
           const resp = await axios.get(url, {params:{memberId: memberId}});
           // 로그인 팔로우 정보 로드
@@ -138,7 +138,7 @@
           const q = params.get("q")
 
           // url
-          const url = "${contextPath}/rest/artist/search";
+          const url = contextPath + "/rest/artist/search";
 
           // 조회
           const resp = await axios.get(url, { params: {q: q, page: this.artistPage++}});
@@ -219,14 +219,14 @@
         // 대표페이지 팔로우 생성
         async createFollow(){
             // 팔로우 생성 url
-            const url = "${contextPath}/rest/follow/";
+            const url = contextPath + "/rest/follow/";
             await axios.post(url, this.followObj);
             // [develope] 
         },
         // 대표페이지 팔로우 취소
         async deleteFollow(){
             // 팔로우 생성 url
-            const url = "${contextPath}/rest/follow/";
+            const url = contextPath + "/rest/follow/";
             await axios.delete(url, {
                 data: this.followObj,
             });
@@ -241,7 +241,7 @@
 
 
         goArtistPage(artistSearch){
-          window.location.href="/artist/" + artistSearch.artistEngNameLower + "/feed";
+          window.location.href = contextPath + "/artist/" + artistSearch.artistEngNameLower + "/feed";
         },
 
       },

@@ -8,9 +8,8 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>스타링크</title>
     <!-- favicon -->
-	<link rel="icon" href="/static/image/favicon.ico">
+	<link rel="icon" href="${pageContext.request.contextPath}/static/image/favicon.ico">
     <title>스타링크</title>
     <!-- 폰트어썸 cdn -->
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css">
@@ -468,7 +467,7 @@
       <nav class="navbar navbar-expand-md navbar-light back-white" style="box-shadow: 0px 3px 4px rgba(3, 21, 17, 0.1); height: 100%;">
          <div class="container-fluid d-flex justify-content-center align-items-center" style="height: 100%;">
             <div class="text-center">
-               <a class="navbar-brand" href="/"><img src="/static/image/logo.png" style="width: 130px;"></a>
+               <a class="navbar-brand" href="${pageContext.request.contextPath}/"><img src="${pageContext.request.contextPath}/static/image/logo.png" style="width: 130px;"></a>
             </div>
          </div>
       </nav>

@@ -170,7 +170,7 @@
                     <tr v-for="(member, i) in memberList.slice(pageObj.begin - 1, pageObj.end)" :key="i">
                         <td>{{pageObj.begin + i}}</td>
                         <td><input type="checkbox" @change="checkMember($event, member.memberId)" :checked="selectedMemberObj[member.memberId]"></td>
-                        <td><img :src="member.profileSrc" style="height: 50px; width: 50px;"></td>
+                        <td><img :src="'${pageContext.request.contextPath}' + member.profileSrc" style="height: 50px; width: 50px;"></td>
                         <td>
                             {{fullName(member.memberId, member.memberNick)}}<br>
                             {{member.memberEmail}}
@@ -362,7 +362,7 @@
         },
         // 멤버 불러오기
         async loadMemberList(){
-            const url = "${contextPath}/rest/admin/member"
+            const url = contextPath + "/rest/admin/member"
             const response = await axios.post(url, this.memberSearchVO);
             this.memberList = _.cloneDeep(response.data);
         },
@@ -378,26 +378,26 @@
         // 회원신고 생성
         async reportMember(target){
             //console.log(this.reportDto);
-            const url = "${contextPath}/rest/report/"
+            const url = contextPath + "/rest/report/"
             const resp = await axios.post(url, this.reportDto);
         },
         // 회원 비동기 검색
         async searchMember(){
-            const url = "${contextPath}/rest/report/test/";
+            const url = contextPath + "/rest/report/test/";
             const resp = await axios.post(url, this.memberSearchVO);
             this.memberList = _.cloneDeep(resp.data);
             // console.table(this.memberSearchVO);
         },
         // 회원 팔로우 생성
         async followMember(followTargetId){
-            const url = "${contextPath}/rest/follow/member";
+            const url = contextPath + "/rest/follow/member";
             const resp = await axios.post(url, { followTargetPrimaryKey: followTargetId });
         },
         // 팔로우 목록(회원) 불러오기
         async loadMemberFollow(){
             // 로그인한 상태가 아니라면 실행X
             if(memberId==="") return;
-            const url = "${contextPath}/rest/follow/member";
+            const url = contextPath + "/rest/follow/member";
             const resp = await axios.get(url, { param: {memberId: memberId} });
             //console.log(resp.data);
         },
@@ -425,7 +425,7 @@
             console.table(this.selectedMemberList)
 
             // URL
-            // const url = "${contextPath}/rest/artist/"
+            // const url = contextPath + "/rest/artist/"
             // 아티스트 삭제
 
             // const resp = await axios.delete(url, { 

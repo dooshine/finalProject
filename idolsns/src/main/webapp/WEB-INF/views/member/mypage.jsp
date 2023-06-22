@@ -3,91 +3,12 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>   
 <jsp:include page="/WEB-INF/views/template/header.jsp"></jsp:include> 
 
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>마이페이지</title>
-    <!-- 폰트어썸 cdn -->
-    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css">
-    <!-- jquery cdn -->
-    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-    <!-- 뷰 cdn -->
-    <script src="https://unpkg.com/vue@3.2.26"></script>
-    <!-- axios -->
-    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-    <!-- lodash -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.21/lodash.min.js"></script>
-    <!-- moment -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
-    <!-- 부트스트랩 css(공식) -->
-    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css">
-
-    <!-- custom 테스트 css -->
-    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/static/css/test.css">
-    <!-- tabler 아이콘 -->
-   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
-    <!-- toastify -->
-    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
-      <!-- swiper cdn -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css"/>
-	<script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
-	<!------- 카카오 지도 관련-------->
-	<!-- 카카오 api 키 등록 -->
-	<script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=047888df39ba653ff171c5d03dc23d6a&libraries=services"></script>
-	<!-- 맵 관련 css -->
-	<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/static/css/map.css">
-	<!------- 카카오 지도 관련-------->
-   <style>
-      .profile-image-wrapper {
-          position: relative;
-          display: inline-block;
-      }
-      
-      .profile-image {
-          width: 200px;
-          height: 200px;
-          border-radius: 100%;
-          transition: filter 0.3s;
-      }
-      
-      .profile-image:hover {
-          filter: brightness(50%);
-	}
-	/*   이미지 스와이핑 창 스타일 */
-    	.swiper { 
-		width: 600px;
-		height: 600px;
-		}
-		
-    	.address{
-    	font-size:10px;
-    	}
-    	.grey{
-    	color: grey;
-    	}
-    	.fs-7{
-    	font-size: 10px;
-    	}
-    	.h-20{
-    	height: 20px;
-    	}
-    	.reply-text{
-    	font-size: 5px;
-    	}
-   </style>
-</head>
-<body>
-   <div class="container rounded p-3" style="background-color:white">
    <div id="app">
       <br><br>
       <div class="container">
          <div class="row" >
             <div class="col-4" >
-                  <img :src="memberProfileImageObj !== ''  && memberProfileImageObj.attachmentNo !== undefined ? '/download/?attachmentNo='+memberProfileImageObj.attachmentNo :  ' /static/image/profileDummy.png' "
+                  <img :src="memberProfileImageObj !== ''  && memberProfileImageObj.attachmentNo !== undefined ? '${pageContext.request.contextPath}/download/?attachmentNo='+memberProfileImageObj.attachmentNo :  '${pageContext.request.contextPath}/static/image/profileDummy.png' "
                   style="width: 200px; height: 200px; border-radius: 100%;">
             </div>
             <div class="col-3">
@@ -133,11 +54,11 @@
          
           <div class="modal" tabindex = "-1" role="dialog" id="settingsModal" data-bs-backdrop="static" ref="settingsModal">
             <div class="modal-dialog" role="document">
-               <div class="modal-content   ">
+               <div class="modal-content">
                   <div class="modal-header">
                      <i class="fa-solid fa-xmark" style="color: #bcc0c8;" data-bs-dismiss="modal" aria-label="Close"></i>
                   </div>
-                  <div class="modal-body ">
+                  <div class="modal-body">
                   	<div class="row">
 	                     <i class="fa-solid fa-lock" @click="goToPassword()">비밀번호 변경</i>
                   	</div>
@@ -178,7 +99,7 @@
          </div>
          
          <div class="modal" tabindex = "-1" role="dialog" id="followModal" data-bs-backdrop="static" ref="followModal">
-            <div class="modal-dialog" role="document">
+            <div class="modal-dialog" role="document">z`
                <div class="modal-content   ">
                   <div class="modal-header">
                      <i class="fa-solid fa-xmark" style="color: #bcc0c8;" data-bs-dismiss="modal" aria-label="Close"></i>
@@ -186,7 +107,7 @@
                   <div class="modal-body text-left">
                      <div v-for="(board,index) in FollowListProfile"  :key="index">
                      <img :src="getAttachmentUrl(board.attachmentNo)" class="profile-image" style="width:54px; height:54px;">
-                     <a :href="'/member/mypage/' + board.followTargetPrimaryKey">
+                     <a :href="'${pageContext.request.contextPath}/member/mypage/' + board.followTargetPrimaryKey">
 					    <span>{{board.followTargetPrimaryKey}}</span>
 					</a>
                     <button @click="deleteFollow(board.followNo)">팔로잉</button>
@@ -204,9 +125,10 @@
                      <i class="fa-solid fa-xmark" style="color: #bcc0c8;" dat   a-bs-dismiss="modal" aria-label="Close"></i>
                   </div>
                   <div class="modal-body text-left">
+					<h1>여기</h1>
                      <div v-for="(board,index) in FollowerListProfile"  :key="index">
                      <img :src="getAttachmentUrl(board.attachmentNo)" class="profile-image" style="width:54px; height:54px;">
-                     <a :href="'/member/mypage/' + board.memberId">
+                     <a :href="'${pageContext.request.contextPath}/member/mypage/' + board.memberId">
                     <span> {{board.memberId}}</span>
                     </a>
                     <button @click="deleteFollow(board.followNo)">팔로잉</button>
@@ -225,7 +147,7 @@
                   <div class="modal-body text-left">
                      <div v-for="(board,index) in PageListProfile"  :key="index">
                     <img :src="getAttachmentUrl(board.attachmentNo)" class="profile-image" style="width:54px; height:54px;">
-                    <a :href="'/artist/' + board.followTergetPrimarykey + '/feed'">
+                    <a :href="'${pageContext.request.contextPath}/artist/' + board.followTergetPrimarykey + '/feed'">
                     <span> {{board.followTargetPrimaryKey}}</span>
                     </a>
                     <button @click="deleteFollow(board.followNo)">팔로잉</button>
@@ -298,7 +220,7 @@
                 	<!-- 프로필 사진과 아이디 -->
                 	<div class="row mt-1">
 			            <div class="col-1 col-md-1 col-lg-1 d-flex align-items-center justify-content-center">
-			               <img class="rounded-circle img-fluid" src="static/image/profileDummy.png">
+			               <img class="rounded-circle img-fluid" src="${pageContext.request.contextPath}/static/image/profileDummy.png">
 			            </div>
 			            <div class="col-10 col-md-10 col-lg-10 align-items-center justify-content-start">
 														
@@ -536,7 +458,7 @@
 										
 				                		<div class="col-2 text-center ">
 				                			<div class="row w-50 h-50 text-center m-auto">
-				                				<img class="img-fluid rounded-circle " src="static/image/profileDummy.png">
+				                				<img class="img-fluid rounded-circle " src="${pageContext.request.contextPath}/static/image/profileDummy.png">
 				                			</div>
 				                			<div class="row w-50 h-50 text-center m-auto">
 				                				<h6 class="fs-7">{{reply.replyId}}</h6>
@@ -568,7 +490,7 @@
 				                					</div>
 				                					<div class="col-2 text-center">
 				                						<div class="row w-50 h-50 text-center m-auto">
-					                						<img class="img-fluid rounded-circle " src="static/image/profileDummy.png">
+					                						<img class="img-fluid rounded-circle " src="${pageContext.request.contextPath}/static/image/profileDummy.png">
 					                					</div>
 							                			<div class="row w-50 h-50 text-center m-auto">
 							                				<h6 class="fs-7">{{rereply.replyId}}</h6>
@@ -593,7 +515,7 @@
 		                					</div>
 		                					<div class="col-2 text-center">
 		                						<div class="row w-50 h-50 text-center m-auto">
-			                						<img class="img-fluid rounded-circle " src="static/image/profileDummy.png">
+			                						<img class="img-fluid rounded-circle " src="${pageContext.request.contextPath}/static/image/profileDummy.png">
 			                					</div>
 					                			<div class="row w-50 h-50 text-center m-auto">
 					                				<h6 class="fs-7">${memberId }</h6>
@@ -618,7 +540,7 @@
 							<!-- 댓글 작성버튼 눌렸을 때만 나오게됨 -->
 		                	<div class="row" v-if="replyFlagList[index]"> 
 		                		<div class="col-1">
-		                			<img class="rounded-circle img-fluid" src="static/image/profileDummy.png">
+		                			<img class="rounded-circle img-fluid" src="${pageContext.request.contextPath}/static/image/profileDummy.png">
 		                		</div>
 		                		<div class="col-10 mt-1">
 		                			<input type="text" placeholder=" 댓글을 입력하세요." v-model="replyContent" class="w-100 rounded-4 border border-secondary "> 
@@ -709,7 +631,7 @@
                 	<!-- 프로필 사진과 아이디 -->
                 	<div class="row mt-1">
 			            <div class="col-1 col-md-1 col-lg-1 d-flex align-items-center justify-content-center">
-			               <img class="rounded-circle img-fluid" src="static/image/profileDummy.png">
+			               <img class="rounded-circle img-fluid" src="${pageContext.request.contextPath}/static/image/profileDummy.png">
 			            </div>
 			            <div class="col-10 col-md-10 col-lg-10 align-items-center justify-content-start">
 														
@@ -947,7 +869,7 @@
 										
 				                		<div class="col-2 text-center ">
 				                			<div class="row w-50 h-50 text-center m-auto">
-				                				<img class="img-fluid rounded-circle " src="static/image/profileDummy.png">
+				                				<img class="img-fluid rounded-circle " src="${pageContext.request.contextPath}/static/image/profileDummy.png">
 				                			</div>
 				                			<div class="row w-50 h-50 text-center m-auto">
 				                				<h6 class="fs-7">{{reply.replyId}}</h6>
@@ -979,7 +901,7 @@
 				                					</div>
 				                					<div class="col-2 text-center">
 				                						<div class="row w-50 h-50 text-center m-auto">
-					                						<img class="img-fluid rounded-circle " src="static/image/profileDummy.png">
+					                						<img class="img-fluid rounded-circle " src="${pageContext.request.contextPath}/static/image/profileDummy.png">
 					                					</div>
 							                			<div class="row w-50 h-50 text-center m-auto">
 							                				<h6 class="fs-7">{{rereply.replyId}}</h6>
@@ -1004,7 +926,7 @@
 		                					</div>
 		                					<div class="col-2 text-center">
 		                						<div class="row w-50 h-50 text-center m-auto">
-			                						<img class="img-fluid rounded-circle " src="static/image/profileDummy.png">
+			                						<img class="img-fluid rounded-circle " src="${pageContext.request.contextPath}/static/image/profileDummy.png">
 			                					</div>
 					                			<div class="row w-50 h-50 text-center m-auto">
 					                				<h6 class="fs-7">${memberId }</h6>
@@ -1029,7 +951,7 @@
 							<!-- 댓글 작성버튼 눌렸을 때만 나오게됨 -->
 		                	<div class="row" v-if="replyFlagList[index]"> 
 		                		<div class="col-1">
-		                			<img class="rounded-circle img-fluid" src="static/image/profileDummy.png">
+		                			<img class="rounded-circle img-fluid" src="${pageContext.request.contextPath}/static/image/profileDummy.png">
 		                		</div>
 		                		<div class="col-10 mt-1">
 		                			<input type="text" placeholder=" 댓글을 입력하세요." v-model="replyContent" class="w-100 rounded-4 border border-secondary "> 
@@ -1102,7 +1024,7 @@
                   artistViewList:[],
                   previewURL: "",
                   //팔로우 리스트 멤버별 프로필
-                  FollowListProfile : [],
+                  FollowListProfile : ["testuser1"],
                   //팔로워 리스트 멤버별 프로필
                   FollowerListProfile : [],
                   //페이지 리스트 멤버별 프로필
@@ -1179,7 +1101,7 @@
                      this.$refs.fileInput.click();
                    },
                async profile() {
-                  const response = await axios.get("/member/profile",{
+                  const response = await axios.get(contextPath + "/member/profile",{
                 	  params : {
                 		  memberId : this.memberId
                 	  }
@@ -1193,7 +1115,7 @@
                },
                
                async followCnt() {
-                  const response = await axios.get("/member/followCnt",{
+                  const response = await axios.get(contextPath + "/member/followCnt",{
                 	  params : {
                 		  memberId : this.memberId
                 	  }
@@ -1206,7 +1128,7 @@
                },
                
                async followList() {
-                  const response = await axios.get("/member/followList/"+this.memberId);
+                  const response = await axios.get(contextPath + "/member/followList/"+this.memberId);
                   const{FollowMemberList, FollowerMemberList, FollowPageList} = response.data;
                   
                   this.FollowMemberList = FollowMemberList;
@@ -1261,7 +1183,7 @@
                },
                
                async profileImage() {
-                   const response = await axios.get("/member/profileImage",{
+                   const response = await axios.get(contextPath + "/member/profileImage",{
                 	   params : {
                 		   memberId : this.memberId
                 	   }
@@ -1271,14 +1193,14 @@
                    //console.log("this.memberProfileImageObj : "+this.memberProfileImageObj);
                    const attachmentNo = this.memberProfileImageObj.attachmentNo;   
                       //console.log("attachmentNo : " +attachmentNo);
-                      const url = "/rest/attachment/download/"+attachmentNo;
+                      const url = contextPath + "/rest/attachment/download/"+attachmentNo;
                    this.previewURL = url;                   
                 },
                
                
                async nickDuplicatedCheck(memberNick) {
 
-                       const resp = await axios.get("/member/nickDuplicatedCheck", {
+                       const resp = await axios.get(contextPath + "/member/nickDuplicatedCheck", {
                            params : {
                                memberNick : this.editedNickname
                            }
@@ -1292,7 +1214,7 @@
                      },
                
                async updateNickname(memberNick) {
-                  const response = await axios.get("/member/nickname",{
+                  const response = await axios.get(contextPath + "/member/nickname",{
                      params:{
                         memberNick : this.editedNickname
                      }
@@ -1352,7 +1274,7 @@
                        this.previewURL = URL.createObjectURL(file);
                      
                       // URL
-                      const url = "${contextPath}/rest/member/memberProfile";
+                      const url = contextPath + "/rest/member/memberProfile";
 
                       // 폼데이터 생성
                       const formData = new FormData();
@@ -1367,7 +1289,7 @@
                   
                   //팔로우 리스트 멤버별 프로필 조회
                   async followListProfile() {
-                	  const response =await axios.get("/member/followListProfile",{
+                	  const response =await axios.get(contextPath + "/member/followListProfile",{
                 		  params :{
                 			  memberId : this.memberId
                 		  }
@@ -1379,7 +1301,7 @@
                   
                   //팔로워 리스트 멤버별 프로필 조회
                   async followerListProfile() {
-					  const response = await axios.get("/member/followerListProfile", {
+					  const response = await axios.get(contextPath + "/member/followerListProfile", {
 					    params: {
 					    	followTargetPrimaryKey: this.memberId
 					    }
@@ -1389,7 +1311,7 @@
 					
 					//페이지 리스트 멤버별 프로필 조회
 	                  async pageListProfile() {
-						const response = await axios.get("/member/pageListProfile",{
+						const response = await axios.get(contextPath + "/member/pageListProfile",{
 							params : {
 								memberId : this.memberId
 							}
@@ -1401,7 +1323,7 @@
                   
                   //프로필 리스트 팔로우 취소
 				async deleteFollow(followNo) {
-					const response = await axios.get("/member/deleteFollow",{
+					const response = await axios.get(contextPath + "/member/deleteFollow",{
 						params : {followNo:followNo}
 					});
 					if (response.data.success) {
@@ -1412,22 +1334,22 @@
 				
 				//비밀번호 변경페이지로 이동
 				goToPassword() {
-			        window.location.href = '/member/password';
+			        window.location.href = contextPath + '/member/password';
 			    },
 			    
 			    //로그아웃
 			    goToLogout() {
-			    	window.location.href = '/member/logout';
+			    	window.location.href = contextPath + '/member/logout';
 			    },
 			    
 			    //회원탈퇴 페이지로 이동
 			    goToExit() {
-			    	window.location.href = '/member/exit';
+			    	window.location.href = contextPath + '/member/exit';
 			    },
 			    
 			    //페이지 확인
 			    async mypageCheck() {
-			    	const response = await axios.get("/member/mypage")
+			    	const response = await axios.get(contextPath + "/member/mypage")
 			    	if(response.data === this.memberId) {
 			    		this.mypage = true;
 			    	}
@@ -1453,14 +1375,14 @@
 				// 대표페이지 팔로우 생성
 				async createFollow(){
 					// 팔로우 생성 url
-					const url = "${contextPath}/rest/follow/";
+					const url = contextPath + "/rest/follow/";
 					await axios.post(url, this.followObj);
 					// [develope] 
 				},
 				// 대표페이지 팔로우 취소
 				async deleteMemberFollow(){
 					// 팔로우 생성 url
-					const url = "${contextPath}/rest/follow/";
+					const url = contextPath + "/rest/follow/";
 					await axios.delete(url, {
 						data: this.followObj,
 					});
@@ -1478,7 +1400,7 @@
 			    
 			    //팔로우 여부 
 			    async followCheck() {
-			    	const response = await axios.get("/member/checkFollowMember", {
+			    	const response = await axios.get(contextPath + "/member/checkFollowMember", {
 			    		params : {
 							Id : this.memberId
 						}
@@ -1494,7 +1416,7 @@
 			    
 			    //팔로우
 			    async memberFollowNew() {
-			    	const response = await axios.get("/member/follow", {
+			    	const response = await axios.get(contextPath + "/member/follow", {
 			    		params : {
 							Id : this.memberId
 						}
@@ -1510,7 +1432,7 @@
                       // 로그인X → 실행 X
                       if (memberId === "") return;
                       // url
-                      const url = "${contextPath}/rest/follow/memberFollowProfileInfo/"
+                      const url = contextPath + "/rest/follow/memberFollowProfileInfo/"
                       // 팔로우 목록 load
                       const resp = await axios.get(url, { params: { memberId: this.memberId } });
 
@@ -1535,7 +1457,7 @@
                      	
                       //console.log(likedPostData);
                       
-                      const resp = await axios.post("${contextPath}/rest/post/pageReload/memberLikePost",likedPostData);
+                      const resp = await axios.post(contextPath + "/rest/post/pageReload/memberLikePost",likedPostData);
   	                this.posts = resp.data;
   	                this.getLikePostIndex(this.posts);
   	                this.page++;
@@ -1563,7 +1485,7 @@
                    	
                     //console.log(writePostData);
                     
-                    const resp = await axios.post("${contextPath}/rest/post/pageReload/memberWritePost",writePostData);
+                    const resp = await axios.post(contextPath + "/rest/post/pageReload/memberWritePost",writePostData);
 	                this.posts = resp.data;
 	                this.getLikePostIndex(this.posts);
 	                this.page++;
@@ -1578,7 +1500,7 @@
               	// 게시글 삭제 !!!좋아요!!!
               	async deletePost(postNo){
                   	try{
-                  		await axios.delete('${contextPath}/rest/post/'+postNo);
+                  		await axios.delete(contextPath + '/rest/post/'+postNo);
                   		this.fetchPosts();
                   	}
                   	catch (error){
@@ -1589,7 +1511,7 @@
   			// 게시글 삭제 !!!내가!!!
             	async deletePost(postNo){
                 	try{
-                		await axios.delete('${contextPath}/rest/post/'+postNo);
+                		await axios.delete(contextPath + '/rest/post/'+postNo);
                 		this.fetchPostsW();
                 	}
                 	catch (error){
@@ -1602,11 +1524,11 @@
   			    	this.modalImageUrl = this.getAttachmentUrl(attachmentNo)
   			    },
                   getAttachmentUrl(attachmentNo) {		
-              		return "${contextPath}/rest/attachment/download/"+attachmentNo;
+              		return contextPath + "/rest/attachment/download/"+attachmentNo;
                   },
                   async checkFileType(attachmentNo) {
                       try {
-                          const response = await axios.head('${contextPath}/rest/attachment/download/post/' + attachmentNo);
+                          const response = await axios.head(contextPath + '/rest/attachment/download/post/' + attachmentNo);
                           const contentType = response.headers['content-type'];
                           if (contentType.includes('image')) {
                               return 'image';
@@ -1627,7 +1549,7 @@
                	// 좋아요 관련 비동기 처리-----------------------------------
                	// 아이디 접속해 있고, 좋아요 클릭시에 실행
                	checkLike(postNo,index){
-                  	axios.get('${contextPath}/rest/post/like/'+postNo)
+                  	axios.get(contextPath + '/rest/post/like/'+postNo)
                   		.then(response => {
                   			//console.log(response.data);
                   			// 응답이 좋아요면 좋아요 +1
@@ -1656,7 +1578,7 @@
                   		postNoList.push(post.postNo); 
                   	})
                   	
-                 		axios.get('${contextPath}/rest/post/like/index/'+postNoList)
+                 		axios.get(contextPath + '/rest/post/like/index/'+postNoList)
                  			.then(response => {               			
                  			this.postLikeIndexList = response.data;                			
                  		})
@@ -1674,7 +1596,7 @@
                   async replySending(postNo,index){
                   	try{
                   		const replyDto = {postNo: postNo, replyContent:this.replyContent};
-                      	const response = await axios.post('${contextPath}/rest/post/reply/',replyDto);
+                      	const response = await axios.post(contextPath + '/rest/post/reply/',replyDto);
                       	this.fetchPosts();
                       }
                   	catch (error){
@@ -1698,7 +1620,7 @@
                   async rereplySending(postNo,replyNo,index){
                   	try{
                   		const replyDto = {postNo: postNo, replyContent:this.rereplyContent, replyGroupNo: replyNo};
-                      	const response = await axios.post('${contextPath}/rest/post/rereply/',replyDto);
+                      	const response = await axios.post(contextPath + '/rest/post/rereply/',replyDto);
                       	this.fetchPosts();
                       }
                   	catch (error){
@@ -1726,7 +1648,7 @@
                   // 댓글 삭제 !!!좋아요!!!
                   async deleteReply(replyNo){
                   	try{
-                  		await axios.delete('${contextPath}/rest/post/reply/delete/'+replyNo);
+                  		await axios.delete(contextPath + '/rest/post/reply/delete/'+replyNo);
                   		this.fetchPosts();
                   	}
                   	catch (error){
@@ -1738,7 +1660,7 @@
                   // 댓글 삭제!!!내가!!!
                   async deleteReply(replyNo){
                   	try{
-                  		await axios.delete('${contextPath}/rest/post/reply/delete/'+replyNo);
+                  		await axios.delete(contextPath + '/rest/post/reply/delete/'+replyNo);
                   		this.fetchPostsW();
                   	}
                   	catch (error){
@@ -1750,7 +1672,7 @@
                   // 대댓글 삭제!!!좋아요!!!
                   async deleteRereply(replyNo){
                   	try{
-                  		await axios.delete('${contextPath}/rest/post/reply/reDelete/'+replyNo);
+                  		await axios.delete(contextPath + '/rest/post/reply/reDelete/'+replyNo);
                   		this.fetchPosts();
                   	}
                   	catch(error){
@@ -1760,7 +1682,7 @@
                // 대댓글 삭제!!!내가!!!
                   async deleteRereply(replyNo){
                   	try{
-                  		await axios.delete('${contextPath}/rest/post/reply/reDelete/'+replyNo);
+                  		await axios.delete(contextPath + '/rest/post/reply/reDelete/'+replyNo);
                   		this.fetchPostsW();
                   	}
                   	catch(error){
@@ -1866,7 +1788,7 @@
               	async loadFindFixedTagList(){
                       if(this.findFixedTagName.length == 0) return;
 
-                      const resp = await axios.get("${contextPath}/rest/fixedTag/"+this.findFixedTagName);
+                      const resp = await axios.get(contextPath + "/rest/fixedTag/"+this.findFixedTagName);
                       this.findFixedTagList = resp.data;
   					// console.log(this.findFixedTagList);
                       // console.log("조회 실행");

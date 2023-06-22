@@ -199,7 +199,7 @@
                         </td>
                         <td scope="col">{{artistView.artistNo}}</td>
                         <td>
-                            <img :src="previewURLList[i]===null ? artistView.profileSrc : previewURLList[i]" style="height: 50px; width: 50px;">
+                            <img :src="previewURLList[i]===null ? '${pageContext.request.contextPath}'+artistView.profileSrc : previewURLList[i]" style="height: 50px; width: 50px;">
                             <!-- <img v-if="previewURLList[i]!==null" :src="previewURLList[i]" style="height: 50px; width: 50px;"> -->
                         </td>
                         <td>{{fullName(artistView.artistName, artistView.artistEngName)}}</td>
@@ -270,7 +270,7 @@
             artistEngName: "",
             artistEngNameLower: "",
             attachment: null,
-            previewURL: "/static/image/profileDummy.png",
+            previewURL: contextPath + "/static/image/profileDummy.png",
           },
 
           artistSearchObj : {
@@ -368,7 +368,7 @@
             if(this.attachmentList[index] === null) return;
 
             // URL
-            const url = "${contextPath}/rest/admin/artistProfile";
+            const url = contextPath + "/rest/admin/artistProfile";
             
             // 폼데이터 생성
             const formData = new FormData();
@@ -395,7 +395,7 @@
             // 미선택 처리
             if(file === undefined){
                 this.newArtistObj.attachment = null;
-                this.newArtistObj.previewURL = "/static/image/profileDummy.png";
+                this.newArtistObj.previewURL = contextPath + "/static/image/profileDummy.png";
                 return;
             }
 
@@ -425,7 +425,7 @@
 
             // 2. 중복 검사
             // URL
-            const isArtistExistUrl = "${contextPath}/rest/artist/check";
+            const isArtistExistUrl = contextPath + "/rest/artist/check";
             // 아티스트 중복검사
 
             //console.log(this.newArtistObj.artistEngNameLower);
@@ -438,7 +438,7 @@
             // 3. 아티스트 생성
             
             // URL
-            const createArtisturl = "${contextPath}/rest/artist/";
+            const createArtisturl = contextPath + "/rest/artist/";
             
             // 폼데이터 생성
             const formData = new FormData();
@@ -457,7 +457,7 @@
             this.newArtistObj.artistEngName = "";
             this.newArtistObj.artistEngNameLower = "";
             this.newArtistObj.attachment = null;
-            this.newArtistObj.previewURL= "/static/image/profileDummy.png";
+            this.newArtistObj.previewURL= contextPath + "/static/image/profileDummy.png";
 
             // 파일인풋 초기화
             this.$refs.attach.value="";
@@ -465,7 +465,7 @@
         // 아티스트 목록 조회
         async loadArtistViewList () {
             // URL
-            const url = "${contextPath}/rest/admin/artistView";
+            const url = contextPath + "/rest/admin/artistView";
             // 비동기 아티스트 목록 조회
             const resp = await axios.get(url);
             // 반영
@@ -531,7 +531,7 @@
             if(selectedCnt===0 && !confirm(selectedCnt + "개의 대표페이지를 삭제하시겠습니까?")) return;
 
             // URL
-            const url = "${contextPath}/rest/artist/"
+            const url = contextPath + "/rest/artist/"
             // 아티스트 삭제
 
             const resp = await axios.delete(url, { 

@@ -127,7 +127,7 @@ public class emailServiceImpl implements emailService{
 		
 		Element link = doc.getElementById("custom-email-link");
 		link.text("STARLINK LOGIN");
-		link.attr("href", "${contextPath}/member/login");
+		link.attr("href", "${pageContext.request.contextPath}/member/login");
 		
 		helper.setText(doc.toString(), true);
 		

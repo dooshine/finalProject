@@ -214,7 +214,7 @@
                     <tr v-for="(member, i) in memberList.slice(pageObj.begin - 1, pageObj.end)" :key="i">
                         <td style="text-align: center;"><input type="checkbox" @change="checkMember($event, member.memberId)" :checked="selectedMemberObj[member.memberId]"></td>
                         <td style="text-align: center;">{{pageObj.begin + i}}</td>
-                        <td style="text-align: center;"><img :src="member.profileSrc" style="height: 50px; width: 50px;"></td>
+                        <td style="text-align: center;"><img :src="'${pageContext.request.contextPath}' + member.profileSrc" style="height: 50px; width: 50px;"></td>
                         <td>
                             {{fullName(member.memberId, member.memberNick)}}<br>
                             {{member.memberEmail}}
@@ -386,7 +386,7 @@
       methods: {
         // 멤버 불러오기
         async loadMemberList(){
-            const url = "${contextPath}/rest/admin/member"
+            const url = contextPath + "/rest/admin/member"
             const response = await axios.post(url, this.memberSearchVO);
             //console.log(response.data);
             this.memberList = response.data;

@@ -49,11 +49,11 @@
     text-decoration: none;
   }
   #artist-header a.artist-header-tab-active {
-  	color: black;
+  	color: #6A53FB;
   }
   #artist-header a.artist-header-tab:not(.artist-header-tab-active):hover {
 	cursor: pointer;
-  	color: #404040
+  	color: #7d6afb;
   }
   .grey {
 	color: grey;
@@ -153,7 +153,7 @@
 	        <!-- 대표페이지 프로필 사진 -->
 	        <div class="my-auto" >
 	            <div class="border artist-profile-img rounded-circle overflow-hidden">
-	                <img class="artist-profile-img " :src="artistObj.profileSrc">
+	                <img class="artist-profile-img " :src="'${pageContext.request.contextPath}' + artistObj.profileSrc">
 	            </div>
 	        </div>
 	
@@ -174,7 +174,7 @@
 	        <div class="col container my-auto">
 	            <div class="row mb-2 justify-content-end" >
 	                <button class="custom-btn btn-round" style="width:150px;" 
-	                :class="{'btn-purple1':!isFollowingArtist, 'btn-purple1-secondary': isFollowingArtist}"  v-text="isFollowingArtist?'팔로우취소':'팔로우하기'" @click="followPage">팔로우하기</button>
+	                :class="{'btn-purple1':!isFollowingArtist, 'btn-purple1-secondary': isFollowingArtist}"  v-text="isFollowingArtist?'팔로우취소':'팔로우하기'" @click="followPage"></button>
 	            </div>
 	            <div class="row justify-content-end">
 	                <button class="custom-btn btn-round btn-gray" style="width:150px;">글쓰기</button>
@@ -188,14 +188,14 @@
 		<%-- ######################## 대표페이지 헤더 ######################## --%>
 		<div class="w-100" id="artist-header">
 			<div class="d-flex justify-content-center">
-				<a class="font-bold px-4 artist-header-tab artist-header-tab-active" :href="makeHref('feed')">
-					게시물
+				<a class="font-bold px-4 artist-header-tab artist-header-tab-active" href="feed">
+				게시물
 				</a>
-				<a class="font-bold px-4 artist-header-tab" :href="makeHref('map')">
+				<a class="font-bold px-4 artist-header-tab" href="map">
 					지도
 				</a>
-				<a class="font-bold px-4 artist-header-tab" :href="makeHref('fund')">
-					후원
+				<a class="font-bold px-4 artist-header-tab" href="fund">
+					펀딩
                 </a>
 			</div>
 		</div>
@@ -539,7 +539,7 @@
 								
 								<!-- 프로필 사진이 없는 경우 -->
 								<img v-else class="img-fluid p-0" style="max-width: 100%; min-width: 100%;cursor: pointer;"
-									@click="toMemberPage(post.memberId)" src="static/image/profileDummy.png">
+									@click="toMemberPage(post.memberId)" src="${pageContext.request.contextPath}/static/image/profileDummy.png">
 							</div>
 						</div>
 <!-- 						<div class="col-1"></div> -->
@@ -900,7 +900,7 @@
 												<!-- 프로필 사진이 없는 경우 -->
 												<img v-else class="img-fluid p-0" @click="toMemberPage(reply.replyId)"
 												style="width:100%;height:100%;cursor: pointer;"
-												src="static/image/profileDummy.png">
+												src="${pageContext.request.contextPath}/static/image/profileDummy.png">
 												</div>
 											</div>
 											<div class="col-1">
@@ -980,7 +980,7 @@
 														
 														<!-- 대댓글 프로필 사진이 없는 경우 -->
 														<img v-else class="img-fluid p-0" style="width:100%;height:100%;cursor: pointer;" @click="toMemberPage(rereply.replyId)"													 
-															src="static/image/profileDummy.png">
+															src="${pageContext.request.contextPath}/static/image/profileDummy.png">
 														</div>
 													</div>
 													<div class="col-1">
@@ -1053,7 +1053,7 @@
 															
 															<!-- 프로필 사진이 없는 경우 -->
 															<img v-else class="img-fluid p-0" style="width:100%;height:100%;"															
-															src="static/image/profileDummy.png">
+															src="${pageContext.request.contextPath}/static/image/profileDummy.png">
 													</div>
 												</div>
 												<div class="col-1">
@@ -1115,7 +1115,7 @@
 														
 														<!-- 프로필 사진이 없는 경우 -->
 														<img v-else class="img-fluid p-0" style="width:100%;height:100%;cursor:pointer;" @click="toMemberPage(reply.replyId)"
-														src="static/image/profileDummy.png">
+														src="${pageContext.request.contextPath}/static/image/profileDummy.png">
 													</div>
 												</div>
 												<div class="col-1"></div>
@@ -1195,7 +1195,7 @@
 																	
 																	<!-- 프로필 사진이 없는 경우 -->
 																	<img v-else class="img-fluid p-0" style="width:100%;height:100%;cursor: pointer;" @click="toMemberPage(rereply.replyId)"
-																		src="static/image/profileDummy.png">
+																		src="${pageContext.request.contextPath}/static/image/profileDummy.png">
 															</div>
 														</div>
 														<div class="col-1"></div>
@@ -1266,7 +1266,7 @@
 														
 															<!-- 프로필 사진이 없는 경우 -->
 															<img v-else class="img-fluid p-0" style="width:100%;height:100%;"
-															src="static/image/profileDummy.png">
+															src="${pageContext.request.contextPath}/static/image/profileDummy.png">
 														</div>
 													</div>
 													<div class="col-1"></div>
@@ -1325,7 +1325,7 @@
 									
 										<!-- 프로필 사진이 없는 경우 -->
 										<img v-else class="img-fluid p-0"											
-											src="static/image/profileDummy.png">
+											src="${pageContext.request.contextPath}/static/image/profileDummy.png">
 									</div>
 <!-- 								<div class="col-1"></div> -->
 								</div>
@@ -1375,6 +1375,9 @@
 		</div>
 		<!-- 글 박스 루프 1개-->
 
+	</div>
+	<div v-if="posts.length===0">
+		<h3 class="p-4">{{artistObj.artistName}}태그를 사용한 게시물이 없습니다</h3>
 	</div>
 	<!--------------- 게시물들 반복구간 ------------->
 
@@ -1566,7 +1569,7 @@
             // 대표페이지 이름
             const artistEngNameLower = window.location.pathname.split("/").at(-2);
 			// url
-            const url = "${contextPath}/rest/artist/";
+            const url = contextPath + "/rest/artist/";
 			// 조회
             const resp = await axios.get(url, { params: { artistEngNameLower: artistEngNameLower } });
 			// 조회 결과 없을 시 
@@ -1582,7 +1585,7 @@
             // 로그인X → 실행 X
             if(memberId==="") return;
 
-            const url = "${contextPath}/rest/follow/memberFollowInfo/"
+            const url = contextPath + "/rest/follow/memberFollowInfo/"
 
             const resp = await axios.get(url, {params:{memberId: memberId}});
 
@@ -1608,7 +1611,7 @@
             //     }
             // }
 
-			const url = "${contextPath}/rest/follow/checkFollowPage";
+			const url = contextPath + "/rest/follow/checkFollowPage";
 
 			const resp = await axios.get(url, {params: {memberId: memberId, followTargetType: '대표페이지', followTargetPrimaryKey: this.artistObj.artistEngNameLower}});
 
@@ -1637,18 +1640,20 @@
 
             this.loadArtist();
             this.loadMemberFollowInfo();
+
+			this.checkFollow();
         },
 
         // 대표페이지 팔로우 생성
         async createFollowPage(){
             // 팔로우 생성 url
-            const url = "${contextPath}/rest/follow/";
+            const url = contextPath + "/rest/follow/";
             await axios.post(url, this.followPageObj);
         },
         // 대표페이지 팔로우 취소
         async deleteFollow(){
             // 팔로우 생성 url
-            const url = "${contextPath}/rest/follow/";
+            const url = contextPath + "/rest/follow/";
             await axios.delete(url, {
                 data: this.followPageObj,
             });
@@ -1672,11 +1677,6 @@
             // 팔로우 대상 PK
             this.followPageObj.followTargetPrimaryKey = artistName;
         },
-        makeHref(target){
-            const pathName = window.location.pathname;
-			const pathArr = pathName.split('/').slice();
-			return pathArr.slice(0, pathArr.length-1).join('/') + '/' + target;
-        },
 		// ######################## 대표페이지 헤더 끝########################
 
 
@@ -1693,7 +1693,7 @@
             var artistName = this.artistObj.artistName
 
 
-            const url = "${contextPath}/rest/post/pageReload/fixedTagPost";
+            const url = contextPath + "/rest/post/pageReload/fixedTagPost";
             var fixedTagPostData = {
             		page: this.page,
             		fixedTagName: artistName
@@ -1701,7 +1701,7 @@
             
             //console.log(fixedTagPostData);
             
-   			const resp = await axios.post("${contextPath}/rest/post/pageReload/fixedTagPost", fixedTagPostData);           
+   			const resp = await axios.post(contextPath + "/rest/post/pageReload/fixedTagPost", fixedTagPostData);           
            	//console.log(resp);
    			this.posts = resp.data;
             this.getLikePostIndex(this.posts);
@@ -1718,7 +1718,7 @@
     	
     	// 비동기 통신 후 최신화
     	async fetchNew(){    		 
-    		const url = "${contextPath}/rest/post/pageReload/fixedTagPost";
+    		const url = contextPath + "/rest/post/pageReload/fixedTagPost";
    		 	const resp = await axios.post(url, {page:this.page,fixedTagName: this.artistObj.artistName});
              this.posts = resp.data;
              this.getLikePostIndex(this.posts);
@@ -1731,7 +1731,7 @@
             if(this.finish == true) return;//다 불러왔으면
             
             this.loading = true;
-            const url = "${contextPath}/rest/post/pageReload/fixedTagPost";
+            const url = contextPath + "/rest/post/pageReload/fixedTagPost";
    		 	const resp = await axios.post(url, {page:this.page,fixedTagName: this.artistObj.artistName});
    		 	this.posts = resp.data;
             this.getLikePostIndex(this.posts);
@@ -1755,7 +1755,7 @@
     	async deletePost(){
     		var postNo = this.deletePostNo;
         	try{
-        		await axios.delete('${contextPath}/rest/post/'+postNo);
+        		await axios.delete(contextPath + '/rest/post/'+postNo);
         		this.fetchNew();
         	}
         	catch (error){
@@ -1774,7 +1774,7 @@
 	    	};
 	    	
 	    	try {
-	    		await axios.put('${contextPath}/rest/post/',postDto);
+	    		await axios.put(contextPath + '/rest/post/',postDto);
 	    		
 	    	}
 	    	catch(error){
@@ -1791,11 +1791,11 @@
 	    	this.modalImageUrl = this.getAttachmentUrl(attachmentNo)
 	    },
         getAttachmentUrl(attachmentNo) {		
-    		return "${contextPath}/rest/attachment/download/"+attachmentNo;
+    		return contextPath + "/rest/attachment/download/"+attachmentNo;
         },
         async checkFileType(attachmentNo) {
             try {
-                const response = await axios.head('${contextPath}/rest/attachment/download/post/' + attachmentNo);
+                const response = await axios.head(contextPath + '/rest/attachment/download/post/' + attachmentNo);
                 const contentType = response.headers['content-type'];
                 if (contentType.includes('image')) {
                     return 'image';
@@ -1854,7 +1854,7 @@
 			// 로그인X → 실행 X
 			if(this.memberId===null) return;
 			// url
-			const url = "${contextPath}/rest/follow/memberFollowInfo/"
+			const url = contextPath + "/rest/follow/memberFollowInfo/"
 			// 팔로우 목록 load
 			const resp = await axios.get(url, {params:{memberId: this.memberId}});
 
@@ -1882,7 +1882,7 @@
                 followTargetPrimaryKey: followedMemberId
             };
             
-            const url = "${contextPath}/rest/follow/";
+            const url = contextPath + "/rest/follow/";
             await axios.post(url,followDto);
            
 
@@ -1908,7 +1908,7 @@
             };                    
             
             // 팔로우 삭제 
-            const url = "${contextPath}/rest/follow/";
+            const url = contextPath + "/rest/follow/";
             await axios.delete(url, {
                 data: followDto,
             });
@@ -1944,7 +1944,7 @@
         	};
         	//console.log(this.reportDto);
         	
-        	const url = "${contextPath}/rest/report/";
+        	const url = contextPath + "/rest/report/";
         	try{
         		const resp = await axios.post(url, reportDto);
         	}
@@ -1958,7 +1958,7 @@
      	// 좋아요 관련 비동기 처리-----------------------------------
      	// 아이디 접속해 있고, 좋아요 클릭시에 실행
      	checkLike(postNo,index){
-        	axios.get('${contextPath}/rest/post/like/'+postNo)
+        	axios.get(contextPath + '/rest/post/like/'+postNo)
         		.then(response => {
         			//console.log(response.data);
         			// 응답이 좋아요면 좋아요 +1
@@ -1987,7 +1987,7 @@
         		postNoList.push(post.postNo); 
         	})
         	
-       		axios.get('${contextPath}/rest/post/like/index/'+postNoList)
+       		axios.get(contextPath + '/rest/post/like/index/'+postNoList)
        			.then(response => {               			
        			this.postLikeIndexList = response.data;                			
        		})
@@ -2000,7 +2000,7 @@
         
      	// 고정 태그 맵핑
      	searchFixedTag(data){
-        	this.searchUrl = '${contextPath}/search/post/?q='+data;
+        	this.searchUrl = contextPath + '/search/post/?q='+data;
         },
      	
      	
@@ -2009,7 +2009,7 @@
         async replySending(postNo,index){
         	try{
         		const replyDto = {postNo: postNo, replyContent:this.replyContent};
-            	const response = await axios.post('${contextPath}/rest/post/reply/',replyDto);
+            	const response = await axios.post(contextPath + '/rest/post/reply/',replyDto);
             	this.fetchNew();
             }
         	catch (error){
@@ -2044,7 +2044,7 @@
         async rereplySending(postNo,replyNo,index){
         	try{
         		const replyDto = {postNo: postNo, replyContent:this.rereplyContent, replyGroupNo: replyNo};
-            	const response = await axios.post('${contextPath}/rest/post/rereply/',replyDto);
+            	const response = await axios.post(contextPath + '/rest/post/rereply/',replyDto);
             	this.fetchNew();
             }
         	catch (error){
@@ -2072,7 +2072,7 @@
         // 댓글 삭제
         async deleteReply(replyNo){
         	try{
-        		await axios.delete('${contextPath}/rest/post/reply/delete/'+replyNo);
+        		await axios.delete(contextPath + '/rest/post/reply/delete/'+replyNo);
         		this.fetchNew();
         	}
         	catch (error){
@@ -2083,7 +2083,7 @@
         // 대댓글 삭제
         async deleteRereply(replyNo){
         	try{
-        		await axios.delete('${contextPath}/rest/post/reply/reDelete/'+replyNo);
+        		await axios.delete(contextPath + '/rest/post/reply/reDelete/'+replyNo);
         		this.fetchNew();
         	}
         	catch(error){
@@ -2227,7 +2227,7 @@
     	async loadFindFixedTagList(){
             if(this.findFixedTagName.length == 0) return;
 
-            const resp = await axios.get("${contextPath}/rest/fixedTag/"+this.findFixedTagName);
+            const resp = await axios.get(contextPath + "/rest/fixedTag/"+this.findFixedTagName);
             this.findFixedTagList = resp.data;
 			// console.log(this.findFixedTagList);
             // console.log("조회 실행");
@@ -2246,7 +2246,7 @@
         async getSessionMemberAttachmentNo(){
         	if(this.memberId !=null)
         	{
-        		const resp = await axios.get("${contextPath}/rest/post/sessionAttachmentNo/");	
+        		const resp = await axios.get(contextPath + "/rest/post/sessionAttachmentNo/");	
         		this.sessionMemberAttachmentNo = resp.data;
         		return this.sessionMemberAttachmentNo; 
         	}
@@ -2315,7 +2315,7 @@
         },
         // 해당 맴버가 쓴 글 페이지로 
         toMemberPage(memberId){
-        	const url = '${contextPath}/member/mypage2/'+memberId;
+        	const url = contextPath + '/member/mypage2/'+memberId;
         	window.location.href = url;
         },
 

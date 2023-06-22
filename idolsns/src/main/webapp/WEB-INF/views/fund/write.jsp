@@ -37,7 +37,7 @@ $(function(){
 		         }
 				
 				$.ajax({
-					url:"${contextPath}/rest/attachment/upload",
+					url: contextPath + "/rest/attachment/upload",
 					method:"post",
 					data:fd,
 					processData:false,
@@ -48,7 +48,7 @@ $(function(){
 													.val(response.attachmentNo);
 						$("form").prepend(input);
 
-						var imgNode = $("<img>").attr("src", "${contextPath}/rest/attachment/download/"+response.attachmentNo);
+						var imgNode = $("<img>").attr("src", contextPath + "/rest/attachment/download/"+response.attachmentNo);
 						imgNode.attr('width','100%');
 						$("[name=postContent]").summernote('insertNode', imgNode.get(0));
 					},
@@ -268,7 +268,7 @@ $(function(){
    	          	      findFixedTagName: "",
          	          findFixedTagList: [],
          	          newFixedTagList: [],
-         	          previewURL: "/static/image/profileDummy.png",
+         	          previewURL: contextPath + "/static/image/profileDummy.png",
          	          el: '#app',
          	          minDate: "",
          	          minDateEnd: "",
@@ -312,12 +312,11 @@ $(function(){
             	},
             	methods: {
             		async loadFindFixedTagList(){
-                        if(this.findFixedTagName.length == 0) return;
+						const target = this.findFixedTagName.replace(/[\/?&%# ]/g, "");
+                        if(target.length == 0) return;
 
-                        const resp = await axios.get("${contextPath}/rest/fixedTag/"+this.findFixedTagName);
+						const resp = await axios.get(contextPath + "/rest/fixedTag/"+target);
                         this.findFixedTagList = resp.data;
-                        //console.log(this.findFixedTagList);
-                        // console.log("조회 실행");
                     },
                     // 고정태그 추가
                     addNewFixedTag (newFixedTag){
@@ -336,7 +335,7 @@ $(function(){
                             return;
                         }
                     	
-                    	const url = "/rest/fund/tag";
+                    	const url = contextPath + "/rest/fund/tag";
                     	const resp = axios.post(url, this.newFixedTagList)
                     },
                     selectFile() {
@@ -413,7 +412,7 @@ $(function(){
 				    checkDuplicateTitle() {
 				    	if(this.funding.fundTitle == "") return;
 				    	const encodedTitle = encodeURIComponent(this.funding.fundTitle);
-				    	axios.get('/rest/fund/duplicateTitleCheck/'+ encodedTitle)
+				    	axios.get(contextPath + '/rest/fund/duplicateTitleCheck/'+ encodedTitle)
 				        .then(response => {
 				          if (response.data) {
 				        	  this.fundTitleAlert = true;

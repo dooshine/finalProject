@@ -17,16 +17,16 @@
 <div class="container-fluid" id="app">
     <div class="row">
         <div class="col">
-            <a href="/dev/follow">팔로우 통합</a>
+            <a href="${pageContext.request.contextPath}/dev/follow">팔로우 통합</a>
         </div>
         <div class="col">
-            <a href="/dev/followMember">모두 팔로우한 회원목록</a>
+            <a href="${pageContext.request.contextPath}/dev/followMember">모두 팔로우한 회원목록</a>
         </div>
         <div class="col">
-            <a href="/dev/memberFollowCnt">팔로우 수</a>
+            <a href="${pageContext.request.contextPath}/dev/memberFollowCnt">팔로우 수</a>
         </div>
         <div class="col">
-            <a href="/dev/memberProfile">회원프로필</a>
+            <a href="${pageContext.request.contextPath}/dev/memberProfile">회원프로필</a>
         </div>
     </div>
     <!-- # 팔로우 통계 예시 -->
@@ -154,7 +154,7 @@
         // [함수] 모든회원 팔로우 통계 조회
         async loadAllMemberFollowCntList(){
             // url
-            const url = "${contextPath}/rest/follow/memberFollowCnt";
+            const url = contextPath + "/rest/follow/memberFollowCnt";
             // api호출
             const resp = await axios.get(url);
             // data 반영
@@ -164,7 +164,7 @@
         // [함수] 특정회원 팔로우 통계 조회
         async selectTargetMemberFollowCnt(){
             // url
-            const url = "${contextPath}/rest/follow/memberFollowCnt";
+            const url = contextPath + "/rest/follow/memberFollowCnt";
             // api호출
             const resp = await axios.get(url, { params: {memberId: this.targetMemberId} });
             // data 반영

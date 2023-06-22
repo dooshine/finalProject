@@ -49,11 +49,11 @@
     text-decoration: none;
   }
   #artist-header a.artist-header-tab-active {
-  	color: black;
+	color: #6A53FB;
   }
   #artist-header a.artist-header-tab:not(.artist-header-tab-active):hover {
 	cursor: pointer;
-  	color: #404040
+	color: #7d6afb;
   }
 </style>
 
@@ -66,7 +66,7 @@
 	        <!-- 대표페이지 프로필 사진 -->
 	        <div class="my-auto" >
 	            <div class="border artist-profile-img rounded-circle overflow-hidden">
-	                <img class="artist-profile-img" :src="artistObj.profileSrc">
+	                <img class="artist-profile-img" :src="'${pageContext.request.contextPath}' + artistObj.profileSrc">
 	            </div>
 	        </div>
 	
@@ -87,7 +87,7 @@
 	        <div class="col container my-auto">
 	            <div class="row mb-2 justify-content-end" >
 	                <button class="custom-btn btn-round" style="width:150px;" 
-	                :class="{'btn-purple1':!isFollowingArtist, 'btn-purple1-secondary': isFollowingArtist}"  v-text="isFollowingArtist?'팔로우취소':'팔로우하기'" @click="followPage">팔로우하기</button>
+	                :class="{'btn-purple1':!isFollowingArtist, 'btn-purple1-secondary': isFollowingArtist}"  v-text="isFollowingArtist?'팔로우취소':'팔로우하기'" @click="followPage"></button>
 	            </div>
 	            <div class="row justify-content-end">
 	                <button class="custom-btn btn-round btn-gray" style="width:150px;">글쓰기</button>
@@ -101,14 +101,14 @@
 		<%-- ######################## 대표페이지 헤더 ######################## --%>
 		<div class="w-100" id="artist-header">
 			<div class="d-flex justify-content-center">
-				<a class="font-bold px-4 artist-header-tab" :href="makeHref('feed')">
-					게시물
+				<a class="font-bold px-4 artist-header-tab artist-header-tab-active" href="feed">
+				게시물
 				</a>
-				<a class="font-bold px-4 artist-header-tab artist-header-tab-active" :href="makeHref('map')">
+				<a class="font-bold px-4 artist-header-tab" href="map">
 					지도
 				</a>
-				<a class="font-bold px-4 artist-header-tab" :href="makeHref('fund')">
-					후원
+				<a class="font-bold px-4 artist-header-tab" href="fund">
+					펀딩
                 </a>
 			</div>
 		</div>
@@ -141,6 +141,9 @@
 								{{ post.mapName }}
 							</div>
 						</template>
+					</div>
+					<div v-if="postShowDto.length === 0">
+						<h3>{{artistObj.artistName}}관련 지도정보가 없습니다</h3>
 					</div>
 				</div>
 			</div>
@@ -208,7 +211,7 @@
 				};
     	  		document.head.appendChild(script);
 				
-				// this.showMap(this.postShowDto[0].mapName,this.postShowDto[0].mapPlace);
+				
 
 			}
 			
@@ -224,7 +227,7 @@
             // 대표페이지 이름
             const artistEngNameLower = window.location.pathname.split("/").at(-2);
 			// url
-            const url = "${contextPath}/rest/artist/";
+            const url = contextPath + "/rest/artist/";
 			// 조회
             const resp = await axios.get(url, { params: { artistEngNameLower: artistEngNameLower } });
 			// 조회 결과 없을 시 
@@ -232,7 +235,6 @@
 			this.artistObj = resp.data;
 			
 			await this.loadTags();
-			this.showMap(this.postShowDto[0].mapName,this.postShowDto[0].mapPlace);
 			
 			this.tagName = this.artistObj.artistName; // 태그명 설정
 		},
@@ -242,7 +244,7 @@
             // 로그인X → 실행 X
             if(memberId==="") return;
 
-            const url = "${contextPath}/rest/follow/memberFollowInfo/"
+            const url = contextPath + "/rest/follow/memberFollowInfo/"
 
             const resp = await axios.get(url, {params:{memberId: memberId}});
 
@@ -296,13 +298,13 @@
         // 대표페이지 팔로우 생성
         async createFollowPage(){
             // 팔로우 생성 url
-            const url = "${contextPath}/rest/follow/";
+            const url = contextPath + "/rest/follow/";
             await axios.post(url, this.followPageObj);
         },
         // 대표페이지 팔로우 취소
         async deleteFollow(){
             // 팔로우 생성 url
-            const url = "${contextPath}/rest/follow/";
+            const url = contextPath + "/rest/follow/";
             await axios.delete(url, {
                 data: this.followPageObj,
             });
@@ -326,11 +328,6 @@
             // 팔로우 대상 PK
             this.followPageObj.followTargetPrimaryKey = artistName;
         },
-		makeHref(target){
-            const pathName = window.location.pathname;
-			const pathArr = pathName.split('/').slice();
-			return pathArr.slice(0, pathArr.length-1).join('/') + '/' + target;
-        },
 		// ######################## 대표페이지 헤더 끝########################
 
 
@@ -339,12 +336,20 @@
 		// ######################## 맵 method ########################
     	async loadTags() {
 			const tagName = this.artistObj.artistName;
-			const url = "/rest/post/" + tagName;
+			const url = contextPath + "/rest/post/" + tagName;
 		
 			const resp = await axios.get(url);
 			this.postShowDto = resp.data;
-		
+			
 			await this.loadPositions();
+
+			// 카카오 맵 첫장소 띄우기
+			for(let i = 0; i<this.postShowDto.length; i++){
+				if(this.postShowDto[i].mapName!==null){
+					this.showMap(this.postShowDto[i].mapName,this.postShowDto[i].mapPlace);
+					break;
+				}
+			}
 		},
 
 		// 키워드 검색 완료 시 호출되는 콜백함수 입니다
@@ -436,7 +441,7 @@
   		},
 		// ######################## 맵 method 끝 ########################
       },
-      mounted(){  
+      async mounted(){  
 
 		// 카카오맵 API 로드
 		const script = document.createElement('script');
@@ -448,12 +453,14 @@
 				this.loadMemberFollowInfo();
 			});
 		};
+		
 
-		document.head.appendChild(script);
+		await document.head.appendChild(script);
         // 1. 아티스트 정보 로드
         this.loadArtist();
         // 2. 로그인 한 사람 팔로우 정보 로드
         this.loadMemberFollowInfo();
+
       },
 	  created(){
 		
