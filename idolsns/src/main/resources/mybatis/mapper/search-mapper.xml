@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ↑ XML 헤더(반드시 첫 번째 줄에 위치) -->
+
+<!-- dtd선언 -->
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- mapper -->
+<mapper namespace="search">
+    <!-- 회원 정보 조회 -->
+    <!-- <select>
+    </select> -->
+
+
+
+    <!-- # 회원 프로필사진 resultMap -->
+    <resultMap type="SearchMemberDto" id="smbdto">
+        <result property="memberId" column="member_id"/>
+        <result property="memberNick" column="member_nick"/>
+
+        <association property="attachmentNo" column="member_id" javaType="java.lang.Integer" select="selectMemberProfileImage"/>
+    </resultMap>
+
+    <!-- SQL 구문 조각 생성 -->
+    <sql id="topNHeader">
+        select * from (
+        select rownum rn, tmp.* from (
+    </sql>
+    <sql id="topNFooter">
+        ) tmp
+        ) where rn between #{begin} and #{end}
+    </sql>
+    <!-- 회원검색 조회 -->
+    <select id="selectSearchMember" resultMap="smbdto">
+        <bind name="memberIdExist" value="memberId != null and !memberId.equals('')"/>
+        <include refid="topNHeader" />
+        select member_id, member_nick from member
+        <where>
+        <if test="memberIdExist">
+          or instr(member_id, #{memberId}) > 0
+          or instr(member_nick, #{memberId}) > 0
+        </if>
+        <include refid="topNFooter" />
+        </where>
+    </select>
+
+
+
+    <!-- (서브구문) 회원 프로필 이미지 -->
+    <select id="selectMemberProfileImage" resultType="Integer">
+        select attachment_no from member_profile_image 
+        where member_id = #{memberId}
+    </select>
+
+    <!-- 로그인회원 팔로우 정보 불러오기 -->
+    <select id="selectMemberProfile" resultMap="smbdto">
+        <bind name="memberIdExist" value="memberId != null and !memberId.equals('')"/>
+        select member_id, member_nick from member
+        <where>
+        <if test="memberIdExist">
+          and member_id = #{memberId}
+        </if>
+        </where>
+    </select>
+</mapper>

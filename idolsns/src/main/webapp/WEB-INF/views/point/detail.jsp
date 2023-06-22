@@ -1,59 +1,149 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+
+
+   <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>  
+
+<jsp:include page="/WEB-INF/views/template/header.jsp"></jsp:include> 
+
+
+   <style>
+   	     @media screen and (max-width:992px) {
+		  	.col-6 {
+		    width: 100%; 
+		  }
+    	}
+		.table th {
+			background-color: #f8f7fc;
+			padding-left: 12px;
+		}
+		.table td {
+			padding-left: 12px;
+		}	   
+
+	
+	</style>
+	
+	
+<div id="app">
+  <div class="custom-container">
+    <h3 class="font-bold mt-5 mb-3" style="padding-left: 0.5em">결제 상세 정보</h3>
+      
+      <div style="padding-left:0.5em; padding-right:0.5em;">
+      
+      <div class="custom-hr-big" style="background-color: #7f7f7f;"></div>
+      
+      
+      
+      <table class="table">
+        <tr class="col-12">
+          <th class="col-3">주문번호</th>
+			<td>{{ response.partner_order_id }}</td>
+        </tr>
+        <tr>
+          <th>구분</th>
+          	<td>{{ paymentDto.paymentName }}</td>
+        </tr>
+        <tr>
+          <th>주문금액</th>
+			<td>{{ formatCurrency(response.amount.total) }}스타</td>
+        </tr>
+        <tr>
+          <th>결제일</th>
+          	<td>{{ paymentDto.paymentTime }}</td>
+        </tr>
+        <tr>
+          <th>결제 수단</th>
+          	<td>카카오페이</td>
+        </tr>
+        <tr>
+          <th>결제 상태</th>
+          	<td>{{ paymentDto.paymentStatus }}</td>
+        </tr>
+      </table>
+     
+      
+	<div class="d-flex justify-content-end mb-5">
+		<a :href="'history'">
+	      <button class="custom-btn-sm btn-purple1">
+			결제 내역
+	      </button>
+      	</a>
+	
+      <!-- 결제 취소 버튼: 잔여 금액이 존재하고 7일 이내인 경우에만 표시 -->
+      <template v-if="paymentDto.paymentRemain > 0 && !isCancellationDisabled">
+        <a :href="'cancel?paymentNo=' + paymentDto.paymentNo">
+          <button class="custom-btn-sm btn-danger" style="margin-left:0.5em">
+            결제 취소
+          </button>
+        </a>
+      </template>
+      <!-- 7일 경과 후 충전 취소 안내 문구 -->
+      <template v-if="isCancellationDisabled && paymentDto.paymentRemain > 0">
+        <p class="font-bold start" style="color: red; font-size: 15px;">
+          결제 7일 경과 후 충전 취소가 불가합니다.
+        </p>
+      </template>
+      </div>
+
+ 
+    </div>
+     </div>
     
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+  </div>
 
 
-<h1>결제 상세 정보</h1>
 
-<h2>상품명 : ${paymentDto.paymentName}</h2>
-<h2>총금액 : 
-<fmt:formatNumber value = "${paymentDto.paymentTotal}" pattern = "#,##0.00"/>원
-</h2>
-<h2>잔여금액 : ${paymentDto.paymentRemain}원</h2>
-<h2>현재상태 : ${paymentDto.paymentStatus}</h2>
 
-<!--  결제 취소 버튼 : 잔여 금액이 존재한다면 -->
-<c:if test="${paymentDto.paymentRemain > 0}">
-	<a href = "cancel?paymentNo=${paymentDto.paymentNo}">결제 취소</a>
-</c:if>
 
-<hr>
+<script>
+Vue.createApp({
+    data() {
+      return {
+        paymentDto: {},
+        paymentNo: '',
+        response: {},
+      }
+    },
+    computed: {
+        isCancellationDisabled() {
+          if (this.paymentDto && this.paymentDto.paymentTime) {
+            const currentDate = new Date();
+            const differenceInDays = Math.floor((currentDate - new Date(this.paymentDto.paymentTime)) / (24 * 60 * 60 * 1000));
+            return differenceInDays > 7;
+          }
+          return false;
+        }
+      },
+    methods: {
+    	formatCurrency(value) {
+	        return value.toLocaleString();
+	      },
+      async loadPaymentDetail() {
+        try {
+          const url = "/rest/point/" + this.paymentNo;
+          //console.log(url);
+          const response = await axios.get(url);
+          this.paymentDto = response.data;
+          
+          const paymentTid = this.paymentDto.paymentTid;
 
-<h2>결제 상태 : ${response.status}</h2>
-<h2>주문 번호 : ${response.partner_order_id}</h2>
-<h2>주문자 : ${response.partner_user_id}</h2>
-<h2>결제 수단 : ${response.payment_method_type}</h2>
+          const url2 = "/rest/point/order/" + "?paymentTid=" +paymentTid;
+          const response2 = await axios.get(url2);
+          this.response = response2.data;
+        
+        } catch (error) {
+          console.error(error);
+        }
+      }
+    },
+    created() {
+    	this.paymentNo = window.location.search.split("=")[1]; 
+      	this.loadPaymentDetail();
+    }
+  }).mount("#app");
+</script>
 
-<h2>결제 금액 : ${response.amount.total}원</h2>
-<h2>취소 금액 : ${response.canceled_amount.total}원</h2>
-<h2>취소 가능 : ${response.cancel_available_amount.total}원</h2>
 
-<h2>상품명 : ${response.item_name}</h2>
-<h2>상품코드 : ${response.item_code}</h2>
-<h2>구매수량 : ${response.quantity}</h2>
 
-<h2>준비 시각 : <fmt:formatDate value="${response.created_at}" pattern="y년 M월 d일 E a h시 m분 s초"/></h2>
-<h2>승인 시각 : <fmt:formatDate value="${response.approved_at}" pattern="y년 M월 d일 E a h시 m분 s초"/></h2>
-<h2>취소 시각 : <fmt:formatDate value="${response.canceled_at}" pattern="y년 M월 d일 E a h시 m분 s초"/></h2>
-
-<%-- 카드 정보는 카드 결제일 때만 나옴--%>
-<c:if test = "${response.payment_method_type == 'CARD'}"></c:if>
-<c:if test = "${response.selected_card_info != null}">
-	<h3>카드사 정보 : ${response.selected_card_info.card_corp_name}</h3>
-	<h3>카드 BIN 코드 : ${response.selected_card_info.card_bin}</h3>
-	<h3>할부 개월 수 : ${response.selected_card_info.install_month}</h3>
-	<h3>무이자할부 여부 : ${response.selected_card_info.interest_free_install}</h3>
-</c:if>
-
-<%-- 결제 전체 순서에 따른 내역--%>
-<hr>
-<h2>결제 순서 및 상세 내역</h2>
-<c:forEach var="paymentAction" items="${response.payment_action_details}">
-	<h3>요청번호 : ${paymentAction.aid}</h3>
-	<h3>거래시각 : ${paymentAction.approved_at}</h3>
-	<h3>총액 : ${paymentAction.amount}원</h3>
-	<h3>포인트 : ${paymentAction.point_amount}원</h3>
-	<h3>유형 : ${paymentAction.payment_action_type}</h3>	
-</c:forEach>
+		<jsp:include page="/WEB-INF/views/template/footer.jsp"></jsp:include> 

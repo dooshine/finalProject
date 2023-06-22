@@ -1,8 +1,9 @@
 package com.kh.idolsns.repo;
 
-import javax.servlet.http.HttpSession;
+import java.util.List;
 
 import com.kh.idolsns.dto.PostDto;
+import com.kh.idolsns.vo.PostShowVO;
 
 public interface PostRepo {
     // 통합게시물 시퀀스 발행
@@ -13,4 +14,9 @@ public interface PostRepo {
     boolean update(PostDto postDto);
     // 통합게시물 삭제
     boolean delete(Long postNo);
+    // 모든 리스트 불러오기
+    List<PostDto> selectList();
+    // 하나의 게시물 불러오기
+    PostDto selectOne(Long postNo);
+    
 }

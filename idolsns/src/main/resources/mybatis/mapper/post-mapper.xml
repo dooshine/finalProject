@@ -8,6 +8,74 @@
 
 <!-- mapper -->
 <mapper namespace="post">
+
+
+
+	   
+    <resultMap type="PostShowVO" id="psvo">
+		<!-- FundPostImageDto (fund_post + post + fund_main_image) -->
+		<association property="postShowDto">
+			<result column="post_no" property="postNo"/>
+			<result column="member_id" property="memberId"/>
+			<result column="post_time" property="postTime"/>
+			<result column="post_type" property="postType"/>
+			<result column="post_content" property="postContent"/>
+			<result column="tag_no" property="tagNo"/>
+			<result column="tag_type" property="tagType"/>
+			<result column="tag_name" property="tagName"/>
+			<result column="map_place" property="mapPlace"/>
+			<result column="fund_title" property="fundTitle"/>
+		</association>
+		
+		
+	
+		<!-- post -->
+		<collection property="postDtos" javaType="java.util.List"
+				ofType="PostDto" select="postByPostNo" column="post_no"/>
+	
+		
+		<!-- post_image -->
+		<collection property="attachmentNos" javaType="java.util.List"
+				ofType="PostImageDto" select="attachByPostNo" column="post_no"/>
+		
+		<!-- tag -->
+		<collection property="tagNames" javaType="java.util.List"
+				ofType="TagDto" select="tagByPostNo" column="post_no"/>
+				
+				
+		
+	
+				
+				
+	</resultMap>
+	
+    
+ 
+	<select id = "sortTag" resultType="PostShowDto">
+
+		 select
+		    p.post_no, 
+		    p.member_id, 
+		    p.post_time, 
+		    p.post_type, 
+		    p.post_content,
+		    f.fund_title,
+		    t.tag_no, 
+		    t.tag_name, 
+		    t.tag_type,
+		    m.map_name,
+		    m.map_place
+		from 
+		    post p
+		    left join fund_post f on p.post_no = f.post_no
+		    left join map m on p.post_no = m.post_no
+		    left join tag t on p.post_no = t.post_no
+		WHERE t.tag_name = #{tagName}
+		order by p.post_no desc
+
+	</select>
+
+
     <!-- 통합게시물 시퀀스 생성 -->
     <select id="sequence" resultType="Long">
         select post_seq.nextval from dual
@@ -17,7 +85,7 @@
         insert into post 
         (post_no, member_id, post_type, post_time, post_content) 
         values
-        (#{postNo}, #{memberId}, #{postType}, sysdate, #{postContent})
+        (#{postNo}, #{memberId}, #{postType}, systimestamp, #{postContent})
     </insert>
     <!-- 통합게시물 1개 조회 -->
     <select id="selectOne" resultType="PostDto">
@@ -37,4 +105,18 @@
         delete from post 
         where post_no = #{postNo}
     </delete>
+    
+    
+    
+    
+    
+ 
+    
+    
+    
+    
+    
+    
+    
+    
 </mapper>

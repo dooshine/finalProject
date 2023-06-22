@@ -2,6 +2,7 @@ package com.kh.idolsns.dto;
 
 import java.sql.Date;
 
+import com.fasterxml.jackson.databind.deser.std.DateDeserializers.DateDeserializer;
 import lombok.Data;
 
 @Data
@@ -16,4 +17,8 @@ public class MemberDto {
 	private Date memberJoin;
 	private String memberLevel;
 	private Date memberLogin;
+	private Date memberExitDate;
+	
+	// 조인할 컬럼
+	private int attachmentNO;
 }

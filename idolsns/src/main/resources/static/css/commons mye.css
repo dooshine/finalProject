@@ -1,0 +1,108 @@
+@charset "UTF-8";
+
+
+/* (11) */
+.menu > li.right-menu > ul > li ul {
+    left: auto;
+    right:100%;
+}
+
+.valid-message {
+    color: forestgreen;
+    display: none;
+}
+.invalid-message,
+.invalid-message2,
+.invalid-message3 {
+    color: red;
+    display: none;
+}
+/* 
+    입력창이 성공상태(.valid)일 경우 
+    뒤에 있는 성공메세지(.valid-message)를 표시 
+*/
+.valid ~ .valid-message {
+    display: block;
+}
+/* 
+    입력창이 실패상태(.invalid)일 경우 
+    뒤에 있는 실패메세지(.invalid-message)를 표시 
+*/
+.invalid ~ .invalid-message {
+    display: block;
+}
+.invalid2 ~ .invalid-message2 {
+    display: block;
+}
+.invalid3 ~ .invalid-message3 {
+    display: block;
+}
+
+/* 입력창 디자인 */
+.valid, .invalid, .invalid2, .invalid3 {
+    background-position: top 50% right 3%;
+    background-size: auto 60%;
+    background-repeat: no-repeat;
+}
+.valid {
+    border-color: forestgreen;
+    background-image: url("../image/valid.png");
+}
+
+.invalid, .invalid2, .invalid3 {
+    border-color: red;
+    background-image: url("../image/invalid.png");
+}
+
+.container {
+	margin-top: 20px;
+}
+.container-rounded {
+ 	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.textarea {
+ 	width: 100%;
+ 	height: 6.25em;
+	border: none;
+	resize: none;
+}
+
+.profile-image-wrapper {
+          position: relative;
+          display: inline-block;
+      }
+      
+      .profile-image {
+          width: 200px;
+          height: 200px;
+          border-radius: 100%;
+          transition: filter 0.3s;
+      }
+      
+      .profile-image:hover {
+          filter: brightness(50%);
+	}
+	/*   이미지 스와이핑 창 스타일 */
+    	.swiper { 
+		width: 600px;
+		height: 600px;
+		}
+		
+    	.address{
+    	font-size:10px;
+    	}
+    	.grey{
+    	color: grey;
+    	}
+    	.fs-7{
+    	font-size: 10px;
+    	}
+    	.h-20{
+    	height: 20px;
+    	}
+    	.reply-text{
+    	font-size: 5px;
+    	}

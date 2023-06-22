@@ -9,7 +9,16 @@ public interface PaymentRepo {
 	void save(PaymentDto dto);
 	List<PaymentDto> selectAll();
 	List<PaymentDto> selectByMember(String memberId);
-	PaymentDto find(int paymentNo);
 
-	void decreasePoint(String memberId, int memberPoint);
+	
+	PaymentDto find(int paymentNo);
+	PaymentDto find2(String paymentTid);
+	
+	
+	void cancelRemain(int paymentNo); //전체 취소
+
+
+	
+	
+
 }

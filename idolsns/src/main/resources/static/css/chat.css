@@ -1,0 +1,407 @@
+@charset "UTF-8";
+
+/*
+	채팅용 css
+	작성자: 진서영
+*/
+
+.customModal {
+	position: fixed;
+	bottom: 10px;
+	right: 10px;
+	background: white;
+	border: 0.5px solid #c8c8c8;
+	border-radius: 5px;
+	width: 300px;
+	height: 500px;
+	z-index: 999;
+	display: block;
+	box-shadow: 0px 3px 4px rgba(3, 21, 17, 0.08);
+	
+	/* 스크롤 설정 */
+	overflow-y: initial;
+}
+.customModalSmall {
+	position: absolute;
+	bottom: 282px;
+	right: 60px;
+	z-index: 9999;
+	background: white;
+	border: 0.5px solid #c8c8c8;
+	border-radius: 5px;
+	display: block;
+	box-shadow: 0px 3px 4px rgba(3, 21, 17, 0.08);
+	padding: 16px;
+}
+.leaveRoomAlert,
+.deleteMsgAlert,
+.fileSizeAlert {
+	position: absolute;
+	width: 250px;
+	bottom: 40%;
+	right: 8%;
+	font-size: 0.9em;
+}
+.customModalSmall2 {
+	position: absolute;
+	bottom: 395px;
+	right: 60px;
+	z-index: 9999;
+	background: white;
+	border: 0.5px solid #c8c8c8;
+	border-radius: 5px;
+	display: block;
+	box-shadow: 0px 3px 4px rgba(3, 21, 17, 0.08);
+	padding: 16px;
+}
+.chatRoomModal,
+.inviteMemberModal {
+	position: fixed;
+	bottom: 10px;
+	right: 313px;
+	background: white;
+	border: 0.5px solid #c8c8c8;
+	border-radius: 5px;
+	width: 300px;
+	height: 500px;
+	z-index: 999;
+	display: block;
+	
+	/* 스크롤 설정 */
+	overflow-y: initial;
+}
+.customModalMemberList {
+	position: absolute;
+	width: 250px;
+	max-height: 275px;
+	bottom: 27%;
+	right: 8%;
+	transform: translate(0.5%, -8%);
+	z-index: 9999;
+	background: white;
+	border: 0.5px solid #c8c8c8;
+	border-radius: 5px;
+	display: block;
+	box-shadow: 0px 3px 4px rgba(3, 21, 17, 0.08);
+	padding: 16px;
+	
+	/* 스크롤 설정 */
+	overflow-y: initial;
+}
+.customModalMemberListBody {
+	max-height: 250px;
+	overflow-y: auto;
+	
+	/* 파폭 스크롤 커스텀 */
+	scrollbar-width: thin;
+	scrollbar-color: #c8c8c8 rgba(0,0,0,0);
+}
+.customModalMemberListHeader {
+	padding-bottom: 16px;
+	margin-bottom: 16px;
+	border-bottom: 0.5px solid #dee2e6;
+}
+/* 스크롤바 설정*/
+.customModalBody::-webkit-scrollbar,
+.customModalMemberListBody::-webkit-scrollbar {
+    width: 5px;
+}
+/* 스크롤바 막대 설정*/
+.customModalBody::-webkit-scrollbar-thumb,
+.customModalMemberListBody::-webkit-scrollbar-thumb {
+    background-color: #c8c8c8;
+    border-radius: 10px;    
+}
+/* 스크롤바 뒷 배경 설정*/
+.customModalBody::-webkit-scrollbar-track,
+.customModalMemberListBody::-webkit-scrollbar-track {
+    background-color: rgba(0,0,0,0);
+}
+  	h2, h3, h4, h5, h6 {
+  		margin: 0;
+  	}
+  	.customModalHeader {
+  		padding: 16px;
+  		border-bottom: 0.5px solid #dee2e6;
+  	}
+  	.btn-plus {
+  		transform: rotate(45deg);
+  	}
+  	.customModalBody {
+  		padding: 16px;
+  		height: 440px;
+  		overflow-y: auto;
+  		overflow-x: hidden;
+  		
+  		/* 파폭 스크롤 커스텀 */
+  		scrollbar-width: thin;
+  		scrollbar-color: #c8c8c8 rgba(0,0,0,0);
+  	}
+  	.short {
+  		padding: 16px;
+  		height: 330px;
+  		overflow-y: auto;
+  	}
+  	.customModalFooter {
+  		padding-top: 8px;
+  		padding-left: 16px;
+  		padding-right: 16px;
+  		padding-bottom: 16px;
+  		border-top: 0.5px solid #dee2e6;
+  	}
+  	.hide-style {
+  		font-size: 0.9em;
+  	}
+  	.ti-message-circle-plus,
+  	.ti-message-circle-check,
+  	.ti-dots-vertical,
+  	.ti-dots {
+  		font-size: 22px;
+  		color: #7f7f7f;
+  	}
+  	
+  	.ti-user-plus,
+.ti-edit-circle-small,
+.ti-message-circle-off,
+.ti-edit-circle-off, 
+.ti-edit-circle-large,
+.ti-users-group {
+	font-size: 18px;
+	color: #7f7f7f;
+}
+
+  	.ti-message-circle-plus:hover,
+  	.ti-message-circle-check:hover,
+  	.ti-dots-vertical:hover,
+  	.ti-dots:hover {
+  		color: #404040;
+  	}
+  	
+  	.inviteBtn:hover .ti-user-plus,
+.eidtNameBtn:hover .ti-edit-circle,
+.exitBtn:hover .ti-message-circle-off,
+.memberListBtn:hover .ti-users-group {
+	color: #404040;
+}
+  	
+.newChatRoomBtn[disabled] .ti-message-circle-plus,
+.newChatRoomBtn[disabled]:hover .ti-message-circle-plus,
+.confirmNewChatRoomBtn[disabled] .ti-message-circle-check,
+.confirmNewChatRoomBtn[disabled]:hover .ti-message-circle-check,
+.roomNameChangeModeBtn[disabled] .ti-edit-circle,
+.roomNameChangeModeBtn[disabled]:hover .ti-edit-circle,
+.changeRoomNameBtn[disabled] .ti-dots-vertical .ti-dots,
+.changeRoomNameBtn[disabled]:hover .ti-dots-vertical .ti-dots,
+.cancelRenameBtn[disabled] .ti-edit-circle-off,
+.cancelRenameBtn[disabled]:hover .ti-edit-circle-off,
+.confirmNameBtn[disabled] .ti-edit-circle-large,
+.confirmNameBtn[disabled]:hover .ti-edit-circle-large,
+.memberListBtn[disabled] .ti-users-group,
+.memberListBtn[disabled]:hover .ti-users-group {
+	color: #dee2e6;
+}
+.type-box {
+	width: 100%;
+	height: 55px;
+	resize: none;
+	border: none;
+	outline: none;
+	font-size: 0.9em;
+	padding: 0;
+	
+	-ms-overflow-style: none; /* 인터넷 익스플로러 */
+scrollbar-width: none;
+}
+.type-box::-webkit-scrollbar {
+	display: none;
+}
+.length-alert {
+	font-size: 0.7em;
+	color: #6A53FB;
+}
+
+.changeNameInput {
+	padding: 0;
+	border: none;
+	outline: none;
+	width: 100%;
+	margin-right: 5px;
+}
+
+.fakeBtn {
+	width: 30px;
+	height: 30px;
+	background: #a698fd;
+	border-radius: 100px;
+	cursor: pointer;
+}
+
+.fakeBtn:hover {
+	background: #6A53FB;
+}
+
+.fakeBtn[disabled] ,
+.fakeBtn[disabled]:hover {
+	background: #a698fd;
+	cursor: default;
+}
+
+.ti-photo-up,
+.ti-send {
+	color: white;
+	font-size: 18px;
+}
+
+.messageBox {
+	border: 1.3px solid #6A53FB;
+	border-radius: 10px;
+	padding-top: 3px;
+	padding-bottom: 3px;
+	padding-right: 10px;
+	padding-left: 10px;
+	margin-right:5px;
+	font-size: 0.9em;
+	max-width: 200px;
+	word-break: break-all;
+}
+
+.myMessage > .messageBox  {
+	border: 1.3px solid #f0eeff;
+	background: #f0eeff;
+	margin-right: 0;
+	margin-left: 5px;
+}
+
+.messageTime {
+	font-size: 0.7em;
+	color: #7f7f7f;
+}
+
+.ti-x {
+	color: #a698fd;
+}
+.deleteMessageBtn:hover .ti-x {
+	color: #6A53FB;
+}
+
+.photoMessage {
+	width: 200px;
+	border-radius: 10px;
+	margin-right:5px;
+}
+
+.myMessage > .photoMessage  {
+	margin-right: 0;
+	margin-left: 5px;
+}
+
+.sysMessage {
+	background: #f8f7fc;
+	padding-top: 3px;
+	padding-bottom: 3px;
+	padding-right: 10px;
+	padding-left: 10px;
+	width: 100%;
+	border-radius: 10px;
+}
+
+.sysMsgTime {
+	font-size: 0.7em;
+	color: #7f7f7f;
+}
+
+.sysMsgContent {
+	font-size: 0.8em;
+	color: #7f7f7f;
+}
+
+.sysMessageDate {
+	display: flex;
+	flex-basis: 100%;
+	align-items: center;
+	color: #7f7f7f;
+	font-size: 0.7em;
+	margin-bottom: 18px;
+	margin-top: 20px;
+}
+.sysMessageDate::before {
+	content: "";
+	flex-grow: 1;
+	background: #dee2e6;
+	height: 0.3px;
+	font-size: 0;
+	line-height: 0px;
+	margin-right: 8px;
+}
+.sysMessageDate::after {
+	content: "";
+	flex-grow: 1;
+	background: #dee2e6;
+	height: 0.3px;
+	font-size: 0;
+	line-height: 0px;
+	margin-left: 8px;
+}
+
+.notiMark {
+	position: absolute;
+	top: 5px;
+	right: 5px;
+	border-radius: 10px;
+	width: 12px;
+	height: 12px;
+	background: #6a53fb;
+}
+
+.notiMarkChat {
+	/*position: fixed;*/
+	border-radius: 10px;
+	width: 8px;
+	min-width: 8px;
+	height: 8px;
+	background: #6a53fb;
+	z-index: 9999;
+}
+.chatRoomNameDiv {
+	display: block;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	word-break: break-all;
+}
+.hide-overflow {
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	word-break: break-all;
+}
+
+.profileImg {
+	border-radius: 100px;
+}
+.back-white {
+	background-color: white;
+}
+.btn-close {
+	box-shadow: none;
+}
+
+.chatRoomName {
+	display: block;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	word-break: break-all;
+}
+.btn-close:focus {
+	outline: none;
+	box-shadow: none;
+}
+.link-to-profile,
+.link-to-profile:hover {
+	text-decoration: none;
+	color: black;
+}
+#image-modal {
+	z-index: 999999;
+}

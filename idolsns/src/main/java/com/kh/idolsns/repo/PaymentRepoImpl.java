@@ -1,8 +1,6 @@
 package com.kh.idolsns.repo;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,20 +39,28 @@ public class PaymentRepoImpl implements PaymentRepo {
 	}
 	
 	@Override
-	public PaymentDto find(int PaymentNo) {
-		return sqlSession.selectOne("payment.find", PaymentNo);
+	public PaymentDto find(int paymentNo) {
+		return sqlSession.selectOne("payment.find", paymentNo);
 	}
+	
+	@Override
+	public PaymentDto find2(String paymentTid) {
+		return sqlSession.selectOne("payment.find2", paymentTid);
+	
+	}
+
+	
+	//전체취소
+	@Override
+	public void cancelRemain(int paymentNo) {
+		sqlSession.update("payment.cancelRemain", paymentNo);
+		
+	}
+
+	
+	
 	
 	
 
-	
-	// 충전 취소 시 포인트 차감
-	  public void decreasePoint(String memberId, int memberPoint) {
-	    Map<String, Object> params = new HashMap<>();
-	    params.put("memberId", memberId);
-	    params.put("memberPoint", memberPoint);
-	    sqlSession.update("decreasePoint", params);
-	  }
-	
 	
 }
