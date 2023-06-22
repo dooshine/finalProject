@@ -16,7 +16,6 @@
   - TestInterceptor(테스트 인터셉터, 삭제예정)
 
 
-#test5 gitHook 
 
 # 예시
 1. 일반회원이 관리자페이지 들어갈 때 (localhost:8080/admin/member)

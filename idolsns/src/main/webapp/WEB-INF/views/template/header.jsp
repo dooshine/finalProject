@@ -232,7 +232,7 @@
 				    	<div class="col-6 d-flex px-3" id="navbarSupportedContent">
 				      		<form action="${pageContext.request.contextPath}/search/post" class="d-flex w-100" method="get">
 				      			<div class="search-box w-100">
-					        		<input name="q" class="search-input me-2 w-100" placeholder="STARLINK 검색" type="text" value="${param.q}">
+					        		<input name="q" class="search-input me-2 w-100" placeholder="STARLINK 검색 / WEB-HOOK" type="text" value="${param.q}">
 					        	</div>
 				      		</form>
 				    	</div>
