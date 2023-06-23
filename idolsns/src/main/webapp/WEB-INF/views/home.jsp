@@ -1032,7 +1032,7 @@
 						<h6 class="fs-11px">{{ post.postType }}</h6>
 					</div>
 
-					<a :href="'${pageContext.request.contextPath}' + searchUrl" v-for="fixedTag in post.fixedTagList" :key="fixedTag" 
+					<a :href="searchUrl" v-for="fixedTag in post.fixedTagList" :key="fixedTag" 
 						@click="searchFixedTag(fixedTag)" >
 						<div 
 						class="mx-2 px-2 py-1 fixed-tag align-items-center justify-content-center text-light"
