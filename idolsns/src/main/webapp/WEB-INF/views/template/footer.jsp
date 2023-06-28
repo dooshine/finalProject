@@ -552,7 +552,7 @@
 						return {
 							memberNick: member.memberNick,
 							memberId: member.memberId,
-							profileSrc: contextPath + member.profileSrc
+							profileSrc: member.profileSrc
 						}
 					}
 					else return {
@@ -570,7 +570,7 @@
 						return {
 							memberNick: member.memberNick,
 							memberId: member.memberId,
-							profileSrc: contextPath + member.profileSrc
+							profileSrc: member.profileSrc
 						}
 					}
 					else return {
@@ -601,7 +601,7 @@
 						return {
 							memberNick: member.memberNick,
 							memberId: member.memberId,
-							profileSrc: contextPath + member.profileSrc
+							profileSrc: member.profileSrc
 						}
 					}
 					else return {
@@ -629,7 +629,7 @@
 						return {
 							memberNick: member.memberNick,
 							memberId: member.memberId,
-							profileSrc: contextPath + member.profileSrc
+							profileSrc: member.profileSrc
 						}
 					}
 					else return {
