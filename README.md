@@ -4,7 +4,7 @@
 - `팀명`: 파이널 1조
 - `프로젝트 기간`: 2023.05.10 ~ 2023.06.12
 - `한 줄 소개`: 아이돌 팬들을 위한 SNS 서비스
-- `배포 링크`: https://www.sysout.co.kr/starlink
+- `배포 링크`: https://sysout.co.kr/idolsns/
 - `테스트 계정`
   - 관리자
     - adminuser1 / adminuser1!Q
